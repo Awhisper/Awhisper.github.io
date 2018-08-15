@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编译原理," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下 很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正 我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统  作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扯淡：大白话聊聊编译那点事儿">
+<meta property="og:url" content="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下 很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正 我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统  作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-03-12T13:00:53.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="扯淡：大白话聊聊编译那点事儿">
+<meta name="twitter:description" content="notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下 很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正 我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统  作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/"/>
+
+
+
+
+
+  <title>扯淡：大白话聊聊编译那点事儿 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">扯淡：大白话聊聊编译那点事儿</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-26T23:05:23+08:00">
+                2017-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/02/26/扯淡：大白话聊聊编译那点事儿/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" class="leancloud_visitors" data-flag-title="扯淡：大白话聊聊编译那点事儿">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下</p>
+<p>很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正</p>
+<p>我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统</p>
+</blockquote>
+<p>作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。我们写好的那一行行代码，其实就是最普通的文本字符串，这些个文本字符串是怎么变成一个个漂亮的界面，一个个大数据量吞吐的服务器，一个个聪明的人工智能AI的？这里面其实经历了三个过程,<code>编译</code>,<code>链接</code>,<code>装载</code>(脚本语言会特殊一些，本文后面也会提及)</p>
+<ul>
+<li><p>编译：编译系统会读取我们写的文本字符串，去解读这里面代码所蕴含的意义，解读出来后会翻译成机器能看懂的汇编语言，我们管这个结果叫目标文件，这个过程叫编译</p>
+</li>
+<li><p>链接：每个类，每个文件都会被编译成不同的目标文件，链接器把这每个目标文件穿起来，让他们之间能够相互调用，最后生成可执行文件，这个过程叫链接</p>
+</li>
+<li><p>装载：把已经生成的可执行文件放到操作系统里，在系统专属的进程与内存控制下，找到机器可以识别的汇编代码入口，开始按着汇编去执行机器码<br>，并且能与操作系统级别的各种系统Api对接起来，这个过程叫装载</p>
+</li>
+</ul>
+<p>这一篇主要聊聊编译，但我会持续把大白话聊链接，装载坚持写完</p>
+<h1 id="编译步骤"><a href="#编译步骤" class="headerlink" title="编译步骤"></a>编译步骤</h1><p>怎么能让编译系统理解你写出来的一行行字符串，让机器去<code>读懂</code>你写的代码？这里面其实经历了很多步骤，我之前<a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a>里提到过一点点，这里我们再扯一扯~</p>
+<ul>
+<li>预编译</li>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>生成抽象语法树</li>
+<li>生成中间码</li>
+<li>目标代码生成</li>
+<li>目标代码优化</li>
+</ul>
+<a id="more"></a>
+<h2 id="预编译"><a href="#预编译" class="headerlink" title="预编译"></a>预编译</h2><p>在预编译的过程中，会处理源代码中的那些以<code>#</code>开头的预编译指令，比如<code>#include</code>,<code>#define</code>,<code>#ifdef</code>等，在编译开始前就先对原始的代码文件进行调整，经过了预编译之后，你写的代码其实已经改变了很多。不能说面目全非，但也变化很大，不再是你亲手写出来的样子了</p>
+<ul>
+<li><p><code>#define</code>大家都知道是宏定义，在预编译环节会扫描所有的宏，并将宏展开成真正的原始代码</p>
+</li>
+<li><p><code>#include</code>大家知道是引用的意思，但是引用在预编译阶段是怎么操作的呢？其实这行预编译指令就是原封不动的把.h文件插入到写include的位置，既然是原封不动的copy插入，这里会涉及一些命名重定义问题，这就是为什么有时候写在.h里面的定义需要加static关键字。</p>
+</li>
+<li><p><code>#indef</code>大家都知道是条件编译，通过上面讲的几种预编译的实际操作过程，也能猜到其实就是字符层面的删减，只有符合条件编译的情况，这里面的代码才会被保留，如果编译条件为false，在输入编译器之前，你写的那大段代码就已经被删掉丢弃了</p>
+</li>
+<li><p><code>/* */ &amp; //</code>删除注释，是滴，注释是对编译完全没用的，因此注释是不会参与编译的</p>
+</li>
+<li><p><code>#pragma</code>是一种编译器指令，这种编译器指令会被保留，后续编译有用</p>
+</li>
+<li><p>添加行号，给每行代码添加行号，万一编译报错，也方便追查</p>
+</li>
+</ul>
+<blockquote>
+<p>看到宏的操作我们可以理解到，为什么我们不推荐把一些业务中常用的常量用宏来表示，如果一个宏被修改，那么相当于所有用宏的地方，你写出的代码都变了，要重新编译</p>
+<p>如果一个宏被写入了.h文件，这个.h文件又被include到各种地方，甚至写入了pch，那么一个宏修改，不管你用不用这个宏，受影响的所有文件都等同于你直接修改了代码，要重新编译</p>
+</blockquote>
+<h2 id="词法分析"><a href="#词法分析" class="headerlink" title="词法分析"></a>词法分析</h2><p>词法分析其实是用一个扫描器逐行去扫描整个代码文件，通过一些算法（有限状态机算法）把你写的字符串分割成一个个的记号<code>token</code>，你写的关键字，标识符，字面量，运算符号等，都会被词法分析一一识别，分割，然后按顺序排列成一个个的标记。</p>
+<ul>
+<li>关键词：比如for while if static等会被词法分析识别成单词</li>
+<li>标识符：你代码起名的常量名字，变量名字等</li>
+<li>字面量：你在代码里写死的一些值，数字，字符等，比如@“1”</li>
+<li>特殊符号：+ - * /等等</li>
+</ul>
+<p>让你的代码不再是一个char 一个char相互之间无关联的字符串，而变成了一个标记一个标记的标记流（你可以理解有独立意义的单词），每一个标记可能是个值，可能是个变量名字，可能是个运算符，可能是个语法单词。</p>
+<p>在词法分析阶段，扫描器是并不清楚这一个个标记是什么意思的，他不需要知道for代表循环，int代表整形，他只需要知道for，int，是一个个独立的单词。</p>
+<p>其实扫描器在经历过词法分析后，会简单的对这些token进行归类，符号，常量等可以简单处理的会放入不同的常量区符号区。</p>
+<h2 id="语法分析"><a href="#语法分析" class="headerlink" title="语法分析"></a>语法分析</h2><p>语法分析就是真正的编译器在尝试<code>读懂</code>你写的代码了，经过了词法分析你得到的token流，会按顺序输入语法分析器，语法分析器会尝试解读，最终将我们希望表达的自然语义，构建成了一个逻辑上的计算机能识别，能执行，能遍历的结构–树状结构。也就是抽象语法树（Abstract Syntax Tree）</p>
+<p>每一条语句都是一个表达式，复杂语句就是复杂表达式的组合，可以相互嵌套，语法分析会把token流中很明显的表达式token识别出来，识别出表达式的核心意图，识别出表达式的参数，同时语法分析器会按着自己内部的运算符优先级规则，去调整表达式的执行顺序。</p>
+<ul>
+<li>遇到了 <code>=</code> token，语法分析器会知道这是一个赋值表达式，左边的token是赋值对象的表达式 or token，右边是值的表达式 or token</li>
+<li>遇到了<code>+</code> token，语法分析器会知道这是一个加法表达式</li>
+<li>按着语法分析器的内置规则，把一个又一个的表达式，按着语义去组合去嵌套，组合成一堆表达式的树状结构</li>
+</ul>
+<p>如果此时我们写代码不严谨，哪里少了个括号，哪里赋值没写值就直接回车，这时候语法树都是无法生成的，就会直接编译报错。</p>
+<blockquote>
+<p>大学的时候计算机有一门课程作业就是自己实现一个计算器，要求可以用字符串连续输入一串数学运算式，由我们自己用算法来处理一级运算符 + - 与二级运算符 * / 甚至还要处理括号，最终得出计算器的最终结果。</p>
+<p>这个处理过程很像，我们会识别出一行字符串里，优先计算出 * / 二级运算符的结果，用结果再去计算 + - ，最后得出了一个树按着树去深度遍历，就能拿到计算结果</p>
+</blockquote>
+<h2 id="语义分析"><a href="#语义分析" class="headerlink" title="语义分析"></a>语义分析</h2><p>我们已经初步得到了抽象语法树，这个抽象语法树每个节点都是一个表达式，但是这个表达式是否有意义，此时还并不确定，一个赋值表达式，我不能将一个数值赋值给一个对象指针，一个乘法表达式我不可能把一个地址指针与一个数值相乘。</p>
+<p>语义分析就是进行这种静态分析，会遍历整个语法树，把每个节点的表达式都标识类型，并且验证是否合法，</p>
+<h2 id="抽象语法树"><a href="#抽象语法树" class="headerlink" title="抽象语法树"></a>抽象语法树</h2><p>从语法分析开始，就提到生成抽象语法树（Abstract Syntax Tree），经过了语义分析，AST又变的更加完善，自此最终版的抽象语法树已经建立完成</p>
+<h2 id="生成中间码"><a href="#生成中间码" class="headerlink" title="生成中间码"></a>生成中间码</h2><p>不同硬件平台的汇编处理都是不一样的，这和硬件，CPU，总线的设计都有关系，一个AST如果想要在各个平台都能运行，那么就得生成很多个平台的汇编码。</p>
+<p><code>计算机科学领域的任何问题都可以通过增加一个间接的中间层来解决</code></p>
+<p>于是我们在AST与多个平台的汇编代码中间，抽象出了一个中间码（Intermediate Representation），他与语言无关（过了AST之后，就和语言无关了），与平台无关（他并没有直接生成汇编，在中间码的设计里打平了平台差异硬件差异）。</p>
+<p>最后通过目标平台的汇编器，由中间码生成汇编</p>
+<h2 id="目标代码"><a href="#目标代码" class="headerlink" title="目标代码"></a>目标代码</h2><p>计算机是通过汇编来执行操作的，机器能够听从并执行诸如，<code>移动到内存某个地址</code>，<code>位移多少个字节</code>，<code>写入多少byte的数据</code>，这种汇编指令，因此一个程序如果想让硬件机器能够执行，最终一定是通过这样的汇编指令来实现。</p>
+<p>我们手头有了抽象语法树，他是一个树状的结构，每个节点都是一个表达式的描述，但这毕竟不是机器能读懂的汇编，因此我们需要遍历这个AST，把AST的每一个表达式，每一层逻辑，都先转化成上面提到的中间码，在根据不同的硬件平台，翻译成机器可以读懂的语言–汇编，最终翻译成的汇编语言文件，就是目标文件（以后的篇幅讲<code>链接</code>会重点介绍）</p>
+<p>这一部分还可以细分为</p>
+<ul>
+<li>目标代码生成</li>
+<li>目标代码优化</li>
+</ul>
+<h1 id="编译前端-编译后端"><a href="#编译前端-编译后端" class="headerlink" title="编译前端-编译后端"></a>编译前端-编译后端</h1><p>我们介绍了七个环节，<code>预编译</code>，<code>词法分析</code>，<code>语法分析</code>，<code>语义分析</code>，<code>抽象语法树</code>，<code>中间码生成</code>，<code>目标代码生成</code>，<code>目标代码优化</code>，我们把<code>中间码生成</code>当做一个分界线，前边的环节就叫编译前端，后面的环节叫做编译后端</p>
+<p>这么区分有啥好处？这样的设计就保证了<code>中间码</code>这个东西，语言无关&amp;平台无关。</p>
+<p><strong>编译前端</strong></p>
+<p><code>预编译</code>，<code>词法分析</code>，<code>语法分析</code>，<code>语义分析</code>，<code>抽象语法树</code>，这些环节共同组成了编译前端，编译前端专门去处理语言专属的特性。不同的语言他的词法关键字，他的语法规则，语义分析的函数类型校验，都是不同的，甚至不是所有语言都有<code>预编译</code>这个环节，但每个语言可以开发一个属于自己语言的编译前端，只要生成统一的标准的<code>中间码</code>，就可以无缝对接给任意编译后端，这就是<code>语言无关</code></p>
+<p><strong>编译后端</strong></p>
+<p><code>目标代码生成</code>，<code>目标代码优化</code>，这些环节共同组成了编译后端，其实编译后端还会有本文没有深入讲的<code>链接环节</code>（将目标文件串联成可执行文件），编译后端专门负责处理各个平台的差异，根据不同平台，编译后端进行不同的汇编代码生成，无论是什么语言生成的标准<code>中间码</code>，只要编译后端支持的硬件平台，通过编译后端都能直接生成对应的目标文件，编译后端不支持的硬件平台？扩展编译器，让编译器支持一下咯╮(╯_╰)╭，这就是<code>平台无关</code></p>
+<h1 id="编译工具"><a href="#编译工具" class="headerlink" title="编译工具"></a>编译工具</h1><h2 id="GCC"><a href="#GCC" class="headerlink" title="GCC"></a>GCC</h2><p> GCC（GNU Compiler Collection，GNU编译器套装），既然是编译器套装，那么其实GCC内部包含了编译前端与编译后端所有模块。</p>
+<p> GCC的编译前端部分原本只支持C，后来很快就扩展支持了C++，再到后来，GCC也扩展支持了很多包括<code>Fortran</code>、<code>Pascal</code>、<code>Objective-C</code>、<code>Java</code>。</p>
+<p> GCC的编译后端也是很强大的，移植各个平台都支持，包括<code>x86、mips、Alpha、ARM、AVR、IA-64、SPARC、PowerPC</code>等30多种平台</p>
+<p> GCC虽然在被广泛的使用，但目前也面临了危机，后起之秀CLang/LLVM，大有全面赶超GCC之势头。</p>
+<h2 id="Clang-LLVM"><a href="#Clang-LLVM" class="headerlink" title="Clang/LLVM"></a>Clang/LLVM</h2><p>先说LLVM吧，以下内容摘抄自百科</p>
+<blockquote>
+<p>LLVM 命名最早源自于底层虚拟机（Low Level Virtual Machine）的缩写,由于命名带来的混乱，目前LLVM就是该项目的全称。LLVM 核心库提供了与编译器相关的支持，可以作为多种语言编译器的后台来使用。能够进行程序语言的编译期优化、链接优化、在线编译优化、代码生成。LLVM的项目是一个模块化和可重复使用的编译器和工具技术的集合</p>
+</blockquote>
+<p>扯点历史原因，最早苹果也是用GCC进行一整套的编译链接的，但据说苹果对Objective-C语言打算加入很多新特性，但GCC开发者并不是很买账，一度导致苹果用的GCC版本与GCC主版本的分支割裂。随着2005年Chris大神加入苹果，苹果决定彻底放弃GCC作为编译后端，采用了全新的，高效的、模块化的、协议更放松的LLVM作为编译后端，苹果处于一个GCC编译前端/LLVM编译后端的状态。</p>
+<p>并且GCC/LLVM的使用起来依然无法满足苹果的需求，甚至在苹果的GCC分支版本扩展都无法满足苹果的要求，于是苹果干脆从零去开发一个编译前端Clang，目的就是干掉越来越用的不顺手的GCC</p>
+<p>于是形成了苹果现在的Clang/LLVM的编译前端+编译后端的编译体系。</p>
+<blockquote>
+<p>有一种ClangPlugin的插件开发模式</p>
+<p>可以支持在Clang编译出AST的时候，开发辅助插件去干预或者处理Clang生成的AST</p>
+<p>比如一些OCLint这种，OC编码规范静态检查</p>
+<p>比如直接把OC的AST转化成JS代码甚至类JSPatch代码（想到了什么？滴滴的DynamicCocoa）</p>
+<p><a href="http://blog.mrriddler.com/2017/02/24/Clang%E6%8F%92%E4%BB%B6-Sherlock/" target="_blank" rel="noopener">一些关于ClangPlugin开发的介绍文章</a></p>
+<p><a href="https://lmsgsendnilself.github.io/blog/2017/02/28/clangtojszi-yuan/" target="_blank" rel="noopener">一些开源社区很火的Clang转JS的项目</a></p>
+</blockquote>
+<h2 id="LLVM的发展"><a href="#LLVM的发展" class="headerlink" title="LLVM的发展"></a>LLVM的发展</h2><p>随着LLVM的发展，他模块化、高效的设计收到越来越多的组织青睐，不只是苹果，越来越多的语言，都开始选择用LLVM当做编译后端</p>
+<blockquote>
+<p>如果你要开发一种新的编程语言，在词法语法解析完成后，你要做什么，肯定是生成中间代码，然后优化，最后编译成目标机器码。但是llvm 的中间代码不仅效率高而且可读性很好。那我们就直接拿LLVM过来用就好了，按照你的AST语法树，利用llvm给你的操作IR的接口，生成等价的IR中间码，生成IR了，之后所有的事情就交给llvm吧。</p>
+</blockquote>
+<p><strong>编译器发展故事一则：</strong></p>
+<p>看到了一条微博上面讲了一个故事</p>
+<blockquote>
+<p>五十年代美国女程序员 grace hopper 发明第一个 compiler 之后，遭到顽固抵触，很多程序员情愿费时费力的把程序用人工翻译成机器代码，也不愿用她的发明。早期的机器代码就是像 A4 83 E7 C5 这类如看天书般的东西，使用 compiler 编译器后工作效率提高几十倍。但是一直到五十年代中期很多程序猿对编译器仍然强烈抵触。</p>
+</blockquote>
+<blockquote>
+<p>当时程序猿的主流观点是，“让一个机械的进程，去完成编译高效代码这样一个伟大的工作，显然是个愚蠢和傲慢的白日梦”.  </p>
+</blockquote>
+<blockquote>
+<p>今天许多科学家和工程师，看轻 Ai 和自动驾驶技术部署实施的速度，是不是在犯同样的错误？</p>
+</blockquote>
+<p>先不说后面对人工智能的评论，在计算机的远古时代，程序员们还在人工去写机器码，这简直是一个不敢想象的可怕的事情，而现在编译器已经发展到，我们程序员完全不需要掌握如此底层的知识就能让各种各样的程序运行起来，改变我们的世界。</p>
+<h1 id="虚拟机体系"><a href="#虚拟机体系" class="headerlink" title="虚拟机体系"></a>虚拟机体系</h1><p>那么Java呢？Java是这么操作的么？大家都知道Java有虚拟机JVM。</p>
+<p>那么JavaScript呢？大家都知道脚本都是输入脚本引擎去run的，js有jscore or V8引擎。</p>
+<p>他们还是遵循一样的流程吗？</p>
+<h2 id="Java"><a href="#Java" class="headerlink" title="Java"></a>Java</h2><p>我们上面提到过，其实GCC后来也支持编译java，也就是说我们写的java代码也是要经过<code>编译前端</code>的全部流程，只不过到中间码这一步产生了分歧</p>
+<ul>
+<li>C系的编译语言，生成中间码后，最终目标是生成汇编，也就是可执行文件</li>
+<li>Java的代码经过编译前端后，会生成一种和中间码类似概念的<code>字节码（ByteCode）</code></li>
+</ul>
+<p>我们在前面建立过一个认知，机器能够识别能够执行的代码，是汇编那种的可执行文件，中间码还是字节码这种东西，我们的程序认识能够识别，能够遍历，但是机器是不认识的。</p>
+<p>所以Java需要一个Java Runtime Envirnment，这里面就有JVM，Java运行环境就是可以识别这种<code>字节码</code>的运行环境，如果一个设备，内部安装好了Java Runtime Envirnment，他不需要通过汇编来执行代码，Java运行环境可以直接将<code>字节码</code>输入，然后在java自己的虚拟机JVM里来运行。</p>
+<p>所以Java是这样一个编译流程</p>
+<ul>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>生成AST</li>
+<li>生成<code>字节码</code>（这个东西其实对应的就类似LLVM中的IR中间码）</li>
+</ul>
+<p>这就完成了Java程序的编译过程，我们就得到了字节码这个结果，就是jar包里面的内容。</p>
+<p>Java的运行流程</p>
+<ul>
+<li>目标设备必须具备 Java Runtime Envirnment</li>
+<li>通过Java运行环境来执行字节码</li>
+</ul>
+<h2 id="JavaScript脚本语言"><a href="#JavaScript脚本语言" class="headerlink" title="JavaScript脚本语言"></a>JavaScript脚本语言</h2><p>都说js是脚本语言，不需要编译，是完全解释执行的，真的是这样吗？</p>
+<p>js也是需要进行编译的，但是使用的不同引擎，可能内部的执行流程完全不一样，拿JavaScriptCore来举例。</p>
+<p>js代码会直接在运行的时候输入给JSCore，JSCore也会进行如下的步骤</p>
+<ul>
+<li>预处理</li>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>生成语法树</li>
+<li>生成字节码</li>
+<li>用LLInt（Low Level Interpreter 解释器）执行字节码</li>
+<li>更低级别的JIT执行（好像还有2种，在运行负担变大的时候会用更厉害的JIT去执行）</li>
+</ul>
+<p>看了这些怎么感觉和Java那个流程差不多啊？为什么这玩意叫解释性语言？</p>
+<p>我觉得这里面有一个本质性区别，就是同一个字节码到底在什么时候生成？</p>
+<p>JAVA的机制是，一次编译生成后，字节码可以每次运行的时候直接使用</p>
+<p>JavaScript的机制是，每次运行的时候，再进行编译生成字节码，然后执行，下次运行，又要重新编译生成字节码，重新执行。</p>
+<h2 id="Web-Assembly"><a href="#Web-Assembly" class="headerlink" title="Web Assembly"></a>Web Assembly</h2><p>令人激动的时候来了，web上的js每次运行都得实时编译运行，就不能像Java那样直接下发编好的字节码，一次编译，N次执行呢？</p>
+<p>这个脑洞就是目前炙手可热的<code>Web Assembly</code>，WebAssembly是一种新的字节码格式。它的缩写是”.wasm”， .wasm 为文件名后缀，是一种新的底层安全的二进制语法。它被定义为“精简、加载时间短的格式和执行模型”</p>
+<p>各大浏览器厂商纷纷跟进，也就是说，直接在浏览器里请求编译好的wasm字节码，就可以直接执行，不必再每次运行的时候像javascriptcore一样，每次都要编译一次。</p>
+<p>根据我们本文建立的编译前端的认知，我们其实可以把任何语言（比如C++）经过词法/语法/语法树后生成wasm格式的<code>字节码</code>，换句话说，用C++开发web也不是不可能~</p>
+<blockquote>
+<p>其实在Web里运行C/C++也并不是一定只有最新的WebAssembly，那个是最新的高运行效率的一套新标准</p>
+<p>通过<code>词法分析</code>，<code>语法分析</code>，<code>语法树</code>，<code>字节码</code>，<code>解释器</code>的JavaScriptCore工作流程，我们可以重新设计</p>
+<p>把面向JS语法的<code>词法分析</code>，<code>语法分析</code>，替换成C的语法</p>
+<p>这样不就实现了一个C/C++的虚拟机了</p>
+<p>已经有开源项目这么做了</p>
+<p><a href="https://github.com/felixhao28/JSCPP" target="_blank" rel="noopener">Github JSCPP项目</a></p>
+<p><a href="http://c-smile.sourceforge.net" target="_blank" rel="noopener">C-SMILE 一套支持C/C++ JS JAVA四种语言的scripting language</a></p>
+<p>除此之外，这种自己定制一套字节码，自己实现一套可以执行字节码的虚拟机，让你想到了什么？腾讯的OCS</p>
+</blockquote>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p>强烈推荐阅读文献<br>《程序员的个人修养-装载，链接与库》</p>
+<p>相关Link:</p>
+<p><a href="http://blog.csdn.net/itianyi/article/details/43057279" target="_blank" rel="noopener">编译器(GNU &amp; GCC &amp; clang &amp; llvm)</a></p>
+<p><a href="http://blog.csdn.net/u012491514/article/details/24736041" target="_blank" rel="noopener">gcc编译器—前端和后端</a></p>
+<p><a href="http://blog.mrriddler.com/2017/02/10/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB-%E7%BC%96%E8%AF%91%E4%BD%93%E7%B3%BB%E6%BC%AB%E6%B8%B8/" target="_blank" rel="noopener">计算机体系-编译体系漫游</a></p>
+<p><a href="http://www.nagain.com/activity/article/7/" target="_blank" rel="noopener">llvm之旅第三站 － 认识LLVM IR</a></p>
+<p><a href="http://kaleidoscope-llvm-tutorial-zh-cn.readthedocs.io/zh_CN/latest/" target="_blank" rel="noopener">Kaileidoscope: LLVM Tutorial Chinese version(中文版)</a></p>
+<p><a href="http://www.cnblogs.com/zuopeng/p/4141467.html" target="_blank" rel="noopener">LLVM和GCC的区别</a></p>
+<p><a href="https://www.zhihu.com/question/47819047" target="_blank" rel="noopener">LLVM相比于JVM，有哪些技术优势？</a></p>
+<p><a href="http://blog.csdn.net/lichwei1983/article/details/44658533" target="_blank" rel="noopener">JavaScript引擎深度解析–基础篇（一）字节码生成及语法树的构建详情分析</a></p>
+<p><a href="http://rednaxelafx.iteye.com/blog/492667" target="_blank" rel="noopener">虚拟机随谈（一）：解释器，树遍历解释器，基于栈与基于寄存器，大杂烩</a></p>
+<p>我自己的相关文章Link:</p>
+<p><a href="http://awhisper.github.io/2016/12/22/%E6%89%AF%E6%B7%A1%EF%BC%9A%E8%BF%99%E4%B8%80%E5%91%A8%E6%84%9F%E8%A7%89%E7%BB%8F%E5%8E%86%E4%BA%86%E4%B8%80%E6%AC%A1%E6%8A%80%E6%9C%AF%E7%88%86%E7%82%B8/" target="_blank" rel="noopener">技术爆炸</a></p>
+<p><a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/01/17/MyTeamDaNangTour/" rel="next" title="一起折腾一起High Team越南岘港游记">
+                <i class="fa fa-chevron-left"></i> 一起折腾一起High Team越南岘港游记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/03/12/VKSniffer/" rel="prev" title="VKSniffer 网络请求嗅探器">
+                VKSniffer 网络请求嗅探器 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译步骤"><span class="nav-number">1.</span> <span class="nav-text">编译步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#预编译"><span class="nav-number">1.1.</span> <span class="nav-text">预编译</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#词法分析"><span class="nav-number">1.2.</span> <span class="nav-text">词法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语法分析"><span class="nav-number">1.3.</span> <span class="nav-text">语法分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#语义分析"><span class="nav-number">1.4.</span> <span class="nav-text">语义分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#抽象语法树"><span class="nav-number">1.5.</span> <span class="nav-text">抽象语法树</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#生成中间码"><span class="nav-number">1.6.</span> <span class="nav-text">生成中间码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#目标代码"><span class="nav-number">1.7.</span> <span class="nav-text">目标代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译前端-编译后端"><span class="nav-number">2.</span> <span class="nav-text">编译前端-编译后端</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#编译工具"><span class="nav-number">3.</span> <span class="nav-text">编译工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#GCC"><span class="nav-number">3.1.</span> <span class="nav-text">GCC</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Clang-LLVM"><span class="nav-number">3.2.</span> <span class="nav-text">Clang/LLVM</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#LLVM的发展"><span class="nav-number">3.3.</span> <span class="nav-text">LLVM的发展</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#虚拟机体系"><span class="nav-number">4.</span> <span class="nav-text">虚拟机体系</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Java"><span class="nav-number">4.1.</span> <span class="nav-text">Java</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JavaScript脚本语言"><span class="nav-number">4.2.</span> <span class="nav-text">JavaScript脚本语言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web-Assembly"><span class="nav-number">4.3.</span> <span class="nav-text">Web Assembly</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">5.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '扯淡：大白话聊聊编译那点事儿', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

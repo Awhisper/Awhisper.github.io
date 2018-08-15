@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FrontEnd," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Session 234: What’s New in Safari and WebKit  这个Session介绍了Safari与WebKit的新特性，主要面向三类人群  Web 网页开发者（是本篇主要面相对象） Use WKWebView 原生开发者 Safari Extension 浏览器插件开发者  这个Session主要围绕着与浏览器技术相关的新特性与新功能，并且和大会的其他炙手可热的">
+<meta name="keywords" content="FrontEnd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WWDC2018 Safari与WebKit的新特性">
+<meta property="og:url" content="http://yoursite.com/2018/06/09/whatsnewinsafariandwebkitwwdc2018/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="Session 234: What’s New in Safari and WebKit  这个Session介绍了Safari与WebKit的新特性，主要面向三类人群  Web 网页开发者（是本篇主要面相对象） Use WKWebView 原生开发者 Safari Extension 浏览器插件开发者  这个Session主要围绕着与浏览器技术相关的新特性与新功能，并且和大会的其他炙手可热的">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a80e54e?w=3224&h=1470&f=jpeg&s=389931">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a7c03e6?w=2394&h=1294&f=png&s=249299">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a99f188?w=886&h=280&f=jpeg&s=65692">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a9318b0?w=698&h=1356&f=jpeg&s=210642">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0aae2cc8?w=1356&h=2688&f=jpeg&s=436327">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0ac37a23?w=1498&h=1122&f=png&s=940083">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce4c6cea20?w=1642&h=1388&f=png&s=1152590">
+<meta property="og:updated_time" content="2018-08-15T09:16:16.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="WWDC2018 Safari与WebKit的新特性">
+<meta name="twitter:description" content="Session 234: What’s New in Safari and WebKit  这个Session介绍了Safari与WebKit的新特性，主要面向三类人群  Web 网页开发者（是本篇主要面相对象） Use WKWebView 原生开发者 Safari Extension 浏览器插件开发者  这个Session主要围绕着与浏览器技术相关的新特性与新功能，并且和大会的其他炙手可热的">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a80e54e?w=3224&h=1470&f=jpeg&s=389931">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/09/whatsnewinsafariandwebkitwwdc2018/"/>
+
+
+
+
+
+  <title>WWDC2018 Safari与WebKit的新特性 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/09/whatsnewinsafariandwebkitwwdc2018/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">WWDC2018 Safari与WebKit的新特性</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-09T16:14:17+08:00">
+                2018-06-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/" class="leancloud_visitors" data-flag-title="WWDC2018 Safari与WebKit的新特性">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a80e54e?w=3224&amp;h=1470&amp;f=jpeg&amp;s=389931" alt=""></p>
+<blockquote>
+<p>Session 234: <a href="https://developer.apple.com/videos/play/wwdc2018/234/" target="_blank" rel="noopener">What’s New in Safari and WebKit</a></p>
+</blockquote>
+<p>这个Session介绍了Safari与WebKit的新特性，主要面向三类人群</p>
+<ul>
+<li>Web 网页开发者（是本篇主要面相对象）</li>
+<li>Use WKWebView 原生开发者</li>
+<li>Safari Extension 浏览器插件开发者</li>
+</ul>
+<p>这个Session主要围绕着与浏览器技术相关的新特性与新功能，并且和大会的其他炙手可热的议题比如<code>ARKit</code>，<code>WatchOS</code>，都有相关和联动，极大地增强了Web技术的功能与性能。整个 Session 介绍的各种新功能相对来说比较琐碎，主要包括三大部分：</p>
+<ul>
+<li>安全性与隐私保护</li>
+<li>表现力与性能</li>
+<li>丰富的交互体验</li>
+</ul>
+<h1 id="安全-Security"><a href="#安全-Security" class="headerlink" title="安全 Security"></a>安全 Security</h1><a id="more"></a>
+<p>这一大块主要凸显苹果对安全以及用户隐私方面的重视，小到规范获取授权的提示，跨端的密码自动填充，大到网页上干扰广告商通过 cookie 定位跟踪用户，一种值得尊敬得企业态度。</p>
+<h2 id="UIWebView废弃，迁移WKWebView"><a href="#UIWebView废弃，迁移WKWebView" class="headerlink" title="UIWebView废弃，迁移WKWebView"></a>UIWebView废弃，迁移WKWebView</h2><p>在安全方面，Session上来就宣布了一件重量级的大事，UIWebView正式被官方宣布废弃，建议开发者迁移适配到WKWebView。在XCode9中UIWebView还是 <code>NS_CLASS_AVAILABLE_IOS(2_0)</code>，而我们从最新的Xcode10再看UIWebView就已经是这个样子了</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">UIKIT_EXTERN API_DEPRECATED(&quot;No longer supported; please adopt WKWebView.&quot;, ios(2.0, 12.0)) API_PROHIBITED(tvos, macos) </span><br><span class="line">@interface UIWebView : UIView &lt;NSCoding, UIScrollViewDelegate&gt;</span><br></pre></td></tr></table></figure>
+<p>WKWebView从诞生之初相比UIWebView有太多的优势，无论是内存泄露还是网页性能，并且WKWebView可以同时支持macOS与iOS。由于WKWebView的独特设计，网页运行在独立的进程，如果网页遇到Crash，不会影响App的正常运行。</p>
+<p>但是WKWebView不支持JSContext，不支持NSURLProtocol，Cookie管理蛋疼等问题确实给让不少开发者不想丢弃UIWebView，但最后通牒来了还是准备着手替换吧。</p>
+<h2 id="Safari扩展开发-Safari-Extensions"><a href="#Safari扩展开发-Safari-Extensions" class="headerlink" title="Safari扩展开发 Safari Extensions"></a>Safari扩展开发 Safari Extensions</h2><p>safari扩展开发的历史</p>
+<ul>
+<li>2010: 开放 macOS (Safari网页插件扩展) - Safari Extensions</li>
+<li>2014: 开放 macOS 与 iOS 的 App Extensions 扩展开发 - App Extensibility for macOS and iOS</li>
+<li>2015: 开放了 macOS 与 iOS 的 Safari 内容拦截能力（广告插件）- Content Blockers for macOS and iOS</li>
+<li>2016: 开放了 macOS 的 Safari App Extensions 扩展开发 - Safari App Extensions for macOS</li>
+</ul>
+<p>在macOS上，有一个Safari扩展的商店 <code>Safari Extensions Gallery</code>，现在这个扩展商店也要退出历史舞台了，苹果希望开发者逐渐转移到 App Extensions 开发，最终提交到 <code>AppStore</code> 而不是开发Safari浏览器插件，提交到 <code>Safari Extensions Gallery</code>，这个期限会持续到2018年底，之后 Gallery 就不再接受提交了。</p>
+<h2 id="子资源完整性校验-Subresource-Integrity"><a href="#子资源完整性校验-Subresource-Integrity" class="headerlink" title="子资源完整性校验 Subresource Integrity"></a>子资源完整性校验 Subresource Integrity</h2><p>早在很久之前，已经全面要求开发者适配HTTPS了，但如果开发者在个人网站上引用了存放在第三方平台的子资源，诸如 HTML/CSS/JS ，如果该资源在第三方平台出现了篡改等问题的发生，将导致我们的网站会遭受攻击</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a7c03e6?w=2394&amp;h=1294&amp;f=png&amp;s=249299" alt="subresuroucesha"></p>
+<p>为了应对这种安全问题，Safari在新的版本里对HTML标签加入了一个新的属性 <code>integrity</code> 用来填写当前要引用的子资源的Hash值，如果该子资源下载完毕的时候发现Hash值和 <code>integrity</code> 属性不一致，则会直接放弃加载该资源，这个属性适用于一切子资源，JS/CSS等</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">"https://thirdparty.example/framework.js"</span> <span class="attr">integrity</span>=<span class="string">"sha384oqVuAfXRKa+R9GqQ8K/ux"</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h2 id="智能防追踪-Intelligent-Tracking-Prevention"><a href="#智能防追踪-Intelligent-Tracking-Prevention" class="headerlink" title="智能防追踪 Intelligent Tracking Prevention"></a>智能防追踪 Intelligent Tracking Prevention</h2><p>在WWDC第一天的开场大会上，介绍到了在本届 WWDC，Apple 全面加强了用户隐私相关的保护，无论是用户设备指纹追踪，还是网络浏览行为追踪，表现出了，苹果非常在意保护用户的个人隐私。而在本场 Session 进一步介绍了如何智能的防止隐私追踪，Cookie 是这项技术的关键之一。</p>
+<p>很多广告/搜索进行的用户行为追踪，导致用户刚搜过什么东西，在别处广告就能看到对应的商品推荐，主要靠的是创建一种唯一识别用户的 token，并将这 token 存入除了当前网站之外的第三方网站cookie，从而做到访问任意网站的时候能够追踪到用户在其他网站做过什么。</p>
+<ul>
+<li>在去年的WWDC，苹果就宣布，Cookies 在24小时内之内可以被第三方上下文使用（用户可以被追踪），而过了24小时之后，Cookies 会被隔离存储，并且不提供给第三方上下文，30天候，Cookies 会被删除</li>
+<li>今年这项举措进一步收紧，移除了24小时的宽限期，直接禁止第三方上下文使用 Cookies</li>
+</ul>
+<p>那么问题来了？当用户确实需要跨网站之间同步登陆状态等用户信息怎么办？</p>
+<p><strong>Storage Access API</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a99f188?w=886&amp;h=280&amp;f=jpeg&amp;s=65692" alt=""></p>
+<p>Apple 开放了专门用于存储读取这类用户敏感信息的 API，在使用这个 API 的时候会，苹果会向用户发起询问弹框，询问用户是否允许此类信息追踪，Storage Access API 的代码也很简单</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">makeRequestWithUserGesture</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="keyword">let</span> promise = <span class="built_in">document</span>.requestStorageAccess();</span><br><span class="line">promise.then(<span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"><span class="comment">// Storage access was granted.</span></span><br><span class="line"><span class="comment">// Check whether the user is logged in.</span></span><br><span class="line"><span class="comment">// If not, do a popup to log the user</span></span><br><span class="line"><span class="comment">// in.</span></span><br><span class="line">&#125;, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line"> <span class="comment">// Storage access was denied.</span></span><br><span class="line">&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="自动生成强密码-Automatic-Strong-Passwords"><a href="#自动生成强密码-Automatic-Strong-Passwords" class="headerlink" title="自动生成强密码 Automatic Strong Passwords"></a>自动生成强密码 Automatic Strong Passwords</h2><p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0a9318b0?w=698&amp;h=1356&amp;f=jpeg&amp;s=210642" alt=""></p>
+<p>iOS12 会在用户需要创建一个用户名和密码的时候，自动生成一个强密码，包含了大小写，数字，特殊字符等等。并且这个强密码会被保存到用户的 KeyChain 之中，未来在访问当前网站的时候自动填充登陆，用户也可以在设置中查询已经生成的各个网站的密码，</p>
+<p>对开发者来说，这个功能可以完全不做任何开发适配自动生效 Apple 默认的强密码规则，开发者也可以在自己的网站自定义强密码的规则</p>
+<h2 id="短信验证码自动填充-Security-Code-AutoFill"><a href="#短信验证码自动填充-Security-Code-AutoFill" class="headerlink" title="短信验证码自动填充 Security Code AutoFill"></a>短信验证码自动填充 Security Code AutoFill</h2><p>自动填充短信验证码，这个功能依然不需要开发者做任何适配自动填充，短信验证码会被填充到输入法里，快速录入到目标输入框</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0aae2cc8?w=1356&amp;h=2688&amp;f=jpeg&amp;s=436327" alt=""></p>
+<h1 id="性能与展现-Performance"><a href="#性能与展现-Performance" class="headerlink" title="性能与展现 Performance"></a>性能与展现 Performance</h1><p>本届 WWDC 上来在介绍 iOS12 的时候就强调了软件性能，苹果做了巨大得努力，获得了巨大程度的提升。而在 Web 在浏览器上，一直被人诟病说表现力不如 Native ，性能流畅度不如 Native。而这一个大块内容就重点介绍了 Apple 是如何全面优化 web 的表现力与流畅度的。</p>
+<h2 id="字体集-Font-Collections"><a href="#字体集-Font-Collections" class="headerlink" title="字体集 Font Collections"></a>字体集 Font Collections</h2><p>Safari新增了一种可以将一些固定字符集的多种字体打包在一起，形成一个固定字符集的字体合集用来加载，此举可以大幅度减少多字体情况下的字体包下载大小，Session中提到的例子，使用了Font Collection，需要下载的所有字体体积下降了了84%</p>
+<p>原理是多种字体在相同字符集下，可以共享同一个字符表，每一个字符的编码下对应存储多个字体的字形glyph，从而减少空间上的冗余。</p>
+<h2 id="CCS属性-font-display-Descriptor"><a href="#CCS属性-font-display-Descriptor" class="headerlink" title="CCS属性  font-display Descriptor"></a>CCS属性  font-display Descriptor</h2><p>当一个网页使用了自定义字体，那么Safari会先用空白区域占位，然后去下载该字体，等下载完毕后在刷新出新的字体，如果这个过程 web 开发者想进一步的自己控制，就需要 <code>font-display</code> 这个 CSS 属性</p>
+<p><code>font-display</code> 是一个新的 CSS 属性，已经在 Chrome &amp; Chrome for Android 率先得到了支持，这次 Safari 跟进了对这个属性的支持。</p>
+<p>Session 中并没有讲太细致这个 CSS 到底该如何使用，目前有5种效果可以进行选择，样例中用的是 <code>font-display: fallback;</code> 此外还有 <code>auto/swap/optional</code> </p>
+<ul>
+<li>auto:默认值。使用自定义字体的文本会先被隐藏，直到字体加载结束后才会显示。</li>
+<li>swap:先用默认字体立即显示文字，直到自定义字体加载完成后再使用自定义字体渲染文本。</li>
+<li>fallback:这个可以说是auto和swap的一种折中方式。需要使用自定义字体渲染的文本会在较短的时间不可见，如果自定义字体还没有加载结束，那么就先加载无样式默认字体的文本。一旦自定义字体加载结束，那么文本就会被重新渲染。</li>
+<li>optional:效果和fallback几乎一样，都是先在极短的时间内文本不可见，然后再加载无样式的文本。不过optional选项可以让浏览器自由决定是否使用自定义字体，而这个决定很大程度上取决于浏览器的连接速度。如果速度很慢，那你的自定义字体可能就不会被使用。</li>
+</ul>
+<h2 id="Image标签中播放视频-Videos-in-image-elements"><a href="#Image标签中播放视频-Videos-in-image-elements" class="headerlink" title="Image标签中播放视频 Videos in image elements"></a>Image标签中播放视频 Videos in image elements</h2><p>网页中经常要播放动图，动画，我们一般都会使用 Gif 图，但 Gif 图加载时间太长了，因此开放了直接在 Image 标签中加载视频。并且 Safari 会使用内置的视频解码技术对视频进行最佳的渲染。</p>
+<p>代码也非常简洁，无论是写一个HTML标签，还是写在CSS里，都支持</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">//html 写法</span><br><span class="line">&lt;img src=&quot;explosion.mp4&quot; alt=&quot;Color Explosion&quot;&gt;</span><br><span class="line">//CSS 写法</span><br><span class="line">body &#123;</span><br><span class="line"> background-image: url(&quot;explosion.mp4&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="被动事件监听-Passive-Event-Listeners"><a href="#被动事件监听-Passive-Event-Listeners" class="headerlink" title="被动事件监听 Passive Event Listeners"></a>被动事件监听 Passive Event Listeners</h2><p>这个 feture 大幅度优化了 Web 的滚动性能</p>
+<p>在原本的 Safari 事件监听实现里，如果在滚动中触发了 addEventListener() 的事件监听，滚动会等待 JS 事件监听处理完毕，再继续滚动。</p>
+<p>本次的被动事件监听优化，就是专门针对这种情况导致的可能的卡顿。被动监听作为一个标记位在 addEventListener() 的时候传入，当这个标记开启的时候，滚动不会等待 JS 事件监听执行完毕在继续，从而保证了流畅度。</p>
+<h2 id="异步图片解码-Async-image-decoding"><a href="#异步图片解码-Async-image-decoding" class="headerlink" title="异步图片解码 Async image decoding"></a>异步图片解码 Async image decoding</h2><p>新的 Web API 可以让JS自由的进一步控制DOM的异步图片解码，这里代码举个例子：页面中的一个图片，在点击的时候，加载下一张图片，然后淡淡地动画过度到新图片</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读取要加载的新图片dom 和 新图片 src</span></span><br><span class="line"><span class="keyword">const</span> img = <span class="keyword">this</span>..currentItem.getElementsByTagName(<span class="string">'img'</span>)[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">const</span> unloadedSource = img.getAttribute(<span class="string">'data-src'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//新图片加载（会异步加载，不会卡主线程）</span></span><br><span class="line"><span class="keyword">if</span>(unloadedSource)&#123;</span><br><span class="line">    img.src = img.getAttribute(<span class="string">'data-src'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//播放一个淡出动画，在老图片淡出，透出下面的新图片</span></span><br><span class="line"><span class="keyword">const</span> transition = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.bringElementToFront(<span class="keyword">this</span>.currentItem);</span><br><span class="line">    <span class="keyword">this</span>.currentItem.classList.add(<span class="string">'fade-in'</span>);</span><br><span class="line">    <span class="keyword">this</span>.currentItem.onanimationend = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.currentItem.classList.remove(<span class="string">'fade-in'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line">transition()</span><br></pre></td></tr></table></figure>
+<p>这段代码中最大的问题在于，当对 img.src 赋值的时候，web就开始异步加载图片了，但JS代码会立刻开始执行下面的动画效果，图片还没加载完，动画效果执行过程中出现了闪烁。</p>
+<p>现在图片元素有了新API decode()，这个 decode() 会返回一个 promise ，当图片在异步下载解码完成后会触发。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//读取要加载的新图片dom 和 新图片 src</span></span><br><span class="line"><span class="keyword">const</span> img = <span class="keyword">this</span>..currentItem.getElementsByTagName(<span class="string">'img'</span>)[<span class="number">0</span>];</span><br><span class="line"><span class="keyword">const</span> unloadedSource = img.getAttribute(<span class="string">'data-src'</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">//新图片加载（会异步加载，不会卡主线程）</span></span><br><span class="line"><span class="keyword">if</span>(unloadedSource)&#123;</span><br><span class="line">    img.src = img.getAttribute(<span class="string">'data-src'</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//播放一个淡出动画，在老图片淡出，透出下面的新图片</span></span><br><span class="line"><span class="keyword">const</span> transition = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.bringElementToFront(<span class="keyword">this</span>.currentItem);</span><br><span class="line">    <span class="keyword">this</span>.currentItem.classList.add(<span class="string">'fade-in'</span>);</span><br><span class="line">    <span class="keyword">this</span>.currentItem.onanimationend = <span class="function"><span class="params">()</span> =&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.currentItem.classList.remove(<span class="string">'fade-in'</span>);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;  </span><br><span class="line"></span><br><span class="line"><span class="comment">//使用新 decode() Api 实现当解码完成的时候再执行动画效果</span></span><br><span class="line">img.decode().then(transition)</span><br></pre></td></tr></table></figure>
+<h2 id="支持-Beacon-API"><a href="#支持-Beacon-API" class="headerlink" title="支持 Beacon API"></a>支持 Beacon API</h2><p>这个 Beacon API 可不是苹果他们家那个 iBeacon 设备与手机通信的东西哟！。</p>
+<p>Beacon API 是 W3C 的一项新标准新 API，这个 API 主要用于发送不需要服务器回应的HTTP请求，Chrome &amp;&amp; Firefox 似乎已经实现了，现在 Safari 跟进了这个功能。</p>
+<p>这个API有什么用？</p>
+<ul>
+<li>在空闲的时候发出异步请求，一般用于发送统计，并且因为不需要回应，完全不会影响页面诸如 JS/CSS Animation 的执行</li>
+<li>即使在页面即将关闭 <code>unload</code> 状态下，也会异步发送出去统计，不影响过渡/跳转到下个页面</li>
+</ul>
+<p>举个例子：当按钮点击，调往下一个页面的时候，我们希望发送一条数据请求给服务器，一般情况下浏览器发起请求都是发起异步的请求，但现在这个例子里，一旦发生跳转，当前页面即将销毁，这个网络请求会被浏览器忽略，为了保证数据发送成功，就得使用同步网络请求，就会导致页面先卡一会，请求完成后再跳转新页面。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(event.target.tagName == <span class="string">'A'</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> data = <span class="string">`from=<span class="subst">$&#123;<span class="built_in">window</span>.location.href&#125;</span>&amp;to$(event.target.href)`</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">        xhr.open(<span class="string">'POST'</span>,<span class="string">'/Event'</span>,<span class="literal">false</span>);<span class="comment">//注意这里 false 表示这里强制同步网络请求，会卡</span></span><br><span class="line">        xhr.send(data);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<p>有了不需要回应的 Beacon API，在这个例子里我们就可以不用让页面卡一下在跳转了，并且 sendBeacon() 这个 API 也比 XMLHttpRequest 简洁好多。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.body.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>(event.target.tagName == <span class="string">'A'</span>)&#123;</span><br><span class="line">        <span class="keyword">const</span> data = <span class="string">`from=<span class="subst">$&#123;<span class="built_in">window</span>.location.href&#125;</span>&amp;to$(event.target.href)`</span>;</span><br><span class="line">        <span class="comment">//判断浏览器是否支持 Beacon API</span></span><br><span class="line">        <span class="keyword">if</span> (navigator.sendBeacon)&#123;</span><br><span class="line">            navigator.sendBeacon(<span class="string">'/event'</span>,data);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="keyword">const</span> xhr = <span class="keyword">new</span> XMLHttpRequest();</span><br><span class="line">            xhr.open(<span class="string">'POST'</span>,<span class="string">'/Event'</span>,<span class="literal">false</span>);</span><br><span class="line">            xhr.send(data);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,<span class="literal">true</span>)</span><br></pre></td></tr></table></figure>
+<h1 id="丰富的交互体验-Rich-Experience"><a href="#丰富的交互体验-Rich-Experience" class="headerlink" title="丰富的交互体验 Rich Experience"></a>丰富的交互体验 Rich Experience</h1><p>如果说安全与性能都是优化层面，那么这一大块内容就是彻彻底底的新功能了，更复杂的 Web 交互，Web 的移动支付，Web AR展现，甚至是 watch OS 上的 Web，让我们好好感受一下 Safari 的新能力</p>
+<h2 id="拖放交互-Drag-and-drop"><a href="#拖放交互-Drag-and-drop" class="headerlink" title="拖放交互 Drag and drop"></a>拖放交互 Drag and drop</h2><p>新的 Safari 提供了拖拽 API，这个 API 也是 H5 的标准API，这次 Safari 跟进了支持。</p>
+<ul>
+<li>通过 Dom 对象的 draggable 属性来开启拖拽效果</li>
+<li>通过 dragstart/drop/dragover 事件监听来处理拖拽逻辑</li>
+<li>通过 dataTransfer 来向事件对象 event 传递数据</li>
+</ul>
+<p>下面看个简单的例子</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">dragzone.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">element</span>)</span>&#123;</span><br><span class="line">    element.addEventListener(<span class="string">'dragstart'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">        event.dataTransfer.setData(<span class="string">'text/plain'</span>,element.textContent());</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">dropzone.addEventListener(<span class="string">'drop'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    event.preventDefault();</span><br><span class="line">    <span class="keyword">const</span> li = <span class="built_in">document</span>.createElement(<span class="string">'li'</span>);</span><br><span class="line">    li.textContent = event.dataTransfer.getData(<span class="string">'text/plain'</span>)</span><br><span class="line">    goodList.appendChild(li);</span><br><span class="line">    dropzone.classList.add(<span class="string">'has-items'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="苹果支付-Payment-Request-API-Apple-Pay"><a href="#苹果支付-Payment-Request-API-Apple-Pay" class="headerlink" title="苹果支付 Payment Request API + Apple Pay"></a>苹果支付 Payment Request API + Apple Pay</h2><p>恩，没错，苹果支付现在开放给 Web Safari 了，并且是遵循的 W3C 的标准 Payment Request API 从而对接到苹果支付上。</p>
+<p>简单的例子：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">payButton.addEventListener(<span class="string">'click'</span>,<span class="function"><span class="keyword">function</span>(<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="built_in">window</span>.PaymentRequest)&#123;</span><br><span class="line">        <span class="keyword">const</span> method = &#123;</span><br><span class="line">            supportedMethods:<span class="string">"https://apple.com/apple-pay"</span>,</span><br><span class="line">            data:&#123;</span><br><span class="line">                version:<span class="number">3</span>,</span><br><span class="line">                merchantIdentifier:<span class="string">"example,outdoorsy"</span>,</span><br><span class="line">                merchantCapabilities: [<span class="string">'supports3DS'</span>,<span class="string">'supportsCredit'</span>,<span class="string">'supportsDebit'</span>],</span><br><span class="line">                countryCode:<span class="string">'US'</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> shoppingListItems = <span class="built_in">Array</span>.from(shoppingList.children);</span><br><span class="line">        <span class="keyword">const</span> pricePerItem = <span class="number">5.00</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> details = &#123;</span><br><span class="line">            total:&#123;</span><br><span class="line">                label:<span class="string">"Outdoorsy"</span>,</span><br><span class="line">                amount:&#123;</span><br><span class="line">                    value:<span class="built_in">String</span>(shoppingListItem.length * pricePerItem),</span><br><span class="line">                    currency:<span class="string">'USD'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;,</span><br><span class="line">            displayItems:shoppingListItems.map(<span class="function"><span class="keyword">function</span>(<span class="params">item</span>)</span>&#123;</span><br><span class="line">                <span class="keyword">return</span> &#123;</span><br><span class="line">                    label:item.textContent,</span><br><span class="line">                    pending:<span class="literal">false</span>,</span><br><span class="line">                    amount:&#123;</span><br><span class="line">                        value:<span class="built_in">String</span>(pricePerItem),</span><br><span class="line">                        currency:<span class="string">'USD'</span></span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;),</span><br><span class="line">            shippingOptions:[&#123;</span><br><span class="line">                id:<span class="string">'ground'</span>,</span><br><span class="line">                label:<span class="string">'Ground Shipping'</span>,</span><br><span class="line">                selected:<span class="literal">true</span>,</span><br><span class="line">                amount:&#123;</span><br><span class="line">                    value:<span class="string">'0.00'</span>,</span><br><span class="line">                    currency:<span class="string">'USD'</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;]</span><br><span class="line">        &#125;;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> options = &#123;</span><br><span class="line">            requestPayerName:<span class="literal">true</span>,</span><br><span class="line">            requestShipping:<span class="literal">true</span></span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">const</span> paymentRequest = <span class="keyword">new</span> PaymentRequest([method],details,options);</span><br><span class="line">    </span><br><span class="line">        paymentRequest.show().then(<span class="function">(<span class="params">response</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="comment">//do some thing</span></span><br><span class="line">            <span class="comment">//处理支付 response</span></span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce0ac37a23?w=1498&amp;h=1122&amp;f=png&amp;s=940083" alt="webpay"></p>
+<h2 id="离线网页-Service-Worker"><a href="#离线网页-Service-Worker" class="headerlink" title="离线网页 Service Worker"></a>离线网页 Service Worker</h2><p>Service Worker 是当下炙手可热的渐进式网页技术 PWA ( Progressive Web App) 中的很重要的一环，赋予渐进式网页离线运行与更新的能力，本来由 Google 提出，苹果已经在 iOS 11.3 的版本进行了跟进和支持，关于 PWA 的内容可以搜到太多，这里就不详细讲了。</p>
+<p>Service Worker 这种技术能带给网页离线访问的体验 Great offline experience，主要是通过向浏览器注册安装事件，从而引导内核在后台把网页所需要的 HTML/JS/CSS/IMG 等静态资源安装到本地，并且在网页生命周期之外，浏览器内核维持本地资源的更新频次，并且提供了请求拦截，凡是命中本地资源或数据的请求，都将优先返回本地缓存，不发起网络，从而做到离线使用</p>
+<p>这里介绍一篇更详细介绍 Service Worker 的文章，<a href="https://juejin.im/post/599163316fb9a03c3c14d751" target="_blank" rel="noopener">(译)理解 Service Workers</a></p>
+<h2 id="iPad的全屏模式-Fullscreen-API-on-iPad"><a href="#iPad的全屏模式-Fullscreen-API-on-iPad" class="headerlink" title="iPad的全屏模式 Fullscreen API on iPad"></a>iPad的全屏模式 Fullscreen API on iPad</h2><p>之前 HTML 的全屏模式 API 在 iPad 是不支持的，现在可以正确的在 iPad 上生效了，并且提供了2个额外的 CSS 属性，来控制全屏模式下，关闭按钮的隐藏。</p>
+<h2 id="Safari下的AR-AR-Quick-Look-Safari"><a href="#Safari下的AR-AR-Quick-Look-Safari" class="headerlink" title="Safari下的AR  AR Quick Look + Safari"></a>Safari下的AR  AR Quick Look + Safari</h2><p>本届 WWDC 重点介绍了 ARKit2.0 ，现在通过 Safari 也能够体验 AR了！</p>
+<p>USDZ 是一种苹果ARKit的新模型格式，在 ARKit 的相关 Session 中有详细的介绍，现在 Safari 也能在浏览器中以 AR 的形式，展示这种模型了。现在已经升级 iOS12 的朋友可以直接用 Safari 打开下面的链接，你就可以立刻体验到浏览器中的 AR </p>
+<p><a href="https://developer.apple.com/arkit/gallery/" target="_blank" rel="noopener">AR Quick Look Gallery</a></p>
+<p>代码非常简单，只需要写个 A 标签，加上一个属性 rel = ‘ar’ ，href指向 usdz 文件即可，感觉AR模型放置类的 APP 可以彻底被淘汰了，这么简短的3行 html 就能代替掉所有 AR 放置类 App。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;a rel=&quot;ar&quot; href=&quot;myfile.usdz&quot;&gt;</span><br><span class="line">    &lt;img src=&quot;myimagefallback.jpg&quot;&gt;</span><br><span class="line">&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+<h2 id="手表上的WebKit"><a href="#手表上的WebKit" class="headerlink" title="手表上的WebKit"></a>手表上的WebKit</h2><p>现在 WebKit 已经被移植到 watchOS 上了，可以在手表上打开网页了</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/6/10/163e56ce4c6cea20?w=1642&amp;h=1388&amp;f=png&amp;s=1152590" alt="watchos"></p>
+<h1 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h1><p>总的来说这场 Session 主要还是为 web 开发者准备的，全面增强了 Safari 在各方面的能力。不过需要补充一点的是。好多新的功能都是 W3C 标准，JS API or CSS 属性之类的，我在文中都有提到，苹果在 Safari 中对这些标准进行了跟进与实现。其实，好多功能都是已经在 iOS 11.3 的版本中发布了的，只不过拿到了本次大会来一起进行说明。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FrontEnd/" rel="tag"># FrontEnd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/08/libstdc-inxcode10ios12/" rel="next" title="libstdc++适配Xcode10与iOS12">
+                <i class="fa fa-chevron-left"></i> libstdc++适配Xcode10与iOS12
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/23/React-Native-at-Airbnb-translate/" rel="prev" title="【译】 Airbnb 的 ReactNative 尝试">
+                【译】 Airbnb 的 ReactNative 尝试 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#安全-Security"><span class="nav-number">1.</span> <span class="nav-text">安全 Security</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#UIWebView废弃，迁移WKWebView"><span class="nav-number">1.1.</span> <span class="nav-text">UIWebView废弃，迁移WKWebView</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Safari扩展开发-Safari-Extensions"><span class="nav-number">1.2.</span> <span class="nav-text">Safari扩展开发 Safari Extensions</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子资源完整性校验-Subresource-Integrity"><span class="nav-number">1.3.</span> <span class="nav-text">子资源完整性校验 Subresource Integrity</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#智能防追踪-Intelligent-Tracking-Prevention"><span class="nav-number">1.4.</span> <span class="nav-text">智能防追踪 Intelligent Tracking Prevention</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自动生成强密码-Automatic-Strong-Passwords"><span class="nav-number">1.5.</span> <span class="nav-text">自动生成强密码 Automatic Strong Passwords</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#短信验证码自动填充-Security-Code-AutoFill"><span class="nav-number">1.6.</span> <span class="nav-text">短信验证码自动填充 Security Code AutoFill</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#性能与展现-Performance"><span class="nav-number">2.</span> <span class="nav-text">性能与展现 Performance</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#字体集-Font-Collections"><span class="nav-number">2.1.</span> <span class="nav-text">字体集 Font Collections</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CCS属性-font-display-Descriptor"><span class="nav-number">2.2.</span> <span class="nav-text">CCS属性  font-display Descriptor</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Image标签中播放视频-Videos-in-image-elements"><span class="nav-number">2.3.</span> <span class="nav-text">Image标签中播放视频 Videos in image elements</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#被动事件监听-Passive-Event-Listeners"><span class="nav-number">2.4.</span> <span class="nav-text">被动事件监听 Passive Event Listeners</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#异步图片解码-Async-image-decoding"><span class="nav-number">2.5.</span> <span class="nav-text">异步图片解码 Async image decoding</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#支持-Beacon-API"><span class="nav-number">2.6.</span> <span class="nav-text">支持 Beacon API</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#丰富的交互体验-Rich-Experience"><span class="nav-number">3.</span> <span class="nav-text">丰富的交互体验 Rich Experience</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拖放交互-Drag-and-drop"><span class="nav-number">3.1.</span> <span class="nav-text">拖放交互 Drag and drop</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#苹果支付-Payment-Request-API-Apple-Pay"><span class="nav-number">3.2.</span> <span class="nav-text">苹果支付 Payment Request API + Apple Pay</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#离线网页-Service-Worker"><span class="nav-number">3.3.</span> <span class="nav-text">离线网页 Service Worker</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#iPad的全屏模式-Fullscreen-API-on-iPad"><span class="nav-number">3.4.</span> <span class="nav-text">iPad的全屏模式 Fullscreen API on iPad</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Safari下的AR-AR-Quick-Look-Safari"><span class="nav-number">3.5.</span> <span class="nav-text">Safari下的AR  AR Quick Look + Safari</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#手表上的WebKit"><span class="nav-number">3.6.</span> <span class="nav-text">手表上的WebKit</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'WWDC2018 Safari与WebKit的新特性', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

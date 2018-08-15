@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Medium 原文 Sunsetting React Native  由于很多技术上以及组织架构上的问题，我们（Airbnb）决定全面下线 ReactNative ，会把所有的研发精力都投入到让 Native 原生开发上，希望原生效果更加完美，令人惊艳。   这是我们一系列文章中的第四篇，整个系列文章打算重点介绍我们在 React Native 方面的经验以及Airbnb 的移动端 App 下一">
+<meta name="keywords" content="Hybrid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="【译】 Airbnb 下线 ReactNative">
+<meta property="og:url" content="http://yoursite.com/2018/06/24/Sunsetting-React-Native-translate/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="Medium 原文 Sunsetting React Native  由于很多技术上以及组织架构上的问题，我们（Airbnb）决定全面下线 ReactNative ，会把所有的研发精力都投入到让 Native 原生开发上，希望原生效果更加完美，令人惊艳。   这是我们一系列文章中的第四篇，整个系列文章打算重点介绍我们在 React Native 方面的经验以及Airbnb 的移动端 App 下一">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://diycode.b0.upaiyun.com/photo/2018/c47799d8dca187c282e46c8021bfa5d3.jpeg">
+<meta property="og:updated_time" content="2018-08-15T09:14:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="【译】 Airbnb 下线 ReactNative">
+<meta name="twitter:description" content="Medium 原文 Sunsetting React Native  由于很多技术上以及组织架构上的问题，我们（Airbnb）决定全面下线 ReactNative ，会把所有的研发精力都投入到让 Native 原生开发上，希望原生效果更加完美，令人惊艳。   这是我们一系列文章中的第四篇，整个系列文章打算重点介绍我们在 React Native 方面的经验以及Airbnb 的移动端 App 下一">
+<meta name="twitter:image" content="https://diycode.b0.upaiyun.com/photo/2018/c47799d8dca187c282e46c8021bfa5d3.jpeg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/06/24/Sunsetting-React-Native-translate/"/>
+
+
+
+
+
+  <title>【译】 Airbnb 下线 ReactNative | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/24/Sunsetting-React-Native-translate/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">【译】 Airbnb 下线 ReactNative</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-24T00:24:37+08:00">
+                2018-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/06/24/Sunsetting-React-Native-translate/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/06/24/Sunsetting-React-Native-translate/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/06/24/Sunsetting-React-Native-translate/" class="leancloud_visitors" data-flag-title="【译】 Airbnb 下线 ReactNative">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>Medium 原文 <a href="https://medium.com/airbnb-engineering/sunsetting-react-native-1868ba28e30a" target="_blank" rel="noopener">Sunsetting React Native</a></p>
+</blockquote>
+<p>由于很多技术上以及组织架构上的问题，我们（Airbnb）决定全面下线 ReactNative ，会把所有的研发精力都投入到让 Native 原生开发上，希望原生效果更加完美，令人惊艳。</p>
+<p><img src="https://diycode.b0.upaiyun.com/photo/2018/c47799d8dca187c282e46c8021bfa5d3.jpeg" alt=""></p>
+<blockquote>
+<p>这是我们一系列文章中的第四篇，整个系列文章打算重点介绍我们在 React Native 方面的经验以及Airbnb 的移动端 App 下一步该怎么走</p>
+</blockquote>
+<p>尽管很多公司和团队在项目中都使用了 ReactNative 并且在未来可预见的功能与需求中还会继续使用它，但我们最终还是无法实现我们最初定下的目标。此外，还有一些来自于技术上与团队组织上无法克服的困难，使得继续投资 ReactNative 已经变成了一个挑战。</p>
+<p>因此，我们决定向前看，我们正在下线 Airbnb 中的 ReactNative，并且把所有的这些努力都重新投资在原生开发上。</p>
+<h1 id="ReactNative-没有实现的目标"><a href="#ReactNative-没有实现的目标" class="headerlink" title="ReactNative 没有实现的目标"></a>ReactNative 没有实现的目标</h1><a id="more"></a>
+<h2 id="快速迭代"><a href="#快速迭代" class="headerlink" title="快速迭代"></a>快速迭代</h2><p>当 ReactNative 按着预期进行工作的时候，我们的研发工程师确实能够以无与伦比的速度进行功能迭代。然而我们还是发现有很多技术上或者组织上的问题，会给项目增加很大的挫败感以及带来意外的项目延期。</p>
+<h2 id="保证质量底线"><a href="#保证质量底线" class="headerlink" title="保证质量底线"></a>保证质量底线</h2><p>最近，随着 ReactNative 的逐渐成熟，我们也积累了更多的经验，以前很多做不到的事情现在都能实现。我们实现了共享元素转场，视差效果，并且能把过去丢帧的模块的性能显著提高。然而，在一些诸如初始化和异步首屏渲染等技术问题上，想达到某些预期目标很难。并且内部以及外部资源的匮乏也让事情变得更加艰难。</p>
+<h2 id="一次开发适配两-三个平台"><a href="#一次开发适配两-三个平台" class="headerlink" title="一次开发适配两/三个平台"></a>一次开发适配两/三个平台</h2><p>尽管使用 ReactNative 代码开发出来的功能，几乎就是跨平台共享的，但我们的 App 中，只有一小部分是 ReactNative 的。除此之外，还需要进行大量的桥接基础设施建设，才能让 ReactNative 的工程师能够顺利有效的进行工作。因此我们尝试在三个平台上共享代码，而不是只关注移动端2个平台。理论上我们确实看到了在 Web 上与 App 上共用几个 npm 包有很大的潜力，但我们并没有实质上的的进展。</p>
+<h2 id="提高开发体验"><a href="#提高开发体验" class="headerlink" title="提高开发体验"></a>提高开发体验</h2><p>使用 ReactNative 的开发人员的开发体验非常的混乱，不好衡量。有些方面，比如构建时间，这种动态化的热重载的开发模式要好很多。然而其他方面，比如调试就变得非常的低效。详细的细节在第二篇文章就提过了。</p>
+<h1 id="下线计划"><a href="#下线计划" class="headerlink" title="下线计划"></a>下线计划</h1><p>因为我们无法实现当初定下的目标，我们认为 ReactNative 已经不适合我们了。我们正在准备一套稳妥健康的迁移方案。我们已经停止了所有 ReactNative 的新功能开发，并且计划在今年年底完成最主要的高流量的功能模块，从 ReactNative 迁移回原生开发。这件事情也得益于有些功能模块正打算重新设计。我们的基础架构团队在2018年继续对 ReactNative 提供支持，但到了2019年将要降低支持，并着手减少一些 ReactNative 资源分配，比如 RN runtime 启动初始化资源等。</p>
+<p>在 Airbnb 我们是开源软件的坚定支持者，我们很积极的为很多全世界的开源项目做了大量贡献，并且也开源了我们在 ReactNative 上的一些工作。但由于我们已经决定下线 ReactNative ，我们也没有经历继续维护这些 ReactNative Repos 开源项目。为了能够更好的回报社区，我们决定把我们的一些 ReactNative Repos 开源项目，迁移到 react-native-community 社区。我们已经开始迁移 react-native-maps 这个项目，并且未来也会逐渐迁移  native-navigation 和 lottie-react-native 这两个项目。</p>
+<h1 id="ReactNative-也不是所有人都觉得很差"><a href="#ReactNative-也不是所有人都觉得很差" class="headerlink" title="ReactNative 也不是所有人都觉得很差"></a>ReactNative 也不是所有人都觉得很差</h1><p>尽管 ReactNative 达不到我们的目标，但使用 ReactNative 的人中也有很多人持肯定态度：</p>
+<ul>
+<li>60％的人觉得他们使用 ReactNative 的经历十分的美妙，十分肯定。</li>
+<li>20％的人觉得他们使用 ReactNative 的经历还是不错的，略微肯定。</li>
+<li>15％的人觉得他们使用 ReactNative 的经历不太好，略微否定。</li>
+<li>5％的人觉得他们使用 ReactNative 的经历非常的难受，强烈否定。</li>
+</ul>
+<h1 id="ReactNative-还在发展成熟"><a href="#ReactNative-还在发展成熟" class="headerlink" title="ReactNative 还在发展成熟"></a>ReactNative 还在发展成熟</h1><p>我们发的这一系列 5 篇文章，反映了我们今天使用 ReactNative 的经验，但包括 Facebook 在内，并且还有更多的 ReactNative 社区，都在致力于让 ReactNative 实现更好更强大的混合开发体验。ReactNative 也在以前所未有的速度更快的发展着，仅去年就有 2500 次提交。并且 Facebook 刚宣布他们正在解决我们曾经遇到过的这些技术难题。即使我们不在使用 ReactNative ，我们还是很高兴能持续关注  ReactNative 的发展。因为 ReactNative 这项技术实实在在为全世界使用我们产品的人们带来过收益。</p>
+<h1 id="其他要说的"><a href="#其他要说的" class="headerlink" title="其他要说的"></a>其他要说的</h1><p>我们将 ReactNative 整合到现有的大型 App 项目中去，还保持着很快的迭代速度。在这过程中遇到的很多问题其实是由于我们采用的这种混合的开发模式导致的。并且由于我们的公司规模，可以让我们去解决一些对小公司来说没有时间解决的相关技术难题。这种混合开发的模式下，让 ReactNative 与原生无缝协作与融合在一起是绝对可行的，但也是一项很有挑战的事情。每个使用 ReactNative 的公司都有他们自己的使用体验，这取决于他们的团队组成，现有 App 架构，产品需求，以及使用的 ReactNative 的版本成熟度等因素。</p>
+<p>也许有一天 ReactNative 这个技术发展了，有了很多新的功能，有了更快的迭代速度，有了更稳定的质量，更好的开发者体验，甚至是满足了我们大家所有的目标与期望。有时候会有一种我们正处在移动开发这个行业正在发生变革的边缘的感觉。这些技术发展相关的感受其实十分令人激动与兴奋，但现在我们权衡了这些积极感受与业务痛点以及当前需求资源的平衡，我们还是觉得 ReactNative 不适合我们了。</p>
+<p>决定是否使用新框架是一个重大决定，完全取决于您的团队独有的因素。我们的经历和选择放弃的原因可能不适用于您的团队。事实上，许多公司今天仍在继续成功使用它，它可能仍然是许多公司的最佳选择。</p>
+<p>尽管我们从未停止对原生开发的投入，但下线 ReactNative 还是可以释放出很多资源来让原生开发做的更好，可以阅读下一篇文章，来看看我们将在原生开发上，投入哪些新的东西。</p>
+<h1 id="文章索引"><a href="#文章索引" class="headerlink" title="文章索引"></a>文章索引</h1><ul>
+<li><a href="https://xiaozhuanlan.com/topic/4528071963" target="_blank" rel="noopener">Part 1：Airbnb 的 ReactNative 尝试</a></li>
+<li><a href="https://xiaozhuanlan.com/topic/8914057326" target="_blank" rel="noopener">Part 2：Airbnb 使用 React Native 的技术细节</a></li>
+<li><a href="https://xiaozhuanlan.com/topic/1468720539" target="_blank" rel="noopener">Part 3：打造一个跨平台开发的团队</a></li>
+<li><a href="https://medium.com/airbnb-engineering/sunsetting-react-native-1868ba28e30a" target="_blank" rel="noopener">Part 4：Airbnb 下线 ReactNative </a></li>
+<li><a href="https://xiaozhuanlan.com/topic/2740163985" target="_blank" rel="noopener">Part 5：Airbnb 在移动端的下一步计划 - 把最好的带回原生</a></li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/23/React-Native-at-Airbnb-translate/" rel="next" title="【译】 Airbnb 的 ReactNative 尝试">
+                <i class="fa fa-chevron-left"></i> 【译】 Airbnb 的 ReactNative 尝试
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/08/15/interview-suggestion/" rel="prev" title="面试中的个人竞争力">
+                面试中的个人竞争力 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-没有实现的目标"><span class="nav-number">1.</span> <span class="nav-text">ReactNative 没有实现的目标</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#快速迭代"><span class="nav-number">1.1.</span> <span class="nav-text">快速迭代</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#保证质量底线"><span class="nav-number">1.2.</span> <span class="nav-text">保证质量底线</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一次开发适配两-三个平台"><span class="nav-number">1.3.</span> <span class="nav-text">一次开发适配两/三个平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#提高开发体验"><span class="nav-number">1.4.</span> <span class="nav-text">提高开发体验</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#下线计划"><span class="nav-number">2.</span> <span class="nav-text">下线计划</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-也不是所有人都觉得很差"><span class="nav-number">3.</span> <span class="nav-text">ReactNative 也不是所有人都觉得很差</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-还在发展成熟"><span class="nav-number">4.</span> <span class="nav-text">ReactNative 还在发展成熟</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他要说的"><span class="nav-number">5.</span> <span class="nav-text">其他要说的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#文章索引"><span class="nav-number">6.</span> <span class="nav-text">文章索引</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '【译】 Airbnb 下线 ReactNative', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

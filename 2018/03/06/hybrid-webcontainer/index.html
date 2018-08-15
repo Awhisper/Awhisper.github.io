@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="从零收拾一个hybrid容器（一）– 从选择JS通信方案开始  上一篇文章介绍了如果自己亲自开发一个hybrid容器，应该怎么去选择JS通信方案，并且重点强调了现在市面上流传最广的WebViewJavascriptBridge 他存在的致命问题，以及不应该因为所谓的看似写法统一而在api选型上做功能妥协的思想  前言这篇文章拖到年后才开始写是有点罪过罪过，不过在写之前我想说几点，这系列文章我想表达">
+<meta name="keywords" content="Hybrid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路">
+<meta property="og:url" content="http://yoursite.com/2018/03/06/hybrid-webcontainer/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="从零收拾一个hybrid容器（一）– 从选择JS通信方案开始  上一篇文章介绍了如果自己亲自开发一个hybrid容器，应该怎么去选择JS通信方案，并且重点强调了现在市面上流传最广的WebViewJavascriptBridge 他存在的致命问题，以及不应该因为所谓的看似写法统一而在api选型上做功能妥协的思想  前言这篇文章拖到年后才开始写是有点罪过罪过，不过在写之前我想说几点，这系列文章我想表达">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-27T10:36:24.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路">
+<meta name="twitter:description" content="从零收拾一个hybrid容器（一）– 从选择JS通信方案开始  上一篇文章介绍了如果自己亲自开发一个hybrid容器，应该怎么去选择JS通信方案，并且重点强调了现在市面上流传最广的WebViewJavascriptBridge 他存在的致命问题，以及不应该因为所谓的看似写法统一而在api选型上做功能妥协的思想  前言这篇文章拖到年后才开始写是有点罪过罪过，不过在写之前我想说几点，这系列文章我想表达">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/03/06/hybrid-webcontainer/"/>
+
+
+
+
+
+  <title>从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/06/hybrid-webcontainer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-06T12:06:51+08:00">
+                2018-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/03/06/hybrid-webcontainer/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/03/06/hybrid-webcontainer/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/03/06/hybrid-webcontainer/" class="leancloud_visitors" data-flag-title="从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://awhisper.github.io/2018/01/02/hybrid-jscomunication/" target="_blank" rel="noopener">从零收拾一个hybrid容器（一）– 从选择JS通信方案开始</a></p>
+<blockquote>
+<p>上一篇文章介绍了如果自己亲自开发一个hybrid容器，应该怎么去选择JS通信方案，并且重点强调了现在市面上流传最广的<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a> 他存在的致命问题，以及不应该因为所谓的看似写法统一而在api选型上做功能妥协的思想</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这篇文章拖到年后才开始写是有点罪过罪过，不过在写之前我想说几点，这系列文章我想表达的并不是在推广什么我自己的新Bridge轮子，也不是针对某个开源 Bridge 框架进行深度的源码分析。我们从看开源框架轮子如何设计，如何使用，源码如何工作的思维方式中跳出来，换一种模式去从目的出发，从需求出发，思考当你什么都没有的时候，你要从零思考构建一个 hybrid 框架的时候，你都要考虑哪些方面？这些方面采用怎样的设计思想能做到未来在使用中灵活自如。</p>
+<p>单纯去做一个纯hybrid通信框架，网上有的各类 bridge 轮子，但是通信只是 hybrid 这个话题下的一个底层基础，上层的玩法还有很多，跳出通信框架看看现在各种前端+客户端的混合开发模式下，他们是否有啥共通点，然后汲取里面的设计思想，然后灵活的在自己业务中发挥出来，这样你面临的就从来不是一个选择题，我要不要用RN？我要不要用新玩具 Flutter？（这玩意槽点很多也离我这篇文章的主题有点远，我就提一嘴不打算多说）你面临的只是一个问答题：新出来个重型大轮子，我能不能看看这个思想借鉴到现有业务里的？</p>
+<h1 id="Hybrid"><a href="#Hybrid" class="headerlink" title="Hybrid"></a>Hybrid</h1><blockquote>
+<p><strong>狭义Hybrid</strong></p>
+<p>也是现在大家普遍认知的，Hybrid就是一种给 WebView 增加一些js通信可以调用原生API的方式</p>
+<p><strong>广义Hybrid</strong></p>
+<p>我能否认为，只要是前端的开发思路与客户端原生的开发思路相结合，就认为他是一种 Hybrid？</p>
+<p>我能否认为，通过原生的配合，把原本js or 前端开发做不到的事情做到了，用原生的方式增强了原本的前端技术能力，是否就是一种 Hybrid？</p>
+<p>我能否认为，无论是 WebView+Bridge 也好，RN类似的原生渲染框架也好，小程序也好，某种意义上讲，他们都算 Hybrid？</p>
+</blockquote>
+<p>因为Hybrid本是一个面向业务服务的东西，如果业务的野心足够大，WebView 容器的想象空间应该是在能力上与RN/小程序看齐的，没错，WebView 在 Hybrid 的支持下，不单纯是设计几个 Bridge 调用几个原生 API 的事，我其实在不少聊天群里深度聊过这个话题，泛前端动态化这个方向上，各种技术轮子都是一脉相承通着的，所以你看RN or 小程序是一个大厂新做的重型轮子？在我看来他们都是一回事，完全可以拆解RN中的每个环节，把RN号称比 WebView 好的原生渲染/原生组件拆解融入 WebView，我也可以学习小程序保持 Html/CSS/JS 的开发方式（当然我知道小程序是WXML/WXSS），而非RN那样统一用JSX开发。我甚至还能把RN与小程序都没有的动态bridge融入到Hybrid容器中去，What’s more? 还有更多可以开放的脑洞。</p>
+<p>这种拆解不是说可以做到把所有框架优点塞在一个大而全的框架里就完事的，各种优化方案的选择背后一定带来的是一些取舍。谁来决定取舍，业务决定，如果自己能深度把握这里面的设计思想，就不用在乎什么新的轮子新的框架，取其设计优点（优点一定带来取舍，如果选择这个有点意味着也要选择他的取舍），融入自己的业务之中。</p>
+<h1 id="WebView容器-基本功能"><a href="#WebView容器-基本功能" class="headerlink" title="WebView容器 - 基本功能"></a>WebView容器 - 基本功能</h1><p>前边把话题聊得有点大，有点虚，那么收回来，我后面的内容还是围绕着 WebView 来设计我们想要的 Hybrid 框架，本系列第二篇文章我会传统点，先只从传统的对 WebView 容器上的功能需求出发说一些基本的功能的设计方案与思路，但是第三篇就会从一些“黑脑洞”的功能层面，在 WebView 的基础上扩展出一些非常规的能力。本文就基于 WKWebView 说了，UIWebView 如果说真理解设计思想的话，其实没区别，同理虽然我所有的解释说明都是 iOS 的，但对于安卓来说设计思想完全适用。</p>
+<blockquote>
+<ul>
+<li>选择合适的 JS 通信方案（第一篇）</li>
+<li>实现基本的 WebView 容器能力（第二篇 本篇）</li>
+<li>尝试拓展 WebView 容器的额外能力（第三篇 待续）</li>
+</ul>
+</blockquote>
+<p>一个标准的WebView容器要具备哪些基础的功能需求，来满足常规的 hybrid-webview 开发呢？</p>
+<ul>
+<li>良好的 JS 与原生通信交互能力</li>
+<li>灵活的业务模块扩展能力</li>
+<li>UserAgent 管理</li>
+<li>Cookies 管理</li>
+<li>本地加载 JS 管理</li>
+</ul>
+<h2 id="通信交互设计"><a href="#通信交互设计" class="headerlink" title="通信交互设计"></a>通信交互设计</h2><a id="more"></a>
+<blockquote>
+<p>上一篇文章其实介绍了好几种JS/OC通信方案，如果涉及相关的代码，我只会以WKWebView的 <code>messageHandler(异步)</code> + <code>prompt弹框拦截(同步)</code> + <code>evaluatingJavaScript</code> 的方式进行一些展示代码介绍，但其实用啥方案并无区别，思考理解设计思路，然后在任何的通信方案下迁移运用</p>
+<p>我说的只是一种设计思路，并不是唯一设计思路</p>
+</blockquote>
+<p>一个好的交互通信设计应该考虑哪几个方面？这几个方面的考虑都是出于什么目的？</p>
+<ul>
+<li>JS主动调用原生：</li>
+</ul>
+<p>最基础功能，WebView 各种想要调用原生能力都通过这个设计来通知原生，无论是打开新页面新路由，还是弹个 Tips 框，还是执行 IAP 购买，还是打开摄像头等等。</p>
+<ul>
+<li>JS主动调用原生后回调：</li>
+</ul>
+<p>还是在基础功能之上，如果 WebView 是想要获取一些只有原生才有的数据，比如读原生数据库，查看原生设备网络/磁盘等硬件状况，需要在上面的功能下还额外回调给 WebView</p>
+<ul>
+<li>原生主动调用JS：</li>
+</ul>
+<p>有什么业务场景需要原生主动调用JS呢？举个例子H5开发的时候特别想知道很多事件与时机，比如在H5界面下用户home/锁屏了，用户回到 APP 了，H5都想捕获这个时机用来开发业务需求，比如App开发的 <code>viewWillDisappear</code> /<code>viewDidAppear</code> 等前端开发也想获得当前页面进入屏幕，离开屏幕等事件需求，从而执行对应的业务逻辑。</p>
+<p>和主动调用后回调相比，直接主动调用JS，在底层执行 API 的时候肯定一样都是 <code>evaluatingJavaScript</code> 但毕竟代表着2种功能形式与场景，因此在设计思想上也会带来一定差异。</p>
+<ul>
+<li>原生主动调用JS后回调：</li>
+</ul>
+<p>在原生的事件发起后如果不仅仅想要通知JS，并且还希望从JS获取数据，那么就需要直接封装好回调（总好过，先通过原生主动调用JS，在通过JS主动调用回原生传递数据，这样方便的多）</p>
+<ul>
+<li>同步通信</li>
+</ul>
+<p>在上一篇文章中我提出过同步返回对于JS的意义，同样的代码如果能用 = 直接在JS中同步+顺序的方式处理数据，则开发复杂度会远低于异步callback式的设计（哪怕异步callback可以被封装成promise，但其方便程度，也远远没法和 = 同步返回对比）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步JS调用Native  JS这边可以直接写 =  !!!</span></span><br><span class="line"><span class="keyword">var</span> nativeNetStatus = nativeObject.getNetStatus();</span><br><span class="line"><span class="comment">//异步JS调用Native JS只能这么写</span></span><br><span class="line">nativeObject.getNetSatus(callback(net)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(net)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通信编码：</li>
+</ul>
+<p>JS与OC，在运行环境上毕竟是差异很大的2个环境，相互之间进行通信，一定是按着一定的通信协议来进行的，在协议的处理过程中一定伴随着通信编码，在一个 WebView 容器体系下，通信编码也需要注意很多细节，从而保证数据传输过程中的健壮性。</p>
+<blockquote>
+<p>上面介绍的四块后面会有针对性的伴随着代码示例进行详解</p>
+<p>接下来也会介绍一些有一定的设计价值，但不一定要必备，可选的两个功能，我就不深入详解了</p>
+</blockquote>
+<ul>
+<li>鉴权设计（可选）：</li>
+</ul>
+<p>App 内打开 WebView 的时候，这么多原生能力都提供给了网页端，但网页端是否都是可信并且安全的呢，虽然鉴权设计视业务需求而定，可以做的相对简单，也可以做的复杂一些，是可选的。</p>
+<p>简单的做那么就是广告类的页面一律用常规 WebView 打开，只有自己业务所在域名的网页，才会用带有 Hybrid 能力的WebView进行打开，并且所有 Bridge 通信在执行前先检查判断所在域名是否合法，只有自己业务域名下的网页，才允许bridge通信，其他的一律拒绝。</p>
+<p>想要做复杂点？其实微信服务号就是一个典型的例子，所有微信服务号JSSDK提供的能力，其实都是微信 WebView 的 Hybrid 能力，但你如果想调用你必须配置 AppId 与 AppSecret ，然后在 JSSDK 内部与微信原生内部进行权限认证功能的开发，这我就不深入展开了，一般业务也用不到，只是这个环节我扩展提一下，如果想做复杂也是有必要并且有业务场景的。</p>
+<ul>
+<li>批量发送（可选）：</li>
+</ul>
+<p>JS与OC通信，必然面临着上下文通信开销，开销试通信频繁次数而定，大部分的传统 Hybrid WebView 设计，不太需要考虑这一点，因此无需专门设计批量发送，但如果特殊的业务需求导致必须频繁通信，那么批量发送通过加大数据吞吐量减少通信次数，从而减小上下文通信开销，这一个环节也是要考虑，但是可选的。</p>
+<p>就像我说的一般来说用不上，常规 Hybrid WebView 开发里那通信调用频率，一点压力都没有，但什么时候会用上呢？</p>
+<p>如果还记得我上篇文章说过的 JS与OC 假跳转方式的通信会吃消息？那么如果你真的在处理 UIWebView 的时候坚持想使用假跳转，那么吃消息这个事情怎么解决呢？没错，队列批量发送，所有JS的通信在发起调用的时候都暂存进入一个数组队列，全局起 timer 心跳，以不会吃消息的频次大约300ms一次，检测消息队列是否含有内容，然后通过合并消息，一次通信发送给客户端。</p>
+<p>RN也是有批量发送功能的，可以关注一下 RN 的 RCTBatchBridge 这个类，RN为什么需要批量消息队列呢？RN并不是假跳转的方式通信，而是最稳健功能强大的 JSContext，根本不会发生丢消息的问题，但RN依然选择了批量通信发送，是因为RN不同于WebView，RN 的渲染层依赖 JS 告知原生进行组件贴图，那么多界面元素，每次Dom变化，都可能带来的复杂高频次渲染消息的发出，因此 RN 整体设计了批量发送功能，思路也是一致，在 JS 这边每次执行通信，都暂存在队列，然后以心跳方式 flush 整个队列。 WebView的渲染都在 WebKit 内核里，其实浏览器内核也面临所谓的 Dom 环境与 JS 环境的通信，但这个已经在内核里深度优化了，我们就先不管啦，WebView的渲染涉及的高频词通信，完全不在我们的 Hybrid 框架设计的考虑范围内（前面我说过了一个脑洞，让WebView也像RN一样可以渲染原生贴图，那么批量发送就应该在考虑范围内了）</p>
+<h3 id="详细设计思路-—-JS-Call-OC-无回调"><a href="#详细设计思路-—-JS-Call-OC-无回调" class="headerlink" title="详细设计思路 — JS Call OC 无回调"></a>详细设计思路 — JS Call OC 无回调</h3><blockquote>
+<p>声明：我会沿着思路一步步给出示例代码，会随着思路推翻或者修正前面给出过的示例代码</p>
+</blockquote>
+<p><strong>JS 发送消息</strong></p>
+<p>首先在 JS 侧我们把每一个调用原生的消息对象设计一下都需要涵盖什么内容？先只考虑 JS Call OC 无回调</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> msgBody = &#123;&#125;;</span><br><span class="line">msgBody.handler = <span class="string">'common'</span>;</span><br><span class="line">msgBody.action = <span class="string">'nativeLog'</span>;</span><br><span class="line">msgBody.params = params; <span class="comment">//任意json对象，用于传参.</span></span><br></pre></td></tr></table></figure>
+<p>非得设计这几个字段目的是啥？ handler 和 action 其实主要是给每一条通信消息确定唯一的名字，params用于数据传参。</p>
+<p>有的人说想要唯一识别每条消息，用一个 name 字段，或者干脆用个消息号数字就好了，反正发到客户端，客户端还得一一识别然后无论是注册式分发执行或是switch式分发执行。没错，所以我说了，并不是唯一设计思路，都可以灵活根据自己的业务与想法任意调整。</p>
+<p>我为什么用2个呢？主要的原因在于想对大量的通信消息有一个整理，对于相近相似可以归类的消息，先用  handler 来命名消息所在的模块，在用 action 来命名消息的具体名字，好处是未来在进行模块化扩展，无论是在 JS 侧，还是在 OC 侧，都可以根据模块名，把大量的消息处理代码，分割到不同模块的代码类之中去，还是本着模块扩展与管理的想法，来把消息体用 handler 和 action 2个字段来进行描述</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">sendMessage: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isIOS) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">window</span>.webkit.messageHandlers.WKJSBridge.postMessage(data);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error native message'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isAndroid) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            prompt(<span class="built_in">JSON</span>.stringify([data]));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error native message'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>定义完消息体我们就需要进行通信了，这个函数其实就是抽象出一层消息发送层，将我们刚刚创建的消息体，当做 data 传入 sendMessage 函数，这就是我在第一篇文章中提到的发送层来隔离平台差异以及通信 API 差异，不要为了追求所谓的前端代码统一来选择一个有天生缺陷的<code>假跳转通信</code>，就算选择完全不一样的通信方式，设计这样一个中间层，一样可以做到前端 JS 代码的统一</p>
+<p>从扩展性的角度来讲，如果未来苹果可能出了更新更好的 API ，安卓也有通信 API 的调整，直接处理这个中间层就好了，别管是分平台适配，分安卓/iOS系统版本号适配，甚至同时兼容UIWebView/WKWebView，计算机领域里没有什么问题不是加一个中间层解决不了的（笑~）</p>
+<p>如果以后打算扩展 <code>批量消息，通信队列</code>，那么其实也是一样的思路，设计一个 sendBatchMessage的Api</p>
+<p><strong>通信编码</strong></p>
+<p>因为本文采用的是 WKWebView 的 messageHandler 方法，在 JS Call OC 的时候会自动处理编码序列化与解码反序列化，所以你可以看到 isIOS 分支没有任何额外处理，就直接 Call 了，但咱们既然讲思路，那也得看看需要手动处理通信编码的场景。（UIWebView 的 JSContext 通信同理，可以传递对象，系统自动处理）</p>
+<p>android 的 prompt 通信，prompt() 函数本来就是浏览器弹出一个输入框，输出一串字符串，所以只接受纯字符输入，那么编码方式就简单了，直接把 data 的 json 对象，用 JS 的 json序列化变成 json 字符串输出，等客户端收到拦截后把 json 字符串，反序列化成字典对象，(WKWebView如果也采用弹框拦截，同理)</p>
+<p>UIWebView假跳转方式通信，因为假跳转本意是跳转到一个非法url，自然数据传递必须依靠url的参数规则去定制协议去拼接，那么就得拼接成类似 xxx:xxx/xxx?handler=xx&amp;action=xx&amp;params=”json string” 的url，然后在客户端拦截到url后，按着同样的规则反解</p>
+<p>通信编码问题，会根据通信方案的选取/通信协议的设计，有着截然不同实现与方案，以及各自面临的坑和问题。带着一个准则，无论最终采用了什么样的数据协议设计，JS 怎么编码的，OC 怎么反向解码还原，就一定没问题，一定能解决。（就拿假跳转来说，当你跳进 encodeURIComponent 与 UrlEncode 的坑里的时候，一旦数据结构复杂起来，那就有的玩了，稍有不慎，可能编解码中间就出现歧义了就得踩坑了，不过这种事情不是啥大问题，最终一定能解决就是了）</p>
+<p><strong>OC接收消息</strong></p>
+<blockquote>
+<p>需要提前介绍一下我会在OC端设计几种对象，后面还会在灵活扩展的环节详细解释</p>
+<p>消息体对象：包含单次消息的所有信息</p>
+<p>bridge对象：我的 Hybrid WebView 设计理念是组合，而不是继承，因此我设计的不是一个 XXWebView / XXWebViewController 基类，使用者不需要在业务代码中使用 WebView 必须从我这里继承。我设计的是一个 NSObject 的 bridge 对象，使用者只需要跟自己业务中用的任意一种 WKWebView 的业务自己的类进行绑定，就可以拥有 Hybrid 的能力</p>
+<p>业务web对象：业务方的 webview 对象 or webviewVC对象，业务方可以自由写自己的代码，规划自己的基类，不受任何限制，绑上bridge后，可以调用 bridge api</p>
+</blockquote>
+<p>首先我们在OC也定义一个消息体对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@interface msgObject : NSObject</span><br><span class="line">    </span><br><span class="line">@property (nonatomic, copy, readonly) NSString * handler;</span><br><span class="line">@property (nonatomic, copy, readonly) NSString * action;</span><br><span class="line">@property (nonatomic, copy, readonly) NSDictionary * parameters;</span><br><span class="line"></span><br><span class="line">- (instancetype)initWithDictionary:(NSDictionary *)dict;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>然后我们这里设计一套 block 注册式的消息体处理函数管理（放弃if else / switch 式的消息分发吧，哈哈），因为消息体是 handler / action 2层定义，所以 handlerMap 是个二维字典</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">// 这段代码属于 bridge 对象</span><br><span class="line">// self.handlerMap 是 bridge对象的内部字典属性，保存着所有外部注册的各种通信的处理block代码</span><br><span class="line"></span><br><span class="line">-(void)registerHandler:(NSString *)handlerName Action:(NSString *)actionName handler:(HandlerBlock)handler&#123;</span><br><span class="line">    if (handlerName &amp;&amp; actionName &amp;&amp; handler) &#123;</span><br><span class="line">        NSMutableDictionary *handlerDic = [self.handlerMap objectForKey:handlerName];</span><br><span class="line">        if (!handlerDic) &#123;</span><br><span class="line">            handlerDic = [[NSMutableDictionary alloc]init];</span><br><span class="line">        &#125;</span><br><span class="line">        [self.handlerMap setObject:handlerDic forKey:handlerName];</span><br><span class="line">        [handlerDic setObject:handler forKey:actionName];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)removeHandler:(NSString *)handlerName&#123;</span><br><span class="line">    if (handlerName) &#123;</span><br><span class="line">        [self.handlerMap removeObjectForKey:handlerName];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有了这样的注册机制，我们注册一个 OC 接受 JS 消息体的处理代码，业务在任意 webview 类 or vc 类中，可以调用我提供的注册 api 来实现业务的 消息体处理代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 这段代码属于 业务web 对象</span><br><span class="line">// 业务在任意 webview类 or vc 类中，可以调用我提供的注册 api 来实现业务的 消息体处理代码</span><br><span class="line">[self registerHandler:@&quot;common&quot; Action:@&quot;nativeLog&quot; handler:^(msgObject *msg) &#123;</span><br><span class="line">    NSLog(@&quot;webview log : \n%@&quot;,msg)</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>这样 OC 这边的代码都已经准备就绪，只等 JS 通信到达的时候，进行消息体识别和分发，这是 messageHandler的系统 Api，基本思路就是，从 bridge 对象中的 handlerMap 字典中按着一级 handler 二级 action 二维字典取值去出注册好的执行代码block</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">-(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message&#123;</span><br><span class="line">    NSDictionary *msgBody = message.body;</span><br><span class="line">    if (msgBody) &#123;</span><br><span class="line">        msgObject *msg = [[msgObject alloc]initWithDictionary:msgBody];</span><br><span class="line">        NSDictionary *handlerDic = [self.handlerMap objectForKey:msg.handler];</span><br><span class="line">        HandlerBlock handler = [handlerDic objectForKey:msg.action];</span><br><span class="line">        handler(msg);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>通信解码</strong></p>
+<p>因为 WKWebView 的 messageHandler Api 自动处理的编码解码，此处其实直接通过 <code>NSDictionary *msgBody = message.body;</code> 一句话就直接拿到了最终消息体对象，但既然是讲编程思想，如果是安卓，如果是 iOS 但使用的不是 messageHandler 这种通信方式，自然就要在这一行代码的位置，进行手动解码，完全等同于编码的逆向操作，不做赘述了。</p>
+<p>自此，JS CALL OC 无回调，基本流程走通</p>
+<h3 id="详细设计思路-—-JS-Call-OC-回调"><a href="#详细设计思路-—-JS-Call-OC-回调" class="headerlink" title="详细设计思路 — JS Call OC 回调"></a>详细设计思路 — JS Call OC 回调</h3><p><strong>JS发送消息 声明含有回调</strong></p>
+<p>含有回调的 JS Call OC 有了回调后整个环节会更加完整，因此回调的设计得从 JS Call OC 的最初阶段就进行调整</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> msgBody = &#123;&#125;;</span><br><span class="line">msgBody.handler = <span class="string">'common'</span>;</span><br><span class="line">msgBody.action = <span class="string">'nativeLog'</span>;</span><br><span class="line">msgBody.params = params; <span class="comment">//任意json对象，用于传参.</span></span><br><span class="line"><span class="comment">//msgBody.callbackId = '';</span></span><br><span class="line"><span class="comment">//msgBody.callbackFunction = '';</span></span><br></pre></td></tr></table></figure>
+<p>对JS消息体进行改造，增加用于处理回调相关的数据字段 callbackId 与 callbackFunction</p>
+<ul>
+<li>callbackId：对每一次消息需要发起回调都会生成一个唯一ID，用来当回调发生时，找到最初的发起调用的 JS Callback </li>
+<li>callbackFunction：客户端主动 Call JS 的唯一函数入口，客户端会用这个字符串来拼接回调注入的 JS 头，一般设计下，每个消息这个值都应该不变，不过也可以灵活处理（本来这个值可以不需要传递，写死在客户端，只要前端客户端约定好，但如果这个值不写死，而由前端可控操作，那么灵活性会更大，不必担心前端大规模修改 Call JS 唯一入口的时候，还得等客户端发版）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">sendMessage: <span class="function"><span class="keyword">function</span> (<span class="params">data,callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (callback &amp;&amp; <span class="keyword">typeof</span> (callback) === <span class="string">'function'</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> callbackid = <span class="keyword">this</span>.getNextCallbackID();</span><br><span class="line">        <span class="keyword">this</span>.msgCallbackMap[callbackid] = callback;</span><br><span class="line">        params.callbackId = callbackid;</span><br><span class="line">        params.callbackFunction = <span class="string">'window.callbackDispatcher'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isIOS) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="built_in">window</span>.webkit.messageHandlers.WKJSBridge.postMessage(data);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error native message'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isAndroid) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            prompt(<span class="built_in">JSON</span>.stringify([data]));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error native message'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br><span class="line">    </span><br><span class="line">sendHaHaHaMessage(msgBody,<span class="function"><span class="keyword">function</span>(<span class="params">result</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'回调触发'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>可以看到我们着手修改 sendMessage 函数，如果在调用的时候多写了一个callback函数，那么就会认为该次通信需要回调，因此对 callbackId 与 callbackFunction 进行赋值，callbackId 是一个保证每次通信都唯一的一个id值 getNextCallbackID ，大概思路可以是用时间戳+一定程度的随机小数来进行生成，思路不深入展开了。 callbackFunction 这里我们先写 <code>window.callbackDispatcher</code> 后面会提到这个入口是怎么操作的。</p>
+<p>这里有一步最最重要的操作就是，<code>this.msgCallbackMap[callbackid] = callback;</code> 会把 JS 业务的回调函数，保存在一个全局可处理的回调字典之中，而 Key 就是这个唯一ID callbackId，这样当 OC 发起回调的时候，你才能找到对应的 JS Function</p>
+<p><strong>OC接受消息 识别处理回调</strong></p>
+<p>OC这边的消息体也得针对性进行修改，加入了 callbackID ， callbackFunction， 加入了OC类的函数回调Api</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">typedef void (^JSResponseCallback)(NSDictionary* responseData);</span><br><span class="line"></span><br><span class="line">@interface msgObject : NSObject</span><br><span class="line"></span><br><span class="line">- (instancetype)initWithDictionary:(NSDictionary *)dict;</span><br><span class="line"></span><br><span class="line">@property (nonatomic, copy, readonly) NSString * handler;</span><br><span class="line">@property (nonatomic, copy, readonly) NSString * action;</span><br><span class="line">@property (nonatomic, copy, readonly) NSDictionary * parameters;</span><br><span class="line">@property (nonatomic, copy, readonly) NSString * callbackID;</span><br><span class="line">@property (nonatomic, copy, readonly) NSString  *callbackFunction;</span><br><span class="line"></span><br><span class="line">-(void)setCallback:(JSResponseCallback)callback; //block 作为属性，保存在msgObject的.m文件里</span><br><span class="line"></span><br><span class="line">-(void)callback:(NSDictionary *)result;//在msgObject的.m文件里 调用保存在消息体里的block</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<p>所以我们继续修改 OC 这边收到 JS 消息的函数体，当判断消息体含有回调信息的时候，就会生成用于回调的 OC Block，当OC业务处理完毕，准备回调回传数据的时候使用</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">-(void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message&#123;</span><br><span class="line">    NSDictionary *msgBody = message.body;</span><br><span class="line">    if (msgBody) &#123;</span><br><span class="line">        msgObject *msg = [[msgObject alloc]initWithDictionary:msgBody];</span><br><span class="line">        NSDictionary *handlerDic = [self.handlerMap objectForKey:msg.handler];</span><br><span class="line">        HandlerBlock handler = [handlerDic objectForKey:msg.action];</span><br><span class="line">        //处理回调</span><br><span class="line">        if (msg.callbackID &amp;&amp; msg.callbackID.length &gt; 0) &#123;</span><br><span class="line">            //生成OC的回调block，输入参数是，任意字典对象的执行结果</span><br><span class="line">            JSResponseCallback callback = ^(id responseData)&#123;</span><br><span class="line">                //执行OC 主动 Call JS 的编码与通信</span><br><span class="line">                [weakSelf injectMessageFuction:callbackFunction withActionId:callbackId withParams:responseData];</span><br><span class="line">            &#125;;</span><br><span class="line">            [msg setCallback:callback];</span><br><span class="line">        &#125;</span><br><span class="line">        if (handler)&#123;</span><br><span class="line">            handler(msg);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那业务在注册 OC 消息处理函数的时候，就可以使用这个block 进行回调</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 这段代码属于 业务web 对象</span><br><span class="line">// 业务在任意 webview类 or vc 类中，可以调用我提供的注册 api 来实现业务的 消息体处理代码</span><br><span class="line">[self registerHandler:@&quot;common&quot; Action:@&quot;nativeLog&quot; handler:^(msgObject *msg) &#123;</span><br><span class="line">    NSLog(@&quot;webview log : \n%@&quot;,msg)</span><br><span class="line">    NSDictionary *result = @&#123;@&quot;result&quot;:&quot;result&quot;&#125;;</span><br><span class="line">    //回调一个key value均为 result 字符串的字典当做数据</span><br><span class="line">    [msg callback:result];</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p><strong>通信编码</strong></p>
+<p>之前说到 WKWebView 的 Api 自动处理的 JS CALL OC 的编码解码，但是 OC CALL JS 的编码解码并没有自动处理，所以我们得亲自做，这就是上面提到的 <code>injectMessageFuction:withActionId:withParams</code> 函数，介绍一下三个输入参数</p>
+<ul>
+<li>Fuction：就是前边JS 传过来的 <code>window.callbackDispatcher</code></li>
+<li>ActionId：就是前边JS 传过来的 每个消息体的唯一ID</li>
+<li>Params：就是客户端要回调的数据体，可以为空</li>
+</ul>
+<p>我们会按着下面这种方式去拼接 JS 然后用 <code>evaluateJavaScript:</code> 来注入调用JS</p>
+<p> <code>[NSString stringWithFormat:@&quot;%@(&#39;%@&#39;, &#39;%@&#39;);&quot;, msg,actionId,paramString]</code></p>
+<p>可以看到我们这么拼接出来的 JS 代码字符串其实是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.callbackDispatcher(<span class="string">'12345callbackid'</span>,<span class="string">'&#123;\'result\':\'result\'&#125;'</span>);</span><br></pre></td></tr></table></figure>
+<p>但是编码过程还是需要注意的，我们如何把字典 params 转化为 paramString，确实直接用系统API NSJSONSerialization 转一下就看起来没问题了，但这里其实存在一定的隐患。</p>
+<p>OC 主动 Call JS 的原理其实是，在客户端拼接出一段 JS 代码，但如果 params 这个数据中存在一定特殊字符比如 <code>\r \n \f</code> 等等，这些特殊字符会破坏 JS 的代码结构，打破原本的 JS 语法，这块要非常小心，尤其是你要传递大型嵌套字典数据的时候，简单的测试数据这个问题是无法暴露出来的，如果 JS 代码结构被破坏，那么所有通信 JS 的方法就失效了，所以编码这块大致代码思路可以是这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line">// 字典JSON化</span><br><span class="line">- (NSString *)_serializeMessageData:(id)message&#123;</span><br><span class="line">    if (message) &#123;</span><br><span class="line">        return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:NSJSONWritingPrettyPrinted error:nil] encoding:NSUTF8StringEncoding];</span><br><span class="line">    &#125;</span><br><span class="line">    return nil;</span><br><span class="line">&#125;</span><br><span class="line">// JSON Javascript编码处理</span><br><span class="line">- (NSString *)_transcodingJavascriptMessage:(NSString *)message</span><br><span class="line">&#123;</span><br><span class="line">    //NSLog(@&quot;dispatchMessage = %@&quot;,message);</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\\&quot; withString:@&quot;\\\\&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\&quot;&quot; withString:@&quot;\\\&quot;&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\&apos;&quot; withString:@&quot;\\\&apos;&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\n&quot; withString:@&quot;\\n&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\r&quot; withString:@&quot;\\r&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\f&quot; withString:@&quot;\\f&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\u2028&quot; withString:@&quot;\\u2028&quot;];</span><br><span class="line">    message = [message stringByReplacingOccurrencesOfString:@&quot;\u2029&quot; withString:@&quot;\\u2029&quot;];</span><br><span class="line">    </span><br><span class="line">    return message;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)injectMessageFuction:(NSString *)msg withActionId:(NSString *)actionId withParams:(NSDictionary *)params&#123;</span><br><span class="line">    if (!params) &#123;</span><br><span class="line">        params = @&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    NSString *paramsString = [self _serializeMessageData:params];</span><br><span class="line">    NSString *paramsJSString = [self _transcodingJavascriptMessage:paramsString];</span><br><span class="line">    NSString* javascriptCommand = [NSString stringWithFormat:@&quot;%@(&apos;%@&apos;, &apos;%@&apos;);&quot;, msg,actionId,paramsJSString];</span><br><span class="line">    if ([[NSThread currentThread] isMainThread]) &#123;</span><br><span class="line">        [self.webView evaluateJavaScript:javascriptCommand completionHandler:nil];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        __strong typeof(self)strongSelf = self;</span><br><span class="line">        dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [strongSelf.webView evaluateJavaScript:javascriptCommand completionHandler:nil];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>JS 接收 OC 回调 </strong></p>
+<p>上面提到了，客户端会把 callbackId callbackFuction ResultString 拼接成如下 JS 代码，注入回 WebView</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.callbackDispatcher(<span class="string">'12345callbackid'</span>,<span class="string">'&#123;\'result\':\'result\'&#125;'</span>);</span><br></pre></td></tr></table></figure>
+<p>那么前端要做的就是准备好对应的函数，在window的对象上，挂上 callbackDispatcher 这个函数，这就是为啥我一开始说 callbackFunction 写死 <code>window.callbackDispatcher</code> 的原因，客户端用这个字符串，拼出了 JS 代码，这个 JS 代码执行的时候，就刚好window下有这么一个函数接着</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">window</span>.callbackDispatcher: <span class="function"><span class="keyword">function</span> (<span class="params">callbackId, resultjson</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> handler = <span class="keyword">this</span>.msgCallbackMap[callbackId];</span><br><span class="line">    <span class="keyword">if</span> (handler &amp;&amp; <span class="keyword">typeof</span> (handler) === <span class="string">'function'</span>) &#123;</span><br><span class="line">        <span class="comment">// JSON.parse(resultjson)</span></span><br><span class="line">        <span class="built_in">console</span>.log(resultjson);</span><br><span class="line">        <span class="keyword">var</span> resultObj = resultjson ? <span class="built_in">JSON</span>.parse(resultjson) : &#123;&#125;;</span><br><span class="line">        handler(resultObj);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>当OC 已经成功回调到 JS 了，那么就用 callbackId 在刚才保存的回调字典里找到要回调的方法，然后把传过来的 resultjson 用 JS 的 JSON.parse 反序列化成字典，然后用找到的回调方法把数据传递进去</p>
+<h3 id="详细设计思路-—-OC-主动-Call-JS"><a href="#详细设计思路-—-OC-主动-Call-JS" class="headerlink" title="详细设计思路 — OC 主动 Call JS"></a>详细设计思路 — OC 主动 Call JS</h3><p> 彻底介绍完了 JS Call OC + 回调了，其实大致的思路已经说个七七八八了，再介绍OC 主动 Call JS 会简单许多，甚至真的自己沿着类似的设计思路思考捉摸一下，也能自行设计一个比较合理的方案了</p>
+<p><strong>JS 监听来自 OC 的主动消息</strong></p>
+<p>既然是容器框架代码层与业务解耦，提供监听的 Api 是一种比较好的方式，业务方会把监听事件用一个字符串来约定，比如锁屏事件约定为 <code>applicationEnterBackground</code> ，调用 API 的时候把事件字符串与事件处理函数传入，在一个全局可以管理的 eventCallMap 字典中进行存储，等待事件监听到达的时候，发起调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//监听的API</span></span><br><span class="line"><span class="built_in">window</span>.onListenEvent: <span class="function"><span class="keyword">function</span> (<span class="params">eventId, handler</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> handlerArr = <span class="keyword">this</span>.eventCallMap[eventId];</span><br><span class="line">    <span class="keyword">if</span> (handlerArr === <span class="literal">undefined</span>) &#123;</span><br><span class="line">        handlerArr = [];</span><br><span class="line">        <span class="keyword">this</span>.eventCallMap[eventId] = handlerArr;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (handler !== <span class="literal">undefined</span>) &#123;</span><br><span class="line">        handlerArr.push(handler);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>那么当某个H5页面打算使用这个监听API的时候就这么使用就好了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//业务调用该API</span></span><br><span class="line"><span class="built_in">window</span>.onListenEvent(<span class="string">'applicationEnterBackground'</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'home press'</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>刚才提到 JS Call OC 回调的时候有一个 <code>callbackDispatcher</code> 函数来承接，那么这种OC Call JS也得用类似的方式进行承接，于是我们准备一个 <code>eventDispatcher</code> ，思路是类似的，我不多介绍了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//接收OC事件的API</span></span><br><span class="line"><span class="built_in">window</span>.eventDispatcher: <span class="function"><span class="keyword">function</span> (<span class="params">eventId, resultjson</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> handlerArr = <span class="keyword">this</span>.eventCallMap[eventId];</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> handlerArr) &#123;</span><br><span class="line">        <span class="keyword">if</span> (handlerArr.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="keyword">var</span> handler = handlerArr[key];</span><br><span class="line">            <span class="keyword">if</span> (handler &amp;&amp; <span class="keyword">typeof</span> (handler) === <span class="string">'function'</span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> resultObj = resultjson ? <span class="built_in">JSON</span>.parse(resultjson) : &#123;&#125;;</span><br><span class="line">                handler(resultObj);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><strong>OC 主动调用 JS</strong></p>
+<p>既然是OC主动发起，那么我们就拿锁屏这个事件来举例</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">-(void)addLifeCycleListenerCommon&#123;</span><br><span class="line">    // app从后台进入前台都会调用这个方法</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];</span><br><span class="line">    // 添加检测app进入后台的观察者</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)removeLifeCycleListenerCommon&#123;</span><br><span class="line">    [[NSNotificationCenter defaultCenter]removeObserver:self];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)applicationEnterForeground&#123;</span><br><span class="line">    //最关键的主动通信JS的函数</span><br><span class="line">    [self sendEventName:@&quot;applicationEnterForeground&quot; withParams:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)applicationEnterBackground&#123;</span><br><span class="line">    //最关键的主动通信JS的函数</span><br><span class="line">    [self sendEventName:@&quot;applicationEnterBackground&quot; withParams:nil];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>刚刚 JS Call OC 回调的时候使用的是<code>injectMessageFuction:withActionId:withParams:</code>函数，那么这里介绍的 <code>sendEventName:withParams:</code>则是类似的用于拼接JS进行回调的函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">-(void)sendEventName:(NSString *)event withParams:(NSDictionary *)params&#123;</span><br><span class="line">    NSString *jsFunction = @&apos;window.eventDispatcher&apos;; </span><br><span class="line">    //还是走`injectMessageFuction:withActionId:withParams:` 这个函数，统一进行通信编码处理</span><br><span class="line">    [self injectMessageFuction:jsFunction withActionId:event withParams:params];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TIPS 思路扩展:</p>
+<p>此处<code>window.eventDispatcher</code> 是客户端写死的，但我们之前提到过 <code>callbackDispatcher</code>就设计成 JS 通过主动通信传给客户端而不是写死，这样便于扩展。那么<code>eventDispatcher</code> 能不能也这样呢？其实很简单，我们设计一个 JS Call OC 的消息，传过来让客户端保存住就好了嘛。</p>
+<h3 id="详细设计思路-—-OC-主动-Call-JS-回调"><a href="#详细设计思路-—-OC-主动-Call-JS-回调" class="headerlink" title="详细设计思路 — OC 主动 Call JS 回调"></a>详细设计思路 — OC 主动 Call JS 回调</h3><p>刚才设计一个<code>sendEventName:withParams:</code>的方法，而这个方法内部调用的是<code>injectMessageFuction: withActionId:event withParams:</code>，来把OC主动发起的消息与数据参数传给JS，那么我们在此基础上进行扩展，扩展成支持回调回传数据。</p>
+<p>WKWebView的<code>evaluateJavaScript:completionHandler:</code>这个函数天然有一个参数是<code>completionHandler</code>，因此天然支持OC主动调用evaluateJavaScript，并且回传数据结果，就是通过<code>completionHandler</code>，所以我们只需要把我们设计出来的<code>sendEventXxxxx</code>和<code>injectMessageXxxx</code>两个方法多设计一个block回调输入参数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-(void)injectMessageFuction:(NSString *)msg withActionId:(NSString *)actionId withParams:(NSDictionary *)params withCallback:(void (^ _Nullable)(_Nullable id, NSError * _Nullable error))handler&#123;</span><br><span class="line">    if (!params) &#123;</span><br><span class="line">        params = @&#123;&#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    NSString *paramsString = [self _serializeMessageData:params];</span><br><span class="line">    NSString *paramsJSString = [self _transcodingJavascriptMessage:paramsString];</span><br><span class="line">    NSString* javascriptCommand = [NSString stringWithFormat:@&quot;%@(&apos;%@&apos;, &apos;%@&apos;);&quot;, msg,actionId,paramsJSString];</span><br><span class="line">    if ([[NSThread currentThread] isMainThread]) &#123;</span><br><span class="line">        [self.webView evaluateJavaScript:javascriptCommand completionHandler:handler];</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        __strong typeof(self)strongSelf = self;</span><br><span class="line">        dispatch_sync(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [strongSelf.webView evaluateJavaScript:javascriptCommand completionHandler:handler];</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(void)sendEventName:(NSString *)event withParams:(NSDictionary *)params withCallback:(void (^ _Nullable)(_Nullable id, NSError * _Nullable error))handler&#123;</span><br><span class="line">    NSString *jsFunction = @&apos;window.eventDispatcher&apos;; </span><br><span class="line">    [self injectMessageFuction:jsFunction withActionId:event withParams:params withCallback:handler];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么JS要做的事情就简单了，之前JS这边代码<code>eventDispatcher</code>在查找到handler之后直接调用就好了，那么现在呢？多写一个return</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">eventDispatcher: <span class="function"><span class="keyword">function</span> (<span class="params">eventId, resultjson</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> handlerArr = <span class="keyword">this</span>.eventCallMap[eventId];</span><br><span class="line">    <span class="keyword">var</span> me = <span class="keyword">this</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">var</span> key <span class="keyword">in</span> handlerArr) &#123;</span><br><span class="line">        <span class="keyword">if</span> (handlerArr.hasOwnProperty(key)) &#123;</span><br><span class="line">            <span class="keyword">var</span> handler = handlerArr[key];</span><br><span class="line">            <span class="keyword">if</span> (handler &amp;&amp; <span class="keyword">typeof</span> (handler) === <span class="string">'function'</span>) &#123;</span><br><span class="line">                <span class="keyword">var</span> resultObj = resultjson ? <span class="built_in">JSON</span>.parse(resultjson) : &#123;&#125;;</span><br><span class="line">                <span class="keyword">var</span> returnData = handler(resultObj);</span><br><span class="line">                <span class="comment">//多写一个return</span></span><br><span class="line">                <span class="keyword">return</span> returnData; </span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h3 id="详细设计思路-—-同步返回-JS-Call-OC"><a href="#详细设计思路-—-同步返回-JS-Call-OC" class="headerlink" title="详细设计思路 — 同步返回 JS Call OC"></a>详细设计思路 — 同步返回 JS Call OC</h3><p>由于JS Call OC 同步返回我这里采用了不同于异步messageHandler的通信方式，因此同步返回要单独进行设计。</p>
+<p>消息体和编码协议完全保持不变，重新设计一下发送接口，通过prompt()</p>
+<p><strong>JS 发送同步消息给 OC</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">sendSyncMessage: <span class="function"><span class="keyword">function</span> (<span class="params">data</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>.isIOS) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">//将消息体直接JSON字符串化，调用Prompt()            </span></span><br><span class="line">            <span class="keyword">var</span> resultjson = prompt(<span class="built_in">JSON</span>.stringify(params));</span><br><span class="line">            <span class="comment">//直接用 = 接收 Prompt()的返回数据，JSON反解</span></span><br><span class="line">            <span class="keyword">var</span> resultObj = resultjson ? <span class="built_in">JSON</span>.parse(resultjson) : &#123;&#125;;</span><br><span class="line">            <span class="keyword">return</span> resultObj;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (error) &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(<span class="string">'error native message'</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p><strong>OC 拦截Prompt() 接收消息</strong></p>
+<p>WKWebView有个拦截Prompt()的UIDelegate，我们在这里进行弹窗拦截，经过同步运算后将数据通过<code>completionHandler</code>同步返回给JS</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable result))completionHandler&#123;</span><br><span class="line">    if (webView != self.webView) &#123;</span><br><span class="line">        completionHandler(@&quot;&quot;);</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSData *jsonData = [prompt dataUsingEncoding:NSUTF8StringEncoding];</span><br><span class="line">    NSError *err;</span><br><span class="line">    NSDictionary *dic = [NSJSONSerialization JSONObjectWithData:jsonData</span><br><span class="line">                                                    options:NSJSONReadingMutableContainers</span><br><span class="line">                                                          error:&amp;err];</span><br><span class="line">    //可以看出来，消息体结构不变，所有逻辑保持和异步一致</span><br><span class="line">    msgObject *msg = [[msgObject alloc]initWithDictionary:msgBody];</span><br><span class="line">    NSDictionary *handlerDic = [self.handlerMap objectForKey:msg.handler];</span><br><span class="line">    HandlerBlock handler = [handlerDic objectForKey:msg.action];</span><br><span class="line">    handler(msg);</span><br><span class="line">    //修改 msg的callback方法，当发现是同步消息的时候，callback在block执行完毕后将数据保存到msg的syncReturn中</span><br><span class="line">    NSString *resultjson = [self _serializeMessageData:msg.syncReturn];</span><br><span class="line">    completionHandler(resultjson);</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样就完成了同步返回数据 JS 中，可以很开心的写同步代码了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> params = syncGetPastboard();</span><br><span class="line"><span class="keyword">var</span> pastboard = params.content;</span><br><span class="line"><span class="built_in">console</span>.alert(pastboard);</span><br></pre></td></tr></table></figure>
+<h2 id="业务模块扩展"><a href="#业务模块扩展" class="headerlink" title="业务模块扩展"></a>业务模块扩展</h2><p>上面把基本的 JS Call OC / 回调 / OC Call JS / 回调 的基本通信流程设计思路串了一遍，但我们提一下代码模块设计思路，因为通信是底层通用逻辑，但在这之上，业务会发展出各种专为业务服务的消息体，这些消息是堆积在一个代码里越积越多，毫无管理，还是设计成模块式划分，横向灵活扩展可插拔式的代码结构？这里只提一些我的个人的想法，代码的整洁之道有很多，每个人都有自己的体会，并不是说怎样就是最好的，我这里也仅仅是很粗略的提一下。</p>
+<p><strong>JS 代码模块设计</strong></p>
+<ul>
+<li>jsbridge-core.js </li>
+</ul>
+<p>所有底层通信的相关代码能力，都会放到core这个js代码里，也就是上面我们介绍的各种核心通信框架代码</p>
+<ul>
+<li>jsbridge-common.js</li>
+</ul>
+<p>假如有一些通用的bridge消息需求，比如日志/获取设备信息/屏幕锁屏监听/屏幕，各种Common相关的需求代码，都放到这里</p>
+<ul>
+<li>jsbridge-haha.js</li>
+</ul>
+<p>假如有一些业务独有的需求，比如加入购物车，比如购买兑换积分等等，可以统一归类到 haha 模块，所有跟 haha 模块相关的代码，都放在这里</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Core = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.ua = navigator.userAgent;</span><br><span class="line">    <span class="keyword">this</span>.isAndroid = (<span class="regexp">/(Android);?[\s\/]+([\d.]+)?/</span>.test(<span class="keyword">this</span>.ua));</span><br><span class="line">    <span class="keyword">this</span>.isIOS = !!<span class="keyword">this</span>.ua.match(<span class="regexp">/\(i[^;]+;( U;)? CPU.+Mac OS X/</span>);</span><br><span class="line">    <span class="keyword">this</span>.msgCallbackMap = &#123;&#125;;</span><br><span class="line">    <span class="keyword">this</span>.eventCallMap = &#123;&#125;;</span><br><span class="line">    <span class="keyword">this</span>.sendMessage = <span class="function"><span class="keyword">function</span>(<span class="params">xxxx</span>)</span>&#123;xxxx&#125;;</span><br><span class="line">    <span class="keyword">this</span>.onListenEvent = <span class="function"><span class="keyword">function</span>(<span class="params">xxxx</span>)</span>&#123;xxxx&#125;;</span><br><span class="line">    <span class="keyword">this</span>.eventDispatcher = <span class="function"><span class="keyword">function</span>(<span class="params">xxxx</span>)</span>&#123;xxxx&#125;;</span><br><span class="line">    <span class="keyword">this</span>.callbackDispatcher = <span class="function"><span class="keyword">function</span>(<span class="params">xxxx</span>)</span>&#123;xxxx&#125;;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">window</span>.bridge.Core = Core;</span><br></pre></td></tr></table></figure>
+<p>那么我们就把 JS 的通信底层 Core 模块设置好了，刚才提到的各种代码都在里面，这里这么写有点low，只为展示思路，有了思路，前端怎么整理代码优化代码都可以。另外注意此时我们已经是 <code>window.bridge.core.callbackDispatcher</code>了，所以传递 callbackFunction 的时候要注意</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Common = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.webviewAppearEvent = <span class="string">'webviewAppear'</span>;</span><br><span class="line">    <span class="keyword">this</span>.webviewDisappearEvent = <span class="string">'webviewDisappear'</span>;</span><br><span class="line">    <span class="keyword">this</span>.applicationEnterBackgroundEvent = <span class="string">'applicationEnterBackground'</span>;</span><br><span class="line">    <span class="keyword">this</span>.applicationEnterForegroundEvent = <span class="string">'applicationEnterForeground'</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// dataDic为Object对象</span></span><br><span class="line">Common.nativeLog = <span class="function"><span class="keyword">function</span> (<span class="params">dataDic</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> params = &#123;&#125;;</span><br><span class="line">    params.dataDic = dataDic;</span><br><span class="line">    <span class="keyword">this</span>.sendCommonMessage(<span class="string">'nativeLog'</span>, params);</span><br><span class="line">&#125;,</span><br><span class="line"></span><br><span class="line"><span class="comment">// traceData为字符串</span></span><br><span class="line">Common.crashTrace = <span class="function"><span class="keyword">function</span> (<span class="params">traceData</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> params = &#123;&#125;;</span><br><span class="line">    params.data = traceData;</span><br><span class="line">    <span class="keyword">this</span>.sendCommonMessage(<span class="string">'crashTrace'</span>, params);</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">// 复制剪切板</span></span><br><span class="line">Common.copyContent = <span class="function"><span class="keyword">function</span> (<span class="params">content</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> params = &#123;&#125;;</span><br><span class="line">    params.str = content;</span><br><span class="line">    <span class="keyword">this</span>.sendCommonMessage(<span class="string">'copyContent'</span>, params);</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">//获取设备一些通用信息</span></span><br><span class="line">Common.getCommonParams = <span class="function"><span class="keyword">function</span> (<span class="params">callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.sendCommonMessage(<span class="string">'commonParams'</span>, &#123;&#125;, callback);</span><br><span class="line">&#125;,</span><br><span class="line"><span class="comment">// common模块的基础类，选用同样的 handler name =&gt; Common</span></span><br><span class="line">Common.sendCommonMessage: <span class="function"><span class="keyword">function</span> (<span class="params">action, params, callback</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> msgBody = &#123;&#125;;</span><br><span class="line">    msgBody.handler = <span class="string">'Common'</span>;</span><br><span class="line">    msgBody.action = action;</span><br><span class="line">    msgBody.params = params;</span><br><span class="line">    <span class="built_in">window</span>.bridge.Core.sendMessage(msgBody, callback);</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.bridge.Common = Common;</span><br></pre></td></tr></table></figure>
+<p>那么业务页面中使用就这样咯</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//具体的某个h5页面</span></span><br><span class="line"><span class="comment">//页面有复制进入剪切板的需求</span></span><br><span class="line"><span class="built_in">window</span>.bridge.Common.copyContent(<span class="string">'哈哈哈哈，我复制进剪切板啦'</span>)</span><br><span class="line"><span class="comment">//页面有读取客户端信息的需求</span></span><br><span class="line"><span class="built_in">window</span>.bridge.Common.getCommonParams(<span class="function"><span class="keyword">function</span> (<span class="params">params</span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(params);</span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//页面有监听锁屏的需求</span></span><br><span class="line"><span class="built_in">window</span>.bridge.Core.onListenEvent(<span class="built_in">window</span>.bridge.Common.applicationEnterBackgroundEvent, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'home press'</span>)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>所有代码都有点low，只是介绍思路，我们业务代码也不会这样简单粗暴的写，只是为了简单说明意图，并且我也不深入扩展 haha 模块了就是举例。以后如果有新的一类业务需求，可以扩展新的模块，如果某个模块有新消息需求，可以单独新增消息</p>
+<p><strong>OC 代码模块设计</strong></p>
+<blockquote>
+<p>前文：</p>
+<p>我的 Hybrid WebView 设计理念是组合，而不是继承，因此我设计的不是一个 XXWebView / XXWebViewController 基类，使用者不需要在业务代码中使用 WebView 必须从我这里继承。我设计的是一个 NSObject 的 bridge 对象，使用者只需要跟自己业务中用的任意一种 WKWebView 的业务自己的类进行绑定，就可以拥有 Hybrid 的能力</p>
+</blockquote>
+<p>我也会准备一个类做核心通信类，比如就叫 XXBridge ，集成自 NSObject，用户在ViewController里可以创建各自业务自己封装的任意WebView对象，然后执行绑定操作，把 XXBridge 对象与 WebView 绑定起来，类似这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//在任意业务VC的viewDidLoad里</span><br><span class="line">//创建WKWebView</span><br><span class="line">WKWebViewConfiguration *config = [WKWebViewConfiguration new];</span><br><span class="line">config.preferences = [WKPreferences new];</span><br><span class="line">config.preferences.minimumFontSize = 10;</span><br><span class="line">config.preferences.javaScriptEnabled = YES;</span><br><span class="line">config.preferences.javaScriptCanOpenWindowsAutomatically = YES;</span><br><span class="line">WKWebView *webView = [[WKWebView alloc]initWithFrame:CGRectZero configuration:config];</span><br><span class="line">self.webView = webView；</span><br><span class="line">//创建并绑定Bridge</span><br><span class="line">self.jsBridge = [[WKJSBridge alloc]init];</span><br><span class="line">self.jsBridge.delegate = self;</span><br><span class="line">[self.jsBridge bindBridgeWithWebView:webView];</span><br></pre></td></tr></table></figure>
+<p>所谓的绑定过程大概思路其实只是，把WebView的一些 navigationDelegate/UIDelegate、configuration.userContentController 设置指向 XXBridge 内的处理函数，再把所有 WKWebView 的navigationDelegate UIDelegate通过 XXBridge 的delegate 转发给原VC，其实就是一层简单的代理拦截，我就不详解了，剩下的都是上面的提到过的具体通信代码了。</p>
+<p>当然你完全可以使用继承，强调过很多次，只说设计思路，并且并不是唯一思路，也不代表是最优思路。</p>
+<ul>
+<li>XXBridge Class</li>
+<li>XXBridge+Common Category</li>
+<li>XXBridge+haha Category</li>
+</ul>
+<p>提到模块化可插拔式扩展，在OC里面最快想到的当然是Category，既然 JS 代码都划分为 Core/Common/haha，那么OC也这么做呗（不用category当然也行，只要把代码按着模块简洁合理的分割开来易于扩展和管理就好）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">@implementation XXBridge (Common)</span><br><span class="line"></span><br><span class="line">-(void)registCommonHandler&#123;</span><br><span class="line">    [self addLifeCycleListenerCommon];</span><br><span class="line">    __weak typeof(self) weakSelf = self;</span><br><span class="line">    </span><br><span class="line">    [self registerHandler:@&quot;Common&quot; Action:@&quot;commonParams&quot; handler:^(WKJSBridgeMessage *msg) &#123;</span><br><span class="line">        NSDictionary *result = [weakSelf getCommonParams];</span><br><span class="line">        [msg callback:result];</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    [self registerHandler:@&quot;Common&quot; Action:@&quot;copyContent&quot; handler:^(WKJSBridgeMessage *msg) &#123;</span><br><span class="line">        NSDictionary *params = msg.parameters;</span><br><span class="line">        NSString *content = [params objectForKey:@&quot;str&quot;];</span><br><span class="line">        UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];</span><br><span class="line">        pasteboard.string = content;</span><br><span class="line">    &#125;];</span><br><span class="line">    </span><br><span class="line">    [self registerHandler:@&quot;Common&quot; Action:@&quot;nativeLog&quot; handler:^(WKJSBridgeMessage *msg) &#123;</span><br><span class="line">        [weakSelf nativeLog:msg.parameters];</span><br><span class="line">    &#125;];</span><br><span class="line">    [self registerHandler:@&quot;Common&quot; Action:@&quot;crashTrace&quot; handler:^(WKJSBridgeMessage *msg) &#123;</span><br><span class="line">        [weakSelf crashTrace:msg.parameters];</span><br><span class="line">    &#125;];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)applicationEnterForeground&#123;</span><br><span class="line">    [self sendEventName:WKJSBridgeAppEnterForegroundEvent withParams:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)applicationEnterBackground&#123;</span><br><span class="line">    [self sendEventName:WKJSBridgeAppEnterBackgroundEvent withParams:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)addLifeCycleListenerCommon&#123;</span><br><span class="line">    // app从后台进入前台都会调用这个方法</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterForeground) name:UIApplicationWillEnterForegroundNotification object:nil];</span><br><span class="line">    // 添加检测app进入后台的观察者</span><br><span class="line">    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(applicationEnterBackground) name: UIApplicationDidEnterBackgroundNotification object:nil];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)removeLifeCycleListenerCommon&#123;</span><br><span class="line">    [[NSNotificationCenter defaultCenter]removeObserver:self];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br></pre></td></tr></table></figure>
+<h2 id="UserAgent管理"><a href="#UserAgent管理" class="headerlink" title="UserAgent管理"></a>UserAgent管理</h2><p>WebView容器其实有一个很重要的需求，就是修改WebView UA，作为区别巨有容器能力的WebView识别方式，一般情况下拿到的UA会长这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (Linux; Android 6.0.1; XT1650-05 Build/MCC24.246-37; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/537.36</span><br></pre></td></tr></table></figure>
+<p>但我们在APP内无论是创建有 Hybrid 能力的 WebView，还是常规 WebView ，他们的UA都是系统默认UA，无法做到从 UA 上区别，客户端使用的 WebView 容器了，因此其实还有一个很实用的需求就是，针对 Hybrid WebView 扩充 UA</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Mozilla/5.0 (Linux; Android 6.0.1; XT1650-05 Build/MCC24.246-37; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/51.0.2704.81 Mobile Safari/537.36 NBBRIDGE_屏幕宽_屏幕高_操作系统版本号_App版本号_设备类型</span><br></pre></td></tr></table></figure>
+<p>如果我扩充这样的UA有什么好处呢？前端可以很方便的通过对UA进行正则处理，快速便捷的取到</p>
+<ul>
+<li>屏幕尺寸</li>
+<li>操作系统尺寸</li>
+<li>APP版本号</li>
+<li>设备类型</li>
+</ul>
+<p>有人会问，这些数据也可以通过设计一个Bridge消息，直接从客户端拿，为啥非得走UA呢？因为对于网页来说，分网页的 Client Side 和网页的 Server Side ，Client就说明这段 JS 已经运行在客户端的浏览器里，但 Server Side 会发生在 WebView 向 URL 发起请求，打到服务器端，此时可能是 PHP/Node/JAVA/GO等各种语言写的服务器，但他们的共同特点是在 Server Side 是没有bridge，是不可能建立通信的，此时UA就有意义了。</p>
+<h3 id="全局UA"><a href="#全局UA" class="headerlink" title="全局UA"></a>全局UA</h3><p>iOS 8及 8 以下只能进行全局 UA 修改，可以通过 NSUserDefaults 的方式修改，一次修改每个WebView都有效（无论是常规 WebView 还是被你改造过的 Hybrid WebView）</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">NSDictionary *dictionary = [NSDictionary dictionaryWithObjectsAndKeys:UAStringXXX, @&quot;UserAgent&quot;, nil];</span><br><span class="line">[[NSUserDefaults standardUserDefaults] registerDefaults:dictionary];</span><br></pre></td></tr></table></figure>
+<h3 id="独立UA"><a href="#独立UA" class="headerlink" title="独立UA"></a>独立UA</h3><p>iOS 9 有了独立UA，可以针对每一个 WKWebView 对象实例，设置专属的UA</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (@available(iOS 9.0, *)) &#123;</span><br><span class="line">    self.webView.customUserAgent = self.fullUserAgent;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="Cookie管理"><a href="#Cookie管理" class="headerlink" title="Cookie管理"></a>Cookie管理</h2><p>前边介绍UA的时候说过，在 Server Side 的时候是无法建立 Hybrid 通信的，因此传递数据的方式就只有 UA/Cookie/URL Query</p>
+<ul>
+<li>UA适合传递跟设备相关的，描述设备固定不变的信息</li>
+<li>Cookie适合传递任何你想要的数据，但Cookie有失效与域名限制</li>
+<li>URL Query 适合传递任何你想要的数据，不过最好这个数据没什么安全敏感，因为GET请求是明文的（POST请求也可以，类比一下不多说了）</li>
+</ul>
+<p>提到 WKWebView 就不得不把Cookie管理单独说一下。因为，WKWebView在Cookie上有太多的坑了，所以非常有必要把 Cookie 进行专门的手动代码管理。</p>
+<h3 id="传统的NSHTTPCookieStorage"><a href="#传统的NSHTTPCookieStorage" class="headerlink" title="传统的NSHTTPCookieStorage"></a>传统的NSHTTPCookieStorage</h3><p>通过 NSHTTPCookieStorage 设置的 Cookie ，这样设置的Cookie 无论是 UIWebView 页面请求还是 NSURLSession 网络请求，都会带上 Cookie，所以十分方便</p>
+<h3 id="WKWebView-的-Cookie-大坑"><a href="#WKWebView-的-Cookie-大坑" class="headerlink" title="WKWebView 的 Cookie 大坑"></a>WKWebView 的 Cookie 大坑</h3><p><a href="https://mp.weixin.qq.com/s/rhYKLIbXOsUJC_n6dt9UfA" target="_blank" rel="noopener">【腾讯Bugly干货分享】WKWebView 那些坑</a></p>
+<p>这篇文章里介绍了很多WKWebView的坑，其中会详细说好多Cookie的问题，简单说就是</p>
+<ul>
+<li>WKWebView 发起的请求并不会带上 NSHTTPCookieStorage 里面的 Cookie </li>
+</ul>
+<p>而比如用户登陆状态token等，最基础的设计就是把 token 写到 cookie 里，如果 WebView 获取不到 Cookie 的登陆状态应该怎么办</p>
+<h3 id="WKWebView-ServerSide-Cookie-设置"><a href="#WKWebView-ServerSide-Cookie-设置" class="headerlink" title="WKWebView ServerSide Cookie 设置"></a>WKWebView ServerSide Cookie 设置</h3><p>简单的说就是把 WKWebView 发起的 NSURLRequest 拦截，MutableCopy 一个，然后手动在RequestHeader里从NSHTTPCookieStorage读取Cookie进行添加</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">-(void)syncRequestCookie:(NSMutableURLRequest *)request</span><br><span class="line">&#123;</span><br><span class="line">    if (!request.URL) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    NSArray *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL];</span><br><span class="line">    NSMutableArray *filterCookie = [[NSMutableArray alloc]init];</span><br><span class="line"> </span><br><span class="line">    if (filterCookie.count &gt; 0) &#123;</span><br><span class="line">        NSDictionary *reqheader = [NSHTTPCookie requestHeaderFieldsWithCookies:filterCookie];</span><br><span class="line">        NSString *cookieStr = [reqheader objectForKey:@&quot;Cookie&quot;];</span><br><span class="line">        [request setValue:cookieStr forHTTPHeaderField:@&quot;Cookie&quot;];</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>TIPS：</p>
+<p>当服务器发生重定向的时候，此时第一次在 RequestHeader 中写入的 Cookie 会丢失，还需要重新对重定向的 NSURLRequest 进行 RequestHeader 的 Cookie 处理 ，简单的说就是在 <code>webView:decidePolicyForNavigationAction:decisionHandler:</code> 的时候，判断此时 Request 是否有你要的 Cookie 没有就Cancel掉，修改Request 重新发起</p>
+<h3 id="WKWebView-ClientSide-Cookie-设置"><a href="#WKWebView-ClientSide-Cookie-设置" class="headerlink" title="WKWebView ClientSide Cookie 设置"></a>WKWebView ClientSide Cookie 设置</h3><p>上面这么写完了，当页面加载的时候，后端无论是啥语言，都能从请求里看到 Cookie 了，但是后端渲染返回页面后，在 Client Side 浏览器里运行的时候，JS 在执行的时候用 document.cookie API 是读取不到的。所以还得针对 Client Side Cookie 进行处理</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">-(void)syncClientCookieScripts:(NSMutableURLRequest *)request&#123;</span><br><span class="line">    if (!request.URL) &#123;</span><br><span class="line">        return;</span><br><span class="line">    &#125;</span><br><span class="line">    NSArray *availableCookie = [[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:request.URL];</span><br><span class="line">    NSMutableArray *filterCookie = [[NSMutableArray alloc]init];</span><br><span class="line">   </span><br><span class="line">    for (NSHTTPCookie * cookie in availableCookie) &#123;</span><br><span class="line">        if (self.syncCookieMode) &#123;</span><br><span class="line">            //httponly需求不得写入js cookie</span><br><span class="line">            if (!cookie.HTTPOnly) &#123;</span><br><span class="line">                [filterCookie addObject:cookie];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    // 拼接 JS 代码 对 Client Side 注入Cookie</span><br><span class="line">    NSDictionary *reqheader = [NSHTTPCookie requestHeaderFieldsWithCookies:filterCookie];</span><br><span class="line">    NSString *cookieStr = [reqheader objectForKey:@&quot;Cookie&quot;];</span><br><span class="line">    if (filterCookie.count &gt; 0) &#123;</span><br><span class="line">        for (NSHTTPCookie *cookie in filterCookie) &#123;</span><br><span class="line">            NSTimeInterval expiretime = [cookie.expiresDate timeIntervalSince1970];</span><br><span class="line">            NSString *js = [NSString stringWithFormat:@&quot;document.cookie =&apos;%@=%@;expires=%f&apos;;&quot;,cookie.name,cookie.value,expiretime];</span><br><span class="line">            WKUserScript *jsscript = [[WKUserScript alloc]initWithSource:js injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:NO];</span><br><span class="line">            [self.userContentController addUserScript:jsscript];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    return;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Client Side Cookie 注入依靠的是创建一个 JS 脚本，让 WebView  去执行，介绍通信的时候我们用的是 evaluateScript 去进行主动注入，好处是随时随地调用都可以执行，但眼下这个场景用 WKUserScript 更好，并且推荐使用 WKUserScriptInjectionTimeAtDocumentStart 这个时机。</p>
+<h2 id="本地脚本管理"><a href="#本地脚本管理" class="headerlink" title="本地脚本管理"></a>本地脚本管理</h2><p><a href="http://awhisper.github.io/2017/09/09/injectUIWebView/" target="_blank" rel="noopener">UIWebView代码注入时机与姿势</a></p>
+<p>我的另一篇文章就提到了一个问题，注入时机。</p>
+<p>在页面加载前主动注入，由于页面加载的时候，JS 会启用全新的 JSContext 因此之前注入全都无效，在页面加载完毕的时候注入，JS 会注入的比较晚，导致在 JS代码开始执行 -&gt; 页面完全加载完毕 期间，Client Side 是没有 JS 注入的效果的</p>
+<ul>
+<li>我的Link中提到的CSS注入</li>
+<li>我的上文提到的Cookie注入</li>
+</ul>
+<p>因此 WKWebView 的 WKUserScript 就提供了对于这个问题的解决办法，他的使用方式不是主动注入，而是提前准备好要注入的 JS 代码，在 WKWebView 加载页面的系统处理期间，由系统帮你选择在固定的时机，注入你准备好的 JS 代码，目前只有2个时机，DocumentStart/DocumentEnd</p>
+<ul>
+<li>WKUserScriptInjectionTimeAtDocumentStart</li>
+<li>WKUserScriptInjectionTimeAtDocumentEnd</li>
+</ul>
+<p>因此这种提前预置静态 JS 注入的需求，也是一个 Hybrid WebView 容器应该考虑到的</p>
+<h1 id="WebView容器-常规扩展"><a href="#WebView容器-常规扩展" class="headerlink" title="WebView容器 - 常规扩展"></a>WebView容器 - 常规扩展</h1><p>一个 Hybrid WebView 容器，如果设计好了基础通信流程，设计好了模块扩展模式，其实还可以做一些比较通用的功能组件，这思路其实也和 RN 很类似的，好的架构设计好了，就应该可以横向自由灵活的自己扩展任意业务组件，但 RN 不也内置了很多 FB 提前帮你写好了的通用组件么？</p>
+<ul>
+<li>Common 组件：我们的示例代码就是 Common 组件的一些基础操作<ul>
+<li>复制剪切板</li>
+<li>获取设备信息</li>
+<li>打客户端Log，上报日志</li>
+<li>打客户端Crash追踪Log，随Crash上报</li>
+<li>……打开你的想象力</li>
+</ul>
+</li>
+<li>CommonUI 组件：也有一些 Common 并且与 UI 相关的基础操作<ul>
+<li>showTips 展示客户端文字浮层</li>
+<li>showDialog 展示客户端确认弹框，回调用户选择按钮 </li>
+<li>pullRefresh 采用客户端的下拉刷新，但配合 H5 进行数据加载</li>
+<li>Router 跳转任意 App 内路由页面</li>
+<li>NaviBarControl 可以让前端来定制客户端顶部 NaviBar<ul>
+<li>share Button 增加原生分享按钮，点击后出发原生分享</li>
+<li>Other Button 增加任意原生按钮，点击后跳转任意 App 内路由页面</li>
+</ul>
+</li>
+<li>……打开你的想象力</li>
+</ul>
+</li>
+<li>NetWork 组件：判断浏览器调试环境下走 AJAX 网络请求，判断是客户端就通过客户端发起原生网络请求，请求结果回调  JS （为什么做？一般原生会封装网络请求，有更精细粒度的cache控制 ，和通用无痕日志埋点）<ul>
+<li>Get  不解释了</li>
+<li>Post 不解释了</li>
+<li>……打开你的想象力</li>
+</ul>
+</li>
+<li>Storage 组件：前端的存储只能使用 LocalStorage 和 Cookie 这二者都有很大的缺陷<ul>
+<li>Key - Value Plist Storage ： 可以让前端把 Key Value 发给客户端，让客户端通过本地Plist 存储/读取/删除</li>
+<li>File Storage：可以让前端把大段需要存储的字符串，发给客户端，让客户端在App沙盒内开辟文件路径，saveToFile存储成文件，并且提供目录操作能力，创建目录/删除目录/创建文件/删除文件/读取文件</li>
+<li>……打开你的想象力</li>
+</ul>
+</li>
+<li>Push组件：可以让前端有能力写本地Push闹铃到App 或者上报远程Push Token<ul>
+<li>本地 Push 设置</li>
+<li>远程 Push 获取 Token</li>
+</ul>
+</li>
+</ul>
+<p>其实如果基础功能扩充的足够强大，Hybrid WebView 可以有很强的能力，可以充分打开你的想象力，Hybrid 的宗旨就是，如果 WebView 原本做不到，或者做起来有很大限制或者性能不佳，那么就让原生配合，一起做到</p>
+<h1 id="WebView容器-脑洞预告"><a href="#WebView容器-脑洞预告" class="headerlink" title="WebView容器 - 脑洞预告"></a>WebView容器 - 脑洞预告</h1><p>其实这部分内容本来应该是第三篇的内容，但也可以提前简单说说吊吊胃口╮(╯_╰)╭</p>
+<ul>
+<li>深度调试能力</li>
+</ul>
+<p>在客户端下调试 WebView 只能 safari 调试？能不能更方便一些? 能不能在QA黑盒测试不重新打包运行连电脑的情况下进行 JS 调试？</p>
+<ul>
+<li>动态调用能力</li>
+</ul>
+<p>所有的消息都必须提前在 OC 客户端写好处理模块，前端才能调用，能不能不发版就调用新原生逻辑？</p>
+<p>能不能直接在JS里面写OC?</p>
+<ul>
+<li>异步线程能力</li>
+</ul>
+<p>都说 JS 是单线程，而且慢，能不能给 JS 增加多线程能力？（没错 WebKit 在2017年有个WebKit新标准提案就是这个，但我们暂时先不需要浏览器内核支持，客户端Hybrid能不能先简单支持一下？）</p>
+<ul>
+<li>离线秒开能力</li>
+</ul>
+<p>小程序会打包，然后下发给微信客户端，这样小程序的界面框架加载完全无网络请求，极大程度的加快前端散碎静态资源的加载速度，秒开能力（注意这和腾讯的 VasSonic 的秒开并不是一类方案）</p>
+<ul>
+<li>原生渲染能力</li>
+</ul>
+<p>RN被很多人拿来说 RN 做出来的是原生 App ，界面层级都是原生的，WebView就做不到么？</p>
+<p>小程序底层就是 WebView ，但小程序有些组件官方文档会写，此组件为原生，无法控制与其他 Dom 的 Z轴层级，他是怎么做的？（视频/地图/Canvas组件）</p>
+<p>我们自己写的 WebView 容器能不能做到？</p>
+<h1 id="系列相关文章"><a href="#系列相关文章" class="headerlink" title="系列相关文章"></a>系列相关文章</h1><p><a href="http://awhisper.github.io/2018/01/02/hybrid-jscomunication/" target="_blank" rel="noopener">从零收拾一个hybrid框架（一）–  从选择JS通信方案开始</a></p>
+<p><a href="http://awhisper.github.io/2018/03/06/hybrid-webcontainer/" target="_blank" rel="noopener">从零收拾一个hybrid框架（二）–  WebView容器基础功能设计思路</a></p>
+<p>从零收拾一个Hybrid框架（三）– WebView 容器的一些脑洞方案思路探讨 （挖坑ing） </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/08/wechatkilluniversallink/" rel="next" title="微信着手封堵 Universal Link">
+                <i class="fa fa-chevron-left"></i> 微信着手封堵 Universal Link
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/03/24/wap-app-growth/" rel="prev" title="H5主流浏览器下App导流方案选取">
+                H5主流浏览器下App导流方案选取 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Hybrid"><span class="nav-number">2.</span> <span class="nav-text">Hybrid</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView容器-基本功能"><span class="nav-number">3.</span> <span class="nav-text">WebView容器 - 基本功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#通信交互设计"><span class="nav-number">3.1.</span> <span class="nav-text">通信交互设计</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#详细设计思路-—-JS-Call-OC-无回调"><span class="nav-number">3.1.1.</span> <span class="nav-text">详细设计思路 — JS Call OC 无回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详细设计思路-—-JS-Call-OC-回调"><span class="nav-number">3.1.2.</span> <span class="nav-text">详细设计思路 — JS Call OC 回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详细设计思路-—-OC-主动-Call-JS"><span class="nav-number">3.1.3.</span> <span class="nav-text">详细设计思路 — OC 主动 Call JS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详细设计思路-—-OC-主动-Call-JS-回调"><span class="nav-number">3.1.4.</span> <span class="nav-text">详细设计思路 — OC 主动 Call JS 回调</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详细设计思路-—-同步返回-JS-Call-OC"><span class="nav-number">3.1.5.</span> <span class="nav-text">详细设计思路 — 同步返回 JS Call OC</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#业务模块扩展"><span class="nav-number">3.2.</span> <span class="nav-text">业务模块扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UserAgent管理"><span class="nav-number">3.3.</span> <span class="nav-text">UserAgent管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全局UA"><span class="nav-number">3.3.1.</span> <span class="nav-text">全局UA</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#独立UA"><span class="nav-number">3.3.2.</span> <span class="nav-text">独立UA</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cookie管理"><span class="nav-number">3.4.</span> <span class="nav-text">Cookie管理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#传统的NSHTTPCookieStorage"><span class="nav-number">3.4.1.</span> <span class="nav-text">传统的NSHTTPCookieStorage</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WKWebView-的-Cookie-大坑"><span class="nav-number">3.4.2.</span> <span class="nav-text">WKWebView 的 Cookie 大坑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WKWebView-ServerSide-Cookie-设置"><span class="nav-number">3.4.3.</span> <span class="nav-text">WKWebView ServerSide Cookie 设置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WKWebView-ClientSide-Cookie-设置"><span class="nav-number">3.4.4.</span> <span class="nav-text">WKWebView ClientSide Cookie 设置</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本地脚本管理"><span class="nav-number">3.5.</span> <span class="nav-text">本地脚本管理</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView容器-常规扩展"><span class="nav-number">4.</span> <span class="nav-text">WebView容器 - 常规扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView容器-脑洞预告"><span class="nav-number">5.</span> <span class="nav-text">WebView容器 - 脑洞预告</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系列相关文章"><span class="nav-number">6.</span> <span class="nav-text">系列相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

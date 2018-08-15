@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid,Growth," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Update 2016.11.23更新一个最新的方案，老文章里面介绍的2个方案都不如这个易操作，唯一的问题是就看iOS10的覆盖率了，覆盖率不够之前下文的设备指纹方案可以与这个方案互补  只支持iOS10以上 通过剪切板 跨越浏览器app与宿主app，传递数据  clipboard.js 一个1w Star的js库 因为iOS10系统给js开放了API可以操作剪切板，因此直接使用这个库，可以很方便">
+<meta name="keywords" content="Hybrid,Growth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS app与浏览器深度链接 DeeperLink">
+<meta property="og:url" content="http://yoursite.com/2016/05/11/iOSBrowserDomainBridge/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="Update 2016.11.23更新一个最新的方案，老文章里面介绍的2个方案都不如这个易操作，唯一的问题是就看iOS10的覆盖率了，覆盖率不够之前下文的设备指纹方案可以与这个方案互补  只支持iOS10以上 通过剪切板 跨越浏览器app与宿主app，传递数据  clipboard.js 一个1w Star的js库 因为iOS10系统给js开放了API可以操作剪切板，因此直接使用这个库，可以很方便">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-21T17:00:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS app与浏览器深度链接 DeeperLink">
+<meta name="twitter:description" content="Update 2016.11.23更新一个最新的方案，老文章里面介绍的2个方案都不如这个易操作，唯一的问题是就看iOS10的覆盖率了，覆盖率不够之前下文的设备指纹方案可以与这个方案互补  只支持iOS10以上 通过剪切板 跨越浏览器app与宿主app，传递数据  clipboard.js 一个1w Star的js库 因为iOS10系统给js开放了API可以操作剪切板，因此直接使用这个库，可以很方便">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/11/iOSBrowserDomainBridge/"/>
+
+
+
+
+
+  <title>iOS app与浏览器深度链接 DeeperLink | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/11/iOSBrowserDomainBridge/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">iOS app与浏览器深度链接 DeeperLink</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-11T16:57:52+08:00">
+                2016-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/11/iOSBrowserDomainBridge/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/05/11/iOSBrowserDomainBridge/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/05/11/iOSBrowserDomainBridge/" class="leancloud_visitors" data-flag-title="iOS app与浏览器深度链接 DeeperLink">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="Update-2016-11-23"><a href="#Update-2016-11-23" class="headerlink" title="Update 2016.11.23"></a>Update 2016.11.23</h1><p>更新一个最新的方案，老文章里面介绍的2个方案都不如这个易操作，唯一的问题是就看iOS10的覆盖率了，覆盖率不够之前下文的<code>设备指纹方案</code>可以与这个方案互补</p>
+<ul>
+<li>只支持iOS10以上</li>
+<li>通过剪切板</li>
+<li>跨越浏览器app与宿主app，传递数据</li>
+</ul>
+<p><a href="https://github.com/zenorocha/clipboard.js" target="_blank" rel="noopener">clipboard.js</a></p>
+<p>一个1w Star的js库</p>
+<p>因为iOS10系统给js开放了API可以操作剪切板，因此直接使用这个库，可以很方便的在任何App的webview（包含safari，微信，qq，百度框等）将数据存入剪切板</p>
+<p>然后很方便的在其他任何app中，读取出剪贴板的数据用于互通</p>
+<p>这个方案在准确度上，成功率上，适用范围上全面优于下文讨论的<code>设备指纹</code>和<code>SafariViewController方案</code></p>
+<p>忘掉<code>SafariViewController方案</code>吧，这个方案现在非常的坑</p>
+<p>原因是，SFViewController的方案，Openurl事件会以各种方式被系统吞吃掉事件，duplicate等等，都会导致失败率非常的高</p>
+<h1 id="Deeper-Link-简介"><a href="#Deeper-Link-简介" class="headerlink" title="Deeper Link 简介"></a>Deeper Link 简介</h1><p>本文主要介绍，app跨域访问app外部的浏览器的数据的方案，包括外部safari，或者QQ，微信，手百等外部app内的浏览器。</p>
+<p>主要使用场景就是：</p>
+<p>用户在别的wap网页上，产生了用户行为，用户数据，但是还没下载app，当用户下载app后，打算直接在app内延续之前在wap上的行为和数据的时候，就需要运用到跨越浏览器与app鸿沟的，互通方案。</p>
+<p>简单举个例子就是：</p>
+<p>用户在微信浏览器里，访问某个页面，感兴趣并且登陆了，然后引导下载了app，等用户下载完app后第一次打开，希望能自动就完成登陆，甚至同步下来一些刚才用户在wap页面上操作的数据</p>
+<p><strong>如果能发生跨浏览器与app的互通，除了这个case之外，还可以有更多地自由发挥，设计出更加舒畅的用户体验</strong></p>
+<p><strong>这就是 Deeper Link</strong><br><a id="more"></a></p>
+<p>想要实现这样目前看有2个方案，各自都有弊端，都不是完美的，本文会详细说明这两个方案</p>
+<ul>
+<li>设备指纹唯一识别方案</li>
+<li>iOSSafariCookie互通方案</li>
+</ul>
+<h1 id="设备指纹唯一识别方案"><a href="#设备指纹唯一识别方案" class="headerlink" title="设备指纹唯一识别方案"></a>设备指纹唯一识别方案</h1><p>如果用户在wap页面，能通过某种方式识别到唯一的设备标识，当用户离开去下载app，下载完成第一次打开app的时候，app能识别到一样的设备标识，那么就可以判断第一次打开app的用户，就是刚才浏览wap网页的用户，这样服务就可以把刚才wap上操作的数据结果，通过网络下发给app，从而让app实现，还原刚才wap的操作场景</p>
+<h2 id="方案流程"><a href="#方案流程" class="headerlink" title="方案流程"></a>方案流程</h2><ul>
+<li>用户在wap网页上产生了行为，产生了用户个人数据</li>
+<li>wap网页收集了一种能够<code>唯一标识</code>设备的信息，并且发送给了服务器</li>
+<li>app安装完毕后第一次运行，也去通过app尝试收集<code>唯一标识</code>设备的信息，并且发给服务器</li>
+<li>服务器经过对比，发现app的<code>唯一标识</code>与wap网页发上来的<code>唯一标识</code>能够匹配</li>
+<li>服务器判断，是同一个人操作，于是下发用户个人数据</li>
+</ul>
+<p>纵观整个流程发现，一切的核心，一切的关键，就是那个<code>唯一标示</code></p>
+<h2 id="选取唯一标识"><a href="#选取唯一标识" class="headerlink" title="选取唯一标识"></a>选取唯一标识</h2><p>这个<code>唯一标识</code>要具备苛刻的条件，想找到其实很不容易</p>
+<ul>
+<li>选择当做<code>唯一标识</code>的内容，必须能让app获取的到</li>
+<li>选择当做<code>唯一标识</code>的内容，必须也能让wap获取的到</li>
+<li>选择当做<code>唯一标识</code>的内容，还必须有能力区分出不同的设备，如果选的<code>唯一标识</code>好几个设备取出来的都一样，那么就乱套了</li>
+</ul>
+<p>那么我们看看遵循这几个条件，我们能选择啥？</p>
+<ul>
+<li>UDID,MAC地址啥的，别说wap了，app都不可能取到了</li>
+<li>JS有好几套，通过网页渲染canvas的方案获取屏幕”指纹”，但这玩意app不可能拿到完全一致的东西，二者对不上，就没任何意义</li>
+<li>IDFA，IDFV，这玩意app是能取到了，但是wap拿不到啊</li>
+</ul>
+<p>上面说的几个都是相对来说，如果能双方都拿到，是可以比较精准的进行设备<code>唯一标识</code>的，但问题是，我们拿不到。。怎么办？</p>
+<p>看看下面几个数据</p>
+<ul>
+<li>设备屏幕尺寸（iOS设备如此的统一，一共就那么几个屏幕尺寸，重复的还不一堆一堆的）</li>
+<li>设备操作系统（iOS系统碎片化如此的低，大部分几乎都升到较高级的系统版本，重复的依然一堆一堆）</li>
+<li>设备IP（IP这玩意会变啊，离开WIFI进入3G，经常变，并且IP这玩意在同一WIFI下也重复的一堆一堆的啊）</li>
+<li>访问时间（时间这玩意更没谱了，你们的用户量越大，某一个确定的时间段内，发生第一次安装，重复的就越多）</li>
+<li>还有更多类似的数据</li>
+</ul>
+<p>发现没有，上面的数据最大的特点就是，有一定的描述设备体征的信息，但是如果只靠这一个描述信息，那结果就是重复的太多太多，根本没法确定一个唯一性。</p>
+<p>但是，如果我们把这么些描述信息做成一个合集，同一时间内满足所有的条件，那么这个设备重复的概率一下就缩减了太多太多。</p>
+<h2 id="举例说明"><a href="#举例说明" class="headerlink" title="举例说明"></a>举例说明</h2><p>举个例子，到app安装完毕第一次打开的时候，所有访问过wap的设备信息，把他们的信息全都收集起来，找到同样的屏幕尺寸，同样的操作系统版本，同样的IP地址，访问时间相差不超过10min（暂定）的设备，在如此多得限定条件下，我们近乎可以认定为，是具有唯一性的设备，是同一个人</p>
+<p>可以看到这里面众多的信息一起去过滤，比较强的过滤条件就是IP，但因为IP存在频繁变化，所以追加了时间条件，IP也可能因为WIFI路由器的原因导致，IP也存在重复和误伤，这时候，又辅助了简单的设备信息进行二次过滤。</p>
+<p>这样我们就找到了一个并不完美的<code>唯一标识</code>，有了这个唯一标识，就可以实现我们的跨浏览器和app的互通。</p>
+<p>其实友盟的SDK就是这么做的</p>
+<p><a href="http://bbs.umeng.com/thread-10-1-1.html" target="_blank" rel="noopener">友盟 SDK文档</a></p>
+<p>友盟通过这个方法，知道了用户是从哪个网页看到的app下载的广告，然后发生的去appstore下载并运行的行为，从而有效的能核算广告的收益</p>
+<blockquote>
+<p>a.通过对应用appstore URL进行封装，获取分渠道点击用户的相关信息，包括：时间、IP、设备类型、操作系统版本；</p>
+<p>b.通过在应用中集成代码，获取初次打开应用的用户信息，包括：时间、IP、设备类型、操作系统版本；</p>
+<p>c.实时对比不同渠道点击用户和应用激活用户信息，区分不同渠道带来的激活用户；</p>
+<p>d.此统计方式不用媒介提供统计数据，实时自动对比，会存在一定误差，但可以基本衡量各渠道间及不同时期的渠道激活转化数据。</p>
+</blockquote>
+<h2 id="方案弊端"><a href="#方案弊端" class="headerlink" title="方案弊端"></a>方案弊端</h2><p>他有什么弊端吗？弊端还是挺明显的，因为他是不完美的<code>唯一标识</code>，所以就存在着误伤。</p>
+<p>什么是误伤？用户A浏览了WAP界面，用户B恰巧用同一屏幕，同一操作系统版本，同一网段出口IP，在既定时间内，B用户下载并运行了APP，这样我们这套方案，会把B识别成A，等到A真的下载完APP后再来运行，数据可能已经失效了</p>
+<p>这种误伤是概率存在的，在现有的限定条件下，随着app的用户体量越来越大，这种误伤将会越来越明显。</p>
+<h1 id="iOSSafariCookie互通方案"><a href="#iOSSafariCookie互通方案" class="headerlink" title="iOSSafariCookie互通方案"></a>iOSSafariCookie互通方案</h1><h2 id="方案简介"><a href="#方案简介" class="headerlink" title="方案简介"></a>方案简介</h2><p>接下来介绍另外一种方案，iOSSafariCookie互通，这种方案借助的是iOS9系统新出的一个系统API<code>SFSafariViewController</code>，这个API是专为Safari设计的。所以这套方案有他的特点</p>
+<ul>
+<li>优点：精准，不会误伤。</li>
+<li>缺点：只能通过safari，不能借助QQ，微信，手百等第三方app的浏览器</li>
+</ul>
+<p>感谢SafariAutoLoginTest这个demo项目提供的思路</p>
+<p><a href="https://github.com/mackuba/SafariAutoLoginTest" target="_blank" rel="noopener">SafariAutoLoginTest Github地址</a></p>
+<h2 id="方案思路"><a href="#方案思路" class="headerlink" title="方案思路"></a>方案思路</h2><p>详细说一下思路，如果我们能在用户访问wap页面的时候，通过网页，网手机里写入一些用户的行为和数据，比如用户名，然后在app运行的时候去读取这个信息，那么就自然能建立起，wap页面访问，和app下载安装后第一次运行，二者之间的联系。但是想要做到这一点，谈何容易。</p>
+<p>大家都知道，iOS是有沙盒的，不同app之间，几乎不可能跨越沙盒屏障来访问数据，wap在浏览器里可以写数据进入cookie，保存在手机上，这没问题，但是app所在的cookie，和刚才的外部浏览器所在的cookie，分属不同沙盒，完全就不是同一份cookie。我们在wap上写cookie写进的是safari的cookie，我们打开自己app读cookie读得是自己app的cookie。</p>
+<p>有什么方法可以跨越沙盒传递数据？<code>URL Scheme</code>没错，通过OpenUrl的方式。如果我在wap页面访问，wap页面发出来一个已经和我们的app约定好的<code>URL Scheme</code>跳转，那么就可以，唤起我们的app，并且伴随着url，传递来数据。</p>
+<p>如果用户手机里安装了我们的app，用户先去浏览wap页面，wap页面触发了url跳转，自动唤起了已经安装的app，并且伴随着url传递来了数据，一气呵成，没错用户很自然的从wap上的操作行为，延续到了app上。</p>
+<p>问题来了，如果用户没装app怎么办？难道让用户先浏览Wap站，产生了行为数据，被引导下载app，下载完后，重新回到wap站，重新再由wap站发起url跳转？这体验简直渣到爆，简直无法忍受</p>
+<h2 id="SFSafariViewController"><a href="#SFSafariViewController" class="headerlink" title="SFSafariViewController"></a>SFSafariViewController</h2><p>iOS9以后，苹果推出了<code>SFSafariViewController</code>这个全新的类，这个类的API允许在app内打开一个safari浏览器，而不是一个app内部的webview。</p>
+<p><strong>这个app内safari和外面系统的safari是同一个，共享同一个沙盒，可以操作同一个cookie</strong></p>
+<p>刚才我们设想的操作流程，用户体验很差的流程</p>
+<ul>
+<li>用户浏览wap站</li>
+<li>用户引导下载app</li>
+<li>用户回到wap站，跳转app</li>
+<li>wap通过openurl唤醒app传递数据</li>
+</ul>
+<p>经过app内safari的处理，我们可以采用一些鬼点子，顺着这个旧思路，把用户体验极差的第三部，第四部，给隐藏了，让用户无感知的静默完成，这样方案就完美了</p>
+<ul>
+<li>用户通过safari浏览wap站，wap站写用户行为数据进入cookie</li>
+<li>用户通过引导下载app，运行app</li>
+<li>第一次运行app，app内静默的打开一个纯透明safari（让用户感觉不出来）</li>
+<li>纯透明的safari访问一个专门用来静默取cookie得页面</li>
+<li>纯透明的safari访问的取cookie的页面，取到了正确的cookie数据，</li>
+<li>纯透明的safari将数据通过openurl，静默的回传给app</li>
+<li>app拿到浏览器数据后，销毁无用的纯透明safari</li>
+</ul>
+<p>流程上看起来很复杂，但结果就是，用户用系统safari，浏览了wap站，下载了app，app打开后就自动能恢复到他浏览wap站的个人信息了（或者其他数据）</p>
+<h1 id="VKSafariDomainBridge使用"><a href="#VKSafariDomainBridge使用" class="headerlink" title="VKSafariDomainBridge使用"></a>VKSafariDomainBridge使用</h1><h1 id="这个工具已经不推荐使用了！！"><a href="#这个工具已经不推荐使用了！！" class="headerlink" title="这个工具已经不推荐使用了！！"></a>这个工具已经不推荐使用了！！</h1><p>原因是，SFViewController的方案在iOS10以后，Openurl事件会以各种方式被系统吞吃掉事件，duplicate事件，等等，因为有了更好的替换方案，所以</p>
+<p><strong>所以非常非常不推荐继续使用这个SafariAutoLogin方案了</strong></p>
+<blockquote>
+<p>上面的流程，如果用代码进行开发还算挺麻烦的，所以我封装了一个工具，来辅助进行这一串静默让用户无感知的操作</p>
+</blockquote>
+<blockquote>
+<p><a href="https://github.com/Awhisper/VKSafariDomainBridge" target="_blank" rel="noopener">VKSafariDomainBridge Github地址</a></p>
+</blockquote>
+<blockquote>
+<p>按理说整个流程应该分为2部分</p>
+</blockquote>
+<blockquote>
+<ul>
+<li>wap页面功能：<ul>
+<li>用户浏览wap页的存cookie （wap地址1，用户访问用的）</li>
+<li>隐藏safari浏览的读cookie页面（wap地址2，静默代码访问用的）</li>
+<li>隐藏safari跳转openurl功能</li>
+</ul>
+</li>
+<li>app内功能：<ul>
+<li>打开隐藏safari</li>
+<li>收听openurl的回调，处理数据</li>
+<li>关闭隐藏safari</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<blockquote>
+<p>鉴于实在是不会h5相关的开发，所以我封装的工具就只包含app内的功能</p>
+</blockquote>
+<blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化 VKSafariDomainBridge</span></span><br><span class="line"><span class="built_in">NSURL</span> *url = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"wap地址2，静默代码访问用的url"</span>];</span><br><span class="line"><span class="built_in">NSString</span> *key = <span class="string">@"xxkey"</span></span><br><span class="line">[VKSafariDomainBridge VKSetupSafariBridgeUrl:url AndKey:key];</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>url的地址就是<code>wap地址2，静默代码访问用的</code><br>key作为协议识别关键字，隐藏safari发起的跳转，通过这个key识别，才会走入VKSafariDomainBridge的处理逻辑，如果是其他正规渠道的openurl跳转，key不匹配，便直接走正常逻辑，不会进行VKSafariDomainBridge处理</p>
+</blockquote>
+<blockquote>
+<p>想要获取wap用户数据的时候</p>
+</blockquote>
+<blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[[VKSafariDomainBridge VKSingleton]VKGetSafariInfo:^(<span class="built_in">BOOL</span> success, <span class="built_in">NSString</span> *info) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@ status = %@"</span>,info,@(success));</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+</blockquote>
+<blockquote>
+<p>通过回调，如果成功success会返回YES，并且整个跳转含有数据的url会被转成string，通过block返回，如果失败，则会返回NO</p>
+</blockquote>
+<blockquote>
+<h2 id="代码分析"><a href="#代码分析" class="headerlink" title="代码分析"></a>代码分析</h2></blockquote>
+<blockquote>
+<p>这个功能需要通过appdelegate的openurl回调来实现，既然是封装工具，就要做到无侵入性，写成category形式，只要使用者导入工程，便可以一行代码不需要写，自动生效。</p>
+</blockquote>
+<blockquote>
+<p><code>application:openURL:options:</code>这个方法，如果开发者没有在工程中用到，我会自动添加，保证了openurl回调可以正常工作。</p>
+</blockquote>
+<blockquote>
+<p>如果开发者已经在工程中使用，已经有很多使用者自己的openurl协议要处理了，那么我的category会生成一个新方法，交换掉老的系统函数（MethodSwizzling），先判断url协议里是否含有上面提到的专属<code>Key</code>，含有则走我的处理逻辑，如果不含有，调用老函数，保证原项目功能无异常。</p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">SEL origSelector = <span class="keyword">@selector</span>(application:openURL:options:);</span><br><span class="line">SEL newSelector = <span class="keyword">@selector</span>(vkApplication:openURL:options:);</span><br><span class="line">    </span><br><span class="line">Method origMethod = class_getInstanceMethod(<span class="keyword">class</span>,origSelector);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">if</span> (!origMethod) &#123;</span><br><span class="line">    SEL emptySelector = <span class="keyword">@selector</span>(vkEmptyApplication:openURL:options:);</span><br><span class="line">    Method emptyMethod = class_getInstanceMethod(<span class="keyword">class</span>,emptySelector);</span><br><span class="line">    IMP emptyImp = method_getImplementation(emptyMethod);</span><br><span class="line">    class_addMethod(<span class="keyword">self</span>, origSelector, emptyImp,</span><br><span class="line">                    method_getTypeEncoding(emptyMethod));</span><br><span class="line">&#125;</span><br><span class="line">    </span><br><span class="line">origMethod = class_getInstanceMethod(<span class="keyword">class</span>,origSelector);</span><br><span class="line">Method newMethod = class_getInstanceMethod(<span class="keyword">class</span>,newSelector);</span><br><span class="line"><span class="keyword">if</span> (origMethod &amp;&amp; newMethod) &#123;</span><br><span class="line">    method_exchangeImplementations(origMethod, newMethod);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>接下来就是打开一个透明safari，等待来自网页的openurl跳转。制作透明safari的方法就是new出来后，alpha改为0，直接present。</p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)VKGetSafariInfo:(VKSafariReturn)rtBlock</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([[[<span class="built_in">UIDevice</span> currentDevice] systemVersion] floatValue] &gt;= <span class="number">9.0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (rtBlock) &#123;</span><br><span class="line">            <span class="keyword">self</span>.rtblock = rtBlock;</span><br><span class="line">            </span><br><span class="line">            SFSafariViewController *safari = [[SFSafariViewController alloc]initWithURL:<span class="keyword">self</span>.safariUrl];</span><br><span class="line">            safari.delegate = <span class="keyword">self</span>;</span><br><span class="line">            safari.modalPresentationStyle = <span class="built_in">UIModalPresentationOverCurrentContext</span>;</span><br><span class="line">            safari.view.alpha = <span class="number">0.0</span>f;</span><br><span class="line">            <span class="keyword">self</span>.safari = safari;</span><br><span class="line">            </span><br><span class="line">            <span class="built_in">UIViewController</span> *currentVC = [<span class="keyword">self</span> getCurrentVC];</span><br><span class="line">            <span class="keyword">self</span>.currentVC = currentVC;</span><br><span class="line">            [currentVC presentViewController:safari animated:<span class="literal">NO</span> completion:<span class="literal">nil</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;<span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="keyword">if</span> (rtBlock) &#123;</span><br><span class="line">            rtBlock(<span class="literal">NO</span>,<span class="literal">nil</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当透明safari加载完毕后，略微延迟后直接销毁safari，如果在延迟期间，openurl返回则判断，取cookie数据成功，回调成功，如果超时，就判断取cookie数据失败，回调失败。</p>
+</blockquote>
+<blockquote>
+<p>此处是SFSafariViewController的delegate回调</p>
+</blockquote>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)safariViewController:(SFSafariViewController *)controller didCompleteInitialLoad:(<span class="built_in">BOOL</span>)didLoadSuccessfully&#123;</span><br><span class="line">    __<span class="keyword">weak</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>) weakself = <span class="keyword">self</span>;</span><br><span class="line">    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="keyword">self</span>.timeOut * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [weakself.currentVC dismissViewControllerAnimated:<span class="literal">NO</span> completion:^&#123;</span><br><span class="line">            weakself.safari = <span class="literal">nil</span>;</span><br><span class="line">            weakself.currentVC = <span class="literal">nil</span>;</span><br><span class="line">        &#125;];</span><br><span class="line">        [weakself VKTimeOut];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>openUrl的逻辑就不细说明了。</p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+            <a href="/tags/Growth/" rel="tag"># Growth</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/06/AsyncDisplayKit源码分析/" rel="next" title="AsyncDisplayKit源码分析（一）轮廓梳理">
+                <i class="fa fa-chevron-left"></i> AsyncDisplayKit源码分析（一）轮廓梳理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/17/关于blog的闲扯淡/" rel="prev" title="关于blog的闲扯淡">
+                关于blog的闲扯淡 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Update-2016-11-23"><span class="nav-number">1.</span> <span class="nav-text">Update 2016.11.23</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Deeper-Link-简介"><span class="nav-number">2.</span> <span class="nav-text">Deeper Link 简介</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#设备指纹唯一识别方案"><span class="nav-number">3.</span> <span class="nav-text">设备指纹唯一识别方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方案流程"><span class="nav-number">3.1.</span> <span class="nav-text">方案流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选取唯一标识"><span class="nav-number">3.2.</span> <span class="nav-text">选取唯一标识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#举例说明"><span class="nav-number">3.3.</span> <span class="nav-text">举例说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案弊端"><span class="nav-number">3.4.</span> <span class="nav-text">方案弊端</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#iOSSafariCookie互通方案"><span class="nav-number">4.</span> <span class="nav-text">iOSSafariCookie互通方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#方案简介"><span class="nav-number">4.1.</span> <span class="nav-text">方案简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方案思路"><span class="nav-number">4.2.</span> <span class="nav-text">方案思路</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SFSafariViewController"><span class="nav-number">4.3.</span> <span class="nav-text">SFSafariViewController</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VKSafariDomainBridge使用"><span class="nav-number">5.</span> <span class="nav-text">VKSafariDomainBridge使用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#这个工具已经不推荐使用了！！"><span class="nav-number">6.</span> <span class="nav-text">这个工具已经不推荐使用了！！</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#代码分析"><span class="nav-number">6.1.</span> <span class="nav-text">代码分析</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'iOS app与浏览器深度链接 DeeperLink', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

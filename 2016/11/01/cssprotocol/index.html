@@ -1,0 +1,1481 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Github,Hybrid,CSS," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="CSS产生的想法早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式CSS Class然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定CSS Class的名字就能自动生效。  样式和界面完全隔离解耦 样式之间可以自由任意排列组合创建新CSS Class 对任意界面元素指定样式Class名就能自动">
+<meta name="keywords" content="Github,Hybrid,CSS">
+<meta property="og:type" content="article">
+<meta property="og:title" content="iOS上的CSS样式协议 VKCssProtocol">
+<meta property="og:url" content="http://yoursite.com/2016/11/01/cssprotocol/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="CSS产生的想法早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式CSS Class然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定CSS Class的名字就能自动生效。  样式和界面完全隔离解耦 样式之间可以自由任意排列组合创建新CSS Class 对任意界面元素指定样式Class名就能自动">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ww2.sinaimg.cn/mw1024/678c3e91jw1f9coq69wx5g20sb0i5wsf.gif">
+<meta property="og:updated_time" content="2017-03-12T13:02:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="iOS上的CSS样式协议 VKCssProtocol">
+<meta name="twitter:description" content="CSS产生的想法早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式CSS Class然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定CSS Class的名字就能自动生效。  样式和界面完全隔离解耦 样式之间可以自由任意排列组合创建新CSS Class 对任意界面元素指定样式Class名就能自动">
+<meta name="twitter:image" content="http://ww2.sinaimg.cn/mw1024/678c3e91jw1f9coq69wx5g20sb0i5wsf.gif">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/01/cssprotocol/"/>
+
+
+
+
+
+  <title>iOS上的CSS样式协议 VKCssProtocol | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/01/cssprotocol/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">iOS上的CSS样式协议 VKCssProtocol</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-01T16:23:35+08:00">
+                2016-11-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具代码/" itemprop="url" rel="index">
+                    <span itemprop="name">工具代码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/01/cssprotocol/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/11/01/cssprotocol/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/11/01/cssprotocol/" class="leancloud_visitors" data-flag-title="iOS上的CSS样式协议 VKCssProtocol">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="CSS产生的想法"><a href="#CSS产生的想法" class="headerlink" title="CSS产生的想法"></a>CSS产生的想法</h1><p>早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式<code>CSS Class</code>然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定<code>CSS Class</code>的名字就能自动生效。</p>
+<ul>
+<li>样式和界面完全隔离解耦</li>
+<li>样式之间可以自由任意排列组合创建新CSS Class</li>
+<li>对任意界面元素指定样式Class名就能自动生效</li>
+</ul>
+<p><strong>客户端场景</strong></p>
+<ul>
+<li>UI出App设计图也会有一套标准UI库</li>
+<li>不同的底色，字号，字色，圆角，字体，阴影等等样式属性相互组合</li>
+<li>UI有时候更换整体设计风格的时候，所有项目中用到的标准组件，应该随着UI设计一起变为最新的设计效果</li>
+<li>标准UI库扩展延伸一下，就是客户端主题风格，换肤等系统</li>
+</ul>
+<p><strong>工厂模式</strong></p>
+<p>看到上面的设计需求，相信很多人第一时间想到的都是客户端里构建一套工厂模式</p>
+<ul>
+<li>由工厂模式统一生成UI设计的标准控件</li>
+<li>所有需要使用标注控件的地方都用工厂去生成</li>
+<li>当UI需要整体修改样式属性，修改工厂模式的构造方法就能实现整体应用新效果</li>
+</ul>
+<p>我不是很喜欢这种模式</p>
+<ul>
+<li>写法不统一，必须让使用者使用工厂的构造方法来创建标准UI，非标准UI写法就随意了</li>
+<li>耦合性比较强，必须引入工厂模块</li>
+</ul>
+<p><strong>Css样式,Protocol协议</strong></p>
+<ul>
+<li>希望引入Css的样式思想，让样式与界面分离</li>
+<li>将UI给的统一标准设计图，专心的写成<code>.css</code>文件</li>
+<li>可以动态下发，可以动态替换，动态更新效果。</li>
+<li>希望像iOS Protocol协议那样工作</li>
+<li>不管控件是Label Button Image View，CSSClass都可以直接指定一个协议名字，样式功能就自动生效</li>
+<li>不管控件是用工厂创建的，还是Xib拖线的，还是手写代码写的，都能无缝接入这个cssprotocol</li>
+<li><code>xxview.protocol = &quot;cssclassname1 cssclassname2&quot;</code> 这种感觉</li>
+<li>协议可以同时指定多个样式，以空格区分，样式之间自由组合</li>
+</ul>
+<p><strong>我不想动态修改界面元素布局，动态创建全新的界面</strong></p>
+<p>大家都知道，CSS有一个很大的用途就是用于界面布局，并且css的布局写法和iOS原生的布局写法有很大的区别，所以在这里我想强调一点，我这里写的cssprotocol，不想包含任何跟布局有关，只是单纯的动态配置外观样式，丝毫不影响布局。</p>
+<p>原因是，项目里总会存在着各种各样的布局方式，有frame布局，有masonry autolayout，也有XIB拖线autolayout，我希望我写的东西能让使用的人很快的在自己项目里接入，而不是一下删掉旧的布局方案，全都替换成我的。</p>
+<p>我希望使用者直接在现有的代码里，无论是哪种方式实现的界面，取到UIView，直接指定cssprotocol，就自动样式生效了，不要让使用者需要大规模改动现有代码。</p>
+<p>同理，我也没想让这一套能够动态的创建UI，真要动态创建原生UI，直接用samurai reactnative weex好了。</p>
+<p>还原我的初衷，我还是希望原生开发者能在不改变自己的项目的情况下，很快的接入这个工具，对于主题样式能够控制的更灵活和方便。</p>
+<blockquote>
+<p>题外话：</p>
+<p>我就很不喜欢ASDK的设计，一整套异步渲染，flexbox页面布局，网络，缓存，滚动控制等等一堆完整解决方案杂糅在一起，让使用者的代价异常的高，哪怕提供了UIKit转ASNode的简单入口也无法改变这一笨重无比的事实</p>
+<p>其实ASDK每一个feature，单看源码，单独拆出来模块，学习思想，吸收进入自己的项目都是很好地。</p>
+</blockquote>
+<h1 id="VKCssProtocol"><a href="#VKCssProtocol" class="headerlink" title="VKCssProtocol"></a>VKCssProtocol</h1><p><a href="https://github.com/Awhisper/VKCssProtocol" target="_blank" rel="noopener">VKCssProtocol  Github地址</a></p>
+<p>整个项目的代码，以及使用demo，都在上面</p>
+<a id="more"></a>
+<p>这其实是一个为native开发准备的工具，是OC的代码，OC的实现，别被CSS的名字欺骗了╮(╯_╰)╭</p>
+<p>对于这样的iOS客户端开发的场景，多少会有一定的帮助</p>
+<ul>
+<li>UI出App设计图有一套标准UI库，包括大中小标题，大中小按钮，bar配色，分割线等</li>
+<li>每种标准样式都含有不同的底色，字号，字色，圆角，字体，阴影等等样式属性，属性之间相互自有组合</li>
+<li>UI有时候更换整体设计风格的时候，所有项目中用到的标准组件，应该随着UI设计一起动态生效为最新的设计效果</li>
+<li>客户端主题风格切换，换肤等系统</li>
+</ul>
+<h1 id="基本用法"><a href="#基本用法" class="headerlink" title="基本用法"></a>基本用法</h1><p>简单的看一个GIF吧，左边就是CSS代码，后续我会给出目前已支持的CSS列表，在这里写完后，右侧可以实时看到css效果，可以看到我准备了2个view样式，准备了2个文字样式，然后四个UI进行排列组合，任意交叉组合，实现各种灵活的设计</p>
+<p><img src="http://ww2.sinaimg.cn/mw1024/678c3e91jw1f9coq69wx5g20sb0i5wsf.gif" alt="gif"></p>
+<p><strong>先在项目里创建.css文件</strong></p>
+<p>然后在里面写Css代码，这里我粘个样例</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.commenView1</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>:orange;</span><br><span class="line">    <span class="attribute">border-top</span>: <span class="number">3px</span> solid <span class="number">#9AFF02</span>;</span><br><span class="line">    <span class="attribute">border-left</span>: <span class="number">5px</span> solid black;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.commenView2</span>&#123;</span><br><span class="line">    <span class="attribute">background-color</span>:<span class="number">#FF9D6F</span>;</span><br><span class="line">    <span class="attribute">border-color</span>:black;</span><br><span class="line">    <span class="attribute">border-width</span>:<span class="number">2px</span>;</span><br><span class="line">    <span class="attribute">border-radius</span>:<span class="number">15px</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.commenText1</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>:white ;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">20px</span> ;</span><br><span class="line">    <span class="attribute">text-align </span>: right;</span><br><span class="line">    <span class="attribute">text-transform</span>: lowercase;</span><br><span class="line">    <span class="attribute">text-decoration</span>: line-through;</span><br><span class="line">&#125;</span><br><span class="line"><span class="selector-class">.commenText2</span>&#123;</span><br><span class="line">    <span class="attribute">color</span>:black ;</span><br><span class="line">    <span class="attribute">font-size</span>: <span class="number">15px</span> ;</span><br><span class="line">    <span class="attribute">text-align </span>: right;</span><br><span class="line">    <span class="attribute">text-transform</span>: uppercase;</span><br><span class="line">    <span class="attribute">text-decoration</span>: underline;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>在iOS项目代码里加载Css</strong></p>
+<p>在didFinishLaunch or 某个你打算加载整体Css文件的位置</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//先import 头文件</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"VKCssProtocol.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">//读取bundle中名为cssDemo的css文件</span></span><br><span class="line">@loadBundleCss(<span class="string">@"cssDemo"</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>对任意UI指定协议</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">UILabel</span> *btabc = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">20</span>, <span class="number">50</span>, <span class="keyword">self</span>.view.bounds.size.width - <span class="number">40</span>, <span class="number">80</span>)];</span><br><span class="line">btabc.text = <span class="string">@"commenView1 commenText1"</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:btabc];</span><br><span class="line">    </span><br><span class="line"><span class="built_in">UILabel</span> *lbabc = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">20</span>, <span class="number">150</span>, <span class="keyword">self</span>.view.bounds.size.width - <span class="number">40</span>, <span class="number">80</span>)];</span><br><span class="line">lbabc.text = <span class="string">@"commenView2 commenText1"</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:lbabc];</span><br><span class="line">    </span><br><span class="line"><span class="built_in">UILabel</span> *btabcd = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">20</span>, <span class="number">250</span>, <span class="keyword">self</span>.view.bounds.size.width - <span class="number">40</span>, <span class="number">80</span>)];</span><br><span class="line">btabcd.text = <span class="string">@"commenView1 commenText2"</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:btabcd];</span><br><span class="line">    </span><br><span class="line"><span class="built_in">UILabel</span> *lbabcd = [[<span class="built_in">UILabel</span> alloc]initWithFrame:<span class="built_in">CGRectMake</span>(<span class="number">20</span> , <span class="number">350</span>, <span class="keyword">self</span>.view.bounds.size.width - <span class="number">40</span>, <span class="number">80</span>)];</span><br><span class="line">lbabcd.text = <span class="string">@"commenView2 commenText2"</span>;</span><br><span class="line">[<span class="keyword">self</span>.view addSubview:lbabcd];</span><br></pre></td></tr></table></figure>
+<p>上面的UI创建可以用任意方法创建，frame，autolayout，xib，随便创建</p>
+<p>只需要对指定的UI对象，赋值cssClass属性，就可以指定css协议，就直接生效了，</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">btabc.cssClass = <span class="string">@"commenView1 commenText1"</span>;</span><br><span class="line">lbabc.cssClass = <span class="string">@"commenView2 commenText1"</span>;</span><br><span class="line">btabcd.cssClass = <span class="string">@"commenView1 commenText2"</span>;</span><br><span class="line">lbabcd.cssClass = <span class="string">@"commenView2 commenText2"</span>;</span><br></pre></td></tr></table></figure>
+<p>可以对一个UI对象，指定多个cssClass协议，他们一起组合生效，优先级按最后生效的算</p>
+<h1 id="加载CSS的API"><a href="#加载CSS的API" class="headerlink" title="加载CSS的API"></a>加载CSS的API</h1><p>加载css主要依赖的是<code>VKCssClassManager</code>这个类，但提供了4个宏，可以快速方便的加载css</p>
+<ul>
+<li><code>VKLoadBundleCss(@&quot;cssDemo&quot;);</code></li>
+</ul>
+<p>加载bundle内文件名为cssDemo的.css文件</p>
+<ul>
+<li><code>VKLoadPathCss(@&quot;xxx/xxx.css&quot;);</code></li>
+</ul>
+<p>加载路径path下的css文件</p>
+<ul>
+<li><code>@loadBundleCss(@&quot;cssDemo&quot;);</code></li>
+</ul>
+<p>等同于VKLoadBundleCss，模拟了@语法糖</p>
+<ul>
+<li><code>@loadPathCss(@&quot;xxx/xxx.css&quot;);</code></li>
+</ul>
+<p>等同于VKLoadPathCss，模拟了@语法糖</p>
+<blockquote>
+<p>吐槽：</p>
+<p>模拟@selector()这种的OC语法糖的方案真TM坑爹</p>
+<p>凡是这种@loadBundleCss的宏，是无法获得xcode提供的代码自动补全的</p>
+<p>直接使用VKLoadBundleCss，是可以获得xcode代码自动补全的</p>
+<p>跟RAC的@strongify @weakify一样，无法获得代码自动补全</p>
+<p>这真的是一种只有装B，没球用的，看起来很pro的写法</p>
+</blockquote>
+<h1 id="指定cssClass"><a href="#指定cssClass" class="headerlink" title="指定cssClass"></a>指定cssClass</h1><p>上面贴过代码，我对所有的UIView都扩写了一个category，里面新增了一个属性<code>cssClass</code>，对这个属性赋值，就相当于给这个UIView对象指定所遵从的cssClass协议，可以同时指定多个cssClass协议，用空格分开。</p>
+<p>一个cssClass其实是一系列样式属性style的集合，将这一系列样式属性组合在一起，起个名字就是cssClass了，样给一个UI指定了cssClass就相当于一组style都生效了。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">btabc.cssClass = <span class="string">@"commenView1 commenText1"</span>;</span><br><span class="line">lbabc.cssClass = <span class="string">@"commenView2 commenText1"</span>;</span><br><span class="line">btabcd.cssClass = <span class="string">@"commenView1 commenText2"</span>;</span><br><span class="line">lbabcd.cssClass = <span class="string">@"commenView2 commenText2"</span>;</span><br></pre></td></tr></table></figure>
+<h1 id="指定cssStyle"><a href="#指定cssStyle" class="headerlink" title="指定cssStyle"></a>指定cssStyle</h1><p>如果使用者并不打算专门写一个cssClass，只是打算简单的使用这个工具给一个ui赋值一个或几个style，这也是支持的（嗯，常规的html组件也是可以写class属性和style属性的嘛）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">btabc.cssStyle = <span class="string">@"background-color:black border-color:black"</span>;</span><br></pre></td></tr></table></figure>
+<p>我扩写的category里，还新增了一个属性<code>cssStyle</code>，对这个属性赋值，就相当于给这个UIView对象不创建一个cssClass，直接写一个或多个style使之生效</p>
+<p>相当于你把一个或多个style写法，用空格分开，直接赋值给cssStyle即可</p>
+<h1 id="目前支持的style"><a href="#目前支持的style" class="headerlink" title="目前支持的style"></a>目前支持的style</h1><ul>
+<li><p><code>background-color:orange;</code>View的背景色样式，冒号后是颜色参数，可以直接输入颜色英文or #ffffff这样的十六进制色值</p>
+</li>
+<li><p><code>color:#ffffff</code>如果含有文字，文字的颜色，冒号后是颜色参数，可以直接输入颜色英文or #ffffff这样的十六进制色值</p>
+</li>
+<li><p><code>font-size: 20px ;</code>如果含有文字，文字的字体大小，冒号后面是字号参数</p>
+</li>
+<li><p><code>border-color:red</code>View的边框颜色，等同于layer.borderColor，冒号后是颜色参数，可以直接输入颜色英文or #ffffff这样的十六进制色值</p>
+</li>
+<li><p><code>border-width: 2px</code>View的边框宽度，等同于layer.borderWidth，冒号后是宽度参数</p>
+</li>
+<li><p><code>text-align: center</code>如果含有文字，文字的左右居中对齐，等同于TextAlignment，参数可以输入left center right justify</p>
+</li>
+<li><p><code>border-radius: 2px</code>View的边框圆角，等同于layer.cornerRadius，冒号后面是半径参数</p>
+</li>
+<li><p><code>text: abcdefg</code>如果含有文字，文字的内容，后面参数是字符串</p>
+</li>
+<li><p><code>font-family: fontname</code>如果含有文字，文字的字体，等同于UIFont fontWithName的name，也可以直接输入systemFont，boldSystemFont，italicSystemFont三个快捷输入</p>
+</li>
+<li><p><code>background-image: imagenamed</code>如果含有image，image的名字，等同于UIImage的imageNamed的name</p>
+</li>
+<li><p><code>text-shadow: 2px</code>如果含有文字，文字的阴影宽度，后面是数字参数</p>
+</li>
+<li><p><code>text-transform:uppercase</code>如果含有文字，文字的变化，包含uppercase，lowercase，capitalize三个值，全小写，全大写，首字母大写</p>
+</li>
+<li><code>text-decoration:underline</code>如果含有文字，文字加特殊处理，包含underline，line-through两个值，下划线，删除线</li>
+<li><code>border-top: 3px solid #9AFF02</code>对UIView进行上右下左的单独边线处理，这个值是上边线，第一个参数是宽度，solid后面是颜色</li>
+<li><code>border-right: 3px solid #9AFF02</code>对UIView进行上右下左的单独边线处理，这个值是右边线，第一个参数是宽度，solid后面是颜色</li>
+<li><code>border-bottom: 3px solid #9AFF02</code>对UIView进行上右下左的单独边线处理，这个值是下边线，第一个参数是宽度，solid后面是颜色</li>
+<li><code>border-left: 3px solid #9AFF02</code>对UIView进行上右下左的单独边线处理，这个值是左边线，第一个参数是宽度，solid后面是颜色</li>
+</ul>
+<h1 id="支持灵活扩展"><a href="#支持灵活扩展" class="headerlink" title="支持灵活扩展"></a>支持灵活扩展</h1><p>上面提到的每一个style都是一个模块化组件，如果希望扩展新的style，只需要遵循并且实现模块化协议即可轻松地在整个框架里，加入全新的style模块</p>
+<p>以<code>background-color</code>这个style模块为例</p>
+<p>随便新建一个继承自NSObject的类，让这个类遵从<code>&lt;VKCssStyleProtocol&gt;</code>协议</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"VKCssStylePch.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VKBackgroundcolorStyle</span> : <span class="title">NSObject</span>&lt;<span class="title">VKCssStyleProtocol</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>然后在.m文件实现里，先使用<code>VK_REGISTE_ATTRIBUTE()</code>宏向框架注册，然后必须实现2个类方法协议</p>
+<ul>
+<li>+styleName: 实现这个协议决定于你写css的时候冒号前的名字</li>
+<li>+setTarget: styleValue: 实现这个协议决定于你如何解读css里面冒号后面的参数，并且处理传入的target，也就是目标UIView</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VKBackgroundcolorStyle</span></span></span><br><span class="line"></span><br><span class="line">VK_REGISTE_ATTRIBUTE()</span><br><span class="line"></span><br><span class="line">+ (<span class="built_in">NSString</span> *)styleName&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="string">@"background-color"</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)setTarget:(<span class="keyword">id</span>)target styleValue:(<span class="keyword">id</span>)value&#123;</span><br><span class="line">    <span class="built_in">UIColor</span> *color = [value VKIdToColor];</span><br><span class="line">    <span class="keyword">if</span> ([target isKindOfClass:[<span class="built_in">UIView</span> <span class="keyword">class</span>]]) &#123;</span><br><span class="line">        [(<span class="built_in">UIView</span> *)target setBackgroundColor:color];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<h1 id="动态更新样式"><a href="#动态更新样式" class="headerlink" title="动态更新样式"></a>动态更新样式</h1><p><code>VKCssClassManager</code>这个类负责管理所有的css样式表，我们希望这个css文件就好像配置表一样，可以动态下发，这样在未来发版之后，也能改变app的主题样式，自然就需要一套刷新机制</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">void</span>)readBundleCssFile:(<span class="built_in">NSString</span> *)cssFile;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)readCssFilePath:(<span class="built_in">NSString</span> *)cssFilePath;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)reloadCssFile;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">void</span>)clearCssFile;</span><br></pre></td></tr></table></figure>
+<p>上面是<code>VKCssClassManager</code>的接口，由于bundle里的css文件是不可更新的，因此刷新机制与readBundleCssFile没啥关系，只有通过readCssFilePath路径加载的刷新机制才有意义</p>
+<ul>
+<li>reloadCssFile 的用处就是沿着原路径重新加载css，使用场景是新的css覆盖了旧CSS路径不变，在reloadCssFile的时候会自动触发clearCssFile;</li>
+<li>clearCssFile 的用处是让cssClassManager清空目前所管理的所有class；</li>
+<li>在不直接使用reloadCssFile的情况下，可以先执行clearCssFile，再执行readCssFilePath，从而实现清空css后加载新路径的css文件</li>
+</ul>
+<h1 id="HotReloader"><a href="#HotReloader" class="headerlink" title="HotReloader"></a>HotReloader</h1><p>大家在Gif里看到了像playground一样，无需编译和重新运行，每改一行代码，界面就立刻实时生效的效果，主要是额外写了一个插件<code>HotReloader</code></p>
+<p>由于HotReloader的设计初衷是给调试，高效的实时看效果用的，因此整个HotReloader通过编译控制，所有函数只有在模拟器编译的情况下才有效，真机下HotReloader回自动失效</p>
+<p>这个HotReloader不是必须的，你完全可以不使用它，整个CssProtocol一样可以work</p>
+<p>想要使用它需要先import头文件<code>#import &quot;VKCssHotReloader.h&quot;</code>，然后在准备加载Css的地方用预编译控制，控制模拟器下加载css的代码变为hotReloader监听Css</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#if TARGET_IPHONE_SIMULATOR</span></span><br><span class="line">    <span class="comment">//playground调试</span></span><br><span class="line">    <span class="comment">//JS测试包的本地绝对路径</span></span><br><span class="line">    <span class="built_in">NSString</span> *rootPath = [[<span class="built_in">NSBundle</span> mainBundle] objectForInfoDictionaryKey:<span class="string">@"projectPath"</span>];;</span><br><span class="line">    <span class="built_in">NSString</span> *cssPath = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%@%@"</span>, rootPath, <span class="string">@"/cssDemo.css"</span>];</span><br><span class="line">    </span><br><span class="line">    [VKCssHotReloader hotReloaderListenCssPath:cssPath];</span><br><span class="line"><span class="meta">#else</span></span><br><span class="line">	VKLoadBundleCss(<span class="string">@"cssDemo"</span>);</span><br><span class="line"><span class="meta">#endif</span></span><br></pre></td></tr></table></figure>
+<p>这个绝对路径一定要填Mac的磁盘文件路径哟，用过JSPatchPlaygroundTool的一定不会陌生</p>
+<p>做完这件事之后还要注意2个事情</p>
+<ul>
+<li>在你打算开启调试的地方调用<code>[VKCssHotReloader startHotReloader];</code>（比如某个界面的ViewDidLoad）</li>
+<li>在你打算停止调试的地方调用<code>[VKCssHotReloader endHotReloader];</code>(比如某个界面的dealloc)</li>
+</ul>
+<p>为什么要这么做，因为一旦当你startHotReloader的时候，所有进行过cssClass，cssStyle设置的view都会被建立一个监听，因此会造成View对象的额外持有导致的不释放，因此当你不打算HotReload了就要关闭这个监听endHotReloader</p>
+<p><strong>因为这样的设计有可能造成使用不当的内存Leak，所以对HotReloader的所有代码都进行了编译控制，只有模拟器下才会工作，真机orRelease包下，无论你怎么忘记写endHotReloader都不会造成Leak</strong></p>
+<h1 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h1><p>整个结构大体如这样，采用模块化的设计之后，就是有需求完全按着自己的意愿任意扩充新支持的style属性了。</p>
+<p>不过有一点要补充的是</p>
+<p>由于最近比较忙，这玩意都拖了半个月才凑合写完，我目前已经支持的很多属性，其实实现并不是很优雅</p>
+<p>比如</p>
+<ul>
+<li>border-top </li>
+<li>border-bottom</li>
+<li>border-right</li>
+<li>border-left</li>
+<li>font-weight</li>
+</ul>
+<p>四边独立边线凑合用比较low的方法做了，只是图快，以后这四个模块还得再好好雕琢一下</p>
+<p>字体加重这个模块，用的stroke结果会把字体变镂空，反正没啥工夫好好细弄一下</p>
+<p>后续我还打算做 四个角不同弧度的圆角属性</p>
+<p>总之，这玩意还会不断完善补充</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Github/" rel="tag"># Github</a>
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+            <a href="/tags/CSS/" rel="tag"># CSS</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/30/wxappdemo/" rel="next" title="前端外行的微信小程序瞎折腾之旅">
+                <i class="fa fa-chevron-left"></i> 前端外行的微信小程序瞎折腾之旅
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/18/从antlr到语法解析/" rel="prev" title="从antlr扯淡到一点点编译原理">
+                从antlr扯淡到一点点编译原理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#CSS产生的想法"><span class="nav-number">1.</span> <span class="nav-text">CSS产生的想法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VKCssProtocol"><span class="nav-number">2.</span> <span class="nav-text">VKCssProtocol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基本用法"><span class="nav-number">3.</span> <span class="nav-text">基本用法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#加载CSS的API"><span class="nav-number">4.</span> <span class="nav-text">加载CSS的API</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指定cssClass"><span class="nav-number">5.</span> <span class="nav-text">指定cssClass</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#指定cssStyle"><span class="nav-number">6.</span> <span class="nav-text">指定cssStyle</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#目前支持的style"><span class="nav-number">7.</span> <span class="nav-text">目前支持的style</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#支持灵活扩展"><span class="nav-number">8.</span> <span class="nav-text">支持灵活扩展</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态更新样式"><span class="nav-number">9.</span> <span class="nav-text">动态更新样式</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#HotReloader"><span class="nav-number">10.</span> <span class="nav-text">HotReloader</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#补充"><span class="nav-number">11.</span> <span class="nav-text">补充</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'iOS上的CSS样式协议 VKCssProtocol', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

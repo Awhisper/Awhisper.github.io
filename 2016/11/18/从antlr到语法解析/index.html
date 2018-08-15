@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编译原理," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西  比如JSPatchConvertor，他可以做到把OC代码输入后直接转化成JSPatch代码，  比如objc2swift，他可以做到把OC代码输入后直接转化为Swift代码   这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇JSPatchConvertor实现原理，我们可以好好看看。 从这篇文章里，我们看到了一个工具，一个看起">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从antlr扯淡到一点点编译原理">
+<meta property="og:url" content="http://yoursite.com/2016/11/18/从antlr到语法解析/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西  比如JSPatchConvertor，他可以做到把OC代码输入后直接转化成JSPatch代码，  比如objc2swift，他可以做到把OC代码输入后直接转化为Swift代码   这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇JSPatchConvertor实现原理，我们可以好好看看。 从这篇文章里，我们看到了一个工具，一个看起">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerparser.png">
+<meta property="og:updated_time" content="2017-03-12T13:06:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从antlr扯淡到一点点编译原理">
+<meta name="twitter:description" content="网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西  比如JSPatchConvertor，他可以做到把OC代码输入后直接转化成JSPatch代码，  比如objc2swift，他可以做到把OC代码输入后直接转化为Swift代码   这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇JSPatchConvertor实现原理，我们可以好好看看。 从这篇文章里，我们看到了一个工具，一个看起">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/11/18/从antlr到语法解析/"/>
+
+
+
+
+
+  <title>从antlr扯淡到一点点编译原理 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/18/从antlr到语法解析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">从antlr扯淡到一点点编译原理</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-18T12:51:38+08:00">
+                2016-11-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/11/18/从antlr到语法解析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/11/18/从antlr到语法解析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/11/18/从antlr到语法解析/" class="leancloud_visitors" data-flag-title="从antlr扯淡到一点点编译原理">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西</p>
+<ul>
+<li><p>比如<a href="http://bang590.github.io/JSPatchConvertor/" target="_blank" rel="noopener">JSPatchConvertor</a>，他可以做到把OC代码输入后直接转化成JSPatch代码，</p>
+</li>
+<li><p>比如<a href="http://objc2swift.yahoo-labs.jp/" target="_blank" rel="noopener">objc2swift</a>，他可以做到把OC代码输入后直接转化为Swift代码</p>
+</li>
+</ul>
+<p>这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇<a href="http://blog.cnbang.net/tech/2915/" target="_blank" rel="noopener">JSPatchConvertor实现原理</a>，我们可以好好看看。</p>
+<p>从这篇文章里，我们看到了一个工具，一个看起来很牛逼很厉害的工具，<strong>antlr</strong>，JSPatchConvertor通过它来实现的语法转换，我们先看看这玩意怎么玩？</p>
+<h1 id="antlr的概述"><a href="#antlr的概述" class="headerlink" title="antlr的概述"></a>antlr的概述</h1><p>antlr是一个包含了<code>词法分析</code>,<code>语法分析</code>两大模块的工具，并且提供了大量主流语言的现成的语法描述<code>grammar</code>文件</p>
+<p>使用antlr你可以将某种语言的代码文件，以纯文本字符串的方式输入，被antlr整理分析成一个语法树，一个可以清晰地从树状结构里，看到代码真正的逻辑的结构化数据。</p>
+<p>通俗易懂的说，antlr的作用就是将计算机不明白，无法读取，无法执行的字符串代码，一个字一个字<code>读</code>，一行一行的<code>分析</code>，最后把<code>字符串</code>读明白了，分析明白了，转化成了计算机程序能<code>弄懂</code>(也就是能遍历，能执行，能运行的)的结构化数据<code>语法树</code></p>
+<p>听起来是不是很神秘？没错，这里面其实是编译原理里面的概念，我们所写的C++,OC,JAVA各种知名语言，我们其实写的都是一行一行字符串，这一行行的字符是怎么编译成可以运行的app的，这都是要经过这样的一个步骤，但这也只是编译原理中的一环，经过了<code>词法,语法解析</code>，后面还有很多重要的环节</p>
+<ul>
+<li><p>有了<code>词法,语法解析</code>，我们甚至还可以独创我们自己的语言</p>
+</li>
+<li><p>有了<code>词法,语法解析</code>，再引入编译原理中的其他概念，我们甚至还可以自己写我们独创语言的编译器</p>
+</li>
+</ul>
+<p>看起来是不是很神秘很牛逼~我们今天深入讨论一下</p>
+<h1 id="antlr的基本使用"><a href="#antlr的基本使用" class="headerlink" title="antlr的基本使用"></a>antlr的基本使用</h1><p>antlr包含以下几个部分</p>
+<ul>
+<li>antlr 主工程 </li>
+<li>antlr 语法描述 grammer</li>
+<li>antlr 运行时 runtime</li>
+</ul>
+<a id="more"></a>
+<p>antlr主工程是Java写的，所以想要运行起来必须安装Java也就是JDK，使用antlr主工程可以输入目标语言的语法描述grammer，生成对应运行时的parser。</p>
+<p>目标语言的语法描述grammer文件，在antlr官网可以下载,<a href="https://github.com/antlr/grammars-v4" target="_blank" rel="noopener">https://github.com/antlr/grammars-v4</a>，从里面可以看到，我们可以找到几乎所有主流语言的语法描述，换句话说，如果我们要分析的语言有现成的grammar文件，那我们可以直接拿来输入给antlr就能搞起词法语法分析。</p>
+<p>antlr主工程虽然是Java，但是antlr运行可以在Java，JavaScript，Python，C#等语言里，原因就是官网开放了这四种语言的antlr运行时，<a href="http://www.antlr.org/download.html" target="_blank" rel="noopener">www.antlr.org/download</a>。</p>
+<p>举个通俗点的例子，如果我打算用JavaScript语言，用来分析Oc语法，那么</p>
+<ul>
+<li>我需要先去官网下载<code>ObjectiveC.g4</code>grammer语法描述文件</li>
+<li>我需要用antlr的Java主程序，输入OC的grammer，选择JavaScript语言输出，生成<code>ObjectiveCParser.js</code>这个用js代码写出来的，OC解析器</li>
+<li>我需要开始搭建我的JS程序，将一整个antlr的JavaScript运行时都import进来，并且import进来刚刚生成的<code>ObjectiveCParser.js</code>，在JS代码里开始编写JSPatchConvertor的代码逻辑</li>
+</ul>
+<h2 id="antlr的部署"><a href="#antlr的部署" class="headerlink" title="antlr的部署"></a>antlr的部署</h2><p><a href="https://github.com/antlr/antlr4/blob/master/doc/getting-started.md" target="_blank" rel="noopener">Getting Started with ANTLR v4</a></p>
+<ul>
+<li>首先要自行安装Java，至少JDK 1.6以上</li>
+<li>安装antlr，在终端中执行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ cd /usr/local/lib</span><br><span class="line">$ curl -O http://www.antlr.org/download/antlr-4.5.3-complete.jar</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>antlr-4.5.3-complete.jar</code>拷贝到<code>/usr/local/lib</code>目录下供使用</li>
+<li>添加环境变量，CLASSPATH，在终端中执行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">export CLASSPATH=&quot;.:/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>编辑<code>.bash_profile</code>文件，加入下面的代码（用vi ~/.bash_profile 编辑系统bashprofile）</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ alias antlr4=&apos;java -Xmx500M -cp &quot;/usr/local/lib/antlr-4.5.3-complete.jar:$CLASSPATH&quot; org.antlr.v4.Tool&apos;</span><br><span class="line">$ alias grun=&apos;java org.antlr.v4.gui.TestRig&apos;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>在终端输入 antlr4 能看到输出，则说明安装成功</li>
+</ul>
+<h2 id="antlr生成ObjectiveC的Parser"><a href="#antlr生成ObjectiveC的Parser" class="headerlink" title="antlr生成ObjectiveC的Parser"></a>antlr生成ObjectiveC的Parser</h2><p><a href="https://github.com/antlr/antlr4/blob/master/doc/javascript-target.md" target="_blank" rel="noopener">Antlr Javascript Target Getting Start</a></p>
+<p>如果antlr已经安装成功，我们就应该去下载对应的语法描述文件，去生成js的parser了。</p>
+<p><a href="https://github.com/antlr/grammars-v4" target="_blank" rel="noopener">官方的主流各大语言的语法描述下载地址</a></p>
+<p>从这里面我们可以找到<code>Objc</code>的语法文件，下载下来后就发现，里面一共有一个Java文件和4个g4文件</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png" alt="grammerfile"></p>
+<p>我们需要对每一个文件执行一次，就看到生成了这些文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ antlr4 -Dlanguage=JavaScript xxxxx.g4</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/grammerparser.png" alt=""></p>
+<h2 id="下载Antlr-JavaScript-Runtime"><a href="#下载Antlr-JavaScript-Runtime" class="headerlink" title="下载Antlr JavaScript Runtime"></a>下载Antlr JavaScript Runtime</h2><ul>
+<li><p>可以去官网下载 <a href="http://www.antlr.org/download.html" target="_blank" rel="noopener">Antlr Downloads</a>,然后倒入自己的工程</p>
+</li>
+<li><p>如果你开发的是网页程序可以直接在Html中引入Antlr Runtime</p>
+</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'lib/require.js'</span>&gt;</span><span class="undefined"></span></span><br><span class="line"><span class="xml"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></span></span><br><span class="line"><span class="javascript">    <span class="keyword">var</span> antlr4 = <span class="built_in">require</span>(<span class="string">'antlr4/index'</span>);</span></span><br><span class="line"><span class="undefined"> </span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果你打算在Node中使用Antlr JavaScript Runtime 可以直接运行</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm link antlr4</span><br></pre></td></tr></table></figure>
+<p>这样你就能看到一整个antlr4的文件夹，里面都是Antlr JavaScript Runtime的运行源代码</p>
+<h2 id="开始在Node中运行起来antlr"><a href="#开始在Node中运行起来antlr" class="headerlink" title="开始在Node中运行起来antlr"></a>开始在Node中运行起来antlr</h2><p>我的GitHub上有一个现成的，已经可以运行的，在Node环境下的，<a href="https://github.com/Awhisper/antlrDemo" target="_blank" rel="noopener">antlrDemo</a></p>
+<p>我们从头创建一个全新的antlrDemo工程其实需要这样的文件结构</p>
+<ul>
+<li><code>antlr4</code>目录就是刚刚npm link出来的一整个antlr4运行时</li>
+<li><code>antlrLib</code>目录我放的是刚刚，grammer生成的一大坨js lexer parser</li>
+<li><code>helloworld.js</code> 我们node程序的入口</li>
+<li><code>test.m</code> 一个oc的代码文件</li>
+</ul>
+<p>我们开始编辑<code>helloworld.js</code>，来写antlr啦</p>
+<p>首先我们先要以字符串的形式，读取出<code>test.m</code>的代码字符串</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> rf = <span class="built_in">require</span>(<span class="string">"fs"</span>);</span><br><span class="line"><span class="keyword">var</span> source = rf.readFileSync(<span class="string">"test.m"</span>,<span class="string">"utf-8"</span>);</span><br></pre></td></tr></table></figure>
+<p>导入antlr基础库</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> antlr4 = <span class="built_in">require</span>(<span class="string">'.././antlr4/index'</span>);</span><br><span class="line"><span class="keyword">var</span> ObjCLexer = <span class="built_in">require</span>(<span class="string">'.././antlrLib/ObjectiveCLexer'</span>).ObjectiveCLexer</span><br><span class="line"><span class="keyword">var</span> ObjCParser = <span class="built_in">require</span>(<span class="string">'.././antlrLib/ObjectiveCParser'</span>).ObjectiveCParser</span><br><span class="line"><span class="keyword">var</span> ConsoleErrorListener = <span class="built_in">require</span>(<span class="string">'.././antlr4/error/ErrorListener'</span>).ConsoleErrorListener.INSTANCE</span><br></pre></td></tr></table></figure>
+<p>因为只是初级，我自己也只探索到<code>ObjectiveCParserListener.js</code>这个由grammer.g4自动由antlr生成的js文件。</p>
+<p>打开看一下可以看到里面是无数个空实现，例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Enter a parse tree produced by ObjectiveCParser#importDeclaration.</span></span><br><span class="line">ObjectiveCParserListener.prototype.enterImportDeclaration = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Exit a parse tree produced by ObjectiveCParser#importDeclaration.</span></span><br><span class="line">ObjectiveCParserListener.prototype.exitImportDeclaration = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Enter a parse tree produced by ObjectiveCParser#classInterface.</span></span><br><span class="line">ObjectiveCParserListener.prototype.enterClassInterface = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Exit a parse tree produced by ObjectiveCParser#classInterface.</span></span><br><span class="line">ObjectiveCParserListener.prototype.exitClassInterface = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">// Enter a parse tree produced by ObjectiveCParser#categoryInterface.</span></span><br><span class="line">ObjectiveCParserListener.prototype.enterCategoryInterface = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Exit a parse tree produced by ObjectiveCParser#categoryInterface.</span></span><br><span class="line">ObjectiveCParserListener.prototype.exitCategoryInterface = <span class="function"><span class="keyword">function</span>(<span class="params">ctx</span>) </span>&#123;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这就是一个监听器，当antlr解析一整个oc代码字符串的时候，就会不断的解析到<code>定义了一个类</code>，<code>实现了一个类</code>，<code>定义了一个方法</code>，<code>实现了一个方法</code>，<code>调用了一个函数</code>，<code>传入了一个参数</code>，<code>进入了一个for循环</code>，<code>进入了一个if选择</code>，这就是antlr在遍历一整个你写出来的oc语法树，每当遍历到一个节点的时候，就会触发到这个<code>ObjectiveCParserListener</code>，我们就可以在触发这些关键节点的时候执行我们的逻辑，比如记录语法树，把OC语法树，转换成JSPatch语法，于是这就是Bang哥的JSPatchConvertor了</p>
+<p>理解了概念以后我们看看，antlr如何把这个语法树run起来，说明我写在代码注释里了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//使用ObjectiveCParserListener</span></span><br><span class="line"><span class="keyword">var</span> VKObjCParserListener = <span class="built_in">require</span>(<span class="string">'./VKObjCParserListener'</span>).VKObjCParserListener</span><br><span class="line"></span><br><span class="line"><span class="comment">//输入代码字符串生成流</span></span><br><span class="line"><span class="keyword">var</span> chars = <span class="keyword">new</span> antlr4.InputStream(content);</span><br><span class="line"><span class="comment">//用流来生成lexer 词法分析器，并且添加出错监听</span></span><br><span class="line"><span class="keyword">var</span> lexer = <span class="keyword">new</span> ObjCLexer(chars);</span><br><span class="line">lexer.addErrorListener(ConsoleErrorListener);</span><br><span class="line"></span><br><span class="line"><span class="comment">//用词法分析器生成token</span></span><br><span class="line"><span class="keyword">var</span> tokens  = <span class="keyword">new</span> antlr4.CommonTokenStream(lexer);</span><br><span class="line"><span class="comment">//用token生成parser</span></span><br><span class="line"><span class="keyword">var</span> parser = <span class="keyword">new</span> ObjCParser(tokens);</span><br><span class="line"><span class="comment">//添加parser错误监听</span></span><br><span class="line">parser.addErrorListener(ConsoleErrorListener);</span><br><span class="line"><span class="comment">//配置parser 生成语法树</span></span><br><span class="line">parser.buildParseTrees = <span class="literal">true</span>;</span><br><span class="line"><span class="keyword">var</span> tree = parser.translationUnit();</span><br><span class="line"></span><br><span class="line"><span class="comment">//生成语法树遍历监听器</span></span><br><span class="line"><span class="keyword">var</span> listener = <span class="keyword">new</span> VKObjCParserListener(<span class="function"><span class="keyword">function</span>(<span class="params">tree</span>)</span>&#123;</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'parse final!!!!'</span>);</span><br><span class="line">        callback(tree);</span><br><span class="line">&#125;);</span><br><span class="line">    </span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">	<span class="comment">//遍历语法树，触发遍历监听器</span></span><br><span class="line">    antlr4.tree.ParseTreeWalker.DEFAULT.walk(listener, tree);</span><br><span class="line">&#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'listener error'</span>)</span><br><span class="line">    <span class="built_in">console</span>.log(e)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这样整个antlr的Demo就run起来了，我就不深入详解如何实现JSPatchConvertor了，转换这一步的逻辑可以直接看<a href="">JSPatchConvertor的源码</a>，还有<a href="http://blog.cnbang.net/tech/2915/" target="_blank" rel="noopener">JSPatch Convertor 实现原理详解</a>，我这里主要再讲antlr这个东西如何运作起来</p>
+<h1 id="词法分析-语法分析"><a href="#词法分析-语法分析" class="headerlink" title="词法分析+语法分析"></a>词法分析+语法分析</h1><p>上面聊过，antlr所干的事情叫，<code>词法分析</code>和<code>语法分析</code>，这里面其实是编译原理中的一个环节，各大语言都是要经历这么一个环节</p>
+<p>试想一下，如果你能够自己定义个<code>niubi</code>语言（想到易语言了没？你也能写！），定义出他的语法和关键字，然后你写出你自己语言的语法描述<code>grammar</code>文件，将他按着一样的流程交给antlr（其实还有别的更历时悠久的工具），形成了语法树，然后你就可以在某种运行环境下(比如像本文就是借助js运行环境)，运行自己的语言了！</p>
+<p>再试想一想，如果我们将分析出来的最终语法树，和<code>LLVM</code>结合起来，将一个树状逻辑结构信息，编译链接成可执行的二进制，那我们是不是可以自己开发IDE了，自己开发一个XCode感觉怎么样？</p>
+<p>上面的脑洞确实很大，想要完成，还需要补很多很多的编译原理相关的知识。但是这些神秘的东西，是不是略微有了一点轮廓，不再是那么的渴望不可及？</p>
+<h2 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h2><p>以下概念摘录自<a href="http://blog.csdn.net/nic_r/article/details/7835908" target="_blank" rel="noopener">编译原理之词法分析、语法分析、语义分析</a></p>
+<p><strong>词法分析（Lexical analysis或Scanning）和词法分析程序（Lexical analyzer或Scanner</strong></p>
+<p>　　词法分析阶段是编译过程的第一个阶段。这个阶段的任务是从左到右一个字符一个字符地读入源程序，即对构成源程序的字符流进行扫描然后根据构词规则识别单词(也称单词符号或符号)。词法分析程序实现这个任务。词法分析程序可以使用lex等工具自动生成。
+　　</p>
+<blockquote>
+<p>点评解释：</p>
+<p>比如for 比如if 比如oc的implement 比如各种oc的关键字selector，其实都是词法分析中在识别，识别出巨有核心意义的单词</p>
+</blockquote>
+<p><strong>语法分析（Syntax analysis或Parsing）和语法分析程序（Parser）</strong></p>
+<p>　　语法分析是编译过程的一个逻辑阶段。语法分析的任务是在词法分析的基础上将单词序列组合成各类语法短语，如“程序”，“语句”，“表达式”等等.语法分析程序判断源程序在结构上是否正确.源程序的结构由上下文无关文法描述.
+　　</p>
+<blockquote>
+<p>点评解释：</p>
+<p>虽然我们通过词法明白if，for，或者[]是oc中有关键意义的词，但这些词所组成的语法到底是循环，还是调用，还是声明，还是选择，这些都是通过语法分析</p>
+</blockquote>
+<p><strong>语义分析（Syntax analysis）</strong></p>
+<p>　　<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> arr[<span class="number">2</span>],b;　　</span><br><span class="line">b = arr * <span class="number">10</span>;</span><br></pre></td></tr></table></figure></p>
+<p>　　语义分析是编译过程的一个逻辑阶段. 语义分析的任务是对结构上正确的源程序进行上下文有关性质的审查, 进行类型审查.例如一个C程序片断:源程序的结构是正确的. 语义分析将审查类型并报告错误:不能在表达式中使用一个数组变量,赋值语句的右端和左端的类型不匹配.
+　　</p>
+<blockquote>
+<p>点评解释：</p>
+<p>大概是处理语法分析中一些不完美，有错误的地方</p>
+</blockquote>
+<p><strong>文法（Grammars）</strong></p>
+<p>　　文法是用于描述语言的语法结构的形式规则。文法G定义为四元组(，，，)。其中为非终结符号(或语法实体，或变量)集；为终结符号集；为产生式(也称规则)的集合；产生式(规则)是形如或 a ::=b 的(a , b)有序对,其中(∪)且至少含有一个非终结符，而(∪)。，和是非空有穷集。称作识别符号或开始符号，它是一个非终结符，至少要在一条规则中作为左部出现。 一个文法的例子: G=(={A，R},={0,1} ，={A?0R，A?01,R?A1},=A) 
+　</p>
+<blockquote>
+<p>点评解释：</p>
+<p>就是上文中的grammer.g4文件，如果你打算独创自己的语言，那么你就要自己去编写一个g4文件，他可以算是一种用来编写语言的<code>语言</code></p>
+</blockquote>
+<h2 id="历史悠久的词法分析，语法分析器"><a href="#历史悠久的词法分析，语法分析器" class="headerlink" title="历史悠久的词法分析，语法分析器"></a>历史悠久的词法分析，语法分析器</h2><p>antlr是一个包含了词法分析，语法分析2大内容的工具，但其实伟大的C++早就有被运用的非常广泛的2套工具</p>
+<ul>
+<li>Lex（词法）/Yacc（语法）  </li>
+<li>Flex（词法）/Bison（语法）</li>
+</ul>
+<p>这两个工具都很底层，但是相关的资料都比较少，相关的资料都是教你如何写各种类似这样<code>鸟语</code>一样的grammar文件，然后教你用Lex/Yacc或者Flex/Bison去分析生成语法树，也就是说，网上关于Lex/Yacc或者Flex/Bison的中文资料，绝大部分都是教你如何<code>独创一个语言</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">%&#123;</span><br><span class="line">	int wordCount = 0;</span><br><span class="line">	%&#125;</span><br><span class="line">	chars [A-za-z\_\&apos;\.\&quot;]</span><br><span class="line">	numbers ([0-9])+</span><br><span class="line">	delim [&quot; &quot;\n\t]</span><br><span class="line">	whitespace &#123;delim&#125;+</span><br><span class="line">	words &#123;chars&#125;+</span><br><span class="line">	%%</span><br></pre></td></tr></table></figure>
+<p>而antlr是我能找到的，有现成的各大主流语言的grammar文件的唯一工具。所以更适合你直接拿来解析现有语言而不是，完全自己重头从写grammar文件</p>
+<blockquote>
+<p>世界上最好的语言 PHP</p>
+<p>据说就是使用了 re2c/Bison 进行的语法分析</p>
+<p>据说的，说错了不要打我</p>
+</blockquote>
+<h2 id="使用Flex-Bison-和LLVM编写自己的编译器"><a href="#使用Flex-Bison-和LLVM编写自己的编译器" class="headerlink" title="使用Flex Bison 和LLVM编写自己的编译器"></a>使用Flex Bison 和LLVM编写自己的编译器</h2><p>怎么样，刚才说了，别说独创自己独有的语言，编写一个编译器都不在话下</p>
+<p>好吧，其实我在扯淡。这块我也不懂，太深入了</p>
+<p>但是这里有一篇文章，有兴趣的话，少年们上吧</p>
+<p><a href="http://blog.csdn.net/wz3118103/article/details/26616267" target="_blank" rel="noopener">使用Flex Bison 和LLVM编写自己的编译器</a></p>
+<p><a href="https://realm.io/cn/news/tryswift-samuel-giddins-building-tiny-compiler-swift-ios/" target="_blank" rel="noopener">用 Swift 搭建一个微型编译器</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/01/cssprotocol/" rel="next" title="iOS上的CSS样式协议 VKCssProtocol">
+                <i class="fa fa-chevron-left"></i> iOS上的CSS样式协议 VKCssProtocol
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/21/GitPage-Next的CSS-JS错误/" rel="prev" title="GitPage部署Hexo NexT主题的CSS/JS错误">
+                GitPage部署Hexo NexT主题的CSS/JS错误 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#antlr的概述"><span class="nav-number">1.</span> <span class="nav-text">antlr的概述</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#antlr的基本使用"><span class="nav-number">2.</span> <span class="nav-text">antlr的基本使用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#antlr的部署"><span class="nav-number">2.1.</span> <span class="nav-text">antlr的部署</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#antlr生成ObjectiveC的Parser"><span class="nav-number">2.2.</span> <span class="nav-text">antlr生成ObjectiveC的Parser</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下载Antlr-JavaScript-Runtime"><span class="nav-number">2.3.</span> <span class="nav-text">下载Antlr JavaScript Runtime</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始在Node中运行起来antlr"><span class="nav-number">2.4.</span> <span class="nav-text">开始在Node中运行起来antlr</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#词法分析-语法分析"><span class="nav-number">3.</span> <span class="nav-text">词法分析+语法分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概念"><span class="nav-number">3.1.</span> <span class="nav-text">概念</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#历史悠久的词法分析，语法分析器"><span class="nav-number">3.2.</span> <span class="nav-text">历史悠久的词法分析，语法分析器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Flex-Bison-和LLVM编写自己的编译器"><span class="nav-number">3.3.</span> <span class="nav-text">使用Flex Bison 和LLVM编写自己的编译器</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '从antlr扯淡到一点点编译原理', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

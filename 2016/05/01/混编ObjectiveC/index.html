@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="C++,混编," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近有点炒冷饭的嫌疑，不过确实以前没有Git Or Blog的习惯，所以很多工作上的技术分享就存留在了电脑的文档里，现在还是想重新整理一下，再分享出来。 混编C++也是以前工作中需要用到的，于是被我炒冷饭翻了出来，不过确实有重新整理了一下 为什么要使用C++混编1）需要使用工具库或者源码是C++的各个平台，各种语言，都会有很多开源的工具和库文件方便大家学习和使用，但如C与C++这版经典的语言，很多">
+<meta name="keywords" content="C++,混编">
+<meta property="og:type" content="article">
+<meta property="og:title" content="混编ObjectiveC++">
+<meta property="og:url" content="http://yoursite.com/2016/05/01/混编ObjectiveC/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="最近有点炒冷饭的嫌疑，不过确实以前没有Git Or Blog的习惯，所以很多工作上的技术分享就存留在了电脑的文档里，现在还是想重新整理一下，再分享出来。 混编C++也是以前工作中需要用到的，于是被我炒冷饭翻了出来，不过确实有重新整理了一下 为什么要使用C++混编1）需要使用工具库或者源码是C++的各个平台，各种语言，都会有很多开源的工具和库文件方便大家学习和使用，但如C与C++这版经典的语言，很多">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-06-08T07:57:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="混编ObjectiveC++">
+<meta name="twitter:description" content="最近有点炒冷饭的嫌疑，不过确实以前没有Git Or Blog的习惯，所以很多工作上的技术分享就存留在了电脑的文档里，现在还是想重新整理一下，再分享出来。 混编C++也是以前工作中需要用到的，于是被我炒冷饭翻了出来，不过确实有重新整理了一下 为什么要使用C++混编1）需要使用工具库或者源码是C++的各个平台，各种语言，都会有很多开源的工具和库文件方便大家学习和使用，但如C与C++这版经典的语言，很多">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/01/混编ObjectiveC/"/>
+
+
+
+
+
+  <title>混编ObjectiveC++ | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/01/混编ObjectiveC/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">混编ObjectiveC++</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-01T20:21:41+08:00">
+                2016-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/01/混编ObjectiveC/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/05/01/混编ObjectiveC/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/05/01/混编ObjectiveC/" class="leancloud_visitors" data-flag-title="混编ObjectiveC++">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近有点炒冷饭的嫌疑，不过确实以前没有Git Or Blog的习惯，所以很多工作上的技术分享就存留在了电脑的文档里，现在还是想重新整理一下，再分享出来。</p>
+<p>混编C++也是以前工作中需要用到的，于是被我炒冷饭翻了出来，不过确实有重新整理了一下</p>
+<h1 id="为什么要使用C-混编"><a href="#为什么要使用C-混编" class="headerlink" title="为什么要使用C++混编"></a>为什么要使用C++混编</h1><h2 id="1）需要使用工具库或者源码是C-的"><a href="#1）需要使用工具库或者源码是C-的" class="headerlink" title="1）需要使用工具库或者源码是C++的"></a>1）需要使用工具库或者源码是C++的</h2><p>各个平台，各种语言，都会有很多开源的工具和库文件方便大家学习和使用，但如C与C++这版经典的语言，很多底层的，算法型的库都是用C++实现的，尤其是很多人脸识别，图形滤镜算法，视频处理算法，甚至底层图形渲染OpenGL</p>
+<h2 id="2）C-执行效率快"><a href="#2）C-执行效率快" class="headerlink" title="2）C++执行效率快"></a>2）C++执行效率快</h2><p>大家都知道C++的执行效率快，所以在高复杂度高算法层面的开发内容里，大多都选择使用C++来完成，我是做客户端的，虽然不像做机器学习，大数据处理等在工作中需要广泛运用高效算法，但上面提到的人脸识别，图形滤镜算法，甚至视频处理，还有很多游戏内部需要的游戏AI，都是有可能运用在我们熟知的客户端开发之中</p>
+<h2 id="3）跨平台"><a href="#3）跨平台" class="headerlink" title="3）跨平台"></a>3）跨平台</h2><p>C++是编译型跨平台的，C++的代码编译出来的二进制文件可以在android，iOS，甚至WP上都可以正常运行，可谓是真·跨平台</p>
+<p>说到跨平台，肯定不少人提起H5跨平台呀，ReactNative跨平台呀，这类通常属于解释型跨平台，约定好一种脚本语言，底层辅助以各平台的基础实现，甚至底层就是借助C++实现，通过底层解读脚本语言，在运行时进行解释实现逻辑，就好比webkit作为浏览器的核心，JavaScriptCore作为RN的核心，虽然开发中使用了js进行写代码，但是究其本质还是在运行时解释js在进行native执行的。js代码并不参与编译，这类跨平台在编译时参与编译的，正是那套语法解释器+NA底层代码，他们或多或少还是通过C++实现的</p>
+<h2 id="我们使用C-做逻辑的原因"><a href="#我们使用C-做逻辑的原因" class="headerlink" title="我们使用C++做逻辑的原因"></a>我们使用C++做逻辑的原因</h2><p>我们做客户端，核心模块使用C++的原因其实就是出自（2）（3）两点，因为我们的业务涉及极其复杂的文字排版，而无论是iOS平台还是安卓平台，基础排版是很难满足中文甚至我大天朝独有政治要求的，想要实现势必要在每个平台上分别封装一套极度复杂的排版策略控制，因此我们放弃了使用CoreText的基础排版API（安卓上用啥排版不知道），而选择用C++实现一套通用于两个平台的排版策略，当然在排版速度效率上也是要很高要求的</p>
+<h1 id="ObjectiveC-与-C-的共同点"><a href="#ObjectiveC-与-C-的共同点" class="headerlink" title="ObjectiveC 与 C++ 的共同点"></a>ObjectiveC 与 C++ 的共同点</h1><a id="more"></a>
+<p>在iOS开发之中，OC代码与C++代码可以完美的融合在一块，何谓完美？你甚至可以上一行刚敲完<code>[NSArray objectAtIndex:xx]</code>（OC代码）下一行就使用STL构建一个C++的List<object>数组（C++代码），他们之间可以完美编译，生成正常的程序，并且还可以单步debug，随时跟进一层一层的方法，刚刚单步跳出一个OC的messageSend，马上就可以单步跟进一个C++ Class的function，这之间没有一点障碍，所有变量，指针，结构体，数据，都可以任意查看，二者之间畅通无阻</object></p>
+<h2 id="向下完全兼容C是他们的共同点和纽带"><a href="#向下完全兼容C是他们的共同点和纽带" class="headerlink" title="向下完全兼容C是他们的共同点和纽带"></a>向下完全兼容C是他们的共同点和纽带</h2><p>为什么会这样？因为C++与OC都完全向下兼容C<br>所有的OC对象，虽然有ARC辅助内存管理，但他本质上还是一个<code>void *</code>，同理C++也一样是<code>void *</code>，OC之所以调用函数叫做发送消息，是因为封装了层独有的runtime机制（这机制还是C的），但归根结底每个函数实体依然是一个IMP，依然是一个函数指针，这一点和C++也一样，所以他们之间的衔接才会如此通畅</p>
+<h2 id="其他混编情况可就没那么容易了"><a href="#其他混编情况可就没那么容易了" class="headerlink" title="其他混编情况可就没那么容易了"></a>其他混编情况可就没那么容易了</h2><ul>
+<li><p>android混编C++，恩很麻烦，只能先编译成so，两个环境如果要交互，要先手写一套JNI，把C++环境下的数据和java环境下的数据进行手动转换，并且断点调试没法断点进入so内，想要debug调试，必须靠fwrite写log到本地磁盘调试╮(╯_╰)╭</p>
+</li>
+<li><p>我以前搞过游戏，做过C++内混编lua脚本，这俩互通更蛋疼，虽然lua的解释器底层是用C写的，但是所有的内存都是lua解释器（或者叫虚拟机）内的数据，因此如果二者要互通，也要写一个通道来交换数据，这个交换数据，就是通过超级烦琐的数据对齐，压栈，出栈来互通。</p>
+</li>
+<li><p>前一阵子也学习了一些JSPatch，他其实可以看做是js代码混编Oc的模范工程，同lua一样，整个js的运行环境也是依赖于JavaScriptCore提供的一套JS虚拟机来执行，他有着自己的上下文JSContext，虽说简单的通用数据，字符串，数组，字典，被JavaScriptCore自动的执行完了转换，但一旦需要两个环境交换独有数据类型，例如js里面的function，例如oc里面的自定义NSObject，那么就需要JSValue这个对象起到转换和传递的作用</p>
+</li>
+</ul>
+<h1 id="ObjectiveC如何混编C"><a href="#ObjectiveC如何混编C" class="headerlink" title="ObjectiveC如何混编C++"></a>ObjectiveC如何混编C++</h1><ul>
+<li><p>想要创建一个纯C++类，你只需要创建.h开头和.cpp开头的文件，直接导入工程就好，如果需要使用一些C++的标准库，可以直接从Xcode导入libstdC++</p>
+</li>
+<li><p>如果你想创建一个能即识别C++又识别OC的对象，只需要照常创建一个.h 文件和.m文件，然后将.m文件重命名成.mm文件，就是告诉编译器，这个文件可以进行混编 — ObjectiveC++（名字是不是有点酷）</p>
+</li>
+<li><p>如果你想创建一个纯OC类，那这还需要用我说么？</p>
+</li>
+</ul>
+<p>现在你的工程里，可以有这三种文件存在，基本上就可以满足我们的混编需求了。</p>
+<p>怎么样是不是很想赶快试试了？</p>
+<h1 id="例子：在一个OC环境里调用C"><a href="#例子：在一个OC环境里调用C" class="headerlink" title="例子：在一个OC环境里调用C++"></a>例子：在一个OC环境里调用C++</h1><p>我的例子会一步一步来，甚至有的步骤中可能是错误的代码，给大家展示完错误的代码后，进行说明，再放上正确的代码,</p>
+<p>代码也不全是完整代码</p>
+<p>CppObject.h C++的头文件 .cpp文件留空，先不写逻辑</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CppObject</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ExampleMethod</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; str)</span></span>&#123;&#125;;</span><br><span class="line">    <span class="comment">// constructor, destructor, other members, etc.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>OCObject.h OC的头文件 .m文件先改为.mm，但先不写逻辑</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"><span class="comment">//#import "CppObject.h"</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">OcObject</span> : <span class="title">NSObject</span> </span>&#123;</span><br><span class="line">    CppObject* wrapped;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@property</span> CppObject* wrapped2;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)exampleMethodWithString:(<span class="built_in">NSString</span>*)str;</span><br><span class="line"><span class="comment">// other wrapped methods and properties</span></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>头文件准备完毕，实现文件，我先不写逻辑，先跑一下看看会有什么问题？</p>
+<p>跑完了以后会编译报错，报错的原因很简单，你在<code>OCObject.h</code>中引用了C++的头文件，xcode不认识，无法编译通过。</p>
+<p>咦？刚刚不是说好了C++和OC无缝互通了么，这咋又不认识了？原因很简单，我们通过修改.m为.mm文件，能让编译器xcode知道这是一个混编文件，但是我可没说修改.h为.hh文件哟，是这样的，对于xcode来说，可以认识.mm的混编语法，但是不认识.h文件中的混编语法，如果.h全都是C++的写法，没有问题，如果.h全都是OC的写法，没有问题，如果.h里面有C++又有OC？那妥妥的有问题（.h中引入的其他头文件也算在内）</p>
+<p>怎么处理呢？两个办法</p>
+<ul>
+<li><p>不在.h里写混编了，那我移到.mm里呗~~~</p>
+</li>
+<li><p>不让我写c++？ok，我写C，反正写C是没错的，所以老子写<code>void *</code>写<code>id</code></p>
+</li>
+</ul>
+<p>这里的例子我先写到.mm文件里</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"OcObject.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"CppObject.h"</span></span></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">OcObject</span> () </span>&#123;</span><br><span class="line">    CppObject* wrapped;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">OcObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)exampleMethodWithString:(<span class="built_in">NSString</span>*)str</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// <span class="doctag">NOTE:</span> if str is nil this will produce an empty C++ string</span></span><br><span class="line">    <span class="comment">// instead of dereferencing the NULL pointer from UTF8String.</span></span><br><span class="line">    std::string cpp_str([str UTF8String], [str lengthOfBytesUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]);</span><br><span class="line">    wrapped-&gt;ExampleMethod(cpp_str);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这不~妥了没问题了~，我们再去补上CPP文件中的函数实现，随便写个printf()，输出个string，例子就完成了</p>
+<h1 id="例子：在一个C-环境里调用OC"><a href="#例子：在一个C-环境里调用OC" class="headerlink" title="例子：在一个C++环境里调用OC"></a>例子：在一个C++环境里调用OC</h1><p>首先我们要打造一个C++的环境</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">--AntiCppObject.h</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AntiCppObject</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AntiCppObject();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ExampleMethod</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; str)</span></span>&#123;&#125;;</span><br><span class="line">    <span class="comment">// constructor, destructor, other members, etc.</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--AntiCppObject.cpp</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AntiCppObject.h"</span></span></span><br><span class="line"></span><br><span class="line">AntiCppObject::AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后我们再准备一个OC类接入C++，m文件我就不补充完了，随便写个NSLog就好</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">--AntiOcObject.h</span><br><span class="line"></span><br><span class="line"><span class="meta">#import <span class="meta-string">&lt;Foundation/Foundation.h&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">AntiOcObject</span> : <span class="title">NSObject</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)function;</span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>现在打算接入C++环境了，首先先把.CPP改成.mm文件，妥妥哒</p>
+<p>然后修改头文件</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">--AntiCppObject.h</span><br><span class="line"><span class="meta">#import <span class="meta-string">"AntiOcObject.h"</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AntiCppObject</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    AntiOcObject* AntiOc;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AntiCppObject();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">ExampleMethod</span><span class="params">(<span class="keyword">const</span> <span class="built_in">std</span>::<span class="built_in">string</span>&amp; str)</span></span>&#123;&#125;;</span><br><span class="line">    <span class="comment">// constructor, destructor, other members, etc.</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>经过了刚才的例子，看到这应该立马反应过来，这不对，头文件不能混编，会报错的。那应该怎么做呢？</p>
+<p>做法还是上面提到的，要么<code>void *</code>，要么想办法把定义写在.mm文件里，老规矩，<code>void *</code>先不提，我们先在.h中写个结构体，藏起来那个oc的对象，在mm文件中进行声明</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">--AntiCppObject.h</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sthStruct</span>;</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AntiCppObject</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    sthStruct* sth;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    AntiCppObject();</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">function</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// constructor, destructor, other members, etc.</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">---AntiCppObject.cpp</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"AntiCppObject.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"AntiOcObject.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">sthStruct</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    AntiOcObject* oc;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">AntiCppObject::AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    AntiOcObject* t =[[AntiOcObject alloc]init];</span><br><span class="line">    sth = <span class="keyword">new</span> sthStruct;</span><br><span class="line">    sth-&gt;oc = t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> AntiCppObject::function()</span><br><span class="line">&#123;</span><br><span class="line">    [<span class="keyword">this</span>-&gt;sth-&gt;oc function];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你看这样就实现了在C++中调用OC</p>
+<h1 id="ObjectiveC-混编注意事项"><a href="#ObjectiveC-混编注意事项" class="headerlink" title="ObjectiveC++混编注意事项"></a>ObjectiveC++混编注意事项</h1><ul>
+<li>只需要将.m文件重命名成.mm文件，就是告诉编译器，这个文件可以进行混编 — ObjectiveC++</li>
+<li>在一个项目里使用两种语言，就要尽可能的把这两种语言分开，尽管你可以一口气将所有的文件重命名，但是两种语言差异性还是很大，混乱使用，处理起来会很困难</li>
+<li>header文件没有后缀名变化,没有.hh文件^_^。所以我们要保持头文件的整洁，将混编代码从头文件移出到mm文件中，保证头文件要么是纯正C++，要么是纯正OC，（当然，有C是绝对没问题的）</li>
+<li>Objective-C向下完全兼容C，C++也是，有时候也可以灵活的使用<code>void *</code>指针，当做桥梁，来回在两个环境间传递（上面的例子没有体现）</li>
+</ul>
+<h1 id="小心你的内存"><a href="#小心你的内存" class="headerlink" title="小心你的内存"></a>小心你的内存</h1><ul>
+<li>按着之前的原则，C++和OC两部分尽量区分开，各自在各自的独立区域内维护好自己的内存，Objective-C可以是arc也可mrc，C++开发者自行管理内存</li>
+<li>在.mm文件中，OC环境中在init 和dealloc中对C++类进行 new 和 delete操作</li>
+<li>在.mm文件中，在C++环境中构造和析构函数中进行init 和 release操作</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">--OcObject.mm</span><br><span class="line">-(id)init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        wrapped = new CppObject();</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(void)dealloc</span><br><span class="line">&#123;</span><br><span class="line">    delete wrapped;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--AntiCppObject.mm</span><br><span class="line">AntiCppObject::AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    AntiOcObject* t =[[AntiOcObject alloc]init];</span><br><span class="line">    sth = new sthStruct;</span><br><span class="line">    sth-&gt;oc = t;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AntiCppObject::~AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    if (sth) &#123;</span><br><span class="line">        [sth-&gt;oc release];//arc的话，忽略掉这句话不写</span><br><span class="line">    &#125;</span><br><span class="line">    delete sth;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个例子告诉我们什么？</p>
+<p>如果我们通过oc的方式创建出来的，他的内存自然归OC管理，如果是mrc，请使用release，如果是arc，只要置空，自然会自动释放</p>
+<p>如果我们通过C++的方式，构造函数new出来的，那我们就要手动的使用析构函数就释放他</p>
+<p>其实很多事情原理是一样的</p>
+<ul>
+<li>我们在iOS开发使用CF函数的时候，但凡使用CFCreateXX的一定要手动自己调用CFRlease</li>
+<li>我们在编写C++的时候，使用malloc的一定要自己free，使用new的一定要自己delete</li>
+</ul>
+<h1 id="id的妙用"><a href="#id的妙用" class="headerlink" title="id的妙用"></a>id的妙用</h1><p>刚才的例子中，我虽然频繁提到<code>void *</code>但是并没有详细加以说明，神奇的东西应该放在最后</p>
+<p>首先说一下id这个很特殊的东西</p>
+<p>前面第二个例子，我们是借助一个结构体struct把oc代码隐藏到.mm文件里，那么我们可以不借助struct么？当然可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">--AntiCppObject.h</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">struct sthStruct;</span><br><span class="line">class AntiCppObject</span><br><span class="line">&#123;</span><br><span class="line">    id sthoc;</span><br><span class="line">    sthStruct* sth;</span><br><span class="line">public:</span><br><span class="line">    AntiCppObject();</span><br><span class="line">    ~AntiCppObject();</span><br><span class="line">    void function();</span><br><span class="line">    // constructor, destructor, other members, etc.</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">--AntiCppObject.cpp</span><br><span class="line">#include &quot;AntiCppObject.h&quot;</span><br><span class="line">#import &quot;AntiOcObject.h&quot;</span><br><span class="line"></span><br><span class="line">struct sthStruct</span><br><span class="line">&#123;</span><br><span class="line">    AntiOcObject* oc;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">AntiCppObject::AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    AntiOcObject* t =[[AntiOcObject alloc]init];</span><br><span class="line">    sth = new sthStruct;</span><br><span class="line">    sth-&gt;oc = t;</span><br><span class="line">    </span><br><span class="line">    sthoc = [[AntiOcObject alloc]init];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">AntiCppObject::~AntiCppObject()</span><br><span class="line">&#123;</span><br><span class="line">    if (sth) &#123;</span><br><span class="line">        [sth-&gt;oc release];</span><br><span class="line">        </span><br><span class="line">        [sthoc release];</span><br><span class="line">    &#125;</span><br><span class="line">    delete sth;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void AntiCppObject::function()</span><br><span class="line">&#123;</span><br><span class="line">    [this-&gt;sth-&gt;oc function];</span><br><span class="line">    [this-&gt;sthoc function];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到这个例子中，那个struct还在，旧的方案仍然保留，但是我们在头文件里写了一个id类型，xcode编译器在全都是C++代码的.h文件里虽然不认识oc对象，但是其实是认识id的，我们借助这个id，就可以不借助struct隐藏oc对象声明了</p>
+<h1 id="神奇的void"><a href="#神奇的void" class="headerlink" title="神奇的void *"></a>神奇的void *</h1><p>终于说到这个<code>void *</code>了，首先我们写个oc对象，可以持有<code>void *</code>，写个C++也可以持有，甚至我们不写任何对象，在写一个static的C代码，也可以在一个全局控件保存一个<code>void *</code>对象，正是这个<code>void *</code>对象，可以灵活的组合出各种混编用法</p>
+<p><code>void *</code>是什么？就是指针的最原本形态，利用它我们可以各种花式的进行混编OC与C++</p>
+<p>唯一需要注意的就是<code>id</code>(即oc对象)与<code>void *</code>的转换，要知道arc是有内存管理的，而C++是没有的，如果都一股脑的随便二者转来转去，那内存管理到底该如何自动进行释放？（mrc下二者转换是不需要特别处理的）</p>
+<p>因此Arc下二者进行转换经常伴随着一些强转关键字</p>
+<ul>
+<li>__bridge          </li>
+<li>__bridge_retained </li>
+<li>__bridge_transfer </li>
+</ul>
+<p>其实是从内存安全性上做的转换修饰符，相关搜索id与<code>void *</code>转换可以自行查阅，而且在iOS的core fundation开发中非常常见，简单的说就是bridgeretained会把内存所有权同时归原对象和变换后的对象持有（只对变换后的对象做一次reatain），bridgetransfer会把内存所有权彻底移交变换后的对象持有（retain变换后的对象，release变换前的对象）</p>
+<p>这里面我会贴一段代码，这段代码只为展示一些使用，因此，设计上可能有点绕，和扯淡，只为展示混编</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">--TrickInterface.h</span><br><span class="line">typedef void (*interface)(void* caller, void *parameter);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--TrickOC.h</span><br><span class="line">#import &lt;Foundation/Foundation.h&gt;</span><br><span class="line">#import &quot;TrickInterface.h&quot;</span><br><span class="line"></span><br><span class="line">@interface TrickOC : NSObject</span><br><span class="line">&#123;</span><br><span class="line">    int abc;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(int)dosthing:(void*)param;</span><br><span class="line">@property interface call;</span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">--TrickOC.m</span><br><span class="line">#import &quot;TrickOC.h&quot;</span><br><span class="line">#import &quot;TrickInterface.h&quot;</span><br><span class="line"></span><br><span class="line">void MyObjectDoSomethingWith(void * obj, void *aParameter)</span><br><span class="line">&#123;</span><br><span class="line">    [(__bridge id) obj dosthing:aParameter];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@implementation TrickOC</span><br><span class="line"></span><br><span class="line">-(id)init</span><br><span class="line">&#123;</span><br><span class="line">    self = [super init];</span><br><span class="line">    if (self) &#123;</span><br><span class="line">        self.call = MyObjectDoSomethingWith;</span><br><span class="line">    &#125;</span><br><span class="line">    return self;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">-(int)dosthing:(void *)param</span><br><span class="line">&#123;</span><br><span class="line">    NSLog(@&quot;111111&quot;);</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">@end</span><br><span class="line"></span><br><span class="line">--TrickCpp.cpp</span><br><span class="line">#include &quot;TrickCpp.h&quot;</span><br><span class="line">#include &quot;TrickInterface.h&quot;</span><br><span class="line"></span><br><span class="line">TrickCpp::TrickCpp(void* oc,interface call)</span><br><span class="line">&#123;</span><br><span class="line">    myoc = oc;</span><br><span class="line">    mycall = call;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">void TrickCpp::function()</span><br><span class="line">&#123;</span><br><span class="line">    mycall(myoc,NULL);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">--TrickCpp.h</span><br><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &quot;TrickInterface.h&quot;</span><br><span class="line">class TrickCpp</span><br><span class="line">&#123;</span><br><span class="line">    void* myoc;</span><br><span class="line">    interface mycall;</span><br><span class="line">public:</span><br><span class="line">    TrickCpp();</span><br><span class="line">    TrickCpp(void* oc,interface call);</span><br><span class="line">    ~TrickCpp();</span><br><span class="line">    void function();</span><br><span class="line">    // constructor, destructor, other members, etc.</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">--使用样例</span><br><span class="line"></span><br><span class="line">TrickOC* trickoc = [[TrickOC alloc]init];</span><br><span class="line">    void* pointer = (__bridge void*)trickoc;</span><br><span class="line">    TrickCpp * trick = new TrickCpp(pointer,trickoc.call);</span><br><span class="line">    trick-&gt;function();</span><br></pre></td></tr></table></figure>
+<p>这段代码中首先在全局区域声明了一个全局的cfunction<code>interface</code>，起名叫接口顾名思义是打算把它当做C++传递OC的通道，所有跨C++回调OC都通过这个通道来通信</p>
+<p>在TrickOc.m文件中也实现了这一个全局的cfunction<code>MyObjectDoSomethingWith</code>，这个cfunction实体就是我们的接口通道</p>
+<p>当创建TrickCpp的时候，将以创建好的TrickOc和这个cfunction一并传入，当Cpp需要调用Oc的时候，直接使用cfunction与TrickOc的对象</p>
+<ul>
+<li>本着代码上尽量隔离两种语言避免开发上的混乱和困难，有时候需要一些设计，比如C++做三方库在一个以OC为主的环境中进行使用，OC需要任意调用C++的各种接口和对象，但是不希望三方库直接引用oc头文件，希望三方库解耦，只通过固定回调或者协议来通信</li>
+<li>这demo代码仅仅是一种刻意设计，为了展示故意而为的，真正开发的时候需要根据自己情况好好进行设计</li>
+</ul>
+<h1 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h1><p><a href="http://blog.csdn.net/weiwangchao_/article/details/7895949" target="_blank" rel="noopener">http://blog.csdn.net/weiwangchao_/article/details/7895949</a> </p>
+<p><a href="http://www.philjordan.eu/article/mixing-objective-c-c++-and-objective-c++" target="_blank" rel="noopener">http://www.philjordan.eu/article/mixing-objective-c-c++-and-objective-c++</a></p>
+<p><a href="http://bbs.9ria.com/thread-229773-1-1.html" target="_blank" rel="noopener">http://bbs.9ria.com/thread-229773-1-1.html</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/C/" rel="tag"># C++</a>
+          
+            <a href="/tags/混编/" rel="tag"># 混编</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/29/VKFMDBHelper-辅助工具/" rel="next" title="VKFMDBHelper 辅助工具">
+                <i class="fa fa-chevron-left"></i> VKFMDBHelper 辅助工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/04/AsyncDisplayKit官方文档翻译/" rel="prev" title="AsyncDisplayKit官方文档翻译">
+                AsyncDisplayKit官方文档翻译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#为什么要使用C-混编"><span class="nav-number">1.</span> <span class="nav-text">为什么要使用C++混编</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1）需要使用工具库或者源码是C-的"><span class="nav-number">1.1.</span> <span class="nav-text">1）需要使用工具库或者源码是C++的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2）C-执行效率快"><span class="nav-number">1.2.</span> <span class="nav-text">2）C++执行效率快</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3）跨平台"><span class="nav-number">1.3.</span> <span class="nav-text">3）跨平台</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们使用C-做逻辑的原因"><span class="nav-number">1.4.</span> <span class="nav-text">我们使用C++做逻辑的原因</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ObjectiveC-与-C-的共同点"><span class="nav-number">2.</span> <span class="nav-text">ObjectiveC 与 C++ 的共同点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#向下完全兼容C是他们的共同点和纽带"><span class="nav-number">2.1.</span> <span class="nav-text">向下完全兼容C是他们的共同点和纽带</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他混编情况可就没那么容易了"><span class="nav-number">2.2.</span> <span class="nav-text">其他混编情况可就没那么容易了</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ObjectiveC如何混编C"><span class="nav-number">3.</span> <span class="nav-text">ObjectiveC如何混编C++</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例子：在一个OC环境里调用C"><span class="nav-number">4.</span> <span class="nav-text">例子：在一个OC环境里调用C++</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#例子：在一个C-环境里调用OC"><span class="nav-number">5.</span> <span class="nav-text">例子：在一个C++环境里调用OC</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ObjectiveC-混编注意事项"><span class="nav-number">6.</span> <span class="nav-text">ObjectiveC++混编注意事项</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#小心你的内存"><span class="nav-number">7.</span> <span class="nav-text">小心你的内存</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#id的妙用"><span class="nav-number">8.</span> <span class="nav-text">id的妙用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#神奇的void"><span class="nav-number">9.</span> <span class="nav-text">神奇的void *</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文献"><span class="nav-number">10.</span> <span class="nav-text">参考文献</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '混编ObjectiveC++', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

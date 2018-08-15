@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一个奇怪的业务场景，引发的胡乱思考 问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西 本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲  我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接">
+<meta name="keywords" content="Hybrid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UIWebView代码注入时机与姿势">
+<meta property="og:url" content="http://yoursite.com/2017/09/09/injectUIWebView/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="一个奇怪的业务场景，引发的胡乱思考 问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西 本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲  我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg">
+<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/appwaphead.jpg">
+<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049523772825.jpg">
+<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049524279135-1.jpg">
+<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049532969678.jpg">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/webkit.png">
+<meta property="og:updated_time" content="2018-04-21T16:59:06.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UIWebView代码注入时机与姿势">
+<meta name="twitter:description" content="一个奇怪的业务场景，引发的胡乱思考 问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西 本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲  我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接">
+<meta name="twitter:image" content="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/09/09/injectUIWebView/"/>
+
+
+
+
+
+  <title>UIWebView代码注入时机与姿势 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/09/injectUIWebView/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">UIWebView代码注入时机与姿势</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-09T13:06:27+08:00">
+                2017-09-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/09/injectUIWebView/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2017/09/09/injectUIWebView/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/09/09/injectUIWebView/" class="leancloud_visitors" data-flag-title="UIWebView代码注入时机与姿势">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>一个奇怪的业务场景，引发的胡乱思考</p>
+<p>问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西</p>
+<p>本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲</p>
+</blockquote>
+<p>我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接入APP尝试，快速的也在APP里进行传播。（后续验证可行和有效后，也会纳入APP的功能规划里，以最流畅的体验进行呈现）</p>
+<p>但这样会有一些问题，纯为WAP开发的页面，直接扔到APP的WebView里表现并不好</p>
+<p>WAP的团队开发出来的界面一般长这样<br><img src="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg" alt="15049394419512"></p>
+<p>如果这样的页面不做任何处理直接在APP中<code>低成本接入</code>会变成这样</p>
+<p><img src="http://ouz34cilp.bkt.clouddn.com/appwaphead.jpg" alt="15049394419512"></p>
+<p>问题就在于APP是有自己的NavigationBar的，而WAP的页面一般都为浏览器而生，浏览器没有自己的导航条于是WAP的团队很自然都会在WAP页面里开发出一个导航条，如果这个页面不做任何针对APP的处理，直接放入APP的WebView中，就会出现这样丑陋的双导航条，一个是native App自己的，一个是WAP网页自己画的</p>
+<blockquote>
+<p>这是一个非常常见的场景</p>
+<p>想要实现也非常简单</p>
+<p>WAP识别APP的UA，进行定制化的开发就好了</p>
+<p>为什么说他奇怪？</p>
+</blockquote>
+<p>团队不同，业务场景不同，也面临不一样的问题，对于我们来说，这个问题不在于如何实现，而在于如何做到让WAP开发最省事。因为背景交代过了，WAP的前端团队和APP完全不是一拨人，如果能有什么办法让WAP前端团队在开发工作中尽量的无感知，尽量的少操作，不需要WAP团队在开发的时候人工的判断UA，选择性渲染，于是蛋疼的问题来了</p>
+<ul>
+<li>直接让WAP开发人员定制开发<ul>
+<li>后端渲染的时候判断UA</li>
+<li>前端模板隐藏UI</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>现有老的开发模式就是这样，每次都是人工适配，纯体力活，有时候项目紧急WAP团队就会忘了，上线的时候一发现，咦？在App里好丑啊，虽然改动很小，但一块后端判定UA，一块前端模板选择渲染，代码分散在几处，改起来很麻烦</p>
+<p>单纯是Bar的话不是问题，写进WAP基类就行，问题是类似的场景看业务功能，有时候不止是Bar，会有定制化的东西，在APP里表现，不能和WAP一样</p>
+</blockquote>
+<ul>
+<li>WAP的编译框架支持<ul>
+<li>这确实是可行的，并且是很好的解决方案之一</li>
+<li>厂里的前端使用的是FIS的编译打包框架，支持一定的插件扩展，可以在前端代码编译环节，就自动加入UA判断，对特定的UI，进行有规律的渲染控制</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这个太底层了，对每天几千万UV的WAP来说，进行这么大的改动，风险高，收益低（毕竟这个界面适配APP只是搂草打兔子捎带手）有点难推动，后续确实可以尝试一下</p>
+</blockquote>
+<ul>
+<li>WAP的JS插件支持<ul>
+<li>基础模板引入JS脚本</li>
+<li>用JS脚本在client里判断UA</li>
+<li>提取特定Dom</li>
+<li>隐藏Dom</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>最大的问题在于，JS在client里执行的时机，JS执行的时候，这个Dom已经被渲染出来了，当你判断UA，要移除的时候，画面那个bar会闪一下，整体效果是，整个页面带着bar加载出来了，但是会突然闪一下bar消失</p>
+</blockquote>
+<ul>
+<li>App在WebView里注入CSS<ul>
+<li>让WAP只需要对需要隐藏的Dom做个标记比如<code>XXWAPBAR</code>（WAP只用写几个字母）</li>
+<li>在WAP浏览器里，无感知，完全不需要定制化开发</li>
+<li>在App WebView加载网页的时候，注入额外的CSS，将含有<code>XXWAPBAR</code>标记的Dom隐藏</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>看起来靠谱，看起来是一种WAP开发人员几乎不用管不用操心，也不会影响WAP，只在APP里有独有效果的设计，试试看</p>
+</blockquote>
+<a id="more"></a>
+<h1 id="WebView注入"><a href="#WebView注入" class="headerlink" title="WebView注入"></a>WebView注入</h1><p>对于Hybrid App来说，向WebView里面注入JS（CSS也是通过JS代码的方式注入），是太常见的一件事情了，注入就是最常见的native to js的通信方式</p>
+<ul>
+<li>iOS</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[<span class="keyword">self</span>.webView stringByEvaluatingJavaScriptFromString:injectjs];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>安卓</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">webView.loadUrl(<span class="string">"javascript:"</span> + injectjs);</span><br></pre></td></tr></table></figure>
+<p>我们注入这么一行demo JS代码试试看</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> style = <span class="built_in">document</span>.createElement(<span class="string">'style'</span>);</span><br><span class="line"><span class="comment">//XXWAPBAR 是我们的WAP顶部Bar的class标记</span></span><br><span class="line">style.innerHTML = <span class="string">'.XXWAPBAR &#123; display: none;&#125;'</span>;</span><br><span class="line"><span class="built_in">document</span>.head.appendChild(style)</span><br></pre></td></tr></table></figure>
+<p>习惯性的在iOS的<code>webViewDidFinishLoad</code>，安卓的<code>OnPageFinished</code>的时机去注入这个JS，Run一下看看效果，纳尼？还是闪烁！看来是注入晚了，网页已经渲染完了，这时候注入css，会像前面提到的client端隐藏dom一样，画面会闪烁一下，那我们早一点，<code>webViewDidStartLoad</code>与<code>onPageStarted</code>的时机注入？Run一下看看效果，纳尼？彻底没反应？</p>
+<h1 id="WebView的JSContext"><a href="#WebView的JSContext" class="headerlink" title="WebView的JSContext"></a>WebView的JSContext</h1><p>JSContext是Webkit里面JavaScriptCore框架里面的js上下文，其实就相当于一个WebView里面的js运行时，也可以理解为JS运行环境，先拿iOS做个试验</p>
+<p>iOS的同学想必都知道可以用KVC的方式取出UIWebView的JSContext，那么做一个试验，分别在<code>StartLoad</code>和<code>FinishLoad</code>的delegate里打印一下JSContext</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">- (void)webViewDidStartLoad:(JSBridgeWebView *)webView &#123;</span><br><span class="line">    JSContext* context =[self.webView valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];</span><br><span class="line">    NSLog(@&quot;%@&quot;,context);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (void)webViewDidFinishLoad:(JSBridgeWebView *)webView</span><br><span class="line">&#123;</span><br><span class="line">    JSContext* context =[self.webView valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];</span><br><span class="line">    NSLog(@&quot;%@&quot;,context);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行过后你就会发现，同一个webview的JSContext，在时机不同，他根本就不是一个JS上下文对象，地址都不一样。相同的JS，运行在不同的JS环境里，自然效果是完全不一样的。</p>
+<p>每次WebView加载一个新Url的时候，都会丢掉旧的JS上下文，重新启用一个新的JS环境新的JS上下文，因此你在<code>webViewDidStartLoad</code>的时候即便使用<code>stringByEvaluatingJavaScriptFromString</code>去注入js，也是把js代码在旧的上下文中执行，当新的js上下文完全不受任何影响，没任何效果。</p>
+<h1 id="在资源加载的时候注入js"><a href="#在资源加载的时候注入js" class="headerlink" title="在资源加载的时候注入js"></a>在资源加载的时候注入js</h1><p>安卓的道理也是一样的，因此我们选择<code>OnPageFinished</code>已经晚了，此时页面已经渲染完了，再注入画面会闪，选择<code>OnPageStarted</code>其实是早了，注入到错误的js上下文里，等页面开始加载，就启用了新的js上下文，因此白注入了。</p>
+<p>我们得换一个事件，选一个恰到好处的事件回调，安卓的WebViewClient的<code>onLoadResource</code>事件，这个可以满足我们的需求，这个时间点新的js上下文已经生效，整个网页处于加载资源的阶段，还没开始进行排版与渲染，此时加入刚好满足需求</p>
+<p>运行一下，效果非常好，画面打开的时候，页面中就已经看不到那个Bar了</p>
+<p><strong>蛋疼的问题来了：</strong></p>
+<p>iOS的UIWebView没有这个事件，UIWebView只有可怜的这4个事件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType;</span><br><span class="line">- (void)webViewDidStartLoad:(UIWebView *)webView;</span><br><span class="line">- (void)webViewDidFinishLoad:(UIWebView *)webView;</span><br><span class="line">- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error;</span><br></pre></td></tr></table></figure>
+<h1 id="UIWebView的其他出路之一，NSURLProtocol"><a href="#UIWebView的其他出路之一，NSURLProtocol" class="headerlink" title="UIWebView的其他出路之一，NSURLProtocol"></a>UIWebView的其他出路之一，NSURLProtocol</h1><p>iOS平台提供的<code>NSURLProtocol</code>是一个可以Hook所有网络请求的工具，无论是由WebView发起的，还是直接由App发起的。</p>
+<p><code>NSURLProtocol</code>与<code>Hybrid App</code>相结合可以碰撞出非常多的火花比如</p>
+<ul>
+<li>利用<code>NSURLProtocol</code>实现Web图片Native缓存<ul>
+<li>UIWebView的缓存有统一上线，并且不好细粒度控制</li>
+<li>Hook图片请求，不走UIWebView的网络请求，直接通过<code>SDWebImage</code>,进行fetch&amp;cache图片</li>
+</ul>
+</li>
+<li>利用<code>NSURLProtocol</code>实现Hybrid Web页面静态资源本地包<ul>
+<li>css/js/image等静态资源打包随app下发</li>
+<li>WebView发起请求的时候Hook，从app本地包中返回静态资源</li>
+<li>加快网页加载速度</li>
+<li>静态资源本地包通过app的方式进行批量更新</li>
+</ul>
+</li>
+<li>利用<code>NSURLProtocol</code>实现Web图片native滤镜处理能力<ul>
+<li>UIWebView发起图片资源加载</li>
+<li>Hook后由App下载图片</li>
+<li>App下载图片后进行native滤镜处理</li>
+<li>App将滤镜过后的图片返回Web</li>
+</ul>
+</li>
+</ul>
+<p>怎么使用NSURLProtocol我就不多说了，随便搜搜你能搜出一大筐。</p>
+<p>我们这个场景也可以利用这样方式来实现，简单的说，App就是通过Hook的方式，直接修改了WAP页面的源代码。但有2个选择，可以选择修改css代码，也可以选择直接修改html页面</p>
+<ul>
+<li><strong>HookCss</strong></li>
+</ul>
+<p>每个页面都要加载很多CSS，一般我们的WAP项目里都有一些基础模板通用css，假设是<code>common.css</code></p>
+<p>1.NSURLProtocol选择性hook我们自己域名下的<code>common.css</code>文件<br>2.通过iOS的字符串处理，给这个文件尾部增加css信息<br>3.和JS注入的代码里的css一样<code>.XXWAPBAR { display: none;}</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">NSString *newcontent = [NSString stringWithFormat:@&quot;%@\n\n.XXWAPBAR &#123; display: none;&#125;\n&quot;,content];</span><br></pre></td></tr></table></figure>
+<p>这样Run一下，效果非常好，画面打开的时候，页面中就已经看不到那个Bar了</p>
+<ul>
+<li><strong>HookHtml</strong></li>
+</ul>
+<p>如果不修改CSS，修改HTML也行，但这样就不限定文件了，任意自己域名下的HTML</p>
+<p>1.NSURLProtocol选择性hook我们自己域名下的任意HTML文件<br>2.通过iOS的字符串处理，给这个<code>head</code>标签增加信息<br>3.给<code>head</code>标签增加<code>script</code>子标签<br>4.其实直接给<code>head</code>标签直接增加<code>style</code>子标签也可以</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">NSString *newcontent = [content stringByReplacingOccurrencesOfString:@&quot;&lt;head&gt;&quot; withString:@&quot;&lt;head&gt;\n&lt;script type=\&quot;text/javascript\&quot;&gt;\n</span><br><span class="line">var style = document.createElement(&apos;style&apos;); </span><br><span class="line">style.innerHTML = &apos;.wkWapX &#123; display: none;&#125;&apos;; </span><br><span class="line">document.head.appendChild(style);</span><br><span class="line">\n&lt;/script&gt;\n&quot;];</span><br></pre></td></tr></table></figure>
+<p>这样Run一下，效果一样，画面打开的时候，页面中就已经看不到那个Bar了</p>
+<h1 id="UIWebview的其他出路之二，WebFrameLoadDelegate"><a href="#UIWebview的其他出路之二，WebFrameLoadDelegate" class="headerlink" title="UIWebview的其他出路之二，WebFrameLoadDelegate"></a>UIWebview的其他出路之二，WebFrameLoadDelegate</h1><p><strong>这是一个黑科技</strong></p>
+<p><strong>这个科技和KVC取JSContext一样，都属于UnDocumented API</strong></p>
+<h2 id="WebView与JSContext在UIWebView上的困境"><a href="#WebView与JSContext在UIWebView上的困境" class="headerlink" title="WebView与JSContext在UIWebView上的困境"></a>WebView与JSContext在UIWebView上的困境</h2><p>自从iOS 7推出<code>JavaScriptCore</code>，苹果本意是开放这个框架，让开发者根据自己的需求，自己独立运行和开发脚本引擎，但很多人都想在UIWebView上使用<code>JavaScriptCore</code>里非常方便的API快速的进行js与oc的互通，使用里面的JSContext，抛弃以往iframe走<code>shouldStartLoadWithRequest</code>的delegate方式。</p>
+<blockquote>
+<p>UIWebView是基于Webkit的，内部天然存在着一个javascriptcore，以前只是iOS没对外开放，iOS7才对外开放</p>
+</blockquote>
+<p>但很可惜，对于UIWebView看起来苹果真是对它没多少爱了，并没有把JSContext暴露出来，拿到不到webview的JSContext，整个JSC的API也玩不起来，于是聪明的开发者利用KVC的方式还是把它拿了出来</p>
+<p><code>documentView.webView.mainFrame.javaScriptContext</code></p>
+<p>说到底这还是一个Undocumented Api，没有记录在合法苹果开发者文档与头文件的一个Api，存在一定的风险，但即便如此，使用这个方式依然存在一个问题，也就是我上文强调过的WebView与JSContext的问题</p>
+<blockquote>
+<p>每次WebView加载一个新Url的时候，都会丢掉旧的JS上下文，重新启用一个新的JS环境新的JS上下文，因此你在<code>webViewDidStartLoad</code>的时候即便使用<code>stringByEvaluatingJavaScriptFromString</code>去注入js，也是把js代码在旧的上下文中执行，新的js上下文完全不受任何影响，没任何效果。</p>
+</blockquote>
+<p>大家在搜索<code>javaScriptCore</code>使用指南的时候，总能看到类似这样的代码，在OC中给JSContext直接注入对象or函数</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// Use JSExport Protocol 将oc对象注入给js</span><br><span class="line">context[@&quot;ViewController&quot;] = self</span><br><span class="line"></span><br><span class="line">// 将oc的block，注入给JS当做函数</span><br><span class="line">context[@&quot;hello&quot;] = ^(void) &#123;</span><br><span class="line">        NSLog(@&quot;hello world&quot;);</span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+<p>如果我们基于这种模式来构建Hybrid Bridge，那么将带来很大的便利，最直观的优势就是，这种bridge是同步直接return返回的</p>
+<p>而以前iframe通过<code>shouldStartLoadWithRequest</code>的delegate方式想要返回，必须得异步，并且用js语句注入来执行回调，才能返回数据给js。</p>
+<p>这种基于JSContext的同步Hybrid Bridge构建的时机如果是<code>webViewDidFinishLoad</code>就会存在一些问题，在loadfinish的时候，代表网页中的js代码已经执行完了，如果此时才将bridge构建完毕，那么loadfinish之前执行的js代码是不能够使用jsbridge</p>
+<p>如果我们能捕获到新JSContext刚创建的时机，那么我们就能<code>搞事情</code></p>
+<ul>
+<li>比如创建这种同步jsBridge，是的任意js执行的时候都能有效jsBridge！</li>
+<li>比如解决我们今天聊得场景问题，在新JS环境刚创建，网页还没开始排版和渲染的时候，注入CSS！</li>
+</ul>
+<h2 id="WebFrameLoadDelegate寻求突破"><a href="#WebFrameLoadDelegate寻求突破" class="headerlink" title="WebFrameLoadDelegate寻求突破"></a>WebFrameLoadDelegate寻求突破</h2><p>搜索和寻找中发现了这样一个东西</p>
+<p><a href="https://github.com/TomSwift/UIWebView-TS_JavaScriptContext" target="_blank" rel="noopener">TS_JavaScriptContext</a></p>
+<p>简单的说，这个开源库也找到了一种<code>UnDocumented API</code>来准确捕捉到了新JSContext刚创建的时机，通过<code>WebFrameLoadDelegate</code></p>
+<p><code>WebFrameLoadDelegate</code>这个词随便在网上一搜，你就能搜到API和OC/Swift代码，但很可惜，这个代码仅限<code>macOS</code></p>
+<p><a href="https://developer.apple.com/documentation/webkit/webframeloaddelegate?language=objc" target="_blank" rel="noopener">Apple关于WebFrameLoadDelegate的官方文档URL</a></p>
+<p><img src="http://ouz34cilp.bkt.clouddn.com/15049523772825.jpg" alt="15049523772825"></p>
+<p>从这个官方文档中你可以发现比UIWebViewDelegate多很多的各种Webkit内核的事件</p>
+<p><img src="http://ouz34cilp.bkt.clouddn.com/15049524279135-1.jpg" alt="15049524279135"></p>
+<p>看到其中最重要的一个delegate没？</p>
+<p><code>webView:didCreateJavaScriptContext:forFrame:</code></p>
+<p>没错就是他，意思是说，其实Webkit内核早就把这类事件都抛出来了，并且在macOS的SDK中把这些事件都暴露给了开发者，但是在iOS的SDK中，UIWebView的头文件设计却把这些事件都吞掉了，没暴露出来，不让开发者使用</p>
+<p>按着苹果的尿性，源码里一般都会这么写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (_xxDelegate &amp;&amp; [_xxDelegate respondsToSelector:@selector(webView:didCreateJavaScriptContext:forFrame:)]) &#123;</span><br><span class="line">     [_xxDelegate webView:webView didCreateJavaScriptContext:ctx forFrame:frame];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果苹果把这个delegate给藏了起来，没有写进UIWebViewDelegate的Protocol里，但我们自己把这个函数实现了，按着苹果的尿性，就应当可以触发</p>
+<p>于是<a href="https://github.com/TomSwift/UIWebView-TS_JavaScriptContext" target="_blank" rel="noopener">TS_JavaScriptContext</a>这个项目就按着这个思路去尝试并且真的成功了，他给NSObject添加了一个category，使得NSObject拥有了<code>webView:didCreateJavaScriptContext:forFrame:</code>的implement，因此<code>respondsToSelector</code>的判定就会生效，从而我们就拿到了JS环境的创建事件</p>
+<p><img src="http://ouz34cilp.bkt.clouddn.com/15049532969678.jpg" alt="15049532969678"></p>
+<p>既然已经拿到了正确的时机，后面注入JS就好了，效果杠杠的，</p>
+<h2 id="一些探讨和猜测"><a href="#一些探讨和猜测" class="headerlink" title="一些探讨和猜测"></a>一些探讨和猜测</h2><p>到了这一步，单纯的找到时机，已经能解决我的问题了，不过<code>WebFrameLoadDelegate</code>里面的其他事件让我产生了很大的好奇心</p>
+<p><a href="https://developer.apple.com/documentation/webkit/webframeloaddelegate?language=objc" target="_blank" rel="noopener">Apple关于WebFrameLoadDelegate的官方文档URL</a></p>
+<p>从这里可以看到很多很多的事件，都是UIWebView里没有的，可以说macOS下的WebKit框架对外暴露的Api，更加能窥视Webkit原本的运作机制以及事件周期</p>
+<p>想要窥视更多Webkit也可以看这个</p>
+<p><a href="http://blog.csdn.net/cyforce/article/details/8561369" target="_blank" rel="noopener">ios UIWebview runtime header 用于私有api调用查看</a></p>
+<p>其实Webkit整个都是开源的，网上也有很多教你自己下Webkit源码，编译Webkit的，看些个是最直接的，但毕竟太庞大了，头疼看不进去，哈哈哈哈哈</p>
+<p>我在之前的文章<a href="http://awhisper.github.io/2017/05/01/DSLandLayoutEngine/" target="_blank" rel="noopener">动态界面：DSL&amp;布局引擎</a>中画过这样一个图</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/webkit.png" alt=""></p>
+<p>而今天发现，在这图里面还需要补充很多环节，也就是<code>html/css/js</code>在被加载之前都发生了啥</p>
+<p><a href="http://ourpgh.blogspot.hk/2008/09/webkitwebcore.html" target="_blank" rel="noopener">浅谈WebKit之WebCore篇</a></p>
+<p>可以看看这篇文章来学习一下，然后梳理一个大概的理解</p>
+<ul>
+<li>当webview跳转了一个url</li>
+<li>会先交给Frameloader</li>
+<li>然后就会new Document啊</li>
+<li>Load Resource啊(html/css/js)</li>
+<li>就会commit Document</li>
+<li>然后parse HTML</li>
+<li>生成Dom树啦</li>
+<li>再排版 layout</li>
+<li>最后渲染 render</li>
+</ul>
+<p>看了苹果的<code>WebFrameLoadDelegate</code>文档和那篇<code>私有api调用查看</code>，你会发现有很多<code>forFrame</code>的Api&amp;Delegate，可见FrameLoader还是很重要的一个环节</p>
+<p>而且，通过<a href="https://github.com/TomSwift/UIWebView-TS_JavaScriptContext" target="_blank" rel="noopener">TS_JavaScriptContext</a>这个项目，我还发现一个有趣的现象，就是如果页面中不包含任何的JS（无论是HTML中的JS代码，还是额外JS文件）那么就完全不会有<code>webView:didCreateJavaScriptContext:forFrame:</code>的事件被抛出来，可以想象既然没有JS代码，要毛的JS引擎。</p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><p>其实一开始我们聊的要注入CSS隐藏WAPUI的业务场景，已经不重要了。这么整体review一下你会发现，客户端解决方案里只有安卓比较舒服，iOS UIWebView都不太尽如人意。而且换了WKWebView可能这些问题都不存在（恩，项目还没用，没深挖）</p>
+<ul>
+<li>前端解决<ul>
+<li>定制开发（机械工作，繁琐，没意义）</li>
+<li>前端编译框架（成本大，风险高，跨团队）</li>
+</ul>
+</li>
+<li>客户端解决<ul>
+<li>安卓onLoadResource时机注入（比较完美）</li>
+<li>iOS NSURLProtocol改HTML源码（感觉并不很好）</li>
+<li>iOS 非公开Api调用（可能有审核风险）</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>一个奇怪的业务场景，引发的胡乱思考</p>
+</blockquote>
+<p>但是这个奇怪的场景，和胡乱发散的思考，确实让我多的了解了很多关于WebView内核的机制，这内核机制太庞大了，现在还是靠发散思考和搜索查找进行学习，有时间和精力真的想好好看看，亲自编译一下Webkit的源码，光是纯纯的源码文本就20M呢，要想看进去还真是一个十足的挑战</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/02/universallink/" rel="next" title="Universal Link 前端部署采坑记">
+                <i class="fa fa-chevron-left"></i> Universal Link 前端部署采坑记
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/07/LakeBaikalGlance/" rel="prev" title="“你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游">
+                “你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView注入"><span class="nav-number">1.</span> <span class="nav-text">WebView注入</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#WebView的JSContext"><span class="nav-number">2.</span> <span class="nav-text">WebView的JSContext</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#在资源加载的时候注入js"><span class="nav-number">3.</span> <span class="nav-text">在资源加载的时候注入js</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIWebView的其他出路之一，NSURLProtocol"><span class="nav-number">4.</span> <span class="nav-text">UIWebView的其他出路之一，NSURLProtocol</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#UIWebview的其他出路之二，WebFrameLoadDelegate"><span class="nav-number">5.</span> <span class="nav-text">UIWebview的其他出路之二，WebFrameLoadDelegate</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#WebView与JSContext在UIWebView上的困境"><span class="nav-number">5.1.</span> <span class="nav-text">WebView与JSContext在UIWebView上的困境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WebFrameLoadDelegate寻求突破"><span class="nav-number">5.2.</span> <span class="nav-text">WebFrameLoadDelegate寻求突破</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些探讨和猜测"><span class="nav-number">5.3.</span> <span class="nav-text">一些探讨和猜测</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后记"><span class="nav-number">6.</span> <span class="nav-text">后记</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'UIWebView代码注入时机与姿势', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

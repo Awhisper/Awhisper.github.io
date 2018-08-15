@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid,RN," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  上一篇了解了 ReactNative是如何初始化一整套JS/OC通信机制，是如何相互通信的。通篇在讲JS/OC的通信的源代码流程，解释了为什么JS可以调用OC，为什么OC可以调用JS，这相互之间的通信，是如何通过">
+<meta name="keywords" content="Hybrid,RN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactNative iOS源码解析（二）">
+<meta property="og:url" content="http://yoursite.com/2016/07/02/ReactNative源码分析2/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  上一篇了解了 ReactNative是如何初始化一整套JS/OC通信机制，是如何相互通信的。通篇在讲JS/OC的通信的源代码流程，解释了为什么JS可以调用OC，为什么OC可以调用JS，这相互之间的通信，是如何通过">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-21T17:02:25.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactNative iOS源码解析（二）">
+<meta name="twitter:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  上一篇了解了 ReactNative是如何初始化一整套JS/OC通信机制，是如何相互通信的。通篇在讲JS/OC的通信的源代码流程，解释了为什么JS可以调用OC，为什么OC可以调用JS，这相互之间的通信，是如何通过">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/02/ReactNative源码分析2/"/>
+
+
+
+
+
+  <title>ReactNative iOS源码解析（二） | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/02/ReactNative源码分析2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ReactNative iOS源码解析（二）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-02T14:39:37+08:00">
+                2016-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/02/ReactNative源码分析2/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/07/02/ReactNative源码分析2/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/07/02/ReactNative源码分析2/" class="leancloud_visitors" data-flag-title="ReactNative iOS源码解析（二）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>相关系列文章</p>
+<ul>
+<li><a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/02/ReactNative%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902/" target="_blank" rel="noopener">ReactNative iOS源码解析（二）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/17/Talk-about-ReactNative-Image-Component/" target="_blank" rel="noopener">Talk about ReactNative Image Component</a></li>
+</ul>
+<p>上一篇了解了 ReactNative是如何初始化一整套JS/OC通信机制，是如何相互通信的。通篇在讲JS/OC的通信的源代码流程，解释了为什么JS可以调用OC，为什么OC可以调用JS，这相互之间的通信，是如何通过代码进行控制与管理的</p>
+<p>但是上一篇讲的内容有一点太抽象了，全都是底层通信，我们依然不知道：</p>
+<p><strong>上层的业务module是如何一步步用js搭建出一款app的？</strong></p>
+<p>于是就进入了今天的环节，ReactNative中的Native，具体讲讲各种各样的Module是如何工作的，官方写好的Module以及我们可以自行扩展的Module</p>
+<p>这里面分为2种module</p>
+<ul>
+<li>源生API模块 - RCTModuleData </li>
+</ul>
+<p>（说明，官方文档把这个起名就叫源生模块，英文Module，我这里先中二的起名叫APIModule，为了和另一个区别起名一下，瞎起的名字，大家凑合一下）</p>
+<ul>
+<li>源生UI组件模块 - RCTComponentData</li>
+</ul>
+<p>（说明，官方文档把这个起名就叫源生UI组件，英文Component，我这里先中二的起名叫UIModule，为了和另一个区别起名，瞎起的名字，大家凑合一下）</p>
+<p>API模块阐述了JS是如何调用native各个模块的逻辑</p>
+<p>UI组件阐述了JS是如何创建出native的UI界面</p>
+<p>本文在源码分析部分，对照前文的代码流程可以加深理解</p>
+<a id="more"></a>
+<h1 id="源生API型模块"><a href="#源生API型模块" class="headerlink" title="源生API型模块"></a>源生API型模块</h1><p>什么叫APIModule？</p>
+<p>APIModule是一种面向过程式的模块调用</p>
+<p>JS只需要用一个模块名，一个API名，就能通过bridge找到对应的native的方法进行调用，JS Call OC Method</p>
+<p>这个过程就是一个函数调用而已，不存在操作某个实例对象，只是传递参数，操作参数，处理逻辑，返回数值 OC Call JS（通过前文知道，bridge都是异步的，通过callback block返回）</p>
+<p>举个例子好了，对于系统alert弹框，分享微信朋友圈，这种功能是最适合使用APIModule的</p>
+<h2 id="如何使用APIModule呢？"><a href="#如何使用APIModule呢？" class="headerlink" title="如何使用APIModule呢？"></a>如何使用APIModule呢？</h2><p>其实<a href="http://reactnative.cn/docs/0.26/native-modules-ios.html#content" target="_blank" rel="noopener">ReactNative原生模块 中文文档</a>上面详细介绍了如何使用APIModule，因为一会我们还要详细看源码，我这里还会再简单复数一遍。</p>
+<p>假如我们想让RN拥有，iOS系统弹框这一个功能：</p>
+<p>第一步，先写一个APIModule对象，遵从RCTBridgeModule协议</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">"RCTBridgeModule.h"</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">@interface</span> <span class="title">VKAlertModule</span> : <span class="title">NSObject</span>&lt;<span class="title">RCTBridgeModule</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>第二步，在实现文件里写一个宏<code>RCT_EXPORT_MODULE()</code></p>
+<p>第三步，实现这个Module能为RN提供的API。</p>
+<p>如果我打算写这样一个函数</p>
+<p><code>-(void)nativeAlert:(NSString *)content withButton:(NSString *)name</code></p>
+<p>让RN去调用，那么按着文档我需要去掉-(void)后的所有内容，写进一个宏里面<code>RCT_EXPORT_METHOD(xxx)</code></p>
+<p>整个代码就会是这样</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VKAlertModule</span></span></span><br><span class="line"></span><br><span class="line">RCT_EXPORT_MODULE()</span><br><span class="line"></span><br><span class="line">RCT_EXPORT_METHOD(nativeAlert:(<span class="built_in">NSString</span> *)content withButton:(<span class="built_in">NSString</span> *)name)&#123;</span><br><span class="line">    </span><br><span class="line">   <span class="comment">// Use UIAlertView create a alert</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>一个最简单的APIModule就写好了，在JS里面想要使用这个APIModule，只需要这样写就OK了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; NativeModules &#125; <span class="keyword">from</span> <span class="string">'react-native'</span>;</span><br><span class="line"><span class="keyword">var</span> VKAlertModule = VKAlertModule;</span><br><span class="line"></span><br><span class="line"><span class="comment">//然后在需要调用的地方</span></span><br><span class="line">VKAlertModule.nativeAlert(<span class="string">'这是一个系统弹框'</span>,<span class="string">'确定'</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到，在JS中模块名就是我们创建的类名，function名就是我们写的OC函数中，第一个参数以前的那一部分（只保留第一个参数前的nativeAlert为名字，后面的withButton什么的都不算了）</p>
+<p>我们之前在源码中提到，JS是可以把回调传回来的，那我们就改两笔，加入回调的形式</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//OC侧代码</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">VKAlertModule</span></span></span><br><span class="line"></span><br><span class="line">RCT_EXPORT_MODULE()</span><br><span class="line"></span><br><span class="line">RCT_EXPORT_METHOD(nativeAlert:(<span class="built_in">NSString</span> *)content withButton:(<span class="built_in">NSString</span> *)name callback:(RCTResponseSenderBlock)callback）&#123;</span><br><span class="line">   <span class="comment">// Use UIAlertView create a alert</span></span><br><span class="line">   <span class="comment">// show alert</span></span><br><span class="line">   <span class="comment">// 持有 block</span></span><br><span class="line">   <span class="comment">// when alert button click ok</span></span><br><span class="line">   <span class="comment">// use block callback</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//JS侧代码</span></span><br><span class="line">import &#123; NativeModules &#125; from 'react-native';</span><br><span class="line">var VKAlertModule = VKAlertModule;</span><br><span class="line"></span><br><span class="line"><span class="comment">//然后在需要调用的地方</span></span><br><span class="line">VKAlertModule.nativeAlert('这是一个系统弹框','确定',function()&#123;</span><br><span class="line">	console.log('clickok');</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>此时我们虽然不知道是怎么回事，只是照着文档做了，但看起来，JS已经完全能任意的调用APIModule提供的native能力了</p>
+<p>使用RN写一个系统alert要做这么多工作么？当然不是，facebook已经帮你写好了一个非常大而全的Alert的APIModule，<code>RCTAlertManager</code>，所以你完全可以按着上面的思路去打开RN源码里面的RCTAlertManager类，去看看和学习如何写一个功能强大的APIModule</p>
+<p>系统alert这种通用型的需求，facebook帮你写好了，但是如果是分享微信微博朋友圈之类的，facebook当然就不可能把这么独特的中国化的需求提前给你做好，但是不用慌，相信你也能自己写出来一样强大的shareManager-APIModule</p>
+<h2 id="APIModule的源码是如何运作的呢？"><a href="#APIModule的源码是如何运作的呢？" class="headerlink" title="APIModule的源码是如何运作的呢？"></a>APIModule的源码是如何运作的呢？</h2><p><strong>知其然知其所以然</strong></p>
+<p>我们只清楚了，如何按着文档写一个APIModule，如何直接让JS去使用module，但为什么会这样，这里面代码是怎么运作的，完全是一头雾水，那么就深入源码，看看这几个宏是怎么样能产生这样神奇的功效的</p>
+<p><strong>RCT_EXPORT_MODULE() 注册APIModule宏</strong></p>
+<p>这是一个宏套函数的过程，完全展开一下可以看到</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//宏展开</span></span><br><span class="line">RCT_EXTERN <span class="keyword">void</span> RCTRegisterModule(Class); \</span><br><span class="line">+ (<span class="built_in">NSString</span> *)moduleName &#123; <span class="keyword">return</span> @<span class="meta">#js_name; &#125; \</span></span><br><span class="line">+ (<span class="keyword">void</span>)load &#123; RCTRegisterModule(<span class="keyword">self</span>); &#125;</span><br><span class="line"><span class="comment">//宏里面调用的函数</span></span><br><span class="line"><span class="keyword">void</span> RCTRegisterModule(Class moduleClass)</span><br><span class="line">&#123;</span><br><span class="line">  <span class="keyword">static</span> <span class="built_in">dispatch_once_t</span> onceToken;</span><br><span class="line">  <span class="built_in">dispatch_once</span>(&amp;onceToken, ^&#123;</span><br><span class="line">    RCTModuleClasses = [<span class="built_in">NSMutableArray</span> new];</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  RCTAssert([moduleClass conformsToProtocol:<span class="class"><span class="keyword">@protocol</span>(<span class="title">RCTBridgeModule</span>)],</span></span><br><span class="line">            <span class="string">@"%@ does not conform to the RCTBridgeModule protocol"</span>,</span><br><span class="line">            moduleClass);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Register module</span></span><br><span class="line">  [RCTModuleClasses addObject:moduleClass];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到写了这个宏就自动帮你写好了2个method实现</p>
+<p>一个是自动写好了<code>+moduleName</code>的实现，返回了<code>@#js_name</code>，<code>@#</code>的意思是自动把宏的参数js_name转成字符，但我们刚才的样例里，都是直接不写参数的注册宏，所以说如果注册的时候不写参数，<code>+moduleName</code>会返回空，此处先不细说，后面会提到</p>
+<p>另一个是自动写了<code>+load</code>的实现，+load大家都知道，app一运行就会执行一次，所有的类都会执行一次，所以在app运行的时候，你写的这个module类就会自动的执行了<code>RCTRegisterModule</code>这个函数，这个函数干了些什么事情呢？首先在内存中创建了一个单例RCTModuleClasses表（上一篇中提到过），然后判断你写的类是否遵从RCTBridgeModule协议（这也是为什么要求你在写module定义的时候一定要组从协议），然后把你写的moduleClass放入内从的单例RCTModuleClasses表中</p>
+<p><strong>RCT_EXPORT_METHOD() 导出方法宏</strong> </p>
+<p>这又是一个宏套宏，看着会有一点晦涩</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//最外层宏</span></span><br><span class="line"><span class="meta">#define RCT_EXPORT_METHOD(method) \</span></span><br><span class="line">  RCT_REMAP_METHOD(, method)</span><br><span class="line">  </span><br><span class="line"><span class="comment">//内一层</span></span><br><span class="line"><span class="meta">#define RCT_REMAP_METHOD(js_name, method) \</span></span><br><span class="line">  RCT_EXTERN_REMAP_METHOD(js_name, method) \</span><br><span class="line">  - (<span class="keyword">void</span>)method</span><br><span class="line"></span><br><span class="line"><span class="comment">//内二层</span></span><br><span class="line"><span class="meta">#define RCT_EXTERN_REMAP_METHOD(js_name, method) \</span></span><br><span class="line">  + (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)RCT_CONCAT(__rct_export__, \</span><br><span class="line">    RCT_CONCAT(js_name, RCT_CONCAT(__LINE__, __COUNTER__))) &#123; \</span><br><span class="line">    <span class="keyword">return</span> @[@<span class="meta">#js_name, @#method]; \</span></span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>可以看一下我们把<code>-(void)nativeAlert:(NSString *)content withButton:(NSString *)name</code>这么长一串剪裁掉<code>-(void)</code>都扔进最外层宏当做参数了，最外层基本上没处理什么，直接调用内一层宏，第一个参数传空，第二个参数透传</p>
+<p>看一下内一层宏干了啥，内一层宏除了2个参数透传给内二层宏之外，还重新补全了<code>-(void)</code>，恢复了一个完整OC语法的函数定义，这样才使得RCT_EXPORT_METHOD(xxx)这样写一个函数编译器不会报错</p>
+<p>最重要的内二层我们看看都做了啥，RCT_CONCAT又是一个宏，这个宏我就不展开了，他基本上就是实现了一个宏的拼接，最先把<code>__LINE__</code>与<code>__COUNTER__</code>进行拼接，这是两个C语言宏，分别代表着行号与一个内置计数器，我没有详细去跟这两个数字的具体表现，大概意思就是为每一个RCT_EXPORT_METHOD生成一个唯一识别的数字tag在将这个tag与js_name拼接（此处其实js_name为空字符串），然后在前面拼接上一个<code>__rct_export__</code>，用宏生成了一个返回NSArray的方法</p>
+<p>说这有点绕举个例子就好了，假设我们写<code>RCT_EXPORT_METHOD(nativeAlert:xxx)</code>的时候，<code>__LINE__</code>与<code>__COUNTER__</code>组合起来的数字tag如果是123456，那么这个内二层宏还会自动生成一个这样的函数</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)__rct_export__123456&#123; </span><br><span class="line">    <span class="keyword">return</span> @[<span class="string">@""</span>, <span class="string">@"nativeAlert:xxx"</span>]; </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>换句话说，一行RCT_EXPORT_METHOD(xxxx)，等于生成了2个函数的实现。</p>
+<ul>
+<li><code>-(void)nativeAlert:(NSString *)content withButton:(NSString *)name</code></li>
+<li><code>+(NSArray&lt;NSString *&gt; *)__rct_export__123456</code></li>
+</ul>
+<p><strong>我们native注册的这些modules表，导出的这些自动生成的方法，JS是怎么知道的？怎么调用的？</strong></p>
+<p>这就紧密联系前一篇文章提到的RCTRootView的初始化环节中的几个重要标记了</p>
+<ul>
+<li>InitModule标记</li>
+<li>moduleConfig标记</li>
+<li>moduleConfigInject标记</li>
+<li>evaluateJS标记</li>
+</ul>
+<p><strong>InitModule的时候</strong>,就会从单例RCTModuleClasses表中拿出所有的APIModule的class对象，循环去创建RCTModuleData实例（上文提到过RCTModuleData不是APIModule，而是包装了一下APIModule，RCTModuleData.instance才是APIModule），并且一一保存在RCTBatchBridge对象的三个表中</p>
+<ul>
+<li>moduleClassesByID数组表，枚举APIModule的class，添加进入数组</li>
+<li>moduleDataByID数组表，枚举由APIModule生成的RCTModuleData对象，添加进入数组</li>
+<li>moduleDataByName字典表，以<code>+methodName</code>方法的返回值为key，枚举由APIModule生成的RCTModuleData对象，添加进入字典<br>（刚才不是说注册宏我们从来都不填参数，导致+methodName返回为空字符串么，这里通过RCTBridgeModuleNameForClass方法，如果是空字符串会自动返回类名字符串）</li>
+</ul>
+<p><strong>moduleConfig的时候</strong>，RCTBatchBridge会循环moduleDataByID数组表，把每一个APIModule的name都写进数组，然后写进key为remoteModuleConfig的字典，最后序列化成JS，形成类似这样的json，所有的RCT开头的都是facebook官方写好的APIModule</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="attr">"remoteModuleConfig"</span>:[[<span class="string">"VKAlertModule"</span>],</span><br><span class="line">[<span class="string">"RCTFileRequestHandler"</span>],</span><br><span class="line">[<span class="string">"RCTDataRequestHandler"</span>],</span><br><span class="line">...]&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>moduleConfigInject的时候</strong>，会通过RCTJSExecutor，把这个json注入JSContext，在JS的global全局变量里面加入一个<code>__fbBatchedBridgeConfig</code>对象，是一个数组，里面记录着所有APIModule的name，这样相当于告知了JS，OC这边有多少个APIModule分别都叫做什么，可以被JS调用，但此时还没有告诉JS，每一个APIModule，都可以使用哪些方法</p>
+<p>上一篇还提到了一个JS Call OC的方案，<code>[RCTJSExecutor setUp]</code>中设置了一大堆<code>JSContext[“xxx”]=block</code>的方法，这里面有一个名为<code>nativeRequireModuleConfig</code>的JSContext的block注入</p>
+<p><strong>当evaluateJS标记的时候</strong>,JS就会主动call<code>nativeRequireModuleConfig</code>这个方法，从而调用了这个blck，从名字可以猜出来，前面我们把所有的APIModule的名字列表发给了JS，这下JS开始用名字，找OC一一确认每一个APIModule里面都有啥具体信息，具体Method方法。</p>
+<p>通过名字，block会找到对应的RCTModuleData，从而调用RCTModuleData-Config方法</p>
+<ul>
+<li>会调用RCTModuleData的methods方法拿到一个所有方法的数组<ul>
+<li>运行时获取RCTModuleData的APIModule类的所有MethodList</li>
+<li>循环找到以<code>__rct_export__</code>开头的方法（上文提到过）<ul>
+<li>从这个方法中得到字符串<code>nativeAlert:(NSString *)content xxxx</code></li>
+<li>截取：前面的字符串<code>nativeAlert</code>作为JS简写方法名</li>
+<li>生成RCTModuleMethod</li>
+<li>保存在RCTModuleData内</li>
+</ul>
+</li>
+<li>生成JS简写方法名数组</li>
+</ul>
+</li>
+<li>有类名+类的简写方法名数组，生成APIModule的info信息，转换成json，通过block返回给JS</li>
+</ul>
+<p><code>[&quot;VKAlertModule&quot;,[&quot;nativeAlert&quot;]]</code></p>
+<p>这样JS就完全知晓，Native所有APIModule的名字，每个APIModule下所有的Method的名字了</p>
+<p><strong>JS Call NA的时候</strong></p>
+<p>除了主动的block式callNA以外，前一篇文章提到了<code>nativeFlushQueueImmediate</code>这个JS主动call OC的方法，通过<a href="http://mini.eastday.com/a/160612151604890-15.html" target="_blank" rel="noopener">nativeFlushQueueImmediate的逻辑</a>可以看出，当JS每次想主动调用OC的时候，会把所有JS消息都扔到JS的messagequeue的队列里，然后每个5毫秒，会触发<code>nativeFlushQueueImmediate</code>的block，让OC主动去发起一次<code>flushedQueue</code>来把这段时间内所有的JS消息都拉去过来，这就走到了前一篇文章提到过的</p>
+<p><code>- (void)handleBuffer:(id)buffer batchEnded:(BOOL)batchEnded</code></p>
+<p>再往后就是上文介绍过的 <strong>handleBuffer分发逻辑</strong></p>
+<blockquote>
+<ul>
+<li>RCTBatchedBridge-handlebuffer<ul>
+<li>analyze Buffer(<strong>analyze buffer标记</strong>)</li>
+<li>find module（<strong>find modules标记</strong>）</li>
+<li>for 循环all calls</li>
+<li>dispatch async（<strong>dispatch async标记</strong>）<ul>
+<li>[RCTBatchedBridge- handleRequestNumber:]<ul>
+<li>[RCTBridgeMethod invokeWithBridge:]（<strong>invocation标记</strong> 这个标记会复杂点，子流程表细说） </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+<p>基本上就是，找到对应的RCTModuleData，找到对应的APIModule，找到对应的RCTModuleMethod，执行invocation，完成了调用</p>
+<h2 id="APIModule小结"><a href="#APIModule小结" class="headerlink" title="APIModule小结"></a>APIModule小结</h2><p>以上就是一整个JS Call Native APIModule的源码流程交互图，那种API型的功能，比如系统弹框，比如社交分享，都是通过这样的运作流程，才能让React在JS环境中自由的调用native源生API模块</p>
+<p><strong>这里提一个遇到的坑</strong></p>
+<p>当我们写RCT_EXPORT_METHOD()宏的时候，写导出给JS的函数的时候，如果参数中含有successcallback，errorcallback，切记把这种callback block放在最后，千万不要，把其他类型的参数放在block之后。</p>
+<p>原因是在JS代码一侧有last arg，second arg的判断，当callbackblock 不是以倒数第二第一的位置出现的时候，JS会报exception<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">//正确的做法</span><br><span class="line">RCT_EXPORT_METHOD(nativeAlert:(NSString *)content withButton:(NSString *)name callback:(RCTResponseSenderBlock)callback)）</span><br><span class="line"></span><br><span class="line">//错误的做法</span><br><span class="line">RCT_EXPORT_METHOD(nativeAlert:(NSString *)content withCallback:(RCTResponseSenderBlock)callback) withButton:(NSString *)name）</span><br></pre></td></tr></table></figure></p>
+<p>能让React在JS环境中自由的调用native源生API模块，只是实现一个app很小的一部分，如果能React在JS环境中自由的创建Native源生的UI界面，自由的修改，变化每一个UI界面的展现效果，才是实现一个app最重要的一环，于是我们进入了下一部分<br>源生UI组件模块</p>
+<h1 id="源生UI组件模块"><a href="#源生UI组件模块" class="headerlink" title="源生UI组件模块"></a>源生UI组件模块</h1><p><strong>什么叫UIModule？</strong></p>
+<p>UIModule是一种面向对象式的UI组件调用</p>
+<p>每一个React的Component都是一个独立的UI组件，经过React的flexbox排版计算，有自己的大小，形状，样式。</p>
+<p>每一个被RN渲染出来的RCTView都是继承自UIView的纯源生UI组件，他是根据React的Component的计算结果（大小，形状，样式）从而创建出来的。</p>
+<p>RCTView与Component是一一对应的</p>
+<p>当一个JS Component对象想要创建/改变自己的颜色，大小，样式的时候，就需要通过brdige找到自己所对应的那个RCTView，传递过去相应的数据参数，对RCTView生效传来的数据 JS CALL OC</p>
+<p>当RCTView发生了触摸等源生事件响应的时候，通过brdige找到自己所对应的JS Component，把触摸的事件和数据参数传过去，让React.JS根据数据进行JS Component的重新布局或者界面响应</p>
+<h2 id="我把UIModule比作iOS开发中的UIKit的子类扩展"><a href="#我把UIModule比作iOS开发中的UIKit的子类扩展" class="headerlink" title="我把UIModule比作iOS开发中的UIKit的子类扩展"></a>我把UIModule比作iOS开发中的UIKit的子类扩展</h2><p>UIModule 其实由2部分组成，RCTView与RCTViewManager，就好像v与c的关系一样，每个UIModule都会有一个RCTComponentData与之配合（就好像APIModule与RCTModuleData一样）</p>
+<ul>
+<li>UIView 对应RCTView（继承UIView）与RCTViewManager</li>
+<li>UIImage 对应RCTImageView（继承UIImageView）与RCTImageViewManager</li>
+<li>UILabel 对应RCTTextView（继承RCTView）与RCTTextViewManager</li>
+<li>UIScrolView 对应RCTScrolView（继承RCTView）与RCTScrolViewManager</li>
+</ul>
+<p>正式因为每一个JS的Component都是与一个UIModule建立了一一对应的关系，所以当发生渲染的时候，JS Component的渲染信息，就会通过brdige，生成继承自纯源生iOS UIKit的UIModule</p>
+<p>每一个JS的Component与之直接配合的都是RCTViewManager，这是一个继承自NSObject遵从RCTBridgeModule协议的类，如果你打算自己写一个自定义的UIModule，也是需要继承自RCTViewManager，他只是一个控制器的角色，因此RCTViewManager还需要决定他采用什么方案进行绘制，所以在RCTViewManager可以选择使用不同的UIView来实现真正的视图角色。</p>
+<h2 id="如何使用UIModule呢？"><a href="#如何使用UIModule呢？" class="headerlink" title="如何使用UIModule呢？"></a>如何使用UIModule呢？</h2><p>老规矩，<a href="http://reactnative.cn/docs/0.26/native-component-ios.html#content" target="_blank" rel="noopener">ReactNative原生UI组件 中文文档</a>上面详细介绍了如何使用UIModule，因为一会我们还要详细看源码，我这里还会再简单复数一遍。由于UIModule要处理的东西，官方文档源码都比较详细了，所以我不会太细致的介绍。</p>
+<p><strong>自定义一个UIModule组件</strong></p>
+<ul>
+<li>创建RCTViewManager子类<ul>
+<li>RCT_EXPORT_MODULE()注册宏</li>
+<li><code>-(UIView *)view</code> 指定视图真正实现</li>
+<li>requireNativeComponent导入JS源生组件</li>
+</ul>
+</li>
+<li>创建属性<ul>
+<li>oc 属性导出宏（普通属性，复杂属性）</li>
+<li>JS Component封装 属性propTypes声明</li>
+</ul>
+</li>
+<li>创建事件<ul>
+<li>oc定义eventblock 属性</li>
+<li>oc call eventblock</li>
+<li>js component 同名function 响应</li>
+</ul>
+</li>
+<li>创建样式常亮（不是很常用）<ul>
+<li>oc的constantsToExport 方法返回字典</li>
+<li>JS通过UIManager.XXUIModule.Constants 得到字典</li>
+</ul>
+</li>
+</ul>
+<p>上面全都是按着文档的流程去操作，你就可以在JS中以React.JS的方式去构建一个纯源生native组件了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line">  render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;View style=&#123;<span class="keyword">this</span>.props.style&#125;&gt;</span><br><span class="line">        &lt;XXUIModule</span><br><span class="line">          ...</span><br><span class="line">        /&gt;</span><br><span class="line">      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br><span class="line"><span class="regexp">&#125;);</span></span><br></pre></td></tr></table></figure>
+<h2 id="UIModule源码是如何运作的"><a href="#UIModule源码是如何运作的" class="headerlink" title="UIModule源码是如何运作的"></a>UIModule源码是如何运作的</h2><p><strong>知其然知其所以然</strong></p>
+<p>我们只清楚了，如何按着文档写一个UIModule，如何直接让JS去使用这个UIModule对应的JS Component，但为什么会这样，这里面代码是怎么运作的，依然是一头雾水，那么就深入源码，看看这几个宏，这几个native oc方法是怎么运作的</p>
+<p><strong>RCT_EXPORT_MODULE() 注册Module宏</strong></p>
+<p>跟APIModule注册是同一个宏，都是在一个单例RCTModuleClasses表中把xxRCTViewManager添加进去，不做多解释</p>
+<p><strong><code>-(UIView *)view</code>方法</strong></p>
+<p><code>RCTComponentData-createViewWithTag</code>这个方法会调用RCTViewManager的view方法，前边讲过RCTComponentData的角色</p>
+<p>而<code>RCTComponentData-createViewWithTag</code>这个方法会被一个<code>RCTUIManager</code>调用，当真正需要渲染的时候，RCTUIManager会通过这个方式决定，到底应该alloc，init出一个什么样的UIView（RCTView？MKMapView？UIImageView？）</p>
+<p>这里提到了一个关键词<code>RCTUIManager</code>，先按下不表，后面我们会详细说明</p>
+<p><strong>requireNativeComponent为React.JS导入源生component</strong></p>
+<p>这块就得看JS的源码了，就是下面这个文件</p>
+<p><code>node_modules/react-native/Libiraries/ReactIOS/requireNativeComponent.js</code></p>
+<p>我对JS没那么深的了解，大致看了下这里一直在操作一个叫做<code>UIManager</code>，从UIManager按名字取出ViewConfig的配置，然后配置了一大堆内容，那我们就打开这个文件</p>
+<p><code>node_modules/react-native/Libiraries/Utilities/UIManager.js</code></p>
+<p>看到了这样一行代码<code>var UIManager = require(&#39;NativeModules&#39;).UIManager;</code>眼熟么？没错，这就是APIModule在JS文件中使用的时候，需要的require，换句话说，这个UIManager操作的就是<code>RCTUIManager</code>，RCTUIManager先按下不表，后面我们会详细说明</p>
+<p><strong>OC属性导出宏</strong></p>
+<ul>
+<li>RCT_EXPORT_VIEW_PROPERTY(name,type)</li>
+<li>RCT_CUSTOM_VIEW_PROPERTY(name,type,class)</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//常规导出宏</span></span><br><span class="line"><span class="meta">#define RCT_EXPORT_VIEW_PROPERTY(name, type) \</span></span><br><span class="line">+ (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)propConfig_<span class="meta">##name &#123; return @[@#type]; &#125;</span></span><br><span class="line"><span class="comment">//自定义导出内置宏</span></span><br><span class="line"><span class="meta">#define RCT_REMAP_VIEW_PROPERTY(name, keyPath, type) \</span></span><br><span class="line">+ (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)propConfig_<span class="meta">##name &#123; return @[@#type, @#keyPath]; &#125;</span></span><br><span class="line"><span class="comment">//自定义导出宏</span></span><br><span class="line"><span class="meta">#define RCT_CUSTOM_VIEW_PROPERTY(name, type, viewClass) \</span></span><br><span class="line">RCT_REMAP_VIEW_PROPERTY(name, __custom__, type)         \</span><br><span class="line">- (<span class="keyword">void</span>)set_<span class="meta">##name:(id)json forView:(viewClass *)view withDefaultView:(viewClass *)defaultView</span></span><br></pre></td></tr></table></figure>
+<p>看常规导出宏，##在宏里面的用法就是字符串拼接，@#在宏里面的用法就是参数转字符，换句话说<code>RCT_EXPORT_VIEW_PROPERTY(isHidden, BOOL)</code>的作用就是生成了一个方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)propConfig_isHidden &#123; </span><br><span class="line"> 	<span class="keyword">return</span> @[<span class="string">@"BOOL"</span>]; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>propConfig_isHidden这个函数被谁调用了呢？RCTComponentData的<code>setProps:forView:</code>方法，这个方法被谁调用了呢？RCTUIManger，嗯，一会细说</p>
+<p>看自定义导出宏，这个宏被用来导出一些非常规类型的属性，一些自定义的结构体，对象类型的属性，他首先调用了自定义导出内置宏，着红看起来和刚才的宏差不多，只不过返回的字符串数组多了一个值，他还又单独创建了一个新函数，举例说明，如果我们写了一行<code>RCT_CUSTOM_VIEW_PROPERTY(region, MKCoordinateRegion, RCTMap)</code>(官方文档的例子)，就相当于自动添加了2个方法，第一个方法已经在宏里实现了，第二个方法写完宏后自动生成了声明，但实现需要使用者跟着马上补上（如同RCT_EXPORT_METHOD）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="built_in">NSArray</span>&lt;<span class="built_in">NSString</span> *&gt; *)propConfig_region &#123; </span><br><span class="line"> 	<span class="keyword">return</span> @[<span class="string">@"MKCoordinateRegion"</span>,<span class="string">@"__custom__"</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)set_region:(<span class="keyword">id</span>)json forView:(RCTMap *)view withDefaultView:(RCTMap *)defaultView</span><br></pre></td></tr></table></figure>
+<p>第一个方法方法和常规属性导出宏作用一样，都会被RCTComponentData，RCTUIManger调用，详细内容后续说明</p>
+<p>第二个方法在哪调用呢？调用的位置紧紧挨着第一个方法执行，在第一个方法propConfig_xx执行过后，会判断是否还有@”<strong>custom</strong>“标记，如果含有就会调用第二个方法，详细内容还是属于RCTComponentData，RCTUIManger，后续会说明</p>
+<p>至于JS Component封装，属性propTypes声明，这就属于React.JS的特性了，反正最后还是通过JS的UIManager去操作Native</p>
+<p><strong>OC用属性导出宏创建事件</strong></p>
+<p>一个UIView必须具备一个RCTBubblingEventBlock型的block属性，才可以被当做事件导出</p>
+<p>这个block属性导出和常规属性导出，都是同一个宏<code>RCT_EXPORT_VIEW_PROPERTY</code>只不过type必须是RCTBubblingEventBlock，宏的工作流程是一致的，区别只是RCTComponentData，RCTUIManger在处理上的不同而已，后续说明</p>
+<p><strong>创建常量</strong></p>
+<p>这个constantsToExport方法会返回一个字典，在RCTModuleData的gatherConstants函数中被调用，而这个函数会被RCTModuleData的config方法调用</p>
+<p>这个在APIModule的时候提到过，在injectModuleConfig的时候，获取config，转成json，最后会注入js，成为js可以获取到得常量</p>
+<h2 id="RCTUIManager与RCTComponentData"><a href="#RCTUIManager与RCTComponentData" class="headerlink" title="RCTUIManager与RCTComponentData"></a>RCTUIManager与RCTComponentData</h2><p>终于来说<code>RCTUIManager</code>与<code>RCTComponentData</code>，上面提到了无数次，这两个东西加上<code>UIManager.js</code>构成了整个RN可以通过js创建native界面的核心</p>
+<p><strong>首先强调一点，RCTUIManager是一个APIModule，RCTUIManager是一个APIModule，RCTUIManager是一个APIModule，重要的事情说三遍</strong></p>
+<p>这个东西就有意思了，这是一个APIModule，因此就像其他所有APIModule一样，他会被RCTModuleData管理着，最重被RCTBatchBrdige持有着，时刻等待着JS<code>UIManager.js</code>的调用</p>
+<p>但是他就像RCTBridge一样内部也维护了不止一个字典，管理着所有的UIModule，以及所有的View，他在初始化的时候<code>RCTUIManager-setBridge</code></p>
+<ul>
+<li>会循环所有的RCTBatchBrdige已登记在册的Module，循环寻找其中继承自RCTViewModule的对象</li>
+<li>录入<code>_componentDataByName</code>这个内部字典表，以ModuleName为Key</li>
+<li>此时还创建了一些其他的表包括以下等等，这里先不提，后面说道了会再解释<ul>
+<li>_viewRegistry字典</li>
+<li>_rootViewTags数组</li>
+<li>_pendingUIBlocks字典</li>
+</ul>
+</li>
+</ul>
+<p>让我们看看，当ReactNative开始创建界面的时候，都会发生什么事情？当进过上一篇提到的<strong>evaluateJS标记</strong>之后，并不会立刻开始绘制RN界面，为啥？输入了JSBundle以后，整个JS环境就已经完全配置完毕，ready就位了，但是并不会真正开始绘制界面，绘制界面会通过开发者，自行创建RCTRootView，并且执行initWithBridge后开始（这里我并没有说initWithBundleURL，二者流程是一模一样的，但是initWithBundleURL与initWithBridge的区别我在下一环节会特别说明）</p>
+<ul>
+<li>RCTRootView-initWithBridge<ul>
+<li>(如果此时JS环境已经搭建完毕) RCTRootView-bundleFinishedLoading<ul>
+<li>RCTContentRootView-initWithFrame:bridge:reactTag:<ul>
+<li>reactTag getter<ul>
+<li>RCTUIManager-allocateRootTag</li>
+</ul>
+</li>
+<li>RCTContentRootView-registerRootView</li>
+</ul>
+</li>
+<li>RCTContentRootView-addsubview</li>
+<li>RCTRootView-runApplication<ul>
+<li>RCTBridge-enqueueJSCall</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>因为不是很长，我就不安着这标记那标记的解释了，顺着说一下。</p>
+<p>首先创建RCTRootView的时候如果bridge已经搭建完毕，JS环境已经就位，那么就会直接出发<code>bundleFinishedLoading</code>，如果JS环境没有就位，那么就会等待JS环境运行完毕Ready后，通过通知触发<code>bundleFinishedLoading</code></p>
+<p>在开始正式创建RCTRootView的时候会创建一个subview<code>RCTContentRootView</code>这个东西创建的时候需要一个reactTag，这个tag是一个很关键的东西，此时通过<code>allocateRootTag</code>方法创建了root得reactTag，规则是从1开始，每次创建一个RootView实例都会累加10，1，11，21，31，以此类推。创建完RCTContentRootView后还要去UIManager用这个reactTag注册View，也就是以Tag为Key，登记进入_viewRegistry字典表</p>
+<p>然后将RCTContentRootView添加到RCTRootView上面，执行了runApplication，这里面真正的意义是执行了一行JS代码，告诉JS你要开始绘制这个参数params的界面了！</p>
+<p><code>AppRegistry.runApplication(params)</code></p>
+<p>再往后就是React.JS的工作了，React.JS会着手把JS中的页面进行计算，排版，生成对应的JS Component，准备组织绘制界面了，包含着无数个JS Component的相互嵌套。最重通过<code>UIManager.js</code>这个APIModule的JS接口，开始call oc去创建界面</p>
+<p><strong>RCTUIManager</strong>都有哪些API提供给了JS呢？</p>
+<ul>
+<li>createView</li>
+<li>updateView</li>
+<li>setChildren</li>
+<li>removeRootView</li>
+<li>manageChildren</li>
+<li>findSubviewIn</li>
+<li>measure</li>
+<li>dispatchViewManagerCommand</li>
+</ul>
+<p>我们可以想象一下，当React.JS开始工作的时候，JS把所有布局好的Component，一层套一层的JS界面数据，通过UIManager，调用createView，updateView，setChildren等接口API，来创建一个个纯iOS native的UIKit的界面。</p>
+<p>有兴趣的话，完全可以在<code>runApplication</code>，<code>createView</code>，<code>updateView</code>，<code>setChildren</code>等处打上断点，看看是不是像我说的一样。</p>
+<ul>
+<li>createView的作用是创建一个个的UIView，RCTView，各种nativeView，并且把传过来的JS的属性参数，一一赋值给nativeView</li>
+<li>updateView的作用是，当JSComponent的布局信息，界面样子发生变化，JS来通知nativeView来更新对应的属性变化，样子变化</li>
+<li>setChildren的作用是，告诉OC，那个tag的View是另一个tag的view的子view，需要执行addsubview，insertsubview等</li>
+</ul>
+<p>这样一来，基本上就完成了React.JS创建一个纯native界面的过程，但我们还是具体以createView举例，深入分析一下这里面的源码，这里面有很多我们在前文提到的未解之谜（各种RCTComponentData去调用ViewManager的过程）</p>
+<ul>
+<li>RCTUIManager-createView<ul>
+<li>js传来viewName，通过初始化的_componentDataByName表获取RCTComponentData</li>
+<li>dispatch_async(mainqueue)从JS通信线程抛到主线程创建UI<ul>
+<li>js传来了ReactTag，通过RCTComponentData-createViewWithTag，创建界面</li>
+<li>js传来了属性props，通过RCTComponentData-setProps:forView:进行属性赋值<ul>
+<li>（只运行一次）循环每一个属性，创建属性赋值block函数<ul>
+<li>通过<code>propConfig</code>拼接props的名字来确认，此property是否已经使用EXPORT宏注册过属性（上面提到过）</li>
+<li>如果此属性已经注册，通过运行时invocation的方式，生成了一个block函数，每次调用这个block，就会以运行时的方式，setter给对应属性</li>
+</ul>
+</li>
+<li>通过属性赋值block函数，直接输入参数赋值属性</li>
+</ul>
+</li>
+<li>_viewRegistry字典表里讲创建的View录入以reactTag为Key</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>看到这个过程没有，整个过程有一个最核心的点ReactTag，为什么说这个tag核心呢？因为我们都知道APIModule的特点就是面向过程的，他是不存在对象self这个概念的，所以必须通过这个tag，在JS里面有一个所有JSComponent的tag表，在OC里面依然也有这么一个所有nativeView的Tag表<code>_viewRegistry</code>，只有通过唯一指定的tag，这样APIModule-RCTUIManager，才能知道到底应该操作哪一个nativeView</p>
+<p>我们顺带来看一看JS侧的代码吧~看看JS那边是怎么操作和读取这个tag的吧~比较简便的方式是，查JS源码代码，看看各处都是如何调用<code>UIManager.js</code>的，我对JS没那么熟，不细说了，怕说错，大家可以自己看看。</p>
+<p>这里要介绍一下JS那边tag是如何管理的，有个<code>ReactNativeTagHandles.js</code>的JS模块，require了ReactNativeTagHandles以后在Chrome内存中可以看看ReactNativeTagHandles这个对象都有什么内容，你会发现，它内部存着一大堆的表格</p>
+<ul>
+<li>tagToRootNodeID</li>
+<li>rootNodeIDToTag</li>
+</ul>
+<p>你会发现他里面存着这样的东西<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">rootNodeIDToTag:Object</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;:1</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;[0]:2</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;[0].1:27</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;[0].$1:3</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;[0].$1.0:4</span><br><span class="line">.r[1]&#123;TOP_LEVEL&#125;[0].$1.0.0:5</span><br><span class="line">...</span><br></pre></td></tr></table></figure></p>
+<p>这里面不仅保存着tag信息，还保存着相当多的层级信息，还有其他信息，简单的发现最后一个数字大概代表着reactTag，r[n]中的那个n代表着，component所在的rootView的tag</p>
+<p>因为这样的内容肯定不方便读写操作，所以ReactNativeTagHandles还提供了很多方法可以用</p>
+<ul>
+<li>getNativeTopRootIDFromNodeID()</li>
+<li>reactTagIsNativeTopRootID()</li>
+<li>balabalabal好多函数</li>
+</ul>
+<p>我JS不是很熟悉，这部分就细细解读了</p>
+<h2 id="由APIModule与UIModule引发的半RN半源生开发的坑"><a href="#由APIModule与UIModule引发的半RN半源生开发的坑" class="headerlink" title="由APIModule与UIModule引发的半RN半源生开发的坑"></a>由APIModule与UIModule引发的半RN半源生开发的坑</h2><p>这里就简单的说一下，我们因为业务原因，注定不可能以单一RCTRootView去实现整个APP功能，注定了大部分保留现有native功能，个别动态性较强的新功能采用ReactNative去开发</p>
+<p>所以我们采用的是多RCTRootView得方式，什么意思呢，创建一个RNViewController类，这个类内部有一个RCTRootView当做界面，但是整个RNViewController被当做其他natve的UIViewControler一样，去push，去present，去pop，并没有使用ReactNative里面的navigator组件</p>
+<p>既然选择了这种模式就要注意一个问题，facebook其实也在源码的注释中强调，如果你还有多个RCTRootView，推荐让所有的RCTRootView共享同一个RCTBridge，毕竟上一篇文章我们就讲了，整个RCTBridge的初始化流程还是相当的复杂，挺耗性能的，既然是一个JS环境，干脆所有的rootview公用同一个JS环境，也就是JSBridge</p>
+<p>这就引发了我前面提到过的，RCTRootView创建的时候，跟常规开发文档demo都不同的方式initWithBridge，首先我选择在app启动的时候，就创建初始化整个JS环境，JSBridge，（上一篇分析过，这里面有很多异步处理，不用担心卡主线程UI），等到用户要点击弹出RN页面的时候，再去构建RCTRootView，使用initWithBridge的方式。</p>
+<p>常规的开发文档demo都选择initWithBundleURL的方式，这个方法其实就是，把initJSBridge，与initRootView打包处理了，很适合整个app都是reactnative的开发模式，但是我们就不适用了</p>
+<p><strong>从自定义的APIModule中JS call OC，OC如何知道这个JS Call来自哪个RootView</strong></p>
+<p>我就碰到了这样的一个坑，发现坑了后，读了RCTUIManager的源码才按着UIManager的思路解决了问题，没错就是reactTag，当你希望JS通过APIModule调用na的时候，在JS调用前先找到自己component所在的rootViewTag，把这个tag随着API的参数一起发过来，然后直接通过RCTBridge.uimanager的方法获取RCTUIManager，从而查找整个<code>_viewRegistry[tag]</code>表，最终快速定位到，JSCall来自哪个RootView</p>
+<p>相关链接：<a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+            <a href="/tags/RN/" rel="tag"># RN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/24/ReactNative流程源码分析/" rel="next" title="ReactNative iOS源码解析（一）">
+                <i class="fa fa-chevron-left"></i> ReactNative iOS源码解析（一）
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/10/CarInMyLife/" rel="prev" title="CarInMyLife">
+                CarInMyLife <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#源生API型模块"><span class="nav-number">1.</span> <span class="nav-text">源生API型模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用APIModule呢？"><span class="nav-number">1.1.</span> <span class="nav-text">如何使用APIModule呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APIModule的源码是如何运作的呢？"><span class="nav-number">1.2.</span> <span class="nav-text">APIModule的源码是如何运作的呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APIModule小结"><span class="nav-number">1.3.</span> <span class="nav-text">APIModule小结</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#源生UI组件模块"><span class="nav-number">2.</span> <span class="nav-text">源生UI组件模块</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#我把UIModule比作iOS开发中的UIKit的子类扩展"><span class="nav-number">2.1.</span> <span class="nav-text">我把UIModule比作iOS开发中的UIKit的子类扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#如何使用UIModule呢？"><span class="nav-number">2.2.</span> <span class="nav-text">如何使用UIModule呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#UIModule源码是如何运作的"><span class="nav-number">2.3.</span> <span class="nav-text">UIModule源码是如何运作的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RCTUIManager与RCTComponentData"><span class="nav-number">2.4.</span> <span class="nav-text">RCTUIManager与RCTComponentData</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#由APIModule与UIModule引发的半RN半源生开发的坑"><span class="nav-number">2.5.</span> <span class="nav-text">由APIModule与UIModule引发的半RN半源生开发的坑</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'ReactNative iOS源码解析（二）', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

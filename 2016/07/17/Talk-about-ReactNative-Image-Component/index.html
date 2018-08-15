@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid,RN," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧 关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即">
+<meta name="keywords" content="Hybrid,RN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Talk about ReactNative Image Component">
+<meta property="og:url" content="http://yoursite.com/2016/07/17/Talk-about-ReactNative-Image-Component/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧 关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png">
+<meta property="og:updated_time" content="2018-04-21T17:02:10.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Talk about ReactNative Image Component">
+<meta name="twitter:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧 关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/07/17/Talk-about-ReactNative-Image-Component/"/>
+
+
+
+
+
+  <title>Talk about ReactNative Image Component | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/17/Talk-about-ReactNative-Image-Component/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">Talk about ReactNative Image Component</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-17T10:31:23+08:00">
+                2016-07-17
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/07/17/Talk-about-ReactNative-Image-Component/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/07/17/Talk-about-ReactNative-Image-Component/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/07/17/Talk-about-ReactNative-Image-Component/" class="leancloud_visitors" data-flag-title="Talk about ReactNative Image Component">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>相关系列文章</p>
+<ul>
+<li><a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/02/ReactNative%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902/" target="_blank" rel="noopener">ReactNative iOS源码解析（二）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/17/Talk-about-ReactNative-Image-Component/" target="_blank" rel="noopener">Talk about ReactNative Image Component</a></li>
+</ul>
+<p>最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧</p>
+<p>关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即便是纯源生开发也可以做的很复杂很精妙，比如<code>SDWebImage</code>的无比强大的网络缓存，网图控制，比如<code>ASDK</code>里面的asyncDisplay，比如<code>YYWebImage</code>中身兼网络缓存控制与异步高效解码绘制。今天我们来看看ReactNative是如何处理Image的</p>
+<h1 id="ImageComponent的基本用法"><a href="#ImageComponent的基本用法" class="headerlink" title="ImageComponent的基本用法"></a>ImageComponent的基本用法</h1><p><a href="https://facebook.github.io/react-native/docs/images.html" target="_blank" rel="noopener">Facebook的官方文档：ImageComponent</a></p>
+<p>从文档中我们可以看到ImageComponent一共可以读取三种图片，无论用那种方式，只要把他们赋值给source，好像图片就能自然生效了</p>
+<ul>
+<li>与jsbundle一起打包packag的资源文件（require方式）</li>
+<li>iOS源生APP的ImageAsset内部被iOS管理的资源文件（{uri:name}方式）</li>
+<li>网络上的图片（{uri:url}方式）</li>
+</ul>
+<h2 id="静态图片资源"><a href="#静态图片资源" class="headerlink" title="静态图片资源"></a>静态图片资源</h2><p>随着jsbundle一起打包的资源文件，在文档中以这种方式<code>require(&#39;./img/check.png&#39;)</code>使用，其中的路径是图片小相对于<code>index.ios.js</code>这个文件的路径。</p>
+<p>静态图片资源是什么意思呢？我们用RN肯定是期望热更新的，肯定期望rn的js代码与功能所需要用到的图片，一起随着网络下载的客户端本地，从而生效，从而展现，所以这些图片需要随着js一起被打包，当执行了node.js的打包命令后，会生成一个bundle目录，这里面有最核心的jsbundl也就是js代码包，同时这里面还有个asset目录，里面放着所有一起打包的资源文件，这就是RN的静态图片资源的概念</p>
+<h2 id="APP的图片资源"><a href="#APP的图片资源" class="headerlink" title="APP的图片资源"></a>APP的图片资源</h2><p>这里要提到iOS的图片资源管理，iOS会把所有的图片打包进入app自己独有的资源文件包之中，这部分图片属于APP管理，是随着每个app的包一起提审，一起发版，简单地说这部分图片的管理，不能随着网络下载随意存放和读取和更新，是纯源生iOSAPP的资源管理与读取的方案</p>
+<p>如果想在RN里面，显示这种源生APP资源的话就要通过<code>{uri:name}</code>的方式，其中name是资源文件在源生管理器里面的名字，这样就可以在RN的环境里，读取出native环境里的资源</p>
+<h2 id="网络图片"><a href="#网络图片" class="headerlink" title="网络图片"></a>网络图片</h2><p>这个就很好理解了，恩，不从APP本地无论是RN包还是native包里面读图，直接从网络里拉图，<code>{uri:url}</code>其中url是图片的网络地址</p>
+<h1 id="图片是如何读取的"><a href="#图片是如何读取的" class="headerlink" title="图片是如何读取的"></a>图片是如何读取的</h1><a id="more"></a>
+<p>读了之前的文章，我们应该清楚，所有的RN的ImageComponent最终都会通过源生的UIModule，实现最终的源生的展现效果，那么这个UIModule就是RCTImageView，大家可以从源码中看到这个类</p>
+<p>关注一下这个类的<code>- (void)setSource:(RCTImageSource *)source</code>方法，看起来所有在JS里赋值给Image的Source的属性，都会传过来通过这个方法传给RCTImageView，然后再通过RCTImageView的<code>reloadImage</code>方法去读取图片内容，这部分后面还会讲。</p>
+<p>但我很惊讶与这里面的代码，刚才我们讲到，RN是有三种截然不同的图片读取方式的，传入的是三种截然不同的数据，而且是读取截然不同的三种类型的图片</p>
+<p>在我的认知里面，完全不同的三种方案，在<code>setSource</code>与<code>reloadImage</code>里面应该会按着三种方式，至少有个<code>if else</code>之类的差异化处理，但出乎我的意料，RN在这两处的代码是完全一致并且统一的，代码一气呵成没有任何分支处理</p>
+<p>我们写这样一段JS代码，在一个页面里同时展现3种图片</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;View&gt;</span><br><span class="line">        &lt;Image source=&#123;<span class="built_in">require</span>(<span class="string">'./res/kakaka.jpg'</span>)&#125;/&gt;</span><br><span class="line">        &lt;Image source=&#123;&#123;<span class="attr">uri</span>: <span class="string">'ScreenCover_night'</span>&#125;&#125;</span><br><span class="line">              style=&#123;&#123;<span class="attr">width</span>: <span class="number">40</span>, <span class="attr">height</span>: <span class="number">40</span>&#125;&#125;/&gt;</span><br><span class="line">        &lt;Image source=&#123;&#123;<span class="attr">uri</span>: <span class="string">'https://facebook.github.io/react/img/logo_og.png'</span>&#125;&#125;</span><br><span class="line">              style=&#123;&#123;<span class="attr">width</span>: <span class="number">50</span>, <span class="attr">height</span>: <span class="number">50</span>&#125;&#125;/&gt;</span><br><span class="line">      &lt;<span class="regexp">/View&gt;</span></span><br><span class="line"><span class="regexp">    );</span></span><br><span class="line"><span class="regexp">  &#125;</span></span><br></pre></td></tr></table></figure>
+<p>这3个文件真正执行的时候，在OC的setSource处打断点却发现截然不同的景象</p>
+<p>原本的输入参数</p>
+<ul>
+<li>require(‘./res/kakaka.jpg’)</li>
+<li>{uri: ‘ScreenCover_night’}</li>
+<li>{uri: ‘<a href="https://facebook.github.io/react/img/logo_og.png&#39;}" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png&#39;}</a></li>
+</ul>
+<p>在setSource断点里完全变了，完全变成了imageURL</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+<li>file:///Users/Awhisper/Library/Developer/CoreSimulator/Devices/2D84E82E-AEDD-4B7B-A59A-F44C3B6721F2/data/Containers/Bundle/Application/B80C514C-639F-42FE-812F-3ECF457BFEC8/yuedu.app/ScreenCover_night</li>
+<li><a href="https://facebook.github.io/react/img/logo_og.png" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png</a></li>
+</ul>
+<p>这太不符合我的认知了，为什么输入参数会如此整齐划一的通通变成了iOS下的URL？无论是本地URL还是远程URL，因为他们完全被统一成了同一种URL类型，从而iOS的这两处OC代码完全不需要if分支就能一个逻辑处理所有图片</p>
+<p><strong>我很好奇到底是哪段代码处理了这种统一化？</strong></p>
+<h1 id="图片源Source输入参数在JS里的归一化处理"><a href="#图片源Source输入参数在JS里的归一化处理" class="headerlink" title="图片源Source输入参数在JS里的归一化处理"></a>图片源Source输入参数在JS里的归一化处理</h1><p>如果想弄明白rn是如何把这三种方案统一的，那自然得从JS源码入手看起，我们将要很大程度的关注<code>/node_module/react-native/Libraries/Image</code>这个目录下的几个关键JS文件。</p>
+<p>想弄明白这里面的运作过程，最好的办法就是利用RN的chrome-debug方案，在关键位置上打上断点，看看到底代码调用栈是如何一步步执行的</p>
+<p>那我们的焦点就落在了目录下这个<code>Image.ios.js</code>的文件上，可以看出来没错，这就是Image组件的JS源码，我们会看到这么几行</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">render: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> source = resolveAssetSource(<span class="keyword">this</span>.props.source) || &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//balabalabala</span></span><br><span class="line">    <span class="comment">//....中间代码略去</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> (</span><br><span class="line">      &lt;RawImage</span><br><span class="line">        &#123;...this.props&#125;</span><br><span class="line">        style=&#123;style&#125;</span><br><span class="line">        resizeMode=&#123;resizeMode&#125;</span><br><span class="line">        tintColor=&#123;tintColor&#125;</span><br><span class="line">        source=&#123;source&#125;</span><br><span class="line">      /&gt;</span><br><span class="line">    );</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>可以知道，我们传给JS的Source属性的输入参数<code>this.props.source</code>，究竟是如何处理的<br>他看起来就是<code>resolveAssetSource()</code>处理了一下原封不动的就进入后面的流程了，传递数据给native进行渲染的流程</p>
+<p>这部分流程在这里，我们需要看一下<code>/node_module/react-native/Libraries/ReactNative/ReactNativeBaseComponent.js</code>文件，所有的RN界面组件，无论是标签文字，还是图片，地图，转菊花，都是通过这个BaseComponent来调用UIManger（也就是APIModule RCTUIManager的JS侧入口）绘制到native上的。大家只关注<code>mountComponent</code>这个方法就好了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">mountComponent: <span class="function"><span class="keyword">function</span>(<span class="params">rootID, transaction, context</span>) </span>&#123;</span><br><span class="line">    <span class="comment">//balabalabala</span></span><br><span class="line">    <span class="comment">//....中间代码略去</span></span><br><span class="line"></span><br><span class="line">	<span class="comment">//...用来获取Component的props</span></span><br><span class="line">    <span class="keyword">var</span> updatePayload = ReactNativeAttributePayload.create(</span><br><span class="line">      <span class="keyword">this</span>._currentElement.props,</span><br><span class="line">      <span class="keyword">this</span>.viewConfig.validAttributes</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//balabalabala</span></span><br><span class="line">    <span class="comment">//....中间代码略去 用来获取nativeTopRootID</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//... call OC 创建native界面组件</span></span><br><span class="line">    UIManager.createView(</span><br><span class="line">      tag,</span><br><span class="line">      <span class="keyword">this</span>.viewConfig.uiViewClassName,</span><br><span class="line">      ReactNativeTagHandles.rootNodeIDToTag[nativeTopRootID],</span><br><span class="line">      updatePayload</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    <span class="comment">//balabalabala</span></span><br><span class="line">    <span class="comment">//....中间代码略去</span></span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      rootNodeID: rootID,</span><br><span class="line">      tag: tag</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+<p>我们梳理一下过程</p>
+<p>首先我们三种example的输入参数是</p>
+<ul>
+<li>require(‘./res/kakaka.jpg’) </li>
+<li>{uri: ‘ScreenCover_night’}</li>
+<li>{uri: ‘<a href="https://facebook.github.io/react/img/logo_og.png&#39;}" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png&#39;}</a></li>
+</ul>
+<p>在最终mountComponent的时候，updatePayload获取到的props里面，我们打断点查看一下，看看经过了无数的JS代码处理后，对于Image组件这块的内存数据是怎样的，实践过后会发现，这里的props一定会还有一个uri属性，三种example此时的uri属性分别是</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+<li>ScreenCover_night</li>
+<li><a href="https://facebook.github.io/react/img/logo_og.png" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png</a></li>
+</ul>
+<p>JS代码就到此为止，走过<code>UIManager.createView</code>之后，就进入了OC的代码逻辑了，这个放在后面细说。</p>
+<p>于是我们会发现除了require的静态图片资源，输入参数和输出结果变化非常大以外，另外两种example基本没啥变化，我们先从简单的下手，看一看后两种example是如何简单处理的</p>
+<h2 id="uri-xxx-的处理过程"><a href="#uri-xxx-的处理过程" class="headerlink" title="{uri:xxx}的处理过程"></a>{uri:xxx}的处理过程</h2><p>顺着刚才贴出的代码可以知道，<code>Image.ios.js</code>只是简单的把<code>{uri:xxx}</code>的输入参数传给<code>resolveAssetSource.js</code>的<code>resolveAssetSource方法</code>，处理一下，然后添加了几个额外属性，然后直接复制给this.props.source，之后就传给了<code>ReactNativeBaseComponent.js</code>了。</p>
+<p><code>resolveAssetSource.js</code>的<code>resolveAssetSource方法</code>更是简单粗暴，因为我们输入的是<code>{uri:xx}</code>他就是一个对象，这方法什么也不做直接返回</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> source === <span class="string">'object'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> source;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//其他处理</span></span><br></pre></td></tr></table></figure>
+<p>所以我们在UIManager最终传值的时候，会看到一个跟我们输入数据没啥变化的一个JS Object，只是多了几个属性而已</p>
+<h2 id="require-imagepath-的处理过程"><a href="#require-imagepath-的处理过程" class="headerlink" title="require(imagepath)的处理过程"></a>require(imagepath)的处理过程</h2><p>这个过程就比较复杂了，而且这个过程会涵盖rn的打包，执行，两大重要环节</p>
+<ul>
+<li>一. RN的打包环节</li>
+</ul>
+<p>rn的打包是通过在rn根目录下，执行node.js的一行打包脚本命令，最终把我们编辑过程中的js业务文件，js框架文件，res资源文件，整体打包到bundle目录之下，对于图片来说，我本以为只是把图片换个打包目录另存为而已，但当我一步一步追踪源码的时候，我发现我错了。</p>
+<p><code>require(&#39;./res/kakaka.jpg&#39;)</code> 举例来说，在这个目录下的kakaka.jpg文件会另存为到<code>bundle/asset/res/kakaka.jpg</code>这个位置，成为rn包中的一部分。</p>
+<p>但绝不仅仅是另存为，打包脚本还会在图片文件中植入一行js代码，如果你在<code>AssetRegistry.js</code>的<code>registerAsset</code>方法打上断点，去查看调用栈，你会发现，居然调用栈里的一行JS代码，来自这个图片文件，有图为证（床说中贴吧各种往图片里藏老司机开车的种子连接，就是用这种方式╮(╯_╰)╭）</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png" alt="chrome 断点"></p>
+<p>这行JS代码是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="built_in">require</span>(<span class="string">"react-native/Libraries/Image/AssetRegistry"</span>).registerAsset(&#123;<span class="string">"__packager_asset"</span>:<span class="literal">true</span>,<span class="string">"fileSystemLocation"</span>:<span class="string">"/Users/Awhisper/Desktop/yuedu_RN_BRANCH/Main/YDReactNative/res"</span>,<span class="string">"httpServerLocation"</span>:<span class="string">"/assets/res"</span>,<span class="string">"width"</span>:<span class="number">1242</span>,<span class="string">"height"</span>:<span class="number">150</span>,<span class="string">"scales"</span>:[<span class="number">1</span>],<span class="string">"files"</span>:[<span class="string">"/Users/Awhisper/Desktop/yuedu_RN_BRANCH/Main/YDReactNative/res/kakaka.jpg"</span>],<span class="string">"hash"</span>:<span class="string">"319fbd6959f45c18b1843e71d3bdd991"</span>,<span class="string">"name"</span>:<span class="string">"kakaka"</span>,<span class="string">"type"</span>:<span class="string">"jpg"</span>&#125;);</span><br></pre></td></tr></table></figure>
+<p>这说明，在打包脚本执行的时候，打包脚本会把这个图片的所有信息，包括打包前原来的绝对路径，打包后的相对路径，打包后的host路径，打包后的文件hash，打包后的文件名全都以源码js写入的方式，写进图片文件里。并且这个图片文件还执行了一行代码<code>AssetRegistry. registerAsset</code></p>
+<p>这个图片虽然被植入了JS代码，但是他并没有立刻生效，但正因为图片内部存在JS代码，所以他可以通过<code>require(xxx)</code>的方式进行加载（其实RN也扩写了require.js这个库），也就是说当我们在RN运行环节，一旦执行了<code>require(图片)</code>这行代码，<code>AssetRegistry. registerAsset</code>就会立刻被执行</p>
+<ul>
+<li>二. RN的运行环节</li>
+</ul>
+<p>打包完成了，图片已经被植入了JS代码，现在RN该开始运行了，一旦运行到<code>&lt;Image source={require(&#39;./res/kakaka.jpg&#39;)}/&gt;</code>这句话时候，就相当于require了图片内的js代码，于是就执行了<code>AssetRegistry. registerAsset</code>。</p>
+<p>这个函数干了些啥呢？他把图片内被植入的js代码中的一大堆图片信息参数，全都push进了一个全局的数组里，并且返回了一个索引值index</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">registerAsset</span>(<span class="params">asset: PackagerAsset</span>): <span class="title">number</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> assets.push(asset);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当我们<code>Image.ios.js</code>获取this.props.source的时候，我们断点查看<code>var source</code>的值你会发现他是一个数字也就是1！这就是index</p>
+<p>回到<code>resolveAssetSource.js</code>的<code>resolveAssetSource方法</code>，此时我们的输入参数已经不是一个JS Object了，而是一个数字1，于是自然也就没有直接return，而是进一步处理</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">typeof</span> source === <span class="string">'object'</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> source;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//其他处理</span></span><br><span class="line"><span class="keyword">var</span> asset = AssetRegistry.getAssetByID(source);</span><br><span class="line">  <span class="keyword">if</span> (!asset) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">const</span> resolver = <span class="keyword">new</span> AssetSourceResolver(getDevServerURL(), getBundleSourcePath(), asset);</span><br><span class="line">  <span class="keyword">if</span> (_customSourceTransformer) &#123;</span><br><span class="line">    <span class="keyword">return</span> _customSourceTransformer(resolver);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> resolver.defaultAsset();</span><br></pre></td></tr></table></figure>
+<p>没错他从全局的资源数组里，按着index取出来那个含有资源详细信息的字典，并且稍加处理和改造，返回给了<code>Image.ios.js</code></p>
+<p>这就是为啥我们从这个JS层的输入参数</p>
+<ul>
+<li>require(‘./res/kakaka.jpg’) </li>
+</ul>
+<p>变成了这样的JS层的输出参数</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+</ul>
+<h1 id="图片源Source输入参数在OC里的归一化处理"><a href="#图片源Source输入参数在OC里的归一化处理" class="headerlink" title="图片源Source输入参数在OC里的归一化处理"></a>图片源Source输入参数在OC里的归一化处理</h1><p>上文提到三种example在JS层最终输出参数是这样的</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+<li>ScreenCover_night</li>
+<li><a href="https://facebook.github.io/react/img/logo_og.png" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png</a></li>
+</ul>
+<p>他们会通过UIManager传给OC的RCTUIManager从而进行创建和绘制，此时此刻你会发现，（1）与（3）已经变成了URL的样式，已经可以直接进行URLLoad了，但是(2)还不是一个URL，说明（2）还需要在OC层面进行转换统一，这个转换过程又发生在哪呢？</p>
+<p>这我们就要顺着OC的RCTUIManager去追踪了，在<code>createView</code>方法里面（上一篇源码分析提到过RCTUIManager与RCTComponentData的关系，我就不细讲了）</p>
+<ul>
+<li><code>RCTUIManager-createView:xxxx</code>方法<ul>
+<li><code>RCTComponentData-setProps:forView:</code>方法(RCTUIManager line:910)<ul>
+<li><code>RCTComponentData-propBlockForKey:inDictionary:</code>方法(RCTComponentData line:343) (此处代码有点绕，函数的作用是取出block，真正要看的是函数后面的括号执行block)</li>
+<li>invocation(invocation去执行setter，真正的setSource，并且伴随着复杂切晦涩的宏处理，在宏的处理过程中，把js传过来的json字典会通过RCTConvert转换成RCTImageSource，推荐直接在下面的位置断点看效果)<ul>
+<li><code>RCTImageSource-RCTImageSource</code>方法<ul>
+<li><code>RCTImageSource-NSURL</code>方法</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>没错，<code>RCTImageSource-NSURL</code>就是关键，在这个函数里如果发现url字符串可以被转化成NSURL，则直接return该NSURL（所以例子1，3没有任何变化直接return），如果传来的是像2例子那样一个名字<code>ScreenCover_night</code>，在这段代码里，会主动向iOS独有的资源管理类<code>[NSBundle mainBundle].resourcePath</code>来申请iOS本地资源路径，从而将<code>ScreenCover_night</code>转化成真正意义上的URL</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">file:///Users/Awhisper/Library/Developer/CoreSimulator/Devices/2D84E82E-AEDD-4B7B-A59A-F44C3B6721F2/data/Containers/Bundle/Application/B80C514C-639F-42FE-812F-3ECF457BFEC8/yuedu.app/ScreenCover_night</span><br></pre></td></tr></table></figure>
+<h1 id="图片源Source输入参数归一"><a href="#图片源Source输入参数归一" class="headerlink" title="图片源Source输入参数归一"></a>图片源Source输入参数归一</h1><p>输入</p>
+<ul>
+<li>require(‘./res/kakaka.jpg’)</li>
+<li>{uri: ‘ScreenCover_night’}</li>
+<li>{uri: ‘<a href="https://facebook.github.io/react/img/logo_og.png&#39;}" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png&#39;}</a></li>
+</ul>
+<p>经过了JS层的初步归一，归一处理了example(1)的情况，变成了</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+<li>ScreenCover_night</li>
+<li><a href="https://facebook.github.io/react/img/logo_og.png" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png</a></li>
+</ul>
+<p>经过RCTConvert，OC层的二次归一，归一处理了example(2)的情况，变成了</p>
+<ul>
+<li><a href="http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991" target="_blank" rel="noopener">http://localhost:8081/assets/res/kakaka.jpg?platform=ios&amp;hash=319fbd6959f45c18b1843e71d3bdd991</a></li>
+<li>file:///Users/Awhisper/Library/Developer/CoreSimulator/Devices/2D84E82E-AEDD-4B7B-A59A-F44C3B6721F2/data/Containers/Bundle/Application/B80C514C-639F-42FE-812F-3ECF457BFEC8/yuedu.app/ScreenCover_night</li>
+<li><a href="https://facebook.github.io/react/img/logo_og.png" target="_blank" rel="noopener">https://facebook.github.io/react/img/logo_og.png</a></li>
+</ul>
+<p>现在所有的输入source都已经彻彻底底统一成了url，无论是远程url，还是本地磁盘文件url，所以后续的loadImage过程，就无需特别针对处理了，直接可以进行load了</p>
+<h1 id="关于RCTImageView的缓存"><a href="#关于RCTImageView的缓存" class="headerlink" title="关于RCTImageView的缓存"></a>关于RCTImageView的缓存</h1><p>这是一个很有趣的事情！</p>
+<p>我们都知道RN的网络图片是有缓存的，但是今天在群里讨论的时候，却发现了一个很有意思的事情，我发现RN内部，不止一种图片缓存的方案。</p>
+<h2 id="RN的源生native缓存方案（存在感极低）"><a href="#RN的源生native缓存方案（存在感极低）" class="headerlink" title="RN的源生native缓存方案（存在感极低）"></a>RN的源生native缓存方案（存在感极低）</h2><p>对于源生客户端来说，通常会使用<code>SDWebImage</code>这样的第三方库去处理网络图片，因为他有着非常强大的内存缓存，磁盘缓存，有着灵活的缓存管理手段，以图片url为key，统一在一个字典表里进行存储，无论是内存还是磁盘。</p>
+<p>RN也不例外，你可以找到一个<code>RCTImageStoreManager</code>的类，干着类似的事情，以字典+urlKey的方式管理一堆UIImage，但奇怪的是，这个类居然没有任何方法调用。</p>
+<p><code>RCTImageStoreManager</code>是一个APIModule，他含有<code>RCT_EXPORT_MODULE()</code>代码。也就是说JS层是可以直接操作<code>RCTImageStoreManager</code>的，但是顺藤摸瓜寻找JS层是如何使用却发现，只有2个JS文件使用了它，<code>ImageStore.js</code>与<code>ImageEditor.js</code>，有趣的事情来了，这两个JS组件就好端端的躺在rn框架代码里，但是并没有被任何人使用，没有被Image组件直接使用，网上google了一下发现相关内容非常之少，只有极个别人会用一下。RN的英文官网也搜不到这两个组件的介绍。</p>
+<p>但正如我说，这一整套源生native缓存方案，无论是OC侧的源码还是JS测的源码就这么好端端的呆在RN的框架源码里面，等待着被人使用，虽然几乎没有。如果你尝试一下，发现一切都运作正常</p>
+<h2 id="第三方扩展的native缓存方案"><a href="#第三方扩展的native缓存方案" class="headerlink" title="第三方扩展的native缓存方案"></a>第三方扩展的native缓存方案</h2><p>搜<code>reactnative image cache</code>相关字样的时候，你可以发现github上有很多第三方从新写的一套类似<code>ImageStore.js</code>与<code>ImageEditor.js</code>的解决方案，看来要么是有人觉得facebook写好的现成的不够牛逼，基于数据库重新封装了一套，要么是有人压根都不知道facebook写好了一个，于是自己重写了一遍，哈哈</p>
+<p>总之fb自己写好的那一套native缓存方案，存在感异常的低啊哈哈哈哈哈</p>
+<h2 id="RN的http图片缓存方案"><a href="#RN的http图片缓存方案" class="headerlink" title="RN的http图片缓存方案"></a>RN的http图片缓存方案</h2><p>都说了，fb自己的native缓存方案存在感如此之低，太多的人都不知道，github上的开源的解决方案其实普及率也没那么大，很多人用RN也没用github上的三方缓存也没用fb提供的缓存，但RN的图片依然还是有缓存功能的，这是为啥？</p>
+<p>这就回到了RCTImageView的<code>reloadImage</code>函数了，它里面会起一个NSURLSession去拉取网络图片数据，当拉取到图片缓存数据后，会使用OC源生的NSURLCache缓存整个URLRequest</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//RCTImageLoader-loadImageOrDataWithTag:xxx(line:390)</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">dispatch_async</span>(_URLCacheQueue, ^&#123;</span><br><span class="line">    <span class="comment">// Cache the response</span></span><br><span class="line">    <span class="comment">// <span class="doctag">TODO:</span> move URL cache out of RCTImageLoader into its own module</span></span><br><span class="line">    <span class="built_in">BOOL</span> isHTTPRequest = [request.URL.scheme hasPrefix:<span class="string">@"http"</span>];</span><br><span class="line">    [strongSelf-&gt;_URLCache storeCachedResponse:</span><br><span class="line">     [[<span class="built_in">NSCachedURLResponse</span> alloc] initWithResponse:response</span><br><span class="line">                                              data:data</span><br><span class="line">                                          userInfo:<span class="literal">nil</span></span><br><span class="line">                                     storagePolicy:isHTTPRequest ? <span class="built_in">NSURLCacheStorageAllowed</span>: <span class="built_in">NSURLCacheStorageAllowedInMemoryOnly</span>]</span><br><span class="line">                                    forRequest:request];</span><br><span class="line">    <span class="comment">// Process image data</span></span><br><span class="line">    processResponse(response, data, <span class="literal">nil</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//clean up</span></span><br><span class="line">    [weakSelf dequeueTasks];</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>所以说，如果你没有使用任何的native图片cache方案，无论是fb提供的还是三方的，rn依然会帮助你进行图片缓存，使用的方法就是系统级NSURLCache的整个URLRequest的缓存，这个缓存是系统级的，会和你其他的非rn的native的http缓存请求混在一起处理（具体看NSURLCache的使用，native可以自由的单开和共用）</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+            <a href="/tags/RN/" rel="tag"># RN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/10/CarInMyLife/" rel="next" title="CarInMyLife">
+                <i class="fa fa-chevron-left"></i> CarInMyLife
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/22/Weex-ReactNative-JSPatch/" rel="prev" title="Weex & ReactNative & JSPatch">
+                Weex & ReactNative & JSPatch <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ImageComponent的基本用法"><span class="nav-number">1.</span> <span class="nav-text">ImageComponent的基本用法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#静态图片资源"><span class="nav-number">1.1.</span> <span class="nav-text">静态图片资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#APP的图片资源"><span class="nav-number">1.2.</span> <span class="nav-text">APP的图片资源</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络图片"><span class="nav-number">1.3.</span> <span class="nav-text">网络图片</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图片是如何读取的"><span class="nav-number">2.</span> <span class="nav-text">图片是如何读取的</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图片源Source输入参数在JS里的归一化处理"><span class="nav-number">3.</span> <span class="nav-text">图片源Source输入参数在JS里的归一化处理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#uri-xxx-的处理过程"><span class="nav-number">3.1.</span> <span class="nav-text">{uri:xxx}的处理过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#require-imagepath-的处理过程"><span class="nav-number">3.2.</span> <span class="nav-text">require(imagepath)的处理过程</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图片源Source输入参数在OC里的归一化处理"><span class="nav-number">4.</span> <span class="nav-text">图片源Source输入参数在OC里的归一化处理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图片源Source输入参数归一"><span class="nav-number">5.</span> <span class="nav-text">图片源Source输入参数归一</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于RCTImageView的缓存"><span class="nav-number">6.</span> <span class="nav-text">关于RCTImageView的缓存</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#RN的源生native缓存方案（存在感极低）"><span class="nav-number">6.1.</span> <span class="nav-text">RN的源生native缓存方案（存在感极低）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三方扩展的native缓存方案"><span class="nav-number">6.2.</span> <span class="nav-text">第三方扩展的native缓存方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RN的http图片缓存方案"><span class="nav-number">6.3.</span> <span class="nav-text">RN的http图片缓存方案</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'Talk about ReactNative Image Component', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

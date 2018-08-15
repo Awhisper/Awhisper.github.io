@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Runtime," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这其实是一个NSInvocation练习作业 尝试手写一个更好用的performSelector/msgSend 引子 工作中难免会遇到一些场景，开发的时候不想引入整个头文件，但是又想调用一些方法 动态创建，动态调用看起来比较酷 这种使用场景确实不常见，导入了头文件最省事，最直接，但是这种方式我觉得能搞出很多好玩的东西  一个群里聊天的时候聊到了一个场景，tableView内的cell有N种样式，">
+<meta name="keywords" content="Runtime">
+<meta property="og:type" content="article">
+<meta property="og:title" content="尝试手写一个更好用的performSelector-msgSend">
+<meta property="og:url" content="http://yoursite.com/2015/12/31/尝试手写一个更好用的performSelector-msgSend/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="这其实是一个NSInvocation练习作业 尝试手写一个更好用的performSelector/msgSend 引子 工作中难免会遇到一些场景，开发的时候不想引入整个头文件，但是又想调用一些方法 动态创建，动态调用看起来比较酷 这种使用场景确实不常见，导入了头文件最省事，最直接，但是这种方式我觉得能搞出很多好玩的东西  一个群里聊天的时候聊到了一个场景，tableView内的cell有N种样式，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-21T17:00:34.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="尝试手写一个更好用的performSelector-msgSend">
+<meta name="twitter:description" content="这其实是一个NSInvocation练习作业 尝试手写一个更好用的performSelector/msgSend 引子 工作中难免会遇到一些场景，开发的时候不想引入整个头文件，但是又想调用一些方法 动态创建，动态调用看起来比较酷 这种使用场景确实不常见，导入了头文件最省事，最直接，但是这种方式我觉得能搞出很多好玩的东西  一个群里聊天的时候聊到了一个场景，tableView内的cell有N种样式，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/12/31/尝试手写一个更好用的performSelector-msgSend/"/>
+
+
+
+
+
+  <title>尝试手写一个更好用的performSelector-msgSend | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/31/尝试手写一个更好用的performSelector-msgSend/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">尝试手写一个更好用的performSelector-msgSend</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-31T14:05:42+08:00">
+                2015-12-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/12/31/尝试手写一个更好用的performSelector-msgSend/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2015/12/31/尝试手写一个更好用的performSelector-msgSend/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/12/31/尝试手写一个更好用的performSelector-msgSend/" class="leancloud_visitors" data-flag-title="尝试手写一个更好用的performSelector-msgSend">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这其实是一个NSInvocation练习作业</p>
+<p>尝试手写一个更好用的performSelector/msgSend</p>
+<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><ul>
+<li>工作中难免会遇到一些场景，开发的时候不想引入整个头文件，但是又想调用一些方法</li>
+<li>动态创建，动态调用看起来比较酷</li>
+<li>这种使用场景确实不常见，导入了头文件最省事，最直接，但是这种方式我觉得能搞出很多好玩的东西</li>
+</ul>
+<p>一个群里聊天的时候聊到了一个场景，tableView内的cell有N种样式，在<code>cellForRow</code>的时候，通过<code>NSClassFromString</code>从字符串创建对象，然后挨个对Cell的UI赋值，接下来问题就来了。</p>
+<p>实在不想import如此繁多<code>cell.h</code>头文件应该怎么办？</p>
+<ul>
+<li>有一个办法，所有cell都有个基类，基类统一所有UI赋值的接口，子类重载这些UI赋值，这样创建出来的对象强转成基类，调用基类的接口。这样只需要import一个基类头文件就够了<ul>
+<li>这样要求子类的接口必须和基类完全一致</li>
+<li>如果子类设计很多样，赋值UI的元素更多，就会不太合理</li>
+</ul>
+</li>
+<li>还有一个办法performSelector，恩说实话，我觉得很不好用</li>
+<li>会有人说用运行时Objc_msgSend，恩，这个靠谱，听起来也挺易用的</li>
+<li>老老实实引入各种头文件，别搞什么动态创建，动态调用的花样了</li>
+</ul>
+<h2 id="聊聊performSelector"><a href="#聊聊performSelector" class="headerlink" title="聊聊performSelector"></a>聊聊performSelector</h2><p>这里不是说<code>performSelector</code>中关于异步调用的那一部分，而是单说同步的：<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)performSelector:(SEL)aSelector;</span><br><span class="line">- (<span class="keyword">id</span>)performSelector:(SEL)aSelector withObject:(<span class="keyword">id</span>)object;</span><br><span class="line">- (<span class="keyword">id</span>)performSelector:(SEL)aSelector withObject:(<span class="keyword">id</span>)object1 withObject:(<span class="keyword">id</span>)object2;</span><br></pre></td></tr></table></figure></p>
+<p>这个是<code>NSObject</code>系统开放的<code>performSelector</code>同步接口，这个好用么？我以前觉得很不好用</p>
+<ul>
+<li>参数类型：我凑，不需要参数的接口用起来最直观，我也觉得还算好用，一旦需要参数，withObject：id是什么鬼？我传BOOL，传NSInteger怎么传啊？我包装成NSNumber对面能认识么？</li>
+<li>参数个数：为毛只能不带参数，1个参数，2个参数呢？我想调用的东西含参数特别多咋办啊？</li>
+<li>调用写法：每个参数还得用withObject来传，写出来一点都不酷</li>
+</ul>
+<p>就像我说的，以前我几乎只会去用performSelector调用无参数的函数，一旦有参数，我都不爱用performSelector</p>
+<h2 id="聊聊objc-msgSend"><a href="#聊聊objc-msgSend" class="headerlink" title="聊聊objc_msgSend"></a>聊聊objc_msgSend</h2><p>大家都知道OC的消息机制，函数调用其实都是发送消息，这个太多的地方有讲了，我就不多说了。</p>
+<p>一个我们想要调用的函数<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">int</span>) doSomething:(<span class="keyword">int</span>) x &#123; ... &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在32位的时代，想要实现我要的效果，可以直接使用objc_msgSend<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">objc_msgSend(<span class="keyword">self</span>,<span class="keyword">@selector</span>(doSomething:), <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>但是一旦在64位设备上执行，就会产生崩溃，原因参见<a href="https://developer.apple.com/library/ios/documentation/General/Conceptual/CocoaTouch64BitGuide/ConvertingYourAppto64-Bit/ConvertingYourAppto64-Bit.html" target="_blank" rel="noopener">苹果Converting Your App to a 64-Bit Binary</a>,中Take Care with Functions and Function Pointers，这一部分。</p>
+<p>简单的说，64位下runtime调用和32位变化十分大，尤其是读取函数参数列表，进行传参这部分，所以苹果列出了一句话</p>
+<p>Always Define Function Prototypes</p>
+<p>Function Pointers Must Use the Correct Prototype</p>
+<p>直接的调用C函数指针的时候必须先进行严格的类型匹配强转，不能直接使用<code>Imp</code>这个通用型的指针。</p>
+<p>而objc_msgSend的内部实现也是一个这样的过程，<a href="http://blog.cocoabit.com/dong-shou-shi-xian-objc-msgsend/" target="_blank" rel="noopener">objc_msgSend学习</a></p>
+<ul>
+<li>先从runtime method cache里面查找selector，</li>
+<li>找不到再从 method list里查找，</li>
+<li>找到selector，获取具体实现的<code>Imp</code>C函数，</li>
+<li>调用<code>Imp</code></li>
+</ul>
+<p>所以在64位下，直接使用objc_msgSend一样会引起崩溃，必须进行一次强转<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">((<span class="keyword">void</span>(*)(<span class="keyword">id</span>, SEL,<span class="keyword">int</span>))objc_msgSend)(<span class="keyword">self</span>, <span class="keyword">@selector</span>(doSomething:), <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>所以以前32位的时候objc_msgSend是我们最方便的做法，现在64位了，他已经不是那么方便了，毕竟使用起来还需要人自行手写这部分强转工作</p>
+<h3 id="本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？"><a href="#本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？" class="headerlink" title="本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？"></a>本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？</h3><a id="more"></a>
+<h2 id="设计我的callSelector的接口"><a href="#设计我的callSelector的接口" class="headerlink" title="设计我的callSelector的接口"></a>设计我的callSelector的接口</h2><p>我希望我设计的接口是这样的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"testClassA"</span>);</span><br><span class="line"><span class="keyword">id</span>&lt;vk_msgSend&gt; abc = [[cls alloc]init];</span><br><span class="line"><span class="built_in">NSError</span> *err;</span><br><span class="line"><span class="built_in">NSString</span> *return1 = [abc vk_callSelector:<span class="keyword">@selector</span>(testfunction:withB:) error:&amp;err,<span class="number">4</span>,<span class="number">3.5</span>f];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>它是一个NSObject的Category，只要你对强转成遵从<code>&lt;vk_msgSend&gt;</code>的id对象，就能直接调用</li>
+<li>它像performSelector一样输入<code>SEL</code>做参数执行，但是传参非常容易，基础类型，struct都支持，不需要<code>withObject</code>，不需要转成<code>id</code>，只需要像NSLog()一样，按顺序输入可变参数就好。</li>
+<li>有一个error指针可以用来返回错误信息，也可以填nil不传</li>
+<li>它支持类方法</li>
+<li><code>SEL</code>参数还可以改传字符串</li>
+</ul>
+<p>所以他的定义是这样的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">+ (<span class="keyword">id</span>)vk_callSelector:(SEL)selector error:(<span class="built_in">NSError</span> *__autoreleasing *)error,...;</span><br><span class="line"></span><br><span class="line">+ (<span class="keyword">id</span>)vk_callSelectorName:(<span class="built_in">NSString</span> *)selName error:(<span class="built_in">NSError</span> *__autoreleasing *)error,...;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)vk_callSelector:(SEL)selector error:(<span class="built_in">NSError</span> *__autoreleasing *)error,...;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">id</span>)vk_callSelectorName:(<span class="built_in">NSString</span> *)selName error:(<span class="built_in">NSError</span> *__autoreleasing *)error,...;</span><br></pre></td></tr></table></figure></p>
+<h2 id="实现这样的callSelector"><a href="#实现这样的callSelector" class="headerlink" title="实现这样的callSelector"></a>实现这样的callSelector</h2><h3 id="可变参数接口透传的问题"><a href="#可变参数接口透传的问题" class="headerlink" title="可变参数接口透传的问题"></a>可变参数接口透传的问题</h3><p>既然接口设计的希望使用者怎么简单怎么来，使用者用可变参数的方式一字罗列所有参数，无需转id之类的。那我们也得按照可变参数去处理。</p>
+<p>这里我遇到了一个问题，我一共设计4个接口，这4个接口其实大同小异，核心逻辑是一样的，所以我肯定是用一个公共的方法进行处理，但是，可变参函数怎么透传呢？<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)vk_callSelectorName:(<span class="built_in">NSString</span>*)selName error:(<span class="built_in">NSError</span>*__autoreleasing*)error,...&#123;</span><br><span class="line">    SEL selector = <span class="built_in">NSSelectorFromString</span>(selName);</span><br><span class="line">    [<span class="keyword">self</span> vk_callSelector:selector error:error,...];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>我希望这样就能搞定，把…原封不动的塞到下面那个函数，可是xcode不认呐亲╮(╯_╰)╭</p>
+<p>后来公司讨论组里有位大神给出了建议，直接把<code>va_list</code>当做公共函数的参数，进行透传</p>
+<p>设计公共方法的接口声明为，第一个参数就是<code>va_list</code><br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> <span class="built_in">NSArray</span> *vk_targetBoxingArguments(va_list argList, Class cls, SEL selector, <span class="built_in">NSError</span> *__autoreleasing *error)</span><br></pre></td></tr></table></figure></p>
+<p>然后在调用的时候<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">va_list argList;</span><br><span class="line">va_start(argList, error);</span><br><span class="line">SEL selector = <span class="built_in">NSSelectorFromString</span>(selName);</span><br><span class="line"><span class="built_in">NSArray</span> *boxingAruments = vk_targetBoxingArguments(argList, [<span class="keyword">self</span> <span class="keyword">class</span>], selector, error);</span><br><span class="line">va_end(argList);</span><br></pre></td></tr></table></figure></p>
+<p>用<code>va_start</code>获取<code>va_list</code>然后就可以一层层的透传给公共方法进行处理了</p>
+<h3 id="参数包装"><a href="#参数包装" class="headerlink" title="参数包装"></a>参数包装</h3><p>虽然输入接口可以支持任意的类型，基础类型，struct，id，但是我内部实现的时候，还是把它们统一转换成了id，方便后续传递处理，这个步骤就是包装一下所有传进来的参数,也就是上面提到的<code>vk_targetBoxingArguments</code></p>
+<p>这个包装的过程涉及到<code>va_list</code>的取值过程<code>va_arg</code>了，这里我也踩了个大坑。容我细细道来</p>
+<ul>
+<li>从va_list里面一个一个的取出参数需要明确知道，每一个参数的类型，但是我们想做的是一个通用型的方法，这块就不能写死，可是从哪知道参数类型呢？ – <code>NSMethodSignature</code></li>
+</ul>
+<p><code>NSMethodSignature</code>我理解他其实就是SEL的typeEncode的对象封装，分别记录了这个SEL的返回值类型和各个参数类型</p>
+<p>我们有调用对象，就能获取到对象的Class，我们有SEL，就能获取到<code>NSMethodSignature</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">methodSignature = [cls instanceMethodSignatureForSelector:selector];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>有了<code>NSMethodSignature</code>我们就能按着循环去获取每个参数类型，从而读取<code>va_list</code>了。</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i &lt; [methodSignature numberOfArguments]; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *argumentType = [methodSignature getArgumentTypeAtIndex:i];</span><br><span class="line">    <span class="keyword">switch</span> (argumentType[<span class="number">0</span>] == <span class="string">'r'</span> ? argumentType[<span class="number">1</span>] : argumentType[<span class="number">0</span>]) &#123;</span><br><span class="line">    	<span class="comment">//抽取参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>NSMethodSignature</code>中前两个分别代表返回值和reciever，我们在抽取参数，所以直接从[2]下标开始取值，剩下的就是一个根据typeEcode，从<code>va_list</code>取值，然后包装成id，塞入数组的过程了，具体到每一种类型的case，可以参见源码。</p>
+<p>1）取基础类型int,va_arg(argList, int)取值，包装成NSNumber（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> value = va_arg(argList, <span class="keyword">int</span>);</span><br><span class="line">[argumentsBoxingArray addObject:@(value)];</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>2）取CGSize,va_arg(argList, CGSize)取值，包装成NSValue（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGSize</span> val = va_arg(argList, <span class="built_in">CGSize</span>);</span><br><span class="line"><span class="built_in">NSValue</span>* value = [<span class="built_in">NSValue</span> valueWithCGSize:val];</span><br><span class="line">[argumentsBoxingArray addObject:value];</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>3）取id,va_arg(argList, id)，不包装，直接塞进去啦</p>
+<p>这里要注意，如果传入的参数为nil，需要特殊处理一下，nil无法放入数组，所以我创建了一个vk_nilObject对象，来表明这个位置传进来nil了<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">id</span> value = va_arg(argList, <span class="keyword">id</span>);</span><br><span class="line"><span class="keyword">if</span> (value) &#123;</span><br><span class="line">	[argumentsBoxingArray addObject:value];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	[argumentsBoxingArray addObject:[vk_nilObject new]];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4）取SEL,va_arg(argList,SEL),处理成string</p>
+<p>因为SEL本身的意义就是一个函数的名字类似string一样的键值，是用来查找函数用的，所以当成字符串处理啦<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SEL value = va_arg(argList, SEL);</span><br><span class="line"><span class="built_in">NSString</span> *selValueName = <span class="built_in">NSStringFromSelector</span>(value);</span><br><span class="line">[argumentsBoxingArray addObject:selValueName];</span><br></pre></td></tr></table></figure></p>
+<p>5）取block，其实block就是id，所以和id的处理一模一样<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同id</span></span><br></pre></td></tr></table></figure></p>
+<p>6）取id*，va_arg(argList, void**)</p>
+<p>这里需要注意一下，因为我取出来的是一个pointer，是不能直接放入数组里的，所以我创建了一个vk_pointer对象，持有一个void*属性，然后就可以塞进数组了<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> *value = va_arg(argList, <span class="keyword">void</span>**);</span><br><span class="line">vk_pointer *pointerObj = [[vk_pointer alloc]init];</span><br><span class="line">pointerObj.pointer = value;</span><br><span class="line">[argumentsBoxingArray addObject:pointerObj];</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>遇到了一个va_arg()的坑</li>
+</ul>
+<p>我在调试中，发现当我对typeEncode的<code>f</code>取参数的时候<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">va_arg(argList, <span class="keyword">float</span>)</span><br></pre></td></tr></table></figure></p>
+<p>xcode报了个warning</p>
+<pre><code>/Users/Awhisper/Desktop/GitHub/vk_msgSend/vk_msgSend/NSObject+vk_msgSend.m:280:49: Second argument to &apos;va_arg&apos; is of promotable type &apos;float&apos;; this va_arg has undefined behavior because arguments will be promoted to &apos;double&apos;
+</code></pre><p>一开始我看到warning没管，就继续编码去了，结果运行的时候,参数里含有float，发现了大问题</p>
+<p>正如warning所说，此处编译器是按着double实现的，但是我用va_arg()取的时候按着float取，就直接导致我取出来的float值不对，是0，（一个比较小的double值取了前面几位自然都是0）</p>
+<p>而float后面那个参数，id用va_arg(argList, id)取的时候直接崩溃，（指针已经乱了，从double的中间开始，按着id的长度取id，直接崩溃）</p>
+<p>老老实实的修掉warning，改成用<code>va_arg(argList, double)</code>处理<code>f</code>,一切正常。</p>
+<h3 id="实现调用：NSInvocation"><a href="#实现调用：NSInvocation" class="headerlink" title="实现调用：NSInvocation"></a>实现调用：NSInvocation</h3><p>我们现在已经拿到了包装好的参数数组NSArray，可以开始调用函数了，使用NSInvocation</p>
+<h4 id="1-首先先要生成NSInvocation"><a href="#1-首先先要生成NSInvocation" class="headerlink" title="1 首先先要生成NSInvocation"></a>1 首先先要生成NSInvocation</h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Class cls = [target <span class="keyword">class</span>];</span><br><span class="line"><span class="built_in">NSMethodSignature</span> *methodSignature = vk_getMethodSignature(cls, selector);</span><br><span class="line"><span class="built_in">NSInvocation</span> *invocation = [<span class="built_in">NSInvocation</span> invocationWithMethodSignature:methodSignature];</span><br></pre></td></tr></table></figure>
+<h4 id="2-设置target和SEL"><a href="#2-设置target和SEL" class="headerlink" title="2 设置target和SEL"></a>2 设置target和SEL</h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[invocation setTarget:target];</span><br><span class="line">[invocation setSelector:selector];</span><br></pre></td></tr></table></figure>
+<h4 id="3-循环压入参数"><a href="#3-循环压入参数" class="headerlink" title="3 循环压入参数"></a>3 循环压入参数</h4><p>具体过程和Boxing一样，遍历methodSignature，按着typeEncode来从数组中取出id类型的参数，还原参数，压入invocation。</p>
+<p>遍历的时候肯定是根据每个参数的typeEncode，去switch处理不同类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">2</span>; i&lt; [methodSignature numberOfArguments]; i++) &#123;</span><br><span class="line">    <span class="keyword">const</span> <span class="keyword">char</span> *argumentType = [methodSignature getArgumentTypeAtIndex:i];</span><br><span class="line">    <span class="keyword">id</span> valObj = argsArr[i<span class="number">-2</span>];</span><br><span class="line">    <span class="keyword">switch</span> (argumentType[<span class="number">0</span>]==<span class="string">'r'</span>?argumentType[<span class="number">1</span>]:argumentType[<span class="number">0</span>]) &#123;</span><br><span class="line">    	<span class="comment">//switch case</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里我会详细分类别举例如何压入各种不同类型的参数，从[2]下表开始的原因和前边一致<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[invocation setArgument:&amp;value atIndex:i];`的作用就是压入参数</span><br></pre></td></tr></table></figure></p>
+<p>1）int等基础类型参数，对应上文的参数包装（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> value = [valObj intValue];</span><br><span class="line">[invocation setArgument:&amp;value atIndex:i];</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>2）CGSize基础结构体参数，对应上文参数包装（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGSize</span> value = [val <span class="built_in">CGSizeValue</span>];  </span><br><span class="line">[invocation setArgument:&amp;value atIndex:i];</span><br></pre></td></tr></table></figure></p>
+<p>3）id参数，对应上文参数包装</p>
+<p>上文提到如果传入的id为nil，被上文包装成了vk_nilObject对象扔进数组的，所以这里要针对这个处理一下</p>
+<p>不是vk_nilObject的照常处理</p>
+<p>是vk_nilObject,证明这个位置的参数传入方为空，所以我准备了一个空指针<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> vk_nilObject *vknilPointer = <span class="literal">nil</span>;</span><br></pre></td></tr></table></figure></p>
+<p>把这个空指针传进去<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([valObj isKindOfClass:[vk_nilObject <span class="keyword">class</span>]]) &#123;</span><br><span class="line">    [invocation setArgument:&amp;vknilPointer atIndex:i];</span><br><span class="line">&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">    [invocation setArgument:&amp;valObj atIndex:i];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>4）SEL参数，对应上文包装</p>
+<p>上文提到，SEL被直接转成了string，所以我们这里要还原成SEL，然后直接压入参数<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span> *selName = valObj;</span><br><span class="line">SEL selValue = <span class="built_in">NSSelectorFromString</span>(selName);</span><br><span class="line">[invocation setArgument:&amp;selValue atIndex:i];</span><br></pre></td></tr></table></figure></p>
+<p>5）block参数，对应上文包装</p>
+<p>上文提到block和id是一回事<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同id</span></span><br></pre></td></tr></table></figure></p>
+<p>6）id*的处理，对应上文包装，这里极其恶心，我会专门写一篇详细说一下，这里只写个大概吧<br>上文已经把void*包装成了 vk_pointer，所以我们取出vk* 然后压入参数<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vk_pointer *value = valObj;</span><br><span class="line"><span class="keyword">void</span>* pointer = value.pointer;</span><br><span class="line">[invocation setArgument:&amp;pointer atIndex:i];</span><br></pre></td></tr></table></figure></p>
+<p>#<em>你以为这样就可以了么？你太天真了</em></p>
+<p>如果断点调试，整个call_selector的过程完全走完都不会有事，但是一旦放开断点，彻底走完就崩溃。<br>为啥呢？因为在使用invocation的时候 invoke的过程中，如果对象在invoke内被创建初始化了，invoke结束后，在下一个autorelease的时间点就会产生zombie的crash，<code>send release to a dealloc object</code></p>
+<p>为什么会这样，简单的说下我的理解不细说吧，invoke和直接函数调用不太一样，如果发生了alloc对象，那么这个对象系统会额外多一次autorelease，所以，不会立刻崩溃，但当autoreleasepool释放的时候，就会发生过度release。</p>
+<p>给几个LINK有兴趣大家可以深入探讨一下<br><a href="http://stackoverflow.com/questions/10002538/nsinvocation-nserror-autoreleasing-memory-crasher" target="_blank" rel="noopener">栈溢出1</a>,<a href="http://stackoverflow.com/questions/9986899/how-to-create-an-nsinvocation-object-using-a-method-that-takes-a-pointer-to-an-o/16027886#16027886" target="_blank" rel="noopener">栈溢出2</a></p>
+<p>看一下我的解决办法<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">vk_pointer *value = valObj;</span><br><span class="line"><span class="keyword">void</span>* pointer = value.pointer;</span><br><span class="line"><span class="keyword">id</span> obj = *((__<span class="keyword">unsafe_unretained</span> <span class="keyword">id</span> *)pointer);</span><br><span class="line"><span class="keyword">if</span> (!obj) &#123;</span><br><span class="line">    <span class="keyword">if</span> (argumentType[<span class="number">1</span>] == <span class="string">'@'</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!_vkNilPointerTempMemoryPool) &#123;</span><br><span class="line">            _vkNilPointerTempMemoryPool = [[<span class="built_in">NSMutableDictionary</span> alloc] init];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!_markArray) &#123;</span><br><span class="line">            _markArray = [[<span class="built_in">NSMutableArray</span> alloc] init];</span><br><span class="line">        &#125;</span><br><span class="line">        memset(pointer, <span class="number">0</span>, <span class="keyword">sizeof</span>(<span class="keyword">id</span>));</span><br><span class="line">        [_markArray addObject:valObj];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">[invocation setArgument:&amp;pointer atIndex:i];</span><br></pre></td></tr></table></figure></p>
+<p>我会先判断一下 void<em>指向的对象是否存在，如果传入的是一个已经alloc init 好了的 mutableArray之类的对象，我会直接压入参数，因为invoke过程内，只是往mutableArray里面执行操作，并没有在void\</em>指针处重新new的操作的话，是安全的不会崩溃的。</p>
+<p>如果void*指向的对象不存在，相当于我传入了一个 NSError*，等着由invoke内部去创建，这样外面可以捕获，这种使用场景，就会导致crash，是因为过度release，那我的思路就是先把他持有一下。。。因为多了个release，那我再arc下不能强制retain，那我就add到一个字典里，让他被arc retain一下。<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ([_markArray count] &gt; <span class="number">0</span>) &#123;</span><br><span class="line">    <span class="keyword">for</span> (vk_pointer *pointerObj <span class="keyword">in</span> _markArray) &#123;</span><br><span class="line">        <span class="keyword">void</span> *pointer = pointerObj.pointer;</span><br><span class="line">        <span class="keyword">id</span> obj = *((__<span class="keyword">unsafe_unretained</span> <span class="keyword">id</span> *)pointer);</span><br><span class="line">        <span class="keyword">if</span> (obj) &#123;</span><br><span class="line">            <span class="keyword">@synchronized</span>(_vkNilPointerTempMemoryPool) &#123;</span><br><span class="line">                [_vkNilPointerTempMemoryPool setObject:obj forKey:[<span class="built_in">NSNumber</span> numberWithInteger:[(<span class="built_in">NSObject</span>*)obj hash]]];</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这段代码放在<code>[invocation invoke]</code>之后，因为只有执行之后我们才知道void*指向的位置是否创建了新对象，判断<code>obj</code>是否存在，如果存在则向一个全局的static字典<code>_vkNilPointerTempMemoryPool</code>写入这个对象。</p>
+<ul>
+<li><p>有人说？我为什么不是用栈溢出的答案？，栈溢出的答案却是是保证不crash了，但是传入的参数已经不是void** 而是一个 void***了，这样会导致被调用的函数虽然创建了NSError，但是执行完毕后，并没有赋值给有的指针，会导致外面看NSErro还是空（这么表述可能不对，这几天啃指针，这块已经把我弄得有点乱了，但是大家在函数外取个地址&amp;error看一下，然后在函数内看传入的error地址，就会发现已经不对了）</p>
+</li>
+<li><p>有人说，你这样不是内存泄露了么？一个对象在用过以后就永久被添加进了一个static字典里，我只能说<code>是的</code>，但是情况不是那么绝对，crash的原因是系统的一次额外的release，并且还发生在代码操作者无法掌控的autoreleasepool的<code>drain</code>时机，也就是说，在<code>drain</code>前，这个字典里的这个值是正常的（如果没有字典，此时并没崩溃），在<code>drain</code>后，这个字典里的值因为一次额外release了，此时这个字典内这个key还存在，但是他指向的对象已经野指针了（如果没有字典，此时就崩溃了，因为对一个dealloc对象 release），我试过在几秒之后肯定保证<code>drain</code>结束了，对字典执行<code>removeAll</code>，还是会崩溃！因为removeall的时候处理里面的值，发现那个值野指针了。</p>
+</li>
+<li>有人有更好的办法不？我想不到了，也球建议</li>
+</ul>
+<h4 id="4-执行NSInvocation"><a href="#4-执行NSInvocation" class="headerlink" title="4 执行NSInvocation"></a>4 执行NSInvocation</h4><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[invocation invoke];</span><br></pre></td></tr></table></figure>
+<p>注意上文提到的invoke后处理一下 id* 的内存问题</p>
+<h4 id="4-取出返回值-具体可以看下一篇-NSInvocation内存处理"><a href="#4-取出返回值-具体可以看下一篇-NSInvocation内存处理" class="headerlink" title="4 取出返回值 具体可以看下一篇 NSInvocation内存处理"></a>4 取出返回值 具体可以看下一篇 NSInvocation内存处理</h4><p>如同压入参数一样，还是通过typeEncode来判断返回类型<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> <span class="keyword">char</span> *returnType = [methodSignature methodReturnType];</span><br></pre></td></tr></table></figure></p>
+<p>从invocation按类型取出返回值，返回</p>
+<p>1）int 等基础类型，注意我包装成了NSNumber* 返回的，后文有讲（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> returnValue;</span><br><span class="line">[invocation getReturnValue:&amp;returnValue];</span><br><span class="line"><span class="keyword">return</span> @(returnValue);</span><br><span class="line"><span class="keyword">break</span>;</span><br></pre></td></tr></table></figure></p>
+<p>2）CGSize等基础类型，注意我包装成了NSValue* 返回的，后文有讲（只举一个例子，其他见源码）<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">CGSize</span> result;</span><br><span class="line">[invocation getReturnValue:&amp;result];</span><br><span class="line"><span class="built_in">NSValue</span> * returnValue = [<span class="built_in">NSValue</span> valueWithBytes:&amp;(result) objCType:<span class="keyword">@encode</span>(<span class="built_in">CGSize</span>)];\</span><br><span class="line"><span class="keyword">return</span> returnValue;</span><br></pre></td></tr></table></figure></p>
+<p>3）id类型，这里面也有个坑<br>我是这么做的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span> *result;</span><br><span class="line">[invocation getReturnValue:&amp;result];</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (result == <span class="literal">NULL</span>) &#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">id</span> returnValue;</span><br><span class="line">returnValue = (__bridge <span class="keyword">id</span>)result;</span><br><span class="line"><span class="keyword">return</span> returnValue;</span><br></pre></td></tr></table></figure></p>
+<p>为什么这么做，是因为getReturnValue只是拷贝返回值到指定的地址，你现在返回的是一个id，是一个指针，那么实际对象会在函数runloop结束后自动释放的，原因很类似之前的id*参数问题，但是这里是返回值。</p>
+<p><a href="http://blog.csdn.net/zengconggen/article/details/38024625" target="_blank" rel="noopener">一个详细介绍这一块的博客</a></p>
+<h2 id="还有一点瑕疵"><a href="#还有一点瑕疵" class="headerlink" title="还有一点瑕疵"></a>还有一点瑕疵</h2><p>注意我的返回值被强迫指定成了id，也就是说，如果原函数返回的是NSInteger，我会返回一个NSNumber。</p>
+<p>为什么会这样？我搞不定如何在声明函数的时候，用一个兼容基础和id，所有类型的符号来定义函数。。</p>
+<p>参数之所以可以兼容id与基础类型，是因为我用可变参数…绕过去了。。</p>
+<p>但是返回值我就搞不定了，有人说用<code>void *</code>但我的初衷是希望使用者直接拿到最终的值，目前的困难不是如何把值传出去。而是传出去一个使用者不需要手动转换的最终结果。</p>
+<p>用<code>void *</code>这么看和用id 其实也差不多，使用者拿到后都得转一下。。。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/31/vk-msgSend/" rel="next" title="比系统API好用的VKMsgSend">
+                <i class="fa fa-chevron-left"></i> 比系统API好用的VKMsgSend
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/01/13/ARC下强制retain/" rel="prev" title="ARC下强制retain">
+                ARC下强制retain <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引子"><span class="nav-number">1.</span> <span class="nav-text">引子</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聊聊performSelector"><span class="nav-number">2.</span> <span class="nav-text">聊聊performSelector</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#聊聊objc-msgSend"><span class="nav-number">3.</span> <span class="nav-text">聊聊objc_msgSend</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？"><span class="nav-number">3.1.</span> <span class="nav-text">本着程序员偷懒大法，这部分能不能也省略了？变得更方便一些？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设计我的callSelector的接口"><span class="nav-number">4.</span> <span class="nav-text">设计我的callSelector的接口</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现这样的callSelector"><span class="nav-number">5.</span> <span class="nav-text">实现这样的callSelector</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可变参数接口透传的问题"><span class="nav-number">5.1.</span> <span class="nav-text">可变参数接口透传的问题</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#参数包装"><span class="nav-number">5.2.</span> <span class="nav-text">参数包装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#实现调用：NSInvocation"><span class="nav-number">5.3.</span> <span class="nav-text">实现调用：NSInvocation</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-首先先要生成NSInvocation"><span class="nav-number">5.3.1.</span> <span class="nav-text">1 首先先要生成NSInvocation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-设置target和SEL"><span class="nav-number">5.3.2.</span> <span class="nav-text">2 设置target和SEL</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-循环压入参数"><span class="nav-number">5.3.3.</span> <span class="nav-text">3 循环压入参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-执行NSInvocation"><span class="nav-number">5.3.4.</span> <span class="nav-text">4 执行NSInvocation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-取出返回值-具体可以看下一篇-NSInvocation内存处理"><span class="nav-number">5.3.5.</span> <span class="nav-text">4 取出返回值 具体可以看下一篇 NSInvocation内存处理</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#还有一点瑕疵"><span class="nav-number">6.</span> <span class="nav-text">还有一点瑕疵</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '尝试手写一个更好用的performSelector-msgSend', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

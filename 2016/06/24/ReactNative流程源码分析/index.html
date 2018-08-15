@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid,RN," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理 全文是不是有点太长了，我要不要分拆成几篇文章 函数栈代码流程图，由于采用层次缩进的形式，层次关系">
+<meta name="keywords" content="Hybrid,RN">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ReactNative iOS源码解析（一）">
+<meta property="og:url" content="http://yoursite.com/2016/06/24/ReactNative流程源码分析/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理 全文是不是有点太长了，我要不要分拆成几篇文章 函数栈代码流程图，由于采用层次缩进的形式，层次关系">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/RCTRoot.png">
+<meta property="og:updated_time" content="2018-04-21T17:02:28.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ReactNative iOS源码解析（一）">
+<meta name="twitter:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理 全文是不是有点太长了，我要不要分拆成几篇文章 函数栈代码流程图，由于采用层次缩进的形式，层次关系">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/06/24/ReactNative流程源码分析/"/>
+
+
+
+
+
+  <title>ReactNative iOS源码解析（一） | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/24/ReactNative流程源码分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">ReactNative iOS源码解析（一）</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-24T22:05:24+08:00">
+                2016-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/24/ReactNative流程源码分析/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/06/24/ReactNative流程源码分析/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/06/24/ReactNative流程源码分析/" class="leancloud_visitors" data-flag-title="ReactNative iOS源码解析（一）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>相关系列文章</p>
+<ul>
+<li><a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/02/ReactNative%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902/" target="_blank" rel="noopener">ReactNative iOS源码解析（二）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/17/Talk-about-ReactNative-Image-Component/" target="_blank" rel="noopener">Talk about ReactNative Image Component</a></li>
+</ul>
+<p>本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理</p>
+<p>全文是不是有点太长了，我要不要分拆成几篇文章</p>
+<p>函数栈代码流程图，由于采用层次缩进的形式，层次关系比较深的话，不是很利于手机阅读，</p>
+<h1 id="ReactNative-概要"><a href="#ReactNative-概要" class="headerlink" title="ReactNative 概要"></a>ReactNative 概要</h1><p>ReactNative，动态，跨平台，热更新，这几个词现在越来越火了，一句<code>使用JavaScript写源生App</code>吸引力了无数人的眼球，并且诞生了这么久也逐渐趋于稳定，<code>携程</code>,<code>天猫</code>,<code>QZone</code>也都在大产品线的业务上，部分模块采用这个方案上线，并且效果得到了验证<a href="http://ppt.geekbang.org/gmtc" target="_blank" rel="noopener">（见2016 GMTC 资料PPT）</a></p>
+<p>我们把这个单词拆解成2部分</p>
+<ul>
+<li>React</li>
+</ul>
+<p>熟悉前端的朋友们可能都知道<code>React.JS</code>这个前端框架，没错整个RN框架的JS代码部分，就是React.JS，所有这个框架的特点，完完全全都可以在RN里面使用（这里还融入了Flux，很好的把传统的MVC重组为dispatch，store和components，<a href="http://reactjs.cn/react/docs/flux-overview.html" target="_blank" rel="noopener">Flux架构</a>）</p>
+<p>所以说，写RN哪不懂了，去翻React.JS的文档或许都能给你解答</p>
+<p>以上由@彩虹 帮忙修正</p>
+<ul>
+<li>Native</li>
+</ul>
+<p>顾名思义，纯源生的native体验，纯源生的UI组件，纯原生的触摸响应，纯源生的模块功能</p>
+<p><strong>那么这两个不相干的东西是如何关联在一起的呢？</strong></p>
+<p>React.JS是一个前端框架，在浏览器内H5开发上被广泛使用，他在渲染render()这个环节，在经过各种flexbox布局算法之后，要在确定的位置去绘制这个界面元素的时候，需要通过浏览器去实现。他在响应触摸touchEvent()这个环节，依然是需要浏览器去捕获用户的触摸行为，然后回调React.JS</p>
+<p>上面提到的都是纯网页，纯H5，但如果我们把render()这个事情拦截下来，不走浏览器，而是走native会怎样呢？</p>
+<p>当React.JS已经计算完每个页面元素的位置大小，本来要传给浏览器，让浏览器进行渲染，这时候我们不传给浏览器了，而是通过一个JS/OC的桥梁，去通过<code>[[UIView alloc]initWithFrame:frame]</code>的OC代码，把这个界面元素渲染了，那我们就相当于用React.JS绘制出了一个native的View</p>
+<p>拿我们刚刚绘制出得native的View，当他发生native源生的<code>- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event</code>触摸事件的时候，通过一个OC/JS的桥梁，去调用React.JS里面写好的点击事件JS代码</p>
+<p>这样React.JS还是那个React.JS，他的使用方法没发生变化，但是却获得了纯源生native的体验，native的组件渲染，native的触摸响应</p>
+<p>于是，这个东西就叫做React-Native</p>
+<a id="more"></a>
+<h1 id="ReactNative-结构"><a href="#ReactNative-结构" class="headerlink" title="ReactNative 结构"></a>ReactNative 结构</h1><p>大家可以看到，刚才我说的核心就是一个桥梁，无论是JS=&gt;OC，还是OC=&gt;JS。</p>
+<p>刚才举得例子，就相当于把纯源生的UI模块，接入这个桥梁，从而让源生UI与React.JS融为一体。</p>
+<p>那我们把野心放长远点，我们不止想让React.JS操作UI，我还想用JS操作数据库！无论是新玩意Realm，还是老玩意CoreData，FMDB，我都希望能用JS操作应该怎么办？好办，把纯源生的DB代码模块，接入这个桥梁</p>
+<p>如果我想让JS操作Socket做长连接呢？好办，把源生socket代码模块接入这个桥梁。如果我想让JS能操作支付宝，微信，苹果IAP呢？好办，把源生支付代码模块接入这个桥梁</p>
+<p>由此可见RN就是由一个bridge桥梁，连接起了JS与na的代码模块</p>
+<ul>
+<li>链接了哪个模块，哪个模块就能用JS来操作，就能动态更新</li>
+<li>发现现有RN框架有些功能做不到了？扩展写个na代码模块，接入这个桥梁</li>
+</ul>
+<p>这是一个极度模块化可扩展的桥梁框架，不是说你从facebook的源上拉下来RN的代码，RN的能力就固定一成不变了，他的模块化可扩展，让你缺啥补上啥就好了</p>
+<p><strong>ReactNative 结构图</strong></p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png" alt="RN结构图"></p>
+<p>大家可以看这个结构图，整个RN的结构分为四个部分，上面提到的，RN桥的模块化可扩展性，就体现在JSBridge/OCBridge里的ModuleConfig，只要遵循RN的协议<code>RCTBridgeModule</code>去写的OC Module对象，使用<code>RCT_EXPORT_MODULE()</code>宏注册类，使用<code>RCT_EXPORT_METHOD()</code>宏注册方法，那么这个OC Module以及他的OC Method都会被JS与OC的ModuleConfig进行统一控制</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/RCTRoot.png" alt="RN类图"></p>
+<p>上面是RN的代码类结构图</p>
+<ul>
+<li><p>大家可以看到<code>RCTRootView</code>是RN的根试图，</p>
+<ul>
+<li><p>他内部持有了一个<code>RCTBridge</code>,但是这个RCTBridge并没有太多的代码，而是持有了另一个<code>RCTBatchBridge</code>对象，大部分的业务逻辑都转发给BatchBridge，BatchBridge里面写着的大量的核心代码</p>
+<ul>
+<li><p>BatchBridge会通过<code>RCTJavaScriptLoader</code>来加载JSBundle，在加载完毕后，这个loader也没什么太大的用了</p>
+</li>
+<li><p>BatchBridge会持有一个<code>RCTDisplayLink</code>，这个对象主要用于一些Timer，Navigator的Module需要按着屏幕渲染频率回调JS用的，只是给部分Module需求使用</p>
+</li>
+<li><p><code>RCTModuleXX</code>所有的RN的Module组件都是RCTModuleData，无论是RN的核心系统组件，还是扩展的UI组件，API组件</p>
+<ul>
+<li><code>RCTJSExecutor</code>是一个很特殊的RCTModuleData，虽然他被当做组件module一起管理，统一注册，但他是系统组件的核心之一，他负责单独开一个线程，执行JS代码，处理JS回调，是bridge的核心通道</li>
+<li><code>RCTEventDispatcher</code>也是一个很特殊的RCTModuleData，虽然他被当做组件module一起管理，统一注册，但是他负责的是各个业务模块通过他主动发起调用js，比如UIModule，发生了点击事件，是通过他主动回调JS的，他回调JS也是通过<code>RCTJSExecutor</code>来操作，他的作用是封装了eventDispatcher得API来方便业务Module使用。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>后面我会详细按着代码执行的流程给大家细化OCCode里面的代码，JSCode由于我对前端理解还不太深入，这个Blog就不会去拆解分析JS代码了</p>
+<p>ReactNative通信机制可以参考bang哥的博客 <a href="http://blog.cnbang.net/tech/2698/" target="_blank" rel="noopener">React Native通信机制详解</a></p>
+<h1 id="ReactNative-初始化代码分析"><a href="#ReactNative-初始化代码分析" class="headerlink" title="ReactNative 初始化代码分析"></a>ReactNative 初始化代码分析</h1><p>我会按着函数调用栈类似的形式梳理出一个代码流程表，对每一个调用环节进行简单标记与作用说明，在整个表梳理完毕后，我会一一把每个标记进行详细的源码分析和解释</p>
+<p>下面的代码流程表，如果有类名+方法的，你可以直接在RN源码中定位到具体代码段</p>
+<ul>
+<li>RCTRootView-initWithBundleURLXXX(<strong>RootInit标记</strong>)<ul>
+<li>RCTBridge-initWithBundleXXX<ul>
+<li>RCTBridge-createBatchedBridge（<strong>BatchBridgeInit标记</strong>）<ul>
+<li>New Displaylink（<strong>DisplaylinkInit标记</strong>）</li>
+<li>New dispatchQueue (<strong>dispatchQueueInit标记</strong>)</li>
+<li>New dispatchGroup (<strong>dispatchGroupInit标记</strong>)</li>
+<li>group Enter（<strong>groupEnterLoadSource标记</strong>）<ul>
+<li>RCTBatchedBridge-loadSource (<strong>loadJS标记</strong>)</li>
+</ul>
+</li>
+<li>RCTBatchedBridge-initModulesWithDispatchGroup（<strong>InitModule标记</strong> 这块内容非常多，有个子代码流程表）</li>
+<li>group Enter（<strong>groupEnterJSConfig标记</strong>）<ul>
+<li>RCTBatchedBridge-setUpExecutor（<strong>configJSExecutor标记</strong>）</li>
+<li>RCTBatchedBridge-moduleConfig（<strong>moduleConfig标记</strong>）</li>
+<li>RCTBatchedBridge-injectJSONConfiguration（<strong>moduleConfigInject标记</strong>）</li>
+</ul>
+</li>
+<li>group Notify（<strong>groupDone标记</strong>）<ul>
+<li>RCTBatchedBridge-executeSourceCode（<strong>evaluateJS标记</strong>）</li>
+<li>RCTDisplayLink-addToRunLoop（<strong>addrunloop标记</strong>）</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>RootInit标记</strong>：所有RN都是通过init方法创建的不再赘述，URL可以是网络url，也可以是本地filepath转成URL</p>
+<p><strong>BatchBridgeInit标记</strong>：前边说过rootview会先持有一个RCTBridge，所有的module都是直接操作bridge所提供的接口，但是这个bridge基本上不干什么核心逻辑代码，他内部持有了一个batchbrdige，各种调用都是直接转发给RCTBatchBrdige来操作，因此batchbridge才是核心</p>
+<p>RCTBridge在init的时候调用<code>[self setUp]</code></p>
+<p>RCTBridge在setUp的时候调用<code>[self createBatchedBridge]</code></p>
+<p><strong>DisplaylinkInit标记</strong>：batchbridge会首先初始化一个<code>RCTDisplayLink</code>这个东西在业务逻辑上不会被所有的module调用，他的作用是以设备屏幕渲染的频率触发一个timer，判断是否有个别module需要按着timer去回调js，如果没有module，这个模块其实就是空跑一个displaylink，注意，此时只是初始化，并没有run这个displaylink</p>
+<p><strong>dispatchQueueInit标记</strong>：会初始化一个GCDqueue，后面很多操作都会被扔到这个队列里，以保证顺序执行</p>
+<p><strong>dispatchGroupInit标记</strong>：后面接下来进行的一些列操作，都会被添加到这个GCDgroup之中，那些被我做了group Enter标记的，当group内所有事情做完之后，会触发group Notify</p>
+<p><strong>groupEnterLoadSource</strong>标记：会把无论是从网络还是从本地，拉取jsbundle这个操作，放进GCDgroup之中，这样只有这个操作进行完了（还有其他group内操作执行完了，才会执行notify的任务）</p>
+<p><strong>loadJS标记</strong>：其实就是异步去拉取jsbundle，无论是本地读还是网络啦，<code>[RCTJavaScriptLoader loadBundleAtURL:self.bundleURL onComplete:onSourceLoad];</code>只有当回调完成之后会执行<code>dispatch_group_leave</code>，离开group</p>
+<p><strong>InitModule标记</strong>：这个函数是在主线程被执行的，但是刚才生成的GCD group会被当做参数传进内部，因为内部的一些逻辑是需要加入group的，这个函数内部很复杂 我会继续绘制一个代码流程表</p>
+<ul>
+<li>1）RCTGetModuleClasses() </li>
+</ul>
+<p>一个C函数，RCT_EXPORT_MODULE()注册宏会在<code>+load</code>时候把Module类都统一管理在一个static NSArray里，通过RCTGetModuleClasses()可以取出来所有的Module</p>
+<ul>
+<li>2）RCTModuleData-initWithModuleClass </li>
+</ul>
+<p>此处是一个for循环，循环刚才拿到的array，对每一个注册了得module都循环生成RCTModuleData实例</p>
+<ul>
+<li>3）配置moduleConfig</li>
+</ul>
+<p>每一个module在循环生成结束后，bridge会统一存储3分配置表，包含了所有的moduleConfig的信息，便于查找和管理</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//barchbridge的ivar</span></span><br><span class="line">  <span class="built_in">NSMutableDictionary</span>&lt;<span class="built_in">NSString</span> *, RCTModuleData *&gt; *_moduleDataByName;</span><br><span class="line">  <span class="built_in">NSArray</span>&lt;RCTModuleData *&gt; *_moduleDataByID;</span><br><span class="line">  <span class="built_in">NSArray</span>&lt;Class&gt; *_moduleClassesByID;</span><br><span class="line"><span class="comment">// Store modules</span></span><br><span class="line">  _moduleDataByID = [moduleDataByID <span class="keyword">copy</span>];</span><br><span class="line">  _moduleDataByName = [moduleDataByName <span class="keyword">copy</span>];</span><br><span class="line">  _moduleClassesByID = [moduleClassesByID <span class="keyword">copy</span>];</span><br></pre></td></tr></table></figure>
+<ul>
+<li>4）RCTModuleData-instance</li>
+</ul>
+<p>这是一个for循环，每一个RCTModuleData都需要循环instance一下，需要说明的是，RCTModuleData与Module不是一个东西，各类Module继承自NSObject，RCTModuleData内部持有的instance实例才是各类Module，因此这个环节是初始化RCTModuleData真正各类Module实例的环节</p>
+<p>通过<code>RCTModuleData-setUpInstanceAndBridge</code>来初始化创建真正的Module</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//SOME CODE</span></span><br><span class="line">_instance = [_moduleClass new];</span><br><span class="line"><span class="comment">//SOME CODE</span></span><br><span class="line">[<span class="keyword">self</span> setUpMethodQueue];</span><br></pre></td></tr></table></figure>
+<p>这里需要说明，每一个Module都会创建一个自己独有的专属的串行GCD queue，每次js抛出来的各个module的通信，都是dispatch_async，不一定从哪个线程抛出来，但可以保证每个module内的通信事件是串行顺序的</p>
+<p>每一个module都有个bridge属性指向，rootview的bridge，方便快速调用</p>
+<ul>
+<li>5）RCTJSCExecutor </li>
+</ul>
+<p>RCTJSCExecutor是一个特殊的module，是核心，所以这里会单独处理，生成，初始化，并且被bridge持有，方便直接调用</p>
+<p><code>RCTJSCExecutor初始化</code>做了很多事情，需要大家仔细关注一下</p>
+<p>创建了一个全新的NSThread，并且被持有住，绑定了一个runloop，保证这个线程不会消失，一直在loop，所有与JS的通信，一定都通过RCTJSCExecutor来进行，所以一定是在这个NSThread线程内，只不过各个模块的消息，会进行二次分发，不一定在此线程内</p>
+<ul>
+<li>6）RCTModuleData-gatherConstants</li>
+</ul>
+<p>每一个module都有自己的提供给js的接口配置表，这个方法就是读取这个配置表，注意！这行代码执行在主线程，但他使用dispatch_async 到mainQueue上，说明他先放过了之前的函数调用栈，等之前的函数调用栈走完，然后还是在主线程执行这个循环的gatherConstants，因此之前传进来的GCD group派上了用场，因为只有当所有module配置都读取并配置完毕后才可以进行 run js代码</p>
+<p><strong>下面思路从子代码流程表跳出，回到大代码流程表的标记</strong></p>
+<p><strong>groupEnterJSConfig标记</strong>：代码到了这块会用到刚才创建，但一直没使用的GCD queue，并且这块还比较复杂，在这次enter group内部，又创建了一个子group，都放在这个GCD queue里执行</p>
+<p>如果觉得绕可以这么理解他会在专属的队列里执行2件事情（后面要说的2各标记），当这2个事情执行完后触发子group notify，执行第三件事情（后面要说的第三个标记），当第三个事情执行完后leave母group，触发母group notify</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">dispatch_group_enter(initModulesAndLoadSource);</span><br><span class="line">  <span class="built_in">dispatch_async</span>(bridgeQueue, ^&#123;</span><br><span class="line">    dispatch_group_t setupJSExecutorAndModuleConfig = dispatch_group_create();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Asynchronously initialize the JS executor</span></span><br><span class="line">    dispatch_group_async(setupJSExecutorAndModuleConfig, bridgeQueue, ^&#123;</span><br><span class="line">      RCTPerformanceLoggerStart(RCTPLJSCExecutorSetup);</span><br><span class="line">      [weakSelf setUpExecutor];</span><br><span class="line">      RCTPerformanceLoggerEnd(RCTPLJSCExecutorSetup);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Asynchronously gather the module config</span></span><br><span class="line">    dispatch_group_async(setupJSExecutorAndModuleConfig, bridgeQueue, ^&#123;</span><br><span class="line">      <span class="keyword">if</span> (weakSelf.valid) &#123;</span><br><span class="line">        RCTPerformanceLoggerStart(RCTPLNativeModulePrepareConfig);</span><br><span class="line">        config = [weakSelf moduleConfig];</span><br><span class="line">        RCTPerformanceLoggerEnd(RCTPLNativeModulePrepareConfig);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    dispatch_group_notify(setupJSExecutorAndModuleConfig, bridgeQueue, ^&#123;</span><br><span class="line">      <span class="comment">// We're not waiting for this to complete to leave dispatch group, since</span></span><br><span class="line">      <span class="comment">// injectJSONConfiguration and executeSourceCode will schedule operations</span></span><br><span class="line">      <span class="comment">// on the same queue anyway.</span></span><br><span class="line">      RCTPerformanceLoggerStart(RCTPLNativeModuleInjectConfig);</span><br><span class="line">      [weakSelf injectJSONConfiguration:config onComplete:^(<span class="built_in">NSError</span> *error) &#123;</span><br><span class="line">        RCTPerformanceLoggerEnd(RCTPLNativeModuleInjectConfig);</span><br><span class="line">        <span class="keyword">if</span> (error) &#123;</span><br><span class="line">          <span class="built_in">dispatch_async</span>(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">            [weakSelf stopLoadingWithError:error];</span><br><span class="line">          &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;];</span><br><span class="line">      dispatch_group_leave(initModulesAndLoadSource);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>configJSExecutor标记</strong>：再次专门处理一些JSExecutor这个RCTModuleData</p>
+<p>1）property context懒加载，创建了一个JSContext</p>
+<p>2）为JSContext设置了一大堆基础block回调，都是一些RN底层的回调方法</p>
+<p><strong>moduleConfig标记</strong>：把刚才所有配置moduleConfig信息汇总成一个string，包括moduleID，moduleName，moduleExport接口等等</p>
+<p><strong>moduleConfigInject标记</strong>：把刚才的moduleConfig配置信息string，通过RCTJSExecutor，在他内部的专属Thread内，注入到JS环境JSContext里，完成了配置表传给JS环境的工作</p>
+<p><strong>groupDone标记</strong>:GCD group内所有的工作都已完成，loadjs完毕，配置module完毕，配置JSExecutor完毕，可以放心的执行JS代码了</p>
+<p><strong>evaluateJS标记</strong>：通过<code>[_javaScriptExecutor executeApplicationScript:script sourceURL:url onComplete:]</code>来在JSExecutor专属的Thread内执行jsbundle代码</p>
+<p><strong>addrunloop标记</strong>：最早创建的<code>RCTDisplayLink</code>一直都只是创建完毕，但并没有运作，此时把这个displaylink绑在JSExecutor的Thread所在的runloop上，这样displaylink开始运作</p>
+<p><strong>小结</strong>：</p>
+<p>整个RN在bridge上面，单说OC侧，各种GCD，线程，队列，displaylink，还是挺复杂的，针对各个module也都是有不同的处理，把这块梳理清楚能让我们更加清楚OC代码里面，RN的线程控制，更方便以后我们扩展编写更复杂的module模块，处理更多native的线程工作。</p>
+<p>后面的 js call oc  oc call js 我也会以同样的方式进行梳理，让大家清楚线程上是如何运作的</p>
+<p>PS：JS代码侧其实bridge的设计也有一套，包括所有call oc messageQueue会有个队列控制之类的，我对JS不是那么熟悉和理解，JS侧的代码我就不梳理了。</p>
+<h1 id="ReactNative-JS-call-OC-代码分析"><a href="#ReactNative-JS-call-OC-代码分析" class="headerlink" title="ReactNative JS call OC 代码分析"></a>ReactNative JS call OC 代码分析</h1><p>既然整个RCTRootView都初始化完毕，并且执行了jsbundle文件了，整个RN就已经运作起来了，那么RN运作起来后，JS的消息通过JS代码的bridge发送出来之后，是如何被OC代码识别，分发，最重转向各个module模块的业务代码呢？我们接下来就会梳理，这个流程的代码</p>
+<p>JS call OC 可以有很多个方法，但是所有的方法一定会走到同一个函数内，这个关键函数就是</p>
+<p><code>- (void)handleBuffer:(id)buffer batchEnded:(BOOL)batchEnded</code></p>
+<p>需要说明的事，handleBuffer一定发生在RCTJSExecutor的Thread内</p>
+<p><strong>正所谓顺藤摸瓜，我可以顺着他往上摸看看都哪里会发起js2oc的通信</strong></p>
+<ul>
+<li>[RCTJSExecutor setUp]</li>
+</ul>
+<p>可以看到这里面有很多JavaScriptCore的JSContext[“xxx”]=block的用法，这个用法就是JS可以把xxx当做js里面可以识别的function，object，来直接调用，从而调用到block得意思，可以看出来<code>nativeFlushQueueImmediate</code>当js主动调用这个jsfunction的时候，就会下发一下数据，从而调用handleBuffer，可以确定的是，这个jsfunction，会在jsbunlde run起来后立刻执行一次</p>
+<p>这个方法要特别强调一下，这是唯一个一个JS会主动调用OC的方法，其他的js调用OC，都他由OC实现传给JS一个回调，让JS调用。</p>
+<p><a href="http://mini.eastday.com/a/160612151604890-15.html" target="_blank" rel="noopener">JS侧主动调用nativeFlushQueueImmediate的逻辑</a></p>
+<ul>
+<li>[RCTBatchBridge enqueueApplicationScript:]</li>
+</ul>
+<p>可以看到这句代码只发生在执行jsbundle之后，执行之后会<code>[RCTJSExecutor  flushedQueue:callback]</code>在callback里调用handleBuffer，说明刚刚执行完jsbundle后会由OC主动发起一次flushedQueue，并且传给js一个回调，js通过这个回调，会call oc，进入handleBuffer</p>
+<ul>
+<li>[RCTBatchBridge _actuallyInvokeCallback:]</li>
+<li>[RCTBatchBridge _actuallyInvokeAndProcessModule:]</li>
+</ul>
+<p>两个_actuallyInvoke开头的方法，用处都是OC主动发起调用js的时候，会传入一个call back block，js通过这个callback block回调，这两个方法最后都会执行<code>[RCTJSExecutor _executeJSCall:]</code></p>
+<p>从上面可以看出JS只有一个主动调用OC的方法，其他都是通过OC主动调用JS给予的回调</p>
+<p><strong>我们还可以顺着handleBuffer往下摸看看都会如何分发JS call OC的事件</strong></p>
+<p>以handleBuffer为根，我们继续用函数站代码流程表来梳理</p>
+<ul>
+<li>RCTBatchedBridge-handlebuffer<ul>
+<li>analyze Buffer(<strong>analyze buffer标记</strong>)</li>
+<li>find module（<strong>find modules标记</strong>）</li>
+<li>for 循环all calls</li>
+<li>dispatch async（<strong>dispatch async标记</strong>）<ul>
+<li>[RCTBatchedBridge- handleRequestNumber:]<ul>
+<li>[RCTBridgeMethod invokeWithBridge:]（<strong>invocation标记</strong> 这个标记会复杂点，子流程表细说） </li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong>analyze buffer标记</strong>：js传过来的buffer其实是一串calls的数组，一次性发过来好几个消息，需要OC处理，所以会解析buffer，分别识别出每一个call的module信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSArray&lt;NSNumber *&gt; *moduleIDs = [RCTConvert NSNumberArray:requestsArray[RCTBridgeFieldRequestModuleIDs]];</span><br><span class="line">NSArray&lt;NSNumber *&gt; *methodIDs = [RCTConvert NSNumberArray:requestsArray[RCTBridgeFieldMethodIDs]];</span><br><span class="line">NSArray&lt;NSArray *&gt; *paramsArrays = [RCTConvert NSArrayArray:requestsArray[RCTBridgeFieldParams]];</span><br></pre></td></tr></table></figure>
+<p><strong>find modules标记</strong>：解析了buffer之后就要查找对应的module，不仅要找到RCTModuleData，同时还要取出RCTModuleData自己专属的串行GCD queue</p>
+<p><strong>dispatch async标记</strong>：每一个module和queue都找到了就可以for循环了，去执行一段代码，尤其要注意，此处RN的处理是直接dispatch_async到系统随机某一个空闲线程，因为有模块专属queue的控制，还是可以保持不同模块内消息顺序的可控</p>
+<p><strong>invocation标记</strong>：这个标记的作用就是真真正正的去调用并且执行对应module模块的native代码了，也就是JS最终调用了OC，这个标记内部还比较复杂，里面使用了NSInvocation去运行时查找module类进行反射调用</p>
+<p><strong>invocation内部子流程如下</strong></p>
+<p>解释一下，JS传给OC是可以把JS的回调当做参数一并传过来的，所以后面的流程中会特别梳理一下这种回调参数是如何实现的，</p>
+<ul>
+<li>[RCTBridgeMethod-processMethodSignature]（<strong>invocation预处理标记</strong>）<ul>
+<li>argumentBlocks（<strong>参数处理标记</strong>）</li>
+</ul>
+</li>
+<li>循环压参（<strong>invocation压参标记</strong>）</li>
+<li>反射执行Invocation调用oc</li>
+</ul>
+<p><strong>invocation预处理标记</strong>：RN会提前把即将反射调用的selector进行分析，分析有几个参数每个参数都是什么类型，每种类型是否需要包装或者转化处理。    </p>
+<p><strong>参数处理标记</strong>：argumentBlocks其实是包装或转化处理的block函数，每种参数都有自己专属的block，根据类型进行不同的包装转化策略</p>
+<p>此处别的参数处理不细说了，单说一下JS回调的这种参数是怎么操作的</p>
+<ul>
+<li>JS回调通过bridge传过来的其实是一个数字，是js回调function的id</li>
+<li>我们在开发module的时候，RN让你声明JS回调的时候是声明一个输入参数为NSArray的block</li>
+<li>js回调型参数的argumentBlocks的作用就是，把jsfunctionid进行记录，包装生成一个输入参数为NSArray的block，这个block会自动的调用<code>[RCTBridge enqueueCallback:]</code>在需要的时候回调JS，然后把这个block压入参数，等待传给module</li>
+</ul>
+<p>这块代码各种宏嵌套，还真是挺绕的，因为宏的形式，可读性非常之差，但是读完了后还是会觉得很风骚</p>
+<p><code>[RCTBridgeMethod  processMethodSignature]</code>这个方法，强烈推荐</p>
+<p><strong>invocation压参标记</strong>：argumentBlocks可以理解为预处理专门准备的处理每个参数的函数，那么预处理结束后，就该循环调用argumentBlocks把每一个参数处理一下，然后压入invocation了</p>
+<p>后面就会直接调用到你写的业务模块的代码了，业务模块通过那个callback回调也能直接calljs了</p>
+<h1 id="ReactNative-OC-call-JS-EventDispatcher代码分析"><a href="#ReactNative-OC-call-JS-EventDispatcher代码分析" class="headerlink" title="ReactNative OC call JS EventDispatcher代码分析"></a>ReactNative OC call JS EventDispatcher代码分析</h1><p>我们编写module，纯源生native模块的时候，有时候会有主动要call js的需求，而不是通过js给的callback calljs</p>
+<p>这时候就需要<code>RCTEventDispatcher</code>了，可以看到他的头文件里都是各种sendEvent，sendXXXX的封装，看一下具体实现就会发现，无论是怎么封装，最后都走到了<code>[RCTJSExecutor enqueueJSCall:]</code>，追中还是通过RCTJSExecutor，主动发起调用了JS</p>
+<p>他有两种方式</p>
+<ul>
+<li>直接立刻发送消息主动callJS</li>
+<li>把消息add进一个Event队列，然后通过flushEventsQueue一次性主动callJS</li>
+</ul>
+<h1 id="ReactNative-Displaylink-代码分析"><a href="#ReactNative-Displaylink-代码分析" class="headerlink" title="ReactNative Displaylink 代码分析"></a>ReactNative Displaylink 代码分析</h1><p>之前我们提到过一个<code>RCTDisplayLink</code>，没错他被添加到RCTJSExecutor的Thread所在的runloop之上，以渲染频率触发执行代码，执行frameupDate</p>
+<p><code>[RCTDisplaylink _jsThreadUpdate]</code></p>
+<p>在这个方法里，会拉取所有的需要执行frameUpdate的module，在module所在的队列里面dispatch_async执行didUpdateFrame方法</p>
+<p>在各自模块的didUpdateFrame方法内，会有自己的业务逻辑，以DisplayLink的频率，主动call js</p>
+<p>比如：RCTTimer模块</p>
+<h1 id="RCTJSExecutor"><a href="#RCTJSExecutor" class="headerlink" title="RCTJSExecutor"></a>RCTJSExecutor</h1><p>最后在强调下JSBridge这个管道的线程控制的情况</p>
+<p>刚才提到的无论是OC Call JS还是JS call OC，都只是在梳理代码流程，让你清楚，所有JS/OC之间的通信，都是通过RCTJSExecutor，都是在RCTJSExecutor内部所在的Thread里面进行</p>
+<p>如果发起调用方OC，并不是在JSThread执行，RCTJSExecutor就会把代码perform到JSThread去执行</p>
+<p>发起调用方是JS的话，所有JS都是在JSThread执行，所以handleBuffer也是在JSThread执行，只是在最终分发给各个module的时候，才进行了async+queue的控制分发。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+            <a href="/tags/RN/" rel="tag"># RN</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/16/前端10年读后感/" rel="next" title="“站在10年研发路上，眺望前端未来”：读后感">
+                <i class="fa fa-chevron-left"></i> “站在10年研发路上，眺望前端未来”：读后感
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/07/02/ReactNative源码分析2/" rel="prev" title="ReactNative iOS源码解析（二）">
+                ReactNative iOS源码解析（二） <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-概要"><span class="nav-number">1.</span> <span class="nav-text">ReactNative 概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-结构"><span class="nav-number">2.</span> <span class="nav-text">ReactNative 结构</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-初始化代码分析"><span class="nav-number">3.</span> <span class="nav-text">ReactNative 初始化代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-JS-call-OC-代码分析"><span class="nav-number">4.</span> <span class="nav-text">ReactNative JS call OC 代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-OC-call-JS-EventDispatcher代码分析"><span class="nav-number">5.</span> <span class="nav-text">ReactNative OC call JS EventDispatcher代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ReactNative-Displaylink-代码分析"><span class="nav-number">6.</span> <span class="nav-text">ReactNative Displaylink 代码分析</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#RCTJSExecutor"><span class="nav-number">7.</span> <span class="nav-text">RCTJSExecutor</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'ReactNative iOS源码解析（一）', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

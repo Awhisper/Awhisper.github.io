@@ -1,0 +1,1486 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FrontEnd," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="前言惭愧，最近下班回家沉迷山口山了，前一阵子搞antlr语法转换，这一阵子搞微信小程序，一直拖着没写点啥，一步一步来吧，肯定都得总结点东西留给自己看的。 新技术尝鲜我一直是一个iOS客户端开发，前端经验只停留在w3cschool上面很基础的最初版本html,css,js学习，纯helloworld水准，就学了不到10分钟。所以这里也算是给客户端开发们打点气，新的东西阻碍的永远是你上手的动力，而不是">
+<meta name="keywords" content="FrontEnd">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端外行的微信小程序瞎折腾之旅">
+<meta property="og:url" content="http://yoursite.com/2016/09/30/wxappdemo/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="前言惭愧，最近下班回家沉迷山口山了，前一阵子搞antlr语法转换，这一阵子搞微信小程序，一直拖着没写点啥，一步一步来吧，肯定都得总结点东西留给自己看的。 新技术尝鲜我一直是一个iOS客户端开发，前端经验只停留在w3cschool上面很基础的最初版本html,css,js学习，纯helloworld水准，就学了不到10分钟。所以这里也算是给客户端开发们打点气，新的东西阻碍的永远是你上手的动力，而不是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/wxappinit.png">
+<meta property="og:image" content="http://ww1.sinaimg.cn/mw690/678c3e91jw1f8bnmg7w1zj20uh16zwm9.jpg">
+<meta property="og:image" content="http://ww2.sinaimg.cn/mw690/678c3e91jw1f8bnmhaaqcj20u1173n4z.jpg">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/wxappcomment1.png">
+<meta property="og:updated_time" content="2017-03-12T13:04:13.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="前端外行的微信小程序瞎折腾之旅">
+<meta name="twitter:description" content="前言惭愧，最近下班回家沉迷山口山了，前一阵子搞antlr语法转换，这一阵子搞微信小程序，一直拖着没写点啥，一步一步来吧，肯定都得总结点东西留给自己看的。 新技术尝鲜我一直是一个iOS客户端开发，前端经验只停留在w3cschool上面很基础的最初版本html,css,js学习，纯helloworld水准，就学了不到10分钟。所以这里也算是给客户端开发们打点气，新的东西阻碍的永远是你上手的动力，而不是">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/wxappinit.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/09/30/wxappdemo/"/>
+
+
+
+
+
+  <title>前端外行的微信小程序瞎折腾之旅 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/30/wxappdemo/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">前端外行的微信小程序瞎折腾之旅</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-30T11:02:32+08:00">
+                2016-09-30
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/09/30/wxappdemo/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/09/30/wxappdemo/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/09/30/wxappdemo/" class="leancloud_visitors" data-flag-title="前端外行的微信小程序瞎折腾之旅">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>惭愧，最近下班回家沉迷山口山了，前一阵子搞antlr语法转换，这一阵子搞微信小程序，一直拖着没写点啥，一步一步来吧，肯定都得总结点东西留给自己看的。</p>
+<h2 id="新技术尝鲜"><a href="#新技术尝鲜" class="headerlink" title="新技术尝鲜"></a>新技术尝鲜</h2><p>我一直是一个iOS客户端开发，前端经验只停留在w3cschool上面很基础的最初版本html,css,js学习，纯helloworld水准，就学了不到10分钟。所以这里也算是给客户端开发们打点气，新的东西阻碍的永远是你上手的动力，而不是这个东西的难易。顺带强调自己是前端外行，也是希望各位看官关于内容里如果有很多关于前端理解的偏差，帮我指正和修改。</p>
+<a id="more"></a>
+<p>加了一些小程序开发群，发现很多常问的问题是：</p>
+<ul>
+<li>我想上手小程序，需要先学啥语言，先学习html css js吗？</li>
+<li>小程序是用js开发吗？那我是不是要去先学js？</li>
+<li>想上手学小程序，需要什么知识储备吗？</li>
+</ul>
+<p>我的看法是，我反正从来都不是这样学任何一个新东西的，我就一句话</p>
+<ul>
+<li>直接开干啊!遇到啥问题再具体查啥问题。</li>
+</ul>
+<p>这也跟个人接触新东西的习惯有关，反正我是完全不喜欢那种打算学个新东西（注意是’新’东西），然后就问一下有啥经典书籍么？先抱着一本16开，三四厘米厚的一本大厚书，（我习惯叫砖书，很厚很大砸人很疼），看个好几天一个礼拜的，然后还没上手。或者听到个新东西技术是html，然后美名其曰技术储备，俩仨礼拜略微看明白点html，css，但也毫无实战经验，俩仨礼拜，连小程序的边都没摸到。</p>
+<p>对于’新’东西，等系统化的出书，黄花菜都凉了啊，以前捣鼓RN的时候，无数人问RN有什么好书看，现在RN书停留的版本都是0.2X之前，并且一个个都很浅，现在0.3X已经天翻地覆了，这种啥都等系统化整理文章，做好技术储备，再开始动手，完全不是我的个人学习风格。</p>
+<p>直接上手是最快的，虽然资料少，但是有源码下，源码是最好的指导方案，没源码，官方文档，Github交流，网上及时阅读最新的碎片化博客文章，这些绝对是最快的学习和了解’新’东西的手段。</p>
+<p>光读光看是绝对没用的，最有效最有效的手段是，直接上手，上项目，哪怕是仿写一些开放API接口的app（知乎日报，豆瓣电影，有太多开放提供服务器api，让广大客户端开发者练手的）</p>
+<p><strong>以上只是我的个人学习习惯，因人而异</strong></p>
+<h2 id="扯淡吐槽"><a href="#扯淡吐槽" class="headerlink" title="扯淡吐槽"></a>扯淡吐槽</h2><ul>
+<li>xx火了，客户端要完蛋，前端要火</li>
+<li>小程序会不会灭掉客户端开发</li>
+<li>明年培训机构大量前端要涌入了</li>
+<li>小程序也不一定就会火，客户端不可代替</li>
+</ul>
+<p>当初RN出来就是这样一波风气，小程序出来也是，我对任何这种话题是毫无兴趣！这种<code>然并卵</code>的话题，键盘侠们热火朝天讨论几个小时，时间就过去了，然后就可以happy下班了，有这功夫demo都写出来了，项目都上线了</p>
+<h1 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h1><p>上面其实也扯了太多的废话，微信小程序其实有自己的IDE开发环境，一切都在这个开发环境里面，<a href="http://wxopen.notedown.cn/devtools/download.html" target="_blank" rel="noopener">下载官方IDE开发包</a>，开始运行，就可以直接开发预览小程序了。</p>
+<p>但这里有个IDE开发包破解的问题，小程序目前需要是需要邀请码的，有邀请码你就会有属于你业务的微信小程序appId，有邀请码的好处是你可以把小程序部署到真机上，没有邀请码，<strong>无论你是否破解了IDE，你都无法真机预览</strong>，但是IDE里面的模拟器预览完全没有问题，能运行，能实现绝大部分功能，完全可以项目上先开发起来，等待一旦公测，就直接上线。</p>
+<h2 id="不破解IDE"><a href="#不破解IDE" class="headerlink" title="不破解IDE"></a>不破解IDE</h2><p><strong>先说结论：现在的最新版本IDE，完全不需要破解！</strong></p>
+<ul>
+<li>最新版本的92300的IDE，mac下是一个dmg包，直接安装就能使用</li>
+<li>选择+号添加项目你能看到创建新项目必须填写AppID</li>
+<li>在92300版本里面，已经贴心的新增了一个<code>无AppID</code>的按钮，点了后会得到提示<code>无AppID部分功能受限</code></li>
+<li>说的很吓人，这部分API很少，就2个，并且IDE提供了模拟数据返回，完全不影响绝大部分开发</li>
+<li>你就是破解了，不提示部分功能受限，也是该没法正常还照样没法正常工作，毕竟微信也有自己的服务器验证，你破解后填的AppID终归是假的</li>
+<li>选择工程目录，这时候切记如果你是从0开始创建工程，而不是拥有线程的wx小程序demo代码，一定要在选择工程目录的时候，创建全新文件夹</li>
+<li>只有全新创建的文件夹才会开启quickstart自动创建初始工程文件功能，(如下图）自动创建好一个helloworld工程</li>
+<li>quickstart的自动创建工程，是可以无报错直接运行run起来的。</li>
+<li>但如果文件夹内有文件，IDE就不会创建任何的初始文件的。</li>
+</ul>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/wxappinit.png" alt="init project"></p>
+<h2 id="破解IDE"><a href="#破解IDE" class="headerlink" title="破解IDE"></a>破解IDE</h2><p>首先，感谢<code>@老郭</code>以迅雷不及掩耳盗铃之神速第一时间破解了微信官方IDE，并且开源提供给大家使用，<a href="https://github.com/gavinkwoe/weapp-ide-crack" target="_blank" rel="noopener">GitHub weapp-ide crack</a></p>
+<p>因为在早期的版本，微信的IDE，没有AppID的人是无法体验的，必须经过破解，才能开始自己写demo进行练手。而老郭在第一时间破解了IDE，让所有人能从代码上第一时间体验这个神秘的小程序（真机就没办法了）</p>
+<p>后来倒逼微信官方，把小程序IDE直接开放，才有了上面提到的<code>无AppID</code>模式。</p>
+<p>但是，我使用破解IDE的时候，发现很多人遇到了个问题，按部就班一步一步把IDE破解了，创建新工程的时候，是没有quickstart这一部的，如果什么都不太懂的人做到这一部，一打开工程，一个文件没有直接点运行，直接会报错，什么<code>can not find app.js</code>之类的，<code>context</code>之类的错误，我看到这个后，直接从网上顺手找个demo（就在老郭的git里就有）扔到目录里，就一切运行了。</p>
+<p>所以目前我的感受就是，破解倒逼了微信官方开放无AppID体验，简直太威武了，但对于经验尚浅的新手，破解的一大堆东西和步骤，很可能会出现一大堆不知道为啥的错误提示的时候，真的不如直接下最新版IDE，不破解直接<code>无AppID</code>体验。</p>
+<h1 id="开动起来"><a href="#开动起来" class="headerlink" title="开动起来"></a>开动起来</h1><ul>
+<li>官方文档全在这里 <a href="http://wxopen.notedown.cn/" target="_blank" rel="noopener">官方文档</a>，里面包含简易教程，框架，组件，API，工具等等</li>
+</ul>
+<p>官方文档其实内容真的不多，很多东西写的很浅，光看文档我是觉得很是吃力，因为很多前端开发的概念并不深入，很多标签，css的名字及其陌生，所以辅助上别人的demo食用就很赞了</p>
+<ul>
+<li><p><a href="https://github.com/justjavac/awesome-wechat-weapp#%E6%95%99%E7%A8%8B" target="_blank" rel="noopener">GitLab上面比较丰富的汇总Demo</a> 这里面包括文章，和demo，demo有很多很赞的repo的，我这就只是搬运</p>
+<ul>
+<li><a href="https://github.com/phodal/weapp-quick" target="_blank" rel="noopener">微信小应用示例代码(phodal/weapp-quick)</a></li>
+<li><a href="https://github.com/giscafer/wechat-weapp-mapdemo" target="_blank" rel="noopener">微信小应用地图定位demo(giscafer/wechat-weapp-mapdemo)</a></li>
+<li><a href="https://github.com/hilongjw/weapp-gold" target="_blank" rel="noopener">微信小应用- 掘金主页信息流(hilongjw/weapp-gold)</a></li>
+<li><a href="https://github.com/zce/weapp-demo" target="_blank" rel="noopener">微信小程序（应用号）示例：微信小程序豆瓣电影(zce/weapp-demo)</a></li>
+<li><a href="https://github.com/hingsir/weapp-douban-film" target="_blank" rel="noopener">微信小程序-豆瓣电影(hingsir/weapp-douban-film)</a></li>
+<li><a href="https://github.com/kunkun12/weapp" target="_blank" rel="noopener">小程序 hello world 尝鲜(kunkun12/weapp)</a></li>
+<li><a href="https://github.com/jeffche/wechat-app-2048" target="_blank" rel="noopener">微信小程序版2048小游戏(jeffche/wechat-app-2048)</a></li>
+<li><a href="https://github.com/wangmingjob/weapp-weipiao" target="_blank" rel="noopener">微信小程序-微票(wangmingjob/weapp-weipiao)</a></li>
+<li><a href="https://github.com/SeptemberMaples/wechat-weapp-demo" target="_blank" rel="noopener">微信小程序购物车DEMO(SeptemberMaples/wechat-weapp-demo)</a></li>
+<li><a href="https://github.com/jectychen/wechat-v2ex" target="_blank" rel="noopener">微信小程序V2EX(jectychen/wechat-v2ex)</a></li>
+<li><a href="https://github.com/myronliu347/wechat-app-zhihudaily" target="_blank" rel="noopener">微信小程序-知乎日报(myronliu347/wechat-app-zhihudaily)</a></li>
+<li><a href="https://github.com/hijiangtao/weapp-newsapp" target="_blank" rel="noopener">微信小程序-公众号热门文章信息流(hijiangtao/weapp-newsapp)</a></li>
+<li><a href="https://github.com/lypeer/wechat-weapp-gank" target="_blank" rel="noopener">微信小程序版Gank客户端(lypeer/wechat-weapp-gank)</a></li>
+<li><a href="https://github.com/charleyw/wechat-weapp-redux-todos" target="_blank" rel="noopener">微信小程序集成Redux实现的Todo list(charleyw/wechat-weapp-redux-todos)</a></li>
+<li><a href="https://github.com/kraaas/timer" target="_blank" rel="noopener">微信小程序-番茄时钟(kraaas/timer)</a></li>
+<li><a href="http://javascript.ctolib.com/categories/javascript-wechat-weapp.html" target="_blank" rel="noopener">微信小程序项目汇总</a></li>
+<li><a href="https://github.com/ericzyh/wechat-chat" target="_blank" rel="noopener">微信小程序版聊天室(ericzyh/wechat-chat)</a></li>
+<li><a href="https://github.com/BelinChung/wxapp-hiapp" target="_blank" rel="noopener">微信小程序-HiApp(BelinChung/wxapp-hiapp)</a></li>
+<li><a href="https://github.com/charleyw/wechat-weapp-redux" target="_blank" rel="noopener">小程序Redux绑定库(charleyw/wechat-weapp-redux)</a></li>
+<li><a href="https://github.com/18380435477/WeApp" target="_blank" rel="noopener">微信小程序版微信(18380435477/WeApp)</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><a href="https://github.com/Awhisper/MyWxApp" target="_blank" rel="noopener">我的Github上面的小程序Demo</a> 这个真的只是demo，是我们业务项目的雏形代码，我文章后面介绍的截图，功能，都不是这个Demo，都是我们的项目代码的</li>
+</ul>
+<p>重要的事情说三遍，后面文章的截图不是这个Demo，不是这个Demo，不是这个Demo╮(╯_╰)╭</p>
+<h2 id="quickStart-工程文件基础"><a href="#quickStart-工程文件基础" class="headerlink" title="quickStart 工程文件基础"></a>quickStart 工程文件基础</h2><p><strong>项目基础文件</strong></p>
+<ul>
+<li>app.json 这里对小程序所有的页面进行配置，其实详细的大家可以看官方文档，跟你app界面结构相关的就是前三个<ul>
+<li>“pages”字段表示app包含的所有页面，只有在这里注册过的页面才会有效进行编译，如果你的app不包含”tab”字段，那么app的首页就是”pages”数组里面的第一个page</li>
+<li>“window”字段是处理对于navigationbar的一些样式设置</li>
+<li>“tabBar”字段如果存在，表示app开启首页面为底部tabbar的形式，这样每个tab所对应的page在”tabBar”字段里设置</li>
+<li>“networkTimeout”,”debug”这两个字段一个配置全局网络超时，一个开启debug模式</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>app.wxss 这里其实是全局的CSS，凡是在这里写过的CSS样式，在各自子page里面可以直接使用，写在其他.wxss文件里的样式是不能跨page使用的，可以通过@import进行样式导入，导入别的.wxss文件，但是目前我实践的结果@import只有在主app.wxss里才有效，路径是相对路径</li>
+<li>app.js 这里就是纯js代码逻辑了，官方的demo里给你展示了一些基本代码，调用了微信的login接口，回调，读取用户头像，读本地存储之类的。并且通过js的一个全局函数<code>getApp()</code>可以获得app.js的这个app对象。</li>
+</ul>
+<p><strong>页面文件</strong></p>
+<p>如果一个页面起名叫<code>HomePage</code>，那么我们就应该自行手动创建3个文件，文件名一致才会被系统正确的识别</p>
+<ul>
+<li>HomePage.js 代表着这个页面的业务逻辑，当你在空白js里面输入page的时候会自动出现代码补全，帮你补全了一个page的所有生命周期，onLoad，onHide啥的，其他的js代码提示很不完善╮(╯_╰)╭</li>
+<li>HomePage.wxss 这里面写这个页面的专属css，别的页面不能使用，只在这个页面下可以用，但是可以被import到app.wxss里面，实现全局通用，并且wxss的代码提示非常完善，很爽，很多文档没写的css表，可以通过ide代码提示+推测标准css3，来知道如何编写</li>
+<li>HomePage.wxml 这里面写这个页面了，这种WXML语法看起来就很像html，但他还真不是html，html的东西完全不能直接在这里用。你必须用wx提供的wxml相关组件完全重写，条件渲染，循环渲染，数据绑定，都得按着微信的规定来，并且提供了最简单的模板模块功能，实现一定程度的复用。</li>
+</ul>
+<p>还可以有个可选的HomePage.json文件，页面也是可以拥有自己的.json文件进行一些专属配置的，但是页面的json可以配置的字段不如app.json多，职能配置关于本window相关的一些表现，比如</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="attr">"navigationBarBackgroundColor"</span>:<span class="string">"#ffffff"</span>,</span><br><span class="line">    <span class="attr">"navigationBarTextStyle"</span>:<span class="string">"black"</span>,</span><br><span class="line">    <span class="attr">"navigationBarTitleText"</span>:<span class="string">"微信接口功能演示"</span>,</span><br><span class="line">    <span class="attr">"backgroundColor"</span>:<span class="string">"#eeeeee"</span>,</span><br><span class="line">    <span class="attr">"backgroundTextStyle"</span>:<span class="string">"light"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="上手开搞"><a href="#上手开搞" class="headerlink" title="上手开搞"></a>上手开搞</h2><ul>
+<li>创建一个新目录HomePage，创建好我们页面自己的HomePage至少三个文件</li>
+<li>HomePage.js里面写page，自动补全好页面生命周期，其余留空</li>
+<li>修改app.json里面 “pages”字段，添加进去我们最新的页面路径，并且放到最上面。</li>
+<li>直接点编译，你会发现，你的微信小程序已经在模拟器里面运行起来了，没有报错，只是空白一片，什么也没有嘛。</li>
+</ul>
+<p>后面开始动手画UI了，这个我没有啥教学的，因为上文提供的github各种demo里面丰富多彩的所有组件用法已经够全的了，我这手把手的教如何写一个按钮，如何写一个text，如何水平排布好几段文字，这就有点太无脑了。我举例几个项目中用到的界面，然后写点我这个小白在趟出这些界面的时候遇到的一些问题点吧</p>
+<p><img src="http://ww1.sinaimg.cn/mw690/678c3e91jw1f8bnmg7w1zj20uh16zwm9.jpg" alt="myhomepage"></p>
+<p><img src="http://ww2.sinaimg.cn/mw690/678c3e91jw1f8bnmhaaqcj20u1173n4z.jpg" alt="listpage"></p>
+<h2 id="开发小记"><a href="#开发小记" class="headerlink" title="开发小记"></a>开发小记</h2><h3 id="小程序的mvvm"><a href="#小程序的mvvm" class="headerlink" title="小程序的mvvm"></a>小程序的mvvm</h3><p>小程序天然有一套数据和UI的绑定机制，在js文件里有如下代码，在onload里面发起网络请求，网络请求后回来，handleResponse，再之后setData，可以看到这个data其实就是一个vm</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">data:&#123;</span><br><span class="line">    originData: &#123;&#125;,</span><br><span class="line">    bookList: []</span><br><span class="line">  &#125;,</span><br><span class="line">onLoad:<span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">	<span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">	<span class="built_in">console</span>.log()</span><br><span class="line">	wx.request(&#123;</span><br><span class="line">	    url:<span class="string">'xxxxxxxx'</span>,</span><br><span class="line">	    header: &#123;</span><br><span class="line">	        <span class="string">'Content-Type'</span>: <span class="string">'application/json'</span></span><br><span class="line">	    &#125;,</span><br><span class="line">	    success: <span class="function"><span class="keyword">function</span>(<span class="params">res</span>) </span>&#123;</span><br><span class="line">	       <span class="keyword">if</span>(res.data.status.code == <span class="number">0</span>)&#123;</span><br><span class="line">	          self.handleResponse(res.data.data);</span><br><span class="line">	       &#125;</span><br><span class="line">	    &#125;</span><br><span class="line">	&#125;);</span><br><span class="line">	</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'onLoad'</span>)</span><br><span class="line">&#125;,</span><br><span class="line">handleResponse:<span class="function"><span class="keyword">function</span>(<span class="params">response</span>)</span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(response);</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">var</span> bookList = response.content.column_data;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">this</span>.setData(&#123;</span><br><span class="line">	  originData:response,</span><br><span class="line">	  bookList:bookList</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>当任何时候在js逻辑里面，修改了data，这样的wxml中，<code></code>这种就是告诉负责UI的WXML，这块UI要和bookList这个data里面的一个字段进行绑定，任何时候data发生了变化，这个UI都会根据最新的数据结果刷新</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">wx:for</span>=<span class="string">"&#123;&#123;bookList&#125;&#125;"</span> <span class="attr">wx:for-item</span>=<span class="string">"listBookItem"</span> <span class="attr">wx:for-index</span>=<span class="string">"rowIndex"</span> <span class="attr">class</span>=<span class="string">"novelBookContainer"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">include</span> <span class="attr">src</span>=<span class="string">"../../component/novelBook/novelBook.wxml"</span>/&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="小程序的代码复用-amp-模块化"><a href="#小程序的代码复用-amp-模块化" class="headerlink" title="小程序的代码复用&amp;模块化"></a>小程序的代码复用&amp;模块化</h3><p>可以看出来，我的2个页面，最重要的就是一个书籍详情Cell，进行复用，避免代码大量的机械性重复。</p>
+<p>模块化得从3个层面，<code>js</code>，<code>wxss</code>，<code>wxml</code>来说</p>
+<ul>
+<li>js的模块化：小程序的js看起来就是最普通的js，似乎看起来是不支持ES6的，因此用传统的<code>module.exports</code>就可以封装js的api模块提供外部使用</li>
+<li>wxss的样式导入：上文提过，每个page只能认自己page的wxss，和全局的app.wxss，其他的wxss是不支持由别的文件直接引入的，但是可以在全局app.wxss里面使用<code>@import</code>来把别的文件的样式，导入全局，这样各自page都能使用了</li>
+<li>wxml的模板：官方文档里说支持<code>&lt;template&gt;</code>的方式创建一个模板，模板支持使用data传入数据，我的项目里没这么使用过，我用的另一种方案</li>
+<li>wxml的引用：官方文档里也说明了支持<code>&lt;include&gt;</code>他的作用其实只是原封不动的代码字符串拷贝，会拷贝目标wxml文件里除<code>&lt;template&gt;</code>外所有的标签，原封不动的拷贝替换到<code>&lt;include&gt;</code>位置（这是纯字符串复制，不能支持指定代码灵活变化，需要灵活变化请使用模板）</li>
+</ul>
+<h3 id="点击事件传值"><a href="#点击事件传值" class="headerlink" title="点击事件传值"></a>点击事件传值</h3><p>下面这个代码就是我的bookCell的wxml代码，可以看到这里大量使用了进行UI和data的绑定，这样每次setData，都会让ui直接生效，但我这里重点给大家看一下关于绑定点击事件。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"novelBookDesc"</span> <span class="attr">data-sectionIndex</span>=<span class="string">"&#123;&#123;sectionIndex&#125;&#125;"</span> <span class="attr">data-rowIndex</span>=<span class="string">"&#123;&#123;rowIndex&#125;&#125;"</span> <span class="attr">bindtap</span>=<span class="string">"tapBook"</span> <span class="attr">tapIndex</span>=<span class="string">"&#123;&#123;listBookIndex&#125;&#125;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">image</span> <span class="attr">src</span>=<span class="string">"&#123;&#123;listBookItem.small_pic_url&#125;&#125;"</span> <span class="attr">mode</span>=<span class="string">"scaleToFill"</span> <span class="attr">class</span>=<span class="string">"novelBookCover"</span>/&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTitleText"</span>&gt;</span>[&#123;&#123;listBookItem.sub_class&#125;&#125;] &#123;&#123;listBookItem.title&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span> <span class="attr">class</span>=<span class="string">"novelBookTextInfo"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTextAuthor"</span>&gt;</span>&#123;&#123;listBookItem.author&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTextAuthor"</span>&gt;</span>|<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTextStatus novelBookTextStatusOver"</span> <span class="attr">wx:if</span>=<span class="string">"&#123;&#123;listBookItem.is_full==1&#125;&#125;"</span>&gt;</span>完结<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTextStatus novelBookTextStatusNotOver"</span> <span class="attr">wx:if</span>=<span class="string">"&#123;&#123;listBookItem.is_full!=1&#125;&#125;"</span>&gt;</span>连载<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">text</span> <span class="attr">class</span>=<span class="string">"novelBookTextSummary"</span>&gt;</span>&#123;&#123;listBookItem.summary&#125;&#125;<span class="tag">&lt;/<span class="name">text</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>官方文档里面写的真是比较简单，<code>bindtap=&quot;tapBook&quot;</code>写好了这一句后，每当这个UI元素被点击的时候，都一定会触发对应page的.js文件中tapBook这个jsfunction，看起来很容易，但传值呢？发生点击我怎么知道点击的时候是哪个book被点击了？第几个本书？书的id是啥？关键就在这里</p>
+<p><code>data-sectionIndex=&quot;&quot; data-rowIndex=&quot;&quot;</code></p>
+<p>这一行给<view>添加了2个属性，都是以<code>data-</code>开头，自定义的名字为结束，并且绑定上了2个数据（for 循环的index，for循环后面说），这样添加自定义的<code>data-xx</code>属性就是为点击事件传递属性的关键</view></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">tapBook:<span class="function"><span class="keyword">function</span> (<span class="params">event</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> section = event.currentTarget.dataset.sectionindex;</span><br><span class="line">    <span class="keyword">var</span> row = event.currentTarget.dataset.rowindex;</span><br><span class="line">    <span class="keyword">var</span> book = <span class="keyword">this</span>.data.sectionList[section].column_list.book_info[row];</span><br><span class="line">    <span class="keyword">var</span> docid = book.doc_id;</span><br><span class="line">    wx.navigateTo(&#123;</span><br><span class="line">      url: <span class="string">'../read/read?docid='</span> + docid</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<p>这是对应js代码，当触发tapBook的时候，会把event当做参数传入，event.currentTarget.dataset.xxx 就能获取你刚才<code>data-xx</code>绑定的数据，我刚才把sectionIndex rowIndex的列表点击index绑上了，于是通过这个方法取出来了。</p>
+<p><strong>切记，你在wxml里几遍data-xx，写了大写英文字母，此处在js里调用的时候被自动全部变成小写了，你再写大写是undefine的</strong></p>
+<h3 id="for循环创建列表"><a href="#for循环创建列表" class="headerlink" title="for循环创建列表"></a>for循环创建列表</h3><p>官方文档里面给了好几种for循环的方案，什么<block> <view for="">，都可以绑定上一个js数组数据，然后按着数组的个数循环渲染列表形UI，</view></block></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;view wx:<span class="keyword">for</span>=<span class="string">"&#123;&#123;listItem.column_list.book_info&#125;&#125;"</span> wx:<span class="keyword">for</span>-item=<span class="string">"listBookItem"</span> wx:<span class="keyword">for</span>-index=<span class="string">"rowIndex"</span> <span class="class"><span class="keyword">class</span></span>=<span class="string">"novelBookContainer"</span>&gt;</span><br><span class="line">      &lt;include src=<span class="string">"../../component/novelBook/novelBook.wxml"</span>/&gt;</span><br><span class="line">&lt;<span class="regexp">/view&gt;</span></span><br></pre></td></tr></table></figure>
+<p>这就是一个for循环创建列表的例子</p>
+<ul>
+<li><code>wx:for</code>的意思是告诉这个<view>内用循环创建内容，循环所绑定的数组是listItem.column_list.book_info</view></li>
+<li><code>wx:for-item</code>的意思是，你在下面写当次循环需要用到的具体数组元素，你起名成listBookItem</li>
+<li><code>wx:for-index</code>的意思是，你在下面写档次循环需要用到的数组下表，你起名成了rowIndex</li>
+</ul>
+<p>循环内我include的代码，就是上文点击事件传值介绍的代码，这时候我们回过头去看</p>
+<p><code>&lt;text class=&quot;novelBookTitleText&quot;&gt;[] &lt;/text&gt;</code></p>
+<p><code>&lt;view class=&quot;novelBookDesc&quot; data-sectionIndex=&quot;&quot; data-rowIndex=&quot;&quot; bindtap=&quot;tapBook&quot; tapIndex=&quot;&quot;&gt;</code></p>
+<p>怎么样，用到listBookItem数据在绑定上了吧，用到rowIndex在点击事件了把，同理可知sectionIndex其实是另外一个我没展示的外层循环的<code>wx:for-index</code>定义。</p>
+<h3 id="wx对象提供的API"><a href="#wx对象提供的API" class="headerlink" title="wx对象提供的API"></a>wx对象提供的API</h3><p>所谓API其实就是，在js文件里，微信也提供了很多native API，以wx.xxx开头，<a href="http://wxopen.notedown.cn/api/" target="_blank" rel="noopener">官方API文档</a>，包括很多内容，我就不一一举例了，这里举例几个比较重要的分类</p>
+<ul>
+<li>网络<ul>
+<li>http请求(最常用，各大demo都是通过wx.request()来做http请求)</li>
+<li>大文件上传下载</li>
+<li>websockt</li>
+</ul>
+</li>
+<li>数据<ul>
+<li>数据缓存，本地key-value式数据存储</li>
+<li>各种同步，异步，数据处理接口</li>
+</ul>
+</li>
+<li>导航 页面之间各种跳转</li>
+<li>动画 绘图</li>
+<li>媒体</li>
+<li>设备 重力感应，系统信息，网络状态，罗盘等等</li>
+<li>微信支付</li>
+<li>微信登陆，用户信息</li>
+</ul>
+<p>可以看出，都是直接跟网络，跟设备，相关的信息。</p>
+<h3 id="界面跳转"><a href="#界面跳转" class="headerlink" title="界面跳转"></a>界面跳转</h3><p>我们在<code>小程序mvvm</code>里面已经看到了一段关于wx.request的演示，这里演示一下，界面之间跳转</p>
+<ul>
+<li>wx.nativateTo() 通过push动画打开新的页面</li>
+<li>wx.redirectTo() 当前页面重定向到新页面进行展示，不打开</li>
+<li>wx.navigatBack() 通过pop动画，弹出到上一级界面</li>
+</ul>
+<p>wx.nativateTo是有数量限制的，小程序界面栈层级不能超过5的，所以很多场景可以选择使用wx.redirectTo</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//跳转到别的页面的代码，注意看如何传值</span></span><br><span class="line">wx.navigateTo(&#123;</span><br><span class="line">  url: <span class="string">'../topic/topic?topicid='</span> + topicid</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">//topic界面的js逻辑里面，onLoad生命周期函数</span></span><br><span class="line">onLoad:<span class="function"><span class="keyword">function</span>(<span class="params">options</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> topic = options.topicid</span><br><span class="line">&#125;</span><br><span class="line">options.topic</span><br></pre></td></tr></table></figure>
+<p>可以看到，界面跳转通过url跳转，而传值也通过url的方式传值，你传过去的值会直接写进onLoad生命周期函数的options参数里面，名字和你在url里面写的是一样的。</p>
+<h3 id="CSS"><a href="#CSS" class="headerlink" title="CSS"></a>CSS</h3><p>说实话，一直以来都在做客户端开发，这种css式的界面开发模式，实在是太陌生了，css式的思维，css式的嵌套，对一个新手来说有点痛苦。</p>
+<p><a href="https://github.com/Awhisper/MyWxApp" target="_blank" rel="noopener">我的Github上面的小程序Demo</a> 这里面的代码其实不多，基本上是我们项目的雏形，但最让我头疼的就是那些css，我整整写了一整天，才大约摸到一丢丢前端开发，css思维的方式方法</p>
+<p>这个我也没啥好说的，毕竟我是大大大大菜鸟，就是多写写就有感觉了。</p>
+<p>值得一提的是IDE对于WXSS文件里，css的代码补全非常赞，各种都能第一时间补全，对于我这个根本记不住那么多css名字的新手来说，这个实在是太好了。</p>
+<p>另外，完全支持<code>- position: absolute</code>和<code>- position: relative</code>的绝对坐标布局，也完全支持flexBox的弹性盒子布局，和我一起的小伙伴表示，基本上大部分的css都是直接可以用，我把线上项目迁移到wxss的时候也感觉到了，打开chrome的debug模式，照着线上wap站，原封不动的照着写css布局参数，基本上没有任何问题</p>
+<h3 id="调试"><a href="#调试" class="headerlink" title="调试"></a>调试</h3><p>大家玩起来就知道了，微信小程序的调试模式，和chrome的debug模式一模一样，其实这个ide就是拿nw.js写的，里面是一套webkit，源码里面就有chrome的debug’tool的js代码哈哈</p>
+<h1 id="底层实现探讨"><a href="#底层实现探讨" class="headerlink" title="底层实现探讨"></a>底层实现探讨</h1><p>关于这个小程序底层是如何运作的，在刚出的第一天，就引来无数的遐想，wx独有的wxml wxss到底是拿什么做的？到底是不是h5?到底能不能做成native体验？无数人都在猜测。</p>
+<p>在最开始的时候，ide被破解，并且被证实ide是基于webkit做的，很多人猜微信在真机上就是webview啦（后面事实证明，目前也还真是）</p>
+<p>但我当时就觉得这其实说明不了啥，wx特别抽象出来的 wxml结构，就是想定义一个独立出来的独有抽象层，他虽然目前把这个抽象层（一种自己独有的vdom结构？我是前端新人，不一定对哈），最后又重新通过编译转成了html，最后交给webview来展现（辅助绑定上了一些native插件，比如wxapp里面的视频，tab，navi，input keyboard，map等等，都是通过addsubview的方式直接add到UI/WKwebview上的）</p>
+<p>但是这并不代表，这样的架构就是依赖在webkit，和webview的，完全独有的抽象中间层vdom，就是为了摆脱对webkit的依赖，未来可以很轻松的切换底层架构，直接切换成reactnative or weex 那样的vdom + native渲染的模式，这样就没了webview的依赖，（虽然现在选择的方案，是又绕路回到了html和webkit，但依赖和选择权已经牢牢攥在了自己手里）</p>
+<p><a href="http://www.zhihu.com/question/39377598/answer/123247610" target="_blank" rel="noopener">微信小程序开发人员回答渲染机制</a></p>
+<p>这篇文章看起来官方人员态度有点遮遮掩掩，含糊其辞，通篇都没直指要害-如何渲染，但我觉得解读一下，是这样的潜台词（开玩笑！莫喷：我们很高大上，我们抽象了很多东西，其实我们还是主要用webview渲染，辅助了很多native，就是不太好意思这么直白的说出来）</p>
+<p>但我特别认可微博上的这个回答</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/wxappcomment1.png" alt=""></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FrontEnd/" rel="tag"># FrontEnd</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/09/01/VKDevTool/" rel="next" title="VKDevTool App黑盒调试工具">
+                <i class="fa fa-chevron-left"></i> VKDevTool App黑盒调试工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/01/cssprotocol/" rel="prev" title="iOS上的CSS样式协议 VKCssProtocol">
+                iOS上的CSS样式协议 VKCssProtocol <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#新技术尝鲜"><span class="nav-number">1.1.</span> <span class="nav-text">新技术尝鲜</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#扯淡吐槽"><span class="nav-number">1.2.</span> <span class="nav-text">扯淡吐槽</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发环境"><span class="nav-number">2.</span> <span class="nav-text">开发环境</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#不破解IDE"><span class="nav-number">2.1.</span> <span class="nav-text">不破解IDE</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#破解IDE"><span class="nav-number">2.2.</span> <span class="nav-text">破解IDE</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开动起来"><span class="nav-number">3.</span> <span class="nav-text">开动起来</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#quickStart-工程文件基础"><span class="nav-number">3.1.</span> <span class="nav-text">quickStart 工程文件基础</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#上手开搞"><span class="nav-number">3.2.</span> <span class="nav-text">上手开搞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开发小记"><span class="nav-number">3.3.</span> <span class="nav-text">开发小记</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序的mvvm"><span class="nav-number">3.3.1.</span> <span class="nav-text">小程序的mvvm</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#小程序的代码复用-amp-模块化"><span class="nav-number">3.3.2.</span> <span class="nav-text">小程序的代码复用&amp;模块化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#点击事件传值"><span class="nav-number">3.3.3.</span> <span class="nav-text">点击事件传值</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#for循环创建列表"><span class="nav-number">3.3.4.</span> <span class="nav-text">for循环创建列表</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#wx对象提供的API"><span class="nav-number">3.3.5.</span> <span class="nav-text">wx对象提供的API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面跳转"><span class="nav-number">3.3.6.</span> <span class="nav-text">界面跳转</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CSS"><span class="nav-number">3.3.7.</span> <span class="nav-text">CSS</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调试"><span class="nav-number">3.3.8.</span> <span class="nav-text">调试</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#底层实现探讨"><span class="nav-number">4.</span> <span class="nav-text">底层实现探讨</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '前端外行的微信小程序瞎折腾之旅', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

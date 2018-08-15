@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Growth," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="程序员有时候需要跳出代码，看看业务，思考业务 带着业务的视野，返回来思考技术的运用 最新最好的技术用在锋利的增长刀刃上，业务将无往不利  Growth这个事情，说他是技术，可是掰开了揉碎了，细节说透了，很多程序员会说，这某一点不就是某个很普通的技术实现么？另外一点不就是另外一个苹果新API么？做起来很简单啦，只需要产品好好去规划功能与玩法就行了。 一个业务在增长，技术只是被动的听，做这个做那个，">
+<meta name="keywords" content="Growth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扯淡：用技术玩转业务增长 -- 增长黑客">
+<meta property="og:url" content="http://yoursite.com/2017/03/18/MyUserGrowth/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="程序员有时候需要跳出代码，看看业务，思考业务 带着业务的视野，返回来思考技术的运用 最新最好的技术用在锋利的增长刀刃上，业务将无往不利  Growth这个事情，说他是技术，可是掰开了揉碎了，细节说透了，很多程序员会说，这某一点不就是某个很普通的技术实现么？另外一点不就是另外一个苹果新API么？做起来很简单啦，只需要产品好好去规划功能与玩法就行了。 一个业务在增长，技术只是被动的听，做这个做那个，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-21T17:00:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="扯淡：用技术玩转业务增长 -- 增长黑客">
+<meta name="twitter:description" content="程序员有时候需要跳出代码，看看业务，思考业务 带着业务的视野，返回来思考技术的运用 最新最好的技术用在锋利的增长刀刃上，业务将无往不利  Growth这个事情，说他是技术，可是掰开了揉碎了，细节说透了，很多程序员会说，这某一点不就是某个很普通的技术实现么？另外一点不就是另外一个苹果新API么？做起来很简单啦，只需要产品好好去规划功能与玩法就行了。 一个业务在增长，技术只是被动的听，做这个做那个，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/03/18/MyUserGrowth/"/>
+
+
+
+
+
+  <title>扯淡：用技术玩转业务增长 -- 增长黑客 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/18/MyUserGrowth/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">扯淡：用技术玩转业务增长 -- 增长黑客</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-18T19:09:24+08:00">
+                2017-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/03/18/MyUserGrowth/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2017/03/18/MyUserGrowth/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2017/03/18/MyUserGrowth/" class="leancloud_visitors" data-flag-title="扯淡：用技术玩转业务增长 -- 增长黑客">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>程序员有时候需要跳出代码，看看业务，思考业务</p>
+<p>带着业务的视野，返回来思考技术的运用</p>
+<p>最新最好的技术用在锋利的增长刀刃上，业务将无往不利</p>
+</blockquote>
+<p>Growth这个事情，说他是技术，可是掰开了揉碎了，细节说透了，很多程序员会说，这某一点不就是某个很普通的技术实现么？另外一点不就是另外一个苹果新API么？做起来很简单啦，只需要产品好好去规划功能与玩法就行了。</p>
+<p>一个业务在增长，技术只是被动的听，做这个做那个，等着产品设计玩法，自己只负责实现，业务做好做坏都是产品的锅。抱着这个心态的话那么产品完全可以甩锅，“我们畅想的功能你们做不了，完美的用户体验，一切智能，恨不得产品设计出一款钢铁侠Jarvis，你们技术做不了就是你们的锅”，这就会陷入一个对立状态下的困局。</p>
+<p>这里其实是沟通的问题，本着做好业务为出发点，业务走向正轨，持续增长是整个团队所期望，并且整个团队都会受益的，<code>我负责做什么</code>，<code>什么不是我负责的是你的责任</code>，<code>这些东西我们都能做就是PM不会玩</code>，等等这些借口在业务停滞这一结果导向面前是毫无意义的，在良性的沟通下，大家为了同一个目标去努力，收货丰厚的成果才是合理的工作状态。</p>
+<p><strong>通篇都会以这个基调去讨论问题</strong>，因为我们讨论的是一个综合性非常强，涉及面非常大的东西，抱着谁的责任，谁负责哪块的心态根本不是Growth所需要的。因为在极尽一切办法寻求业务增长的时候，最清楚技术能做到啥程度是研发，研发将技术的价值充分说明，建议，与分享，一起与整个团队努力，运用在业务上才是<code>增长Growth</code>的最有效的办法。</p>
+<h1 id="Growth"><a href="#Growth" class="headerlink" title="Growth"></a>Growth</h1><p>去年2015年的时候，随着一本书《增长黑客》的流行，随着覃超在国内各大科技大会上分享Facebook的一整套一切产品研发以用户增长团队驱动的策略指导为优先的<code>Facebook GrowthHack</code>方法论。Growth的概念开始在国内互联网圈里爆发开来，甚至很多公司HR开始效仿国外公司，专门招聘<code>增长官 Growth Officer</code>。</p>
+<p>抛开他突然爆火的热度，我们专注的了解一下这一全新的领域<code>Growth</code>，通过这些书籍，大公司的分享会PPT，我们会发现这里面不仅仅是业务方向的事情，绝不仅仅是只有<code>经理</code>or<code>产品经理</code>才需要考虑的业务增长方向的事。这里面甚至蕴含着很深的技术手段，需要很深的数据挖掘手段，需要很多高深莫测的黑科技，需要动态化全栈化的技术打通，可以说这里面的技术挑战绝与深度对不低，并且非常要求技术视野的广度。</p>
+<h2 id="增长黑客"><a href="#增长黑客" class="headerlink" title="增长黑客"></a>增长黑客</h2><blockquote>
+<p>GrowthHack就是一群以<code>数据驱动营销</code>，<code>以市场驱动产品</code>，通过技术化手段贯彻增长目标的人。必须既了解技术，又深谙用户心理，擅长发挥创意，绕过限制，通过低成本的手段，解决增长问题的人，在外行人的眼里，他们像极了发明家与广告狂人的混合体 </p>
+<p>—-《增长黑客》</p>
+</blockquote>
+<p><strong>增长黑客不是产品经理</strong></p>
+<p>产品经理更需要思考推出哪些功能来迎合用户，并规划产品的发展走向和节奏，<strong>增长黑客会更加关注那些能带来数据增长的功能，去发现新的机会，去摸索新的功能点，并用数据验证成功。</strong>产品运营更希望用已经被验证成功的方式和经验，不断的扩大效果，不断的复制成功。</p>
+<p>增长黑客不同于运营，增长黑客始终处于一个摸索阶段，有可能绞尽脑汁分析了无数数据，得出了很多想法，但每个尝试了数据反馈的结果都没有得到数据的认可，很有可能长期处于徒劳和无用功的状态，这一点对于可预期的产品运营思路与方法论来说是不可接受的</p>
+<p><strong>技术更胜任增长黑客</strong></p>
+<p>工程师可能是最接近和容易成为增长黑客的一群人，因为从能力角度看，增长黑客不仅需要想法，还需要将想法落实到行动的能力，包括</p>
+<ul>
+<li>自研工具</li>
+<li>采集样本</li>
+<li>分析数据</li>
+<li>大规模推广</li>
+<li>突破推广限制</li>
+</ul>
+<p>懂技术未必能成为增长黑客，但是不懂技术，你根本不知道你的想法到底是异想天开还是触手可及</p>
+<p>在竞争激烈的浪潮中，在你犹豫你的想法是有效可行的时候，很多增长的时机就稍纵即逝了，增长黑客要求就是快，敏锐，在没有任何方向的情况下，用快速的技术落地能力，趟出一条可以走的捷径</p>
+<p>这也是开头提到的</p>
+<ul>
+<li>程序员有时候需要跳出代码，看看业务，思考业务</li>
+<li>带着业务的视野，返回来思考技术的运用</li>
+</ul>
+<h2 id="Growth与方法论"><a href="#Growth与方法论" class="headerlink" title="Growth与方法论"></a>Growth与方法论</h2><p>《增长黑客》这本书里提到很多方法论，比如基本素质和思维方式</p>
+<ul>
+<li>数据为王</li>
+<li>专注目标</li>
+<li>关注细节</li>
+<li>富于创意</li>
+<li>信息通透</li>
+</ul>
+<p>比如从<code>AARRR漏斗转化模型</code>，衍生出来方法论思考步骤</p>
+<ul>
+<li>产品定位</li>
+<li>获取用户</li>
+<li>激发活跃</li>
+<li>提高留存</li>
+<li>增加收入</li>
+<li>病毒传播</li>
+</ul>
+<p>这些东西书中都有很详细的介绍和案例，我写这篇文章也不是为了摘抄书籍，在这里以一副<code>人人都是产品经理</code>（开个玩笑）的样子大谈特谈产品思维，技术博客还是聊技术，Growth里有哪些技术？Growth里可以用到哪些技术？你现在做的技术是不是就是一种Growth？</p>
+<h1 id="Growth里的技术"><a href="#Growth里的技术" class="headerlink" title="Growth里的技术"></a>Growth里的技术</h1><p>我们日常工作中很多开发工作都是与Growth密不可分，但当真的有一天老大给个命令下个死目标，在N个月内让产品提升到XXW用户，XXW收入，XXW点击的时候，没有任何的方案与方法，手头的可以用于钱和推广资源也非常有限，你作为一个工程师，你应该怎么做呢？用你手头仅有的技术能力，你应该做些什么来完成任务呢？</p>
+<a id="more"></a>
+<p>那我们顺着上文提到的一些Growth方法论，来看看我们有哪些技术能使用在这里，当然所有的技术每一个单拿出来都可能作为一个专业的方向深入去探讨，本文我不会探讨太深，只是想强调这里面蕴含的技术含量与业务价值，以及他们之间的切合程度。</p>
+<p><strong>说明：</strong> 这些技术只是我个人思考后的总结，相信真正的增长技术远远不止这些</p>
+<h2 id="数据为王"><a href="#数据为王" class="headerlink" title="数据为王"></a>数据为王</h2><p>数据为王的意思就是，一切以数据为驱动，所有产品决策，功能开发决策，都通过数据提出设想，用数据验证成功。</p>
+<p>想要以抽丝剥茧分析海量千万数据中的那一点点异常，找到那一点点突破口，在产品业务流量狂跌的时候，用数据分析原因，寻找止跌办法，在产品业务流量疯长的时候，还是用数据监控个个细节的异动，在增长的光环下寻找数据中埋藏的业务隐患。听了我说这些，会觉得这谈何容易，需要丰富的经验，需要深刻的业务理解。技术能干啥？技术能干的多了。</p>
+<h3 id="搭建完整的数据采集监控体系-数据可视化"><a href="#搭建完整的数据采集监控体系-数据可视化" class="headerlink" title="搭建完整的数据采集监控体系/数据可视化"></a>搭建完整的数据采集监控体系/数据可视化</h3><p>现在PM以及经理每日要分析各种业务报表，业务指标，使用各种分析工具，诸如<code>百度统计</code>，<code>友盟</code>，<code>TalkingData</code>，<code>Google Analyse</code>等，确实这些工具很强大，但你有没有想过这些东西再强大，作为一个提供通用服务的公司，他们做了很多基础的统计报表与数据可视化的工作，但是每个公司产品有独特的业务场景，如果能提供更为专属的定制化的数据统计与可视化框架，那么就可以分析独有产品的脉络和状态，把握自己产品所在的市场风向。</p>
+<p>FaceBook在覃超的分享中就介绍是一家将数据驱动做到极致的公司，一套庞大复杂的数据可视化架构，可以支持全方位的用户数据记录，高速的数据查询响应与可视化，高度的模块化可配，可以让非研发人员进行轻易的配置就可以创建专属的自定义的数据统计模块，这背后是深厚的数据工程师，算法工程师，以及前后端工程师一起努力才形成的一套如此高度定制化/自动化的数据架构</p>
+<p>不仅后台/算法/数据工程师在这里起着关键的作用，前端/客户端工程师依然可以在这里面用自己的前端/客户端技术大展拳脚，数据统计依赖打点，每个点都人工规划人肉埋点，这样的工作效率以及未来的扩展性和机动性，显然是无法与全自动化的埋点技术相比的，因此大前端也在流行<code>无埋点</code>，<code>动态埋点</code>等技术，背后是依托于各个端独有的技术栈来实现的</p>
+<ul>
+<li><code>前端通过注入JS</code></li>
+<li><code>安卓通过字节码打桩</code></li>
+<li><code>iOS通过运行时orClangPlugin</code></li>
+</ul>
+<p>等等的NB方案，从而实现<code>埋点</code>到<code>无埋点</code>的巨大进步，<a href="http://it.sohu.com/20160803/n462423457.shtml" target="_blank" rel="noopener">从「埋点」到「无埋点」，是过去和未来的差别
+</a>，</p>
+<h3 id="搭建强大的ABTest系统"><a href="#搭建强大的ABTest系统" class="headerlink" title="搭建强大的ABTest系统"></a>搭建强大的ABTest系统</h3><p>ABTest是一种简单的不能再简单的实验，选2个样本，给予唯一变量差异，看实验后果，选效果好的，但是这一套以一整个严谨的机制运作在生产实践中，背后所需要的技术支持还是巨大的，小到一个文案，一个图标，大到一个业务一个模块，都可以用ABTest在全面上线前进行小成本快速实验，快速的试找到最好的结果，全面上线理想的最优解。</p>
+<p>想要做到精准强大的ABTest，背后也是需要一套全方位的ABTest后台服务体系的，其内部蕴含的技术含量一点都不低</p>
+<ul>
+<li>抽样</li>
+</ul>
+<p>抽样不是简单地从用户里随机选1000个人，让这1000个人看到这个test，再随机选1000个人，让他们看到那个test，理论中的ABTest是建立在绝对相等的环境变量以及唯一的测试变量的前提下的，那么我们的业务所面向的用户真的是绝对相等的环境变量么？不同的区域，不同的性别，不同的年龄，甚至不同的购买习惯，深度/浅度用户等等都可能造成不相等的环境变量最后导致实验结果没有说服力。一套合理的ABTest抽样系统他应该具备有极大的兼容和扩展能力，能够对各种细粒度的试验第一时间抽样出最合理的样本</p>
+<ul>
+<li>并发</li>
+</ul>
+<p>每个试验不一定只有AB2个试验样本，有可能是同时发起多个试验样本，一个试验周期快速从N个方案中选出最好的。</p>
+<p>同时我们也不可能一个系统在同一时间只进行一个试验，有可能同时进行2个试验，A有M个实验组，B有N个实验组，并且这两个试验之间有交集，不是绝对不相关。这就需要设立M*N个实验组进行并发试验</p>
+<p>随着试验的复杂性上升，系统所需要支持的复杂度越来越大。我们必须让系统强大到能够同时处理多个试验，同时分发多个试验，还要考虑到抽样人群池的并发同步问题。这样我们才能争分夺秒，在同一时间内，尽可能的发起更多的试验，尽可能争取用一个试验周期拿到我们要的结论，尽快选出最好的试验增长收益，推广到全业务线</p>
+<ul>
+<li>追踪</li>
+</ul>
+<p>简单的试验目标可能就是看1级数据是否增长，比如单个页面的PV在文案不同的情况下是否涨了，比如同一销售位的不同商品，销售额是否涨了。但是想要支持一个强大的ABTest，我们不可能只关注简单试验目标，还需要长期关注用户的持续行为，比如样本用户是否满足预期的在某个特定场景下增加了访问量，停留时间，样本用户是否在后续的付费转化率的某个环节里提高了付费意图。这些就需要在试验开启后，ABTest系统能够精准追踪到用户在试验期间的每个细节。</p>
+<ul>
+<li>计算</li>
+</ul>
+<p>通过对样本用户的行为进行精准追踪，通过对样本群体的追踪数据进行计算汇总，分析行为路径，转化率漏斗等等，配以可视化的数据，进行结果展示方便决策人员进行分析。</p>
+<p><strong>移动端ABTest</strong></p>
+<p>说了这么多ABTest的要义就是快速上线实验，快速验证，快速迭代，因此Server端，网页前端想要做相对容易，毕竟上线不依赖发版，那么移动端呢？</p>
+<ul>
+<li>Server接口ABTest</li>
+</ul>
+<p>这个其实就是server的ABTest，对于server返回的接口由server选择不同人返回不同的数据，追踪统计结果，这个其实跟移动端没关系，受限于功能接口的设计，灵活度很差，接口没有的新功能就不能ABTest</p>
+<ul>
+<li>开关型移动端ABTest</li>
+</ul>
+<p>对于新功能想要ABTest，每次客户端发版之前，专门为Test模块由客户端开发开关请求代码，预先把实验内容写入客户端，发版看效果，每次依赖发版不说，还会往客户端写大量冗余实验代码</p>
+<ul>
+<li>Na动态化ABTest</li>
+</ul>
+<p>如果Na能够像前端一样动态更新，ABTest就能像前端一样灵活自如，因此现在炙手可热的Na动态化框架和相关框架，别管是Hybrid，还是路由，还是RN，还是Weex，在ABTest上都会有巨大的使用价值。</p>
+<h2 id="信息通透"><a href="#信息通透" class="headerlink" title="信息通透"></a>信息通透</h2><p>信息通透是尽可能获取全行业，甚至外部行业的一切风向信息，数据信息，敏感的察觉一切可以影响业务的事情，第一时间获取，第一时间分析，第一时间决策，想要做到这些，你需要的是像雷达一样的强大的抓取系统</p>
+<h3 id="全方位的抓取-爬虫系统"><a href="#全方位的抓取-爬虫系统" class="headerlink" title="全方位的抓取/爬虫系统"></a>全方位的抓取/爬虫系统</h3><p>全方位的行业信息其实就是业务的风向标，信息光靠经理，总监，产品，去每天看新闻，看竞品，看各种媒体去收集，这种依赖人的层面是不可能做到滴水不漏，及时响应，并且信息全面的。这背后需要技术后盾去支持。</p>
+<ul>
+<li><p>如果为了增长销售额，促销的时候你如何做到你的所有商品价格一定比别的家便宜</p>
+</li>
+<li><p>如果为了做热点新闻，你如何在自己没有察觉到热点引爆的时候，知道热点动向，或许来自竞品，或许来自社交网络，甚至来自一些官网，从而第一时间采取动作响应</p>
+</li>
+<li><p>很多例行的年度，季度的行业分析报告，都是可以对业务产生指导的，甚至可以拿到很多不局限在自己产品内的行业上的大数据，这些大数据对业务决策是有指导性意见的</p>
+</li>
+<li><p>ASO SEO关键词，我们可以抓抓竞品的关键词是如何设定的，如何调整的，我们可以通过一些搜索优化平台，查询关键词的热度指标，来辅助人工决策</p>
+</li>
+<li><p>公开的社交网络信息（是否私人有法务风险这里不提），用户的行为都在社交网络上有所展现，我们如果能知道了解用户喜好与画像，我们是否能给用户提供更好的服务，从而留住用户？那么用户画像的数据来自哪呢？如果社交网络不提供相应接口，我们这条路就一定走不通么？</p>
+</li>
+</ul>
+<p><a href="https://www.anotherhome.net/2920?utm_source=tuicool&amp;utm_medium=referral" target="_blank" rel="noopener">女朋友的微博情绪监控</a></p>
+<p>这就是很好的一个抓取结合自然语言处理的例子，通过开放公开的社交网络，抓取用户/女朋友的信息，从而辅助技术策略，监控情绪，及时应对</p>
+<p>其实抓取可以做的事情多了去了，这里只是随便一提几个点而已，但这些点光靠人肉的方式去盯着，记录，思考，决策，是绝对无法做到<code>全方位</code>的信息覆盖的，这个时代信息就是金钱，时间就是金钱，用爬虫抓取的方式，用机器采取<code>全放位</code>的信息覆盖，用机器采取<code>监听监控</code>，从而第一时间掌握信息，做出决策，才是至关重要的</p>
+<p><strong>爬虫抓取系统</strong></p>
+<p>上面都是在说，抓取能干啥，希望能以<code>只有你想不到，没有做不到</code>的心态，去挖掘抓取的真正价值</p>
+<p>回到技术，爬虫系统就需要考虑的更多了，我不是专业做这些的，我懂得其实不多，但这种基本的以业务增长为目的的抓取也还是有一定的技术难度的</p>
+<ul>
+<li>抓取的能力<ul>
+<li>应对异步Ajax抓取</li>
+<li>应对有明确目标网站的抓取<ul>
+<li>定制化的抓取策略，标签级别的精细数据过滤</li>
+</ul>
+</li>
+<li>通用内容抓取<ul>
+<li>抓取整个页面，通过挖掘算法过滤无意义杂质元素，保留主体内容</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>抓取与反作弊<ul>
+<li>代理服务器    </li>
+<li>足够多足够丰富的IP池控制</li>
+<li>session，cookie，http请求头等各种信息凭证的伪造or真实凭证</li>
+<li>模拟真实用户的访问路径设置</li>
+<li>识别蜜罐，别让爬虫做无用功 </li>
+</ul>
+</li>
+</ul>
+<h2 id="获取用户"><a href="#获取用户" class="headerlink" title="获取用户"></a>获取用户</h2><p>产品线面临增长困境的时候，很大的一个原因就在于，如何获取用户，如何提高新增，有钱的产品可以花钱买量，买推广，买下百度的关键词竞价一年，买下苹果Appstore的搜索推荐（据说国外已经开始卖了，国内不知道开卖没有），买下微信游戏平台的推广合作，那流量哗哗的来，根本不愁。</p>
+<p>那么问题来了，没钱怎么办？作为技术人员，你没有推广资源，你怎么办？就只是无能为力么？</p>
+<h3 id="SEO-搜索引擎优化"><a href="#SEO-搜索引擎优化" class="headerlink" title="SEO 搜索引擎优化"></a>SEO 搜索引擎优化</h3><p>前端同学会非常了解，搜索引擎确实存在广告竞价排位，但如果一分钱没有，我们也是可以通过各种方式，提高我们业务网站对搜索引擎爬虫的亲和性，从而实现不花钱，但还是可以尽可能的引流量，正所谓二八原则，排行第一页前20%的链接可能占了所有页链接流量的80%，出了第一页流量会少的可怜，第一页如果排在末尾也是远远不如往上排效果好。</p>
+<p>这块我并不打算班门弄斧，因为这门学科其实是一种猫鼠游戏，SEO做多了搜索引擎会打压，SEO的方式公开了，搜索引擎会对不良的竞争策略主动屏蔽降权，因此SEO这门学问很多时候处于一种，不可说，不可多说，不可明面说的尴尬境地。看书的话你或许只能看到一些常规手段，但里面其实也需要很扎实的技术功底</p>
+<ul>
+<li>关键词研究</li>
+</ul>
+<p>所谓的搜索关键词匹配，深入做好SEO一定要做好关键词研究，抢占什么关键词？火热的关键词，大家都抢，你的网站的权重，网站内容的质量，是否能在那么多强占的人中脱引而出？火热流量你能抢到多少？不火热的关键词容易抢，但是流量低，可是流量低就没价值了么？如果关键词足够长尾（《长尾理论》一本书，可以好好研读），那么虽然长尾词流量低，但是长尾词是很精准，因此转化率会很高，那么怎么挖掘长尾词呢？</p>
+<p>关键词的研究是否能机器进行处理呢？如果你有1篇文章想做SEO，你可以让专业的SEO人员为你用常年积累下来的经验分析选择，选出最合适的关键词。但是如果你有10000篇文章想做SEO怎么办？如果你有10W，100W个页面想做SEO怎么办？这是否就又引入了分词，挖掘，自然语言处理，长尾词自动建设等技术。这已经是很有含金量的技术手段了。</p>
+<p>关键词还可以通过抓取竞品网站，分析竞品网站关键词如何设定，就是运用到了上文提到的抓取技术</p>
+<ul>
+<li>站内优化</li>
+</ul>
+<p>站内优化更需要丰富的前端知识，首先要让你的网站访问流畅，不卡顿，不会加载慢，这是基本的诉求，这样用户才不会很快流失，搜索引擎很重要的一个判断标准就是跳出率，所以做好自己的网站性能一定是有必要的</p>
+<p>其次做好网站sitemap优化，减少网站URL目录层级，都是从网站架构上让爬虫spider更方便的抓取内容的方式，深度URL设计优化，可以让URL中也带英文相关的关键词，等等</p>
+<p>更有甚对于传统的老式爬虫，js flash Ajax等爬虫不友好的网页代码，是否需要准备一个专门用来给爬虫使用的文字型引导站点（虽然现在主流搜索引擎的爬虫都支持Ajax的异步抓取了）</p>
+<ul>
+<li>外链建设</li>
+</ul>
+<p>通过合作建立外链，增加自己的网站的曝光度，流量越多搜索引擎也会为你调整权重和曝光策略，但是这里面盲目的散发外链，机械引入垃圾引导外链，又会增大用户的跳出率，从而被降权，因此外链建设也是需要仔细思考的</p>
+<h3 id="ASO-渠道市场优化"><a href="#ASO-渠道市场优化" class="headerlink" title="ASO 渠道市场优化"></a>ASO 渠道市场优化</h3><p>ASO是app渠道市场优化，并且这是和SEO相近似的一个类似猫鼠游戏的领域，现在有aso100，appannie等很多网站都提供付费与免费的专业ASO指引，这背后还是蕴含着很多技术能提供的策略引导，数据收集决策的</p>
+<p>ASO一些刷量刷榜公司会用人肉评论，人肉购买付费刷量的方式刷付费榜，但这种刷榜公司是处理不了免费榜的（苹果已经无数次的改变排行榜排名算法，还有反作弊降权账号策略了）。是的我们有钱可以刷榜，未来苹果在中国开放了ASO服务，我们也可以用钱来买榜，但是如果我们没钱，我们一样有很多可以做的</p>
+<ul>
+<li>关键词</li>
+</ul>
+<p>和SEO一模一样，每一个款app都可以填100个字的关键词，100个字字数有限，我们如何能选出效果最好最有效的关键词？每一个关键词各大ASO平台都提供了关键词指数查询，选关键词真靠拍脑袋想？你想到的100个字，真的都是高热点关键词吗？你查到的高热点关键词就一定会带来转化吗？（影视剧确实是高热点，你一个金融理财，里面扔一个火爆影视剧的关键词，就算你们被展示出来了，你觉得搜索影视剧的人看到金融理财会点进去选下载吗？）</p>
+<p>选关键词，选优质关键词，选高转化关键词，背后一定可以通过技术手段去提供有效地策略指导的（这也是这种付费ASO平台所存在的盈利模式），我们没钱的时候，我们是否能从技术出发，主动思考这些策略吗？</p>
+<p>关键词还可以通过一些ASO平台，抓取竞品网站ASO情况，分析竞品网站关键词变化情况，机器查询相关关键词ASO评分，从而对最终ASO100字决策进行指引。</p>
+<ul>
+<li>评论</li>
+</ul>
+<p>苹果市场的排行榜，用户评论是会对排名有影响这已经被验证了，我们能否用技术的方式引导用户去评论呢？弹个框直接跳转评论页面，这个是很普通的技术，用户看到<code>残忍的拒绝</code>真的会愿意点拒绝，那我们能否用足够有吸引力的文案和自己激励用户去评论么？引入ABTest去看看什么样的引导用户是最买账的</p>
+<h3 id="花钱付费推广反作弊"><a href="#花钱付费推广反作弊" class="headerlink" title="花钱付费推广反作弊"></a>花钱付费推广反作弊</h3><p>花钱付费推广，有钱能解决的就一定用不上技术么？（先不说存留和转化，这里只说新增）。</p>
+<p>去渠道市场花钱买了30W的激活，这30W的激活，渠道说30W你就认30W？就老老实实的掏钱？你要的是真正的用户，真正能带来收益的用户，如果渠道用脚本，用机器人骗，去作弊，你怎么办？难道不需要强大的技术手段，对于穷凶极恶的作弊措施，精准的发现识别，避免自己的经济损失，有钱也不能当冤大头啊</p>
+<h2 id="激发活跃"><a href="#激发活跃" class="headerlink" title="激发活跃"></a>激发活跃</h2><p>一个用户来了，可能是通过搜索，可能是应用市场渠道，可能是朋友推荐，社交网络传播。那么进来的用户如何在第一时间吸引用户把他留住呢？换句话说就是<code>新用户次日存留</code></p>
+<p>这里可以有很多产品设计，用一些激励，用一些新手引导，用一些任务，来让新用户留下，这里有什么技术可以做的吗？</p>
+<h3 id="Deeper-Link"><a href="#Deeper-Link" class="headerlink" title="Deeper Link"></a>Deeper Link</h3><p>首先介绍2个词</p>
+<ul>
+<li>Deep Link</li>
+</ul>
+<p>Deep Link其实就是scheme这种技术，能让用户在浏览器里无缝的跳转到已经安装的app里，跳转到已经安装的App里的指定页面，能让开发者将浏览器里的数据，登陆信息也好，浏览记录也好，都传给App，让App做贴心的展示，让用户没有从一个浏览器，到打开另一App的阻断感，直接在App里就能还原用户刚刚在浏览器里的场景，这样可以大幅度增加用户的舒适度</p>
+<p>这项技术其实被广泛的运用在用户激活与唤醒，也就是长期用户存留上，为什么？这项技术的前提必须是已经安装App了，可能用户暂时还没想起来使用App，当他在社交网络里，被某一篇来自WAP的易于传播的网页所吸引，点开WAP网页后，通过这种高体验度的方式唤醒App，成为当日的活跃用户，这是已经被验证有效的，还可以结合社交网络病毒传播的增长方式</p>
+<ul>
+<li>Deeper Link</li>
+</ul>
+<p>Deep Link的最大问题在于只对已经安装的用户有效，对于没有安装的用户，他连app都没下，我怎么从网页给App传数据啊？我怎么让用户还原在网页上的场景啊？我怎么无缝衔接网页的登陆状态，浏览记录啊？</p>
+<p>所以我们需要Deeper Link，这可以说是一种黑科技的存在，虽然技术细节实现了并没有那么神秘。每个App都是一个独立沙盒，就连浏览器本身也是一个独立App，之所以是黑科技，他在操作系统层面其实是不希望一个App有这么高的权限去干扰另一个App的，更何况是干扰一个还未安装的App，因此移动端操作系统用沙盒将之隔离，只开放有限的几种通信方式，但是并做不到 Deeper Link。我们是通过一些其他的方式来实现的。并且由于操作系统不同，各个操作系统可能有自己独特的<code>绕过</code>的思路</p>
+<p>可以想象一个场景，用户在社交网络的WebView里，或者专业浏览器App里，看到了已于推广传播的WAP网页，用户被网页上的内容，吸引，已经和网页产生了互动，并且留下了互动的记录，此时此刻我们引导用户去下载App将得到事半功倍的效果。如果用户下载App的时候他惊讶的发现，他直接可以延续刚才在WAP上的账号，可以延续刚才玩的活动游戏，可以延续刚才看的新闻，甚至还因为在活动看过某个自己喜欢的宝贝，在下载App打开惊喜的发现，这个宝贝送给他了，那么这种 Deeper Link 的产品设计，将会对新用户激活率产生无与伦比的助力，并且这种方式依然可以借助WAP在社交网络内进行病毒式推广营销</p>
+<p>这项技术还可以用于渠道统计，要知道iOS是没有渠道号的概念的，我们想做推广打渠道号，来检测这个推广位好坏，在iOS是无法实现的，因为iOS只有唯一渠道Appstore，但是友盟/TalkingData依然也能从唯一渠道里，识别出用户在下载前来自哪个网页哪个广告产生的点击下载，这里面依然使用了 Deeper Link（其实iTunseconnect后来也提供了渠道号式的解决方案，可以在itunes链接里用特别的链接标记来在iTunseconnect里查看，但这功能还是有一些限制）</p>
+<p><strong>Deeper Link的技术实现</strong></p>
+<ul>
+<li>设备指纹，设备唯一识别</li>
+<li>SFViewController iOS9 cookie互通（建议放弃不要使用！！）</li>
+<li>js clipboard safari api iOS10（推荐）</li>
+</ul>
+<p>我之前就专门写过一篇在iOS上的DeeperLink的文章，<a href="http://awhisper.github.io/2016/05/11/iOSBrowserDomainBridge/" target="_blank" rel="noopener">iOS app与浏览器深度链接 DeeperLink</a>，还是需要强调的是，这毕竟是一种<code>黑科技</code>，随着操作系统不断地更新，很多方式也不会是一成不变，所以这篇文章，我也会与时俱进的进行调整，上次简单追加了最新的推荐方案，但是感觉写的不是很清楚，比较随意一笔带过，导致很多人还会找我咨询旧的被淘汰的方案，改天有时间我重写重新梳理一下吧</p>
+<p>至于安卓，我文章里有些技术是通用的，有些技术是iOS专有的，但安卓也是有自己独有的类似方案的，比如说往安装包里植入数据信息等</p>
+<h2 id="用户存留"><a href="#用户存留" class="headerlink" title="用户存留"></a>用户存留</h2><p>这个就相当于长时间存留，新增用户来了，被你激活了，那么接下来他会不会持续使用就体现在用户存留，长时间存留里面，这里和上面的用户激活一样，很大程度归功于产品设计，功能易用，内容吸引人。那么技术在这里能做啥呢？</p>
+<h3 id="技术保证App稳定-性能流畅"><a href="#技术保证App稳定-性能流畅" class="headerlink" title="技术保证App稳定/性能流畅"></a>技术保证App稳定/性能流畅</h3><p>这个就比较泛了，产品设计可以留住吸引住用户，但App经常crash的话再好的产品也留不住任何人，因此客户端的最基本的性能与流畅度其实是一个很重要的事情，这里面要说深了有很多方面，<code>crash率控制</code>，<code>异常保护</code>，<code>性能优化</code>，<code>完善/自动化测试</code>，甚至<code>动态修复</code>。</p>
+<p>但这里不深究的原因其实是，即便我们不是专门在做增长，在做Growth，这几点都一定要牢记并且付诸行动的。</p>
+<p>如果没有这几点的保证，如果App稳定性流畅性上存在明显短板，增长这件事情别想</p>
+<h3 id="个性化推荐算法体系"><a href="#个性化推荐算法体系" class="headerlink" title="个性化推荐算法体系"></a>个性化推荐算法体系</h3><p>尤其是对于那些基于内容的产品与服务，一整套个性化推荐算法体系，在我看来是增长持续动力，为什么？</p>
+<p>现在是一个信息爆炸的社会，社交网络，自媒体，短视频，新闻，大量的信息充斥在现在的信息流之中，而人看到屏幕一串信息的时候，在最先看到的几条内容里，投入精力和关注度最高的，后面看到的信息慢慢就丧失了兴趣。在这样的背景之下，不能再像以前一样只按热度为所有的用户提供一模一样的信息流，因为最上面最能获得用户关注度的位置是有限的，不是所有人都喜欢通过热度选出来的同一条信息，因此个性化，千人千面的推荐，投其所好，抓人眼球的推荐，是可以牢牢地抓住用户兴趣的。</p>
+<p>个性化推荐国内堪称典范的就是<code>今日头条</code>了吧，他们背后所依赖的深度算法，后端架构，一整套个性化推荐体系涵盖了（用户数据挖掘，用户画像，用户数据追踪，机器学习），成就了今日头条的Feed流，这里面每一项感觉都是非常非常深得技术，我这个客户端开发出来的感觉真是太nb，太伟大，我虽然不太懂，我也说说我自己对个性化推荐这个技术的一些看法（项亮写了一本书《推荐系统实战》非常推荐阅读）</p>
+<p><strong>我个人对个性化推荐认知还非常不成熟，希望能有人给提出建议</strong></p>
+<p>我这方面没啥经验，看着同事们摸索跟着同事们学习围观看来的╮(╯_╰)╭</p>
+<p><strong>个性化推荐的模型</strong></p>
+<p>个性化推荐的体系结构下一般都包含着很多种模型，每种模型的设计出发点，推荐思路都是不同的，真正的推荐系统应该是综合了多种推荐模型的结果</p>
+<ul>
+<li>内容推荐 contentBased</li>
+<li>相关推荐</li>
+<li>协同推荐 - 用户  userCF</li>
+<li>协同推荐 - 商品  itemCF</li>
+<li>热度热搜推荐</li>
+<li>人工精选推荐</li>
+<li>用户画像推荐</li>
+<li>等等</li>
+</ul>
+<p>推荐系统一定是有多种模型共同作用产生的结果，并且模型之间还要有动态调权的机制，通过不断的试验/训练，来找到合适的多模型之间的权重，以及RANK排行，这背后无论是模型建设还是调权排行，背后都需要机器学习数据挖掘的知识</p>
+<p>同时还需要一套反馈系统，对于用户的<code>点赞</code>，<code>转发</code>，<code>不喜欢</code>等行为，为推荐系统进行反馈，从而矫正出更完善更适合目标用户的整体模型架构</p>
+<p><strong>特征库的挖掘</strong></p>
+<p>推荐很重要的就是用机器挖掘Tag，对每一个人打Tag，对每一个商品/文章打Tag，一个人喜欢看电影，喜欢玩游戏，可以自己给自己打上<code>电影</code>/<code>游戏</code>的标签，刚上映的大片《金刚狼》看过的人可以打上<code>好莱坞/漫威/金刚狼/科幻/电影/X-Men</code>等标签，这都是由人脑打出来的标签，机器能否打出这样精准的细粒度的标签？就全靠数据挖掘/自然语言处理/机器学习等技术了</p>
+<ul>
+<li>基于人的行为进行特征挖掘，挖掘出来的Tag，可以被称作一种用户画像</li>
+<li>基于物的内容进行特征挖掘，挖掘出来的Tag，就是物品的特征</li>
+<li>Tag树建设</li>
+</ul>
+<p>Tag本身是零散的，网状的，有层级关系的，不同于分类（分类是人工的，有规律的，非网状的），由于Tag的这些特性，零散的Tag之间也应该进一步挖掘出Tag与Tag的关系，这就是Tag树，<code>油条</code>，<code>葡萄酒</code>这些Tag都属于<code>饮食</code>这一Tag之下的，而<code>饮食</code>又算是<code>生活休闲</code>这一Tag之下，我们第一步挖出了成千上万的Tag，第二部就是要把这些Tag进一步挖掘他们之间的联系，建立这种Tag树</p>
+<p>有了这些特征库，我们的推荐算法就可以涵盖到用户画像层面的推荐，物品协同，人协同的推荐也会通过Tag的体系更加精准</p>
+<p><strong>个性化推荐算法的难题</strong></p>
+<ul>
+<li>用户冷启动</li>
+</ul>
+<p>我们的很多模型都是根据一定的用户数据来推荐的</p>
+<blockquote>
+<p>相关推荐：用户看过哪些文章，推荐类似的</p>
+<p>协同推荐: 看过这个东西的用户，还看过哪些东西，推荐类似的</p>
+<p>用户画像推荐：用户数据记录，分析用户喜好哪个领域，推荐类似的</p>
+</blockquote>
+<p>问题来了，一个新用户刚刚来到我们的产品，他什么记录都没有，纯新用户，没有画像，没浏览过商品，没有好友，怎么办？</p>
+<p>这就是所谓的个性化推荐-冷启动</p>
+<p>其实解决办法我们准备的那些<code>热门推荐</code>，<code>人工推荐</code>模型在此时可以派上用场，但只能这样了么？</p>
+<p>其实也不尽然，用户画像没有要求必须一定是在你们产品里的用户数据，挖掘出来的用户画像，完全可以借助社交网络，可以使用某些社交网络公司提供的现成API接口</p>
+<p>就算社交网络没有提供任何API，也可以是拿出我们上面的法宝<code>爬虫抓取</code>，通过爬虫抓取来用户的海量数据，通过我们自己的挖掘算法生成用户画像</p>
+<ul>
+<li>越推荐越窄</li>
+</ul>
+<p>这个我感觉是个性化推荐里最头疼的问题了，所有基于用户画像，基于用户浏览记录，基于协同，基于相关，各种推荐都指向了一个结果，机器通过用户已表现出来的行为，推荐出相应的结果，这里有一个最重要的细节就是<code>用户已表现的行为</code>，一个用户在网络上面展示出来的喜好可能并不代表他的全部喜好，他喜爱<code>摄影</code>，在网络上留下了各种与摄影有关的痕迹与数据，但这并不代表他不喜欢<code>电影</code>，他只是没在有限的网络数据里体现电影这一兴趣而已，但是由于<code>机器会进一步推荐摄影</code>这一结果，导致用户会不自觉的点选更多<code>摄影</code>的内容，从而这部分内容会逐渐侵占<code>电影</code>这一推荐权重，从而用户以更低的几率留下关于<code>电影</code>的数据痕迹。最后形成了一种滚雪球效应，推荐面越来越窄</p>
+<p>这应该是一开始搭建个性化几乎人人都会踩到的一个坑，如何在推荐<code>用户感兴趣</code>的内容的同时，还能推荐<code>用户可能感兴趣</code>机器还猜不到的内容。因此传统的<code>热度推荐</code>，<code>人工推荐</code>也是不可或缺的，在算法调权或者机器学习训练之中，来平衡解决个性化推荐的<code>越推荐越窄</code>的这一最大难题</p>
+<p>吐槽：说真的，我现在用今日头条这个问题很严重，翻了几个火影， 紧接着就满屏幕火影，翻几个妹子图，满屏幕妹子图了</p>
+<h3 id="基于Push的精准用户唤醒体系"><a href="#基于Push的精准用户唤醒体系" class="headerlink" title="基于Push的精准用户唤醒体系"></a>基于Push的精准用户唤醒体系</h3><p>用户唤醒是指，一部分用户已经不来你的产品了，可能删除了App，也可能并没有删除App，只是很少启动了，这时候如何唤醒这类用户呢？恩，没删App那我们就给他发push，删了App咋办？发短信骚扰（这个确实很骚扰，但我们技术的价值就体现在，用机器和算法找到对的人，找到那些不觉得骚扰，还有需求的人）</p>
+<ul>
+<li>Push的到达率</li>
+</ul>
+<p>这就和技术相关了，iOS这一点可能感知并不明显，因为Push只能依靠苹果，到不到达的，我们能做的能力有限，但是安卓就不一样了，安卓的进程保活技术到现在也是炙手可热，值得深挖从而保证push的准确到达，同时安卓还可以和对应机型设备，联系对应的push渠道，华为/小米就像苹果一样，为自己的设备有一套专门的push服务</p>
+<ul>
+<li>Push的精准度</li>
+</ul>
+<p>全体发Push是一种严重的骚扰，用多了原本正在使用app的活跃用户也会被你骚扰而走，那么挑选合适的发push的人，定向精准的发push就成了技术的挑战</p>
+<p>我们需要基于用户的数据，用户的喜好，用户的画像，来发送不同的内容，不同的商品or文章or运营活动</p>
+<p>我们更需要对于用户的行为进行筛选，筛选出哪些有可能要离开的，有可能长期不来的，有可能以前有过深度使用甚至付费但长期不来的（这种召回几率更加的大），筛选出这些用户后再给予不同层面的激励，就能更好的实现用户唤醒</p>
+<h3 id="全面可配的自动化运营机制"><a href="#全面可配的自动化运营机制" class="headerlink" title="全面可配的自动化运营机制"></a>全面可配的自动化运营机制</h3><p>之前提过产品运营，产品运营会以各种活动，促销等形式来不断的提高产品用户的活跃度，运营活动是永不停止的，不可能每一个活动都完全当做一个产品feature来下大力度研发/发版，就算是纯WAP网页的运营活动，也不可能每一个活动都完全重写一个活动页面。</p>
+<p>如何建立一套可配置的，自动化运营机制，这是给所有研发的一个挑战，确实PM的需求层出不穷，不可避免的会需要重新开发迭代，但终归运营活动还是有一定套路的，有一定套路就有规律可循，有规律可循就可以把它自动化配置化，可以交给pm在后台配置后发布的套路活动，可以节省巨大的研发人力和研发成本。</p>
+<p>同时这套自动化运营机制最好从架构上灵活设计，支持各种扩展不断迭代，这样就运营活动的工作效率会成倍提高</p>
+<h2 id="病毒营销"><a href="#病毒营销" class="headerlink" title="病毒营销"></a>病毒营销</h2><p>又要回到之前反复提到一点了，病毒营销也是一个全看PM怎么设计怎么营销的事情了，但是我们的技术一定有其中可以发力的点，我们就是要寻找这样的技术突破，来像放大镜一样，把病毒营销的效果，成倍放大</p>
+<p>病毒营销这种场景，鉴于他极度依赖社交网络传播的特性，想要传播快，无意WAP H5网页是最好的载体，所以我们的策略可以从优化H5种种环节入手</p>
+<h3 id="Deep-Link-or-Universal-Link"><a href="#Deep-Link-or-Universal-Link" class="headerlink" title="Deep Link or Universal Link"></a>Deep Link or Universal Link</h3><p>如果你的产品病毒营销的案例在朋友圈爆发，大家纷纷点赞转发，那些已经是你的用户但是有日子没来了，他看到了这个网页，直接参与活动就唤醒打开了App，这是不是就是你所期望的用户唤醒？没错！</p>
+<p>你自信满满的拿出了Deep Link，也就是scheme技术，准备在WAP里大搞特搞，突然发现？WHAT!!微信屏蔽了！这时候就需要技术开动脑子了，不然如果每次都让用户参与营销活动的时候，<code>点右上角</code>，<code>浏览器打开</code>，这个转化率太低了。iOS试试Universal Link吧（当然这也是个猫鼠游戏，毕竟你在别人的app里面在搞事情）</p>
+<h3 id="Deeper-Link-与社交化分享拉新"><a href="#Deeper-Link-与社交化分享拉新" class="headerlink" title="Deeper Link 与社交化分享拉新"></a>Deeper Link 与社交化分享拉新</h3><p>病毒营销难道只用来唤醒老用户？当然不是，我们最大的关注点还是拉来新用户！那么好，在各种WAP活动中进行的病毒式营销，如何引导别人下载呢？如何让别人下载后激活的概率更大呢？</p>
+<p>没错Deeper Link，至少在现在的Deeper Link 方案里，设备指纹与剪切板，都是可以在微信手百等第三方浏览器里正常工作的</p>
+<h2 id="增加收入"><a href="#增加收入" class="headerlink" title="增加收入"></a>增加收入</h2><p>增加收入这块我就不再提什么PM们的促销活动了。就说我们技术能做的</p>
+<h3 id="ABTest"><a href="#ABTest" class="headerlink" title="ABTest"></a>ABTest</h3><p>什么东西好卖，什么东西现在销量高，当你有数以万计的商品的时候，怎么选出最好卖的东西？ABTest，ABTest的一些详细介绍我就反复介绍了</p>
+<h3 id="个性化推荐体系"><a href="#个性化推荐体系" class="headerlink" title="个性化推荐体系"></a>个性化推荐体系</h3><p>什么人喜欢什么东西，会买什么东西，什么人刚买了什么，是否需要买别的东西，什么人的朋友买了这个东西，他会不会买，如果我们的技术有能力做出这样的判断，无疑对于销售会大幅度促进</p>
+<p>这就是个性化推荐体系，个性化推荐体系的细节我也不反复介绍了，多说一句，最开始的个性化推荐应用就是出现在电商网站的，亚马逊用它深厚的技术，在个性化推荐与售卖相结合上，走在了前列</p>
+<h1 id="专注目标"><a href="#专注目标" class="headerlink" title="专注目标"></a>专注目标</h1><p>我们一口气聊了非常非常多的能对增长有促进的技术，而且这些只是我自己想到的，肯定还有无数的增长技术没有想到，也没有提到。</p>
+<p>但绝不是让大家面面俱到的把一切都做上，《增长黑客》书里提到有一条必备素质就是<code>专注目标</code>，而且看《增长黑客》的时候，你会发现书中举得各种例子，没有一个是这种方方面面全做的，都是在某个细节做到极致的案例。</p>
+<p>这就是<code>专注目标</code>的意义，每个产品线都有自己产品线的情况，每个产品线应该采取的方式绝对是不同的，成功的产品线说起经验来或许头头是道，但你拿过来复制绝对不代表一定能成功。因为行业在变，环境也在变。</p>
+<p>不变的是什么，是我们要基于自己业务线的数据进行分析，进行思考，寻找自己业务线最大的痛点，寻找自己业务线最大的短板，从而有针对性的<code>重拳出击</code>，<code>专注目标</code>，虽然快速迭代，快速试错是一种心态，但我们还是要本着一击必中的决心去履行增长黑客的职责</p>
+<p>而且还有一点，今天我们聊了很多都是具体技术，但真正一个技术是否能在产品中运用的得到，最终收获数据增长，一定要有技术结合业务的思维，再好的技术你不在业务中得到正向验证也是没有意义的，所以增长黑客一定是能够全面的思考，<code>研发/产品/运营/设计/用研</code>的角色</p>
+<p>从一个研发人员，转变成一个增长黑客，去从一片荆棘和迷雾中趟出一条数据增长的血路，真的是一件挺有挑战的事情。</p>
+<p>PS:越说越像鸡汤了，其实我本意不是在灌输啥类似创业的鸡汤，只是当你跳出研发的思维后，想想业务，再想想如何用技术切合业务，背后的挑战真的很有意思</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Growth/" rel="tag"># Growth</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/03/12/VKSniffer/" rel="next" title="VKSniffer 网络请求嗅探器">
+                <i class="fa fa-chevron-left"></i> VKSniffer 网络请求嗅探器
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/04/15/MySempornaDive/" rel="prev" title="探秘水下世界：仙本那OW+AOW潜水记">
+                探秘水下世界：仙本那OW+AOW潜水记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Growth"><span class="nav-number">1.</span> <span class="nav-text">Growth</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#增长黑客"><span class="nav-number">1.1.</span> <span class="nav-text">增长黑客</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Growth与方法论"><span class="nav-number">1.2.</span> <span class="nav-text">Growth与方法论</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Growth里的技术"><span class="nav-number">2.</span> <span class="nav-text">Growth里的技术</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#数据为王"><span class="nav-number">2.1.</span> <span class="nav-text">数据为王</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建完整的数据采集监控体系-数据可视化"><span class="nav-number">2.1.1.</span> <span class="nav-text">搭建完整的数据采集监控体系/数据可视化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#搭建强大的ABTest系统"><span class="nav-number">2.1.2.</span> <span class="nav-text">搭建强大的ABTest系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#信息通透"><span class="nav-number">2.2.</span> <span class="nav-text">信息通透</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#全方位的抓取-爬虫系统"><span class="nav-number">2.2.1.</span> <span class="nav-text">全方位的抓取/爬虫系统</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#获取用户"><span class="nav-number">2.3.</span> <span class="nav-text">获取用户</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SEO-搜索引擎优化"><span class="nav-number">2.3.1.</span> <span class="nav-text">SEO 搜索引擎优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASO-渠道市场优化"><span class="nav-number">2.3.2.</span> <span class="nav-text">ASO 渠道市场优化</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#花钱付费推广反作弊"><span class="nav-number">2.3.3.</span> <span class="nav-text">花钱付费推广反作弊</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#激发活跃"><span class="nav-number">2.4.</span> <span class="nav-text">激发活跃</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Deeper-Link"><span class="nav-number">2.4.1.</span> <span class="nav-text">Deeper Link</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#用户存留"><span class="nav-number">2.5.</span> <span class="nav-text">用户存留</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#技术保证App稳定-性能流畅"><span class="nav-number">2.5.1.</span> <span class="nav-text">技术保证App稳定/性能流畅</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个性化推荐算法体系"><span class="nav-number">2.5.2.</span> <span class="nav-text">个性化推荐算法体系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于Push的精准用户唤醒体系"><span class="nav-number">2.5.3.</span> <span class="nav-text">基于Push的精准用户唤醒体系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#全面可配的自动化运营机制"><span class="nav-number">2.5.4.</span> <span class="nav-text">全面可配的自动化运营机制</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#病毒营销"><span class="nav-number">2.6.</span> <span class="nav-text">病毒营销</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Deep-Link-or-Universal-Link"><span class="nav-number">2.6.1.</span> <span class="nav-text">Deep Link or Universal Link</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deeper-Link-与社交化分享拉新"><span class="nav-number">2.6.2.</span> <span class="nav-text">Deeper Link 与社交化分享拉新</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#增加收入"><span class="nav-number">2.7.</span> <span class="nav-text">增加收入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ABTest"><span class="nav-number">2.7.1.</span> <span class="nav-text">ABTest</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#个性化推荐体系"><span class="nav-number">2.7.2.</span> <span class="nav-text">个性化推荐体系</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#专注目标"><span class="nav-number">3.</span> <span class="nav-text">专注目标</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '扯淡：用技术玩转业务增长 -- 增长黑客', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

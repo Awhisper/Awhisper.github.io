@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Hybrid," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相信很多人都在项目里熟练使用各种Hybrid技术，无论是使用了知名得 WebViewJavascriptBridge 框架来做自己的Hybrid Web容器，又或是自己从头着手写了一个满足自己业务需求的bridge，从而构建起自己的Hybrid Web容器，也有的干脆直接使用了cordova 这一大型Hybrid容器框架，cordova + ionic 来进行Hybrid的开发 拆解学习框架源码是">
+<meta name="keywords" content="Hybrid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始">
+<meta property="og:url" content="http://yoursite.com/2018/01/02/hybrid-jscomunication/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="相信很多人都在项目里熟练使用各种Hybrid技术，无论是使用了知名得 WebViewJavascriptBridge 框架来做自己的Hybrid Web容器，又或是自己从头着手写了一个满足自己业务需求的bridge，从而构建起自己的Hybrid Web容器，也有的干脆直接使用了cordova 这一大型Hybrid容器框架，cordova + ionic 来进行Hybrid的开发 拆解学习框架源码是">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-27T10:15:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始">
+<meta name="twitter:description" content="相信很多人都在项目里熟练使用各种Hybrid技术，无论是使用了知名得 WebViewJavascriptBridge 框架来做自己的Hybrid Web容器，又或是自己从头着手写了一个满足自己业务需求的bridge，从而构建起自己的Hybrid Web容器，也有的干脆直接使用了cordova 这一大型Hybrid容器框架，cordova + ionic 来进行Hybrid的开发 拆解学习框架源码是">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/01/02/hybrid-jscomunication/"/>
+
+
+
+
+
+  <title>从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/hybrid-jscomunication/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T19:58:50+08:00">
+                2018-01-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/02/hybrid-jscomunication/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/01/02/hybrid-jscomunication/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/01/02/hybrid-jscomunication/" class="leancloud_visitors" data-flag-title="从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>相信很多人都在项目里熟练使用各种Hybrid技术，无论是使用了知名得 <a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a> 框架来做自己的Hybrid Web容器，又或是自己从头着手写了一个满足自己业务需求的bridge，从而构建起自己的Hybrid Web容器，也有的干脆直接使用了<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a> 这一大型Hybrid容器框架，<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a> + <a href="http://www.ionic-china.com/" target="_blank" rel="noopener">ionic</a> 来进行Hybrid的开发</p>
+<p>拆解学习框架源码是一个好事，但是在拆解优秀框架源码的背后，如何将多个优秀源码的精华打碎重塑，结合自己的产品业务需求重新组合成为适合自己的，并且扎实掌握可以灵活修改自如控制的代码，这也算是另一个层面的提升。</p>
+<ul>
+<li>选择合适的JS通信方案（第一篇）</li>
+<li>实现基本的WebView容器能力（第二篇 待续）</li>
+<li>尝试拓展WebView容器的额外能力（第三篇 待续）</li>
+</ul>
+<p>这系列文章我想表达的并不是在推广什么我自己的新Bridge轮子，也不是针对某个开源Bridge框架进行深度的源码分析。我们从看开源框架轮子如何设计，如何使用，源码如何工作的思维方式中跳出来</p>
+<p>换一种模式去从目的出发，从需求出发，思考当你什么都没有的时候，你要从零思考构建一个hybrid框架的时候，你都要考虑哪些方面？这些方面采用怎样的设计思想能做到未来在使用中灵活自如，不至于面临局限</p>
+<p>这一篇先重点聊聊 <strong>JS与Native通信的通信方案</strong></p>
+<h1 id="几种JS-Native相互通信方式的介绍"><a href="#几种JS-Native相互通信方式的介绍" class="headerlink" title="几种JS Native相互通信方式的介绍"></a>几种JS Native相互通信方式的介绍</h1><p>大家可能看了很多大框架源码，无论是<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a>还是<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a>他们核心的通信方式就都是 <strong>假跳转请求拦截</strong></p>
+<p>但其实JS与Native通信并不止一种方式，还有很多种通信方式，尤为重要的是，不同的通信方式有着不同的特点，有的甚至虽然受限于安卓/苹果平台差异不通用，但独有的优点却是 <strong>假跳转请求拦截</strong> 无法比拟的</p>
+<h2 id="JS-调用-Native-的几种通信方案"><a href="#JS-调用-Native-的几种通信方案" class="headerlink" title="JS 调用 Native 的几种通信方案"></a>JS 调用 Native 的几种通信方案</h2><ul>
+<li>假跳转的请求拦截</li>
+<li>弹窗拦截<ul>
+<li>alert()</li>
+<li>prompt()</li>
+<li>confirm()</li>
+</ul>
+</li>
+<li>JS上下文注入<ul>
+<li>苹果JavaScriptCore注入</li>
+<li>安卓addJavascriptInterface注入</li>
+<li>苹果scriptMessageHandler注入</li>
+</ul>
+</li>
+</ul>
+<h2 id="Native-调用-JS-的几种通信方案"><a href="#Native-调用-JS-的几种通信方案" class="headerlink" title="Native 调用 JS 的几种通信方案"></a>Native 调用 JS 的几种通信方案</h2><p>JS是一个脚本语言，在设计之初就被设计的任何时候都可以执行一段字符串js代码，换句话说，任何一个js引擎都是可以在任意时机直接执行任意的JS代码，我们可以把任何Native想要传递的消息/数据直接写进JS代码里，这样就能传递给JS了</p>
+<ul>
+<li>evaluatingJavaScript 直接注入执行JS代码</li>
+</ul>
+<p>大家在PC上用电脑，用Chrome的时候都知道，可以直接用’javascript:xxxx’来简单的执行一些JS代码，弹个框，这个方法只有安卓可以用，因为iOS必须先将url字符串生成Request再交给webview去load，这种’javascript:xxxx’生成request会失败</p>
+<ul>
+<li>loadUrl 浏览器用’javascript:’+JS代码做跳转地址</li>
+</ul>
+<p>WKWebView官方提供了一个Api，可以让WebView在加载页面的时候，自动执行注入一些预先准备好的JS</p>
+<ul>
+<li>WKUserScript WKWebView的addUserScript方法，在加载时机注入</li>
+</ul>
+<a id="more"></a>
+<h1 id="JS-调用-Native-的几种通信方案-1"><a href="#JS-调用-Native-的几种通信方案-1" class="headerlink" title="JS 调用 Native 的几种通信方案"></a>JS 调用 Native 的几种通信方案</h1><h2 id="假跳转的请求拦截"><a href="#假跳转的请求拦截" class="headerlink" title="假跳转的请求拦截"></a>假跳转的请求拦截</h2><p>何谓 <strong>假跳转的请求拦截</strong> 就是由网页发出一条新的跳转请求，跳转的目的地是一个非法的压根就不存在的地址比如</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//常规的Http地址</span><br><span class="line">https://wenku.baidu.com/xxxx?xx=xx</span><br><span class="line">//假的请求通信地址</span><br><span class="line">wakaka://wahahalalala/action?param=paramobj</span><br></pre></td></tr></table></figure>
+<p>看我下面写的那条假跳转地址，这么一条什么都不是的扯淡地址，直接放到浏览器里，直接扔到webview里，肯定是妥妥的什么都打不开的，而如果在经过我们改造过的hybrid webview里，进行拦截不进行跳转</p>
+<p>url地址分为这么几个部分</p>
+<ul>
+<li>协议：也就是http/https/file等，上面用了wakaka</li>
+<li>域名：上面的 wenku.baidu.com 和 wahahalalala</li>
+<li>路径：上面的 xxxx?或action？</li>
+<li>参数：上面的 xx=xx或param=paramobj</li>
+</ul>
+<p>如果我们构建一条假url</p>
+<ul>
+<li>用协议与域名当做通信识别</li>
+<li>用路径当做指令识别</li>
+<li>用参数当做数据传递</li>
+</ul>
+<p>客户端会无差别拦截所有请求，真正的url地址应该照常放过，只有协议域名匹配的url地址才应该被客户端拦截，拦截下来的url不会导致webview继续跳转错误地址，因此无感知，相反拦截下来的url我们可以读取其中路径当做指令，读取其中参数当做数据，从而根据约定调用对应的native原生代码</p>
+<p>以上其实是一种 <strong>协议约定</strong> 只要JS侧按着这个约定协议生成假url，native按着约定协议拦截/读取假url，整个流程就能跑通。</p>
+<p>完全可以不用按着我写的这种方式约定协议，可以任意另行约定协议比如，协议当做通信识别，域名当做模块识别，路径当做指令识别，参数当做数据传递等等，协议协议，任何一种合理的约定都可以，都可以正常的让JS与Native进行通信</p>
+<p><strong>假跳转的请求拦截-JS发起调用</strong></p>
+<p>JS其实有很多种方式发起假请求，跟发起一个新请求没啥两样，只要按着 <strong>协议约定</strong> 生成假请求地址，正常的发起跳转即可，任何一种方式都可以让客户端拦截住</p>
+<ul>
+<li>A标签跳转</li>
+</ul>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//在HTML中写上A标签直接填写假请求地址</span><br><span class="line"><span class="tag">&lt;<span class="name">a</span> <span class="attr">href</span>=<span class="string">"wakaka://wahahalalala/action?param=paramobj"</span>&gt;</span>A标签A标签A标签A标签<span class="tag">&lt;/<span class="name">a</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>原地跳转</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在JS中用location.href跳转</span></span><br><span class="line">location.href = <span class="string">'wakaka://wahahalalala/action?param=paramobj'</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>iframe跳转</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在JS中创建一个iframe，然后插入dom之中进行跳转</span></span><br><span class="line">$(<span class="string">'body'</span>).append(<span class="string">'&lt;iframe src="'</span> + <span class="string">'wakaka://wahahalalala/action?param=paramobj'</span> + <span class="string">'" style="display:none"&gt;&lt;/iframe&gt;'</span>);</span><br></pre></td></tr></table></figure>
+<p><strong>假跳转的请求拦截-客户端拦截</strong></p>
+<ul>
+<li>安卓的拦截方式 <code>shouldOverrideUrlLoading</code></li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">shouldOverrideUrlLoading</span><span class="params">(WebView view, String url)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//1 根据url，判断是否是所需要的拦截的调用 判断协议/域名</span></span><br><span class="line">    <span class="keyword">if</span> (是)&#123;</span><br><span class="line">      <span class="comment">//2 取出路径，确认要发起的native调用的指令是什么</span></span><br><span class="line">      <span class="comment">//3 取出参数，拿到JS传过来的数据</span></span><br><span class="line">      <span class="comment">//4 根据指令调用对应的native方法，传递数据</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.shouldOverrideUrlLoading(view, url);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>iOS的UIWebView的拦截方式 <code>webView:shouldStartLoadWithRequest:navigationType:</code></li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)webView:(<span class="built_in">UIWebView</span> *)webView shouldStartLoadWithRequest:(<span class="built_in">NSURLRequest</span> *)request navigationType:(<span class="built_in">UIWebViewNavigationType</span>)navigationType</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//1 根据url，判断是否是所需要的拦截的调用 判断协议/域名</span></span><br><span class="line">    <span class="keyword">if</span> (是)&#123;</span><br><span class="line">      <span class="comment">//2 取出路径，确认要发起的native调用的指令是什么</span></span><br><span class="line">      <span class="comment">//3 取出参数，拿到JS传过来的数据</span></span><br><span class="line">      <span class="comment">//4 根据指令调用对应的native方法，传递数据</span></span><br><span class="line">      <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">      <span class="comment">//确认拦截，拒绝WebView继续发起请求</span></span><br><span class="line">    &#125;    </span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>iOS的WKWebView的拦截方式 <code>webView:decidePolicyForNavigationAction:decisionHandler:</code></li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)webView:(<span class="built_in">WKWebView</span> *)webView decidePolicyForNavigationAction:(<span class="built_in">WKNavigationAction</span> *)navigationAction decisionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">WKNavigationActionPolicy</span>))decisionHandler &#123;</span><br><span class="line">    <span class="comment">//1 根据url，判断是否是所需要的拦截的调用 判断协议/域名</span></span><br><span class="line">    <span class="keyword">if</span> (是)&#123;</span><br><span class="line">      <span class="comment">//2 取出路径，确认要发起的native调用的指令是什么</span></span><br><span class="line">      <span class="comment">//3 取出参数，拿到JS传过来的数据</span></span><br><span class="line">      <span class="comment">//4 根据指令调用对应的native方法，传递数据</span></span><br><span class="line"></span><br><span class="line">      <span class="comment">//确认拦截，拒绝WebView继续发起请求</span></span><br><span class="line">        decisionHandler(<span class="built_in">WKNavigationActionPolicyCancel</span>);</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        decisionHandler(<span class="built_in">WKNavigationActionPolicyAllow</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="弹窗拦截"><a href="#弹窗拦截" class="headerlink" title="弹窗拦截"></a>弹窗拦截</h2><p>前端可以发起很多种弹窗包含</p>
+<ul>
+<li>alert() 弹出个提示框，只能点确认无回调</li>
+<li>confirm() 弹出个确认框（确认，取消），可以回调</li>
+<li>prompt() 弹出个输入框，让用户输入东西，可以回调</li>
+</ul>
+<p>每种弹框都可以由JS发出一串字符串，用于展示在弹框之上，而此字符串恰巧就是可以用来传递数据，我们把所有要传递通讯的信息，都封装进入一个js对象，然后生成字典，最后序列化成json转成字符串</p>
+<p>通过任意一种弹框将字符串传递出来，交给客户端就可以进行拦截，从而实现通信</p>
+<p><strong>弹窗拦截 - JS发起调用</strong></p>
+<p>其实alert/confirm/prompt三种弹框使用上没任何区别和差异，这里只取其中一种举例，可以选一个不常用的当做管道进行JS通信，这里用prompt举例</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> data = &#123;</span><br><span class="line">    action:<span class="string">'xxxx'</span>,</span><br><span class="line">    params:<span class="string">'xxxx'</span>,</span><br><span class="line">    callback:<span class="string">'xxxx'</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">var</span> jsonData = <span class="built_in">JSON</span>.stringify([data]);</span><br><span class="line"><span class="comment">//发起弹框</span></span><br><span class="line">prompt(jsonData);</span><br></pre></td></tr></table></figure>
+<p><strong>弹窗拦截 - 客户端拦截</strong></p>
+<ul>
+<li>安卓的拦截 <code>onJsPrompt</code>（其他的两个弹框也有）</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Override</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">onJsPrompt</span><span class="params">(WebView view, String url, String message, String defaultValue, JsPromptResult result)</span> </span>&#123;</span><br><span class="line">    <span class="comment">//1 根据传来的字符串反解出数据，判断是否是所需要的拦截而非常规H5弹框</span></span><br><span class="line">    <span class="keyword">if</span> (是)&#123;</span><br><span class="line">      <span class="comment">//2 取出指令参数，确认要发起的native调用的指令是什么</span></span><br><span class="line">      <span class="comment">//3 取出数据参数，拿到JS传过来的数据</span></span><br><span class="line">      <span class="comment">//4 根据指令调用对应的native方法，传递数据</span></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">super</span>.onJsPrompt(view, url, message, defaultValue, result);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>iOS的WKWebView <code>webView:runJavaScriptTextInputPanelWithPrompt:balbala</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (void)webView:(WKWebView *)webView runJavaScriptTextInputPanelWithPrompt:(NSString *)prompt defaultText:(nullable NSString *)defaultText initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(NSString * _Nullable result))completionHandler&#123;</span><br><span class="line">    //1 根据传来的字符串反解出数据，判断是否是所需要的拦截而非常规H5弹框</span><br><span class="line">    if (是)&#123;</span><br><span class="line">        //2 取出指令参数，确认要发起的native调用的指令是什么</span><br><span class="line">        //3 取出数据参数，拿到JS传过来的数据</span><br><span class="line">        //4 根据指令调用对应的native方法，传递数据</span><br><span class="line">        //直接返回JS空字符串</span><br><span class="line">        completionHandler(@&quot;&quot;);</span><br><span class="line">    &#125;else&#123;</span><br><span class="line">        //直接返回JS空字符串</span><br><span class="line">        completionHandler(@&quot;&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>iOS的UIWebView</li>
+</ul>
+<p>UIWebView不支持截获任何一种弹框，因此这条路走不通</p>
+<blockquote>
+<p>经过好心人提醒，UIWebView也存在一种利用Undocumented API（只是未公开API，但是否处于被禁止的私有API不一定）的方式来拦截弹框。</p>
+</blockquote>
+<blockquote>
+<p>原理是可以自行创建一个categroy，在里面实现一个未出现在任何UIWebView头文件里的delegate，就能拦截弹框了（这个Undocumented的delegate长得和WKWebView的拦截delegate一个样子）</p>
+</blockquote>
+<p><a href="http://blog.csdn.net/zhuzhiqiang_zhu/article/details/53336547" target="_blank" rel="noopener">iOS–UIWebView 屏蔽 alert警告框</a></p>
+<h2 id="JS上下文注入"><a href="#JS上下文注入" class="headerlink" title="JS上下文注入"></a>JS上下文注入</h2><p>说道JS上下文注入，做iOS的都会了解到iOS7新增的一整个JavaScriptCore这个framework，这个framework被广泛使用在了JSPatch，RN等上面，但这个东西一般用法都是完全脱离于WebView，只有一个JS上下文，这个JS上下文里，没有window对象，没有dom，严格意义上讲这个和我们所关注的依赖WebView的Hybrid框架是有很大差异的，就不在这篇文章里多说了</p>
+<ul>
+<li>苹果UIWebview JavaScriptCore注入</li>
+<li>安卓addJavascriptInterface注入</li>
+<li>苹果WKWebView scriptMessageHandler注入</li>
+</ul>
+<p>虽然某种意义上讲上面三种方式，他们都可以被称作JS注入，他们都有一个共同的特点就是，不通过任何<code>拦截</code>的办法，而是直接将一个native对象（or函数）注入到JS里面，可以由web的js代码直接调用，直接操作</p>
+<p>但这三种注入方式都操作差异还是很大，并且各自的局限性各不相同，我们下面一一说明</p>
+<h3 id="苹果UIWebview-JavaScriptCore注入"><a href="#苹果UIWebview-JavaScriptCore注入" class="headerlink" title="苹果UIWebview JavaScriptCore注入"></a>苹果UIWebview JavaScriptCore注入</h3><p>UIWebView可以通过KVC的方法，直接拿到整个WebView<code>当前</code>所拥有的JS上下文</p>
+<p><code>documentView.webView.mainFrame.javaScriptContext</code></p>
+<p>拿到了JSContext，一切的使用方式就和直接操作JavaScriptCore没啥区别了，我们可以把任何遵循JSExport协议的对象直接注入JS，让JS能够直接控制和操作</p>
+<p>所以在介绍如何JS与Native操作的时候换个顺序，先介绍客户端如何把bridge函数注入到JS，在介绍JS如何使用</p>
+<p><strong>苹果UIWebview JavaScriptCore注入 - 客户端注入</strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">//拿到当前WebView的JS上下文</span><br><span class="line">JSContext *context = [webview valueForKeyPath:@&quot;documentView.webView.mainFrame.javaScriptContext&quot;];</span><br><span class="line">//给这个上下文注入callNativeFunction函数当做JS对象</span><br><span class="line">context[@&quot;callNativeFunction&quot;] = ^( JSValue * data )</span><br><span class="line">&#123;</span><br><span class="line">    //1 解读JS传过来的JSValue  data数据</span><br><span class="line">    //2 取出指令参数，确认要发起的native调用的指令是什么</span><br><span class="line">    //3 取出数据参数，拿到JS传过来的数据</span><br><span class="line">    //4 根据指令调用对应的native方法，传递数据</span><br><span class="line">    //5 此时还可以将客户端的数据同步返回！</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>通过上面的方法可以拿到当前WebView的JS上下文<code>JSContext</code>，然后就要准备往这个JSContext里面注入准备好的block，而这个准备好的block，负责解读JS传过来的数据，从而分发调用各种native函数指令</p>
+<p>TIPS:<br>这种注入不止可以把block注入，在JS里成为一个JS函数，还可以把字符/数字/字典等数据直接注入到JS全局对象之中，可以让JS访问到Native才能获取的全局对象，甚至还可以注入任何NSObject对象，只要这个NSObject对象遵循<code>JSExport</code>OC的协议，相当于JS可以直接调用访问OC的内存对象</p>
+<p><strong>苹果UIWebview JavaScriptCore注入 - JS调用</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//准备要传给native的数据，包括指令，数据，回调等</span></span><br><span class="line"><span class="keyword">var</span> data = &#123;</span><br><span class="line">    action:<span class="string">'xxxx'</span>,</span><br><span class="line">    params:<span class="string">'xxxx'</span>,</span><br><span class="line">    callback:<span class="string">'xxxx'</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//直接使用这个客户端注入的函数</span></span><br><span class="line">callNativeFunction(data);</span><br></pre></td></tr></table></figure>
+<p>在没经过客户端注入的时候，直接使用调用callNativeFunction()会报 <code>callNativeFunction is not defined</code>这个错误，说明此时JS上下全文全局，是没有这个函数的，调用无效</p>
+<p>当执行完客户端注入的时候，此时JS上下文全局global下面，就拥有了这个callNativeFunction的函数对象，就可以正常调用，从而传递数据到Native</p>
+<h2 id="安卓addJavascriptInterface注入"><a href="#安卓addJavascriptInterface注入" class="headerlink" title="安卓addJavascriptInterface注入"></a>安卓addJavascriptInterface注入</h2><p>安卓的WebView有一个接口addJavascriptInterface，可以在loadUrl之前提前准备一个对象，通过这个接口注入给JS上下文，从而让JS能够操作，这个操作方式很类似<code>苹果UIWebview JavaScriptCore注入</code>，整个机制也差别不离，但有个很重大的区别，后面在详述优缺点对比的时候，会重点描述</p>
+<p><strong>安卓addJavascriptInterface注入 - 客户端注入</strong></p>
+<p>使用安卓官方的API接口即可，并且可以在loadUrl之前WebView创建之后，即可配置相关注入功能，这个和UIWebView-JSContext的使用差异非常之大，后面会说</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 通过addJavascriptInterface()将Java对象映射到JS对象</span></span><br><span class="line"><span class="comment">//参数1：Javascript对象名</span></span><br><span class="line"><span class="comment">//参数2：Java对象名</span></span><br><span class="line">mWebView.addJavascriptInterface(<span class="keyword">new</span> AndroidtoJs(), <span class="string">"nativeObject"</span>);</span><br></pre></td></tr></table></figure>
+<p>其中AndroidtoJs这个是一个自定义的安卓对象，他们里面有个函数callFunction，AndroidtoJs这个对象的其他函数方法JS都可以调用</p>
+<p><strong>安卓addJavascriptInterface注入 - JS调用</strong></p>
+<p>刚才注入的js对象叫<code>nativeObject</code>，所以JS中可以在全局任意使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">nativeObject.callFunction(<span class="string">"js调用了android中的hello方法"</span>);</span><br></pre></td></tr></table></figure>
+<p>我不是很熟悉android，以上很多安卓代码都取自 <a href="http://blog.csdn.net/carson_ho/article/details/64904691" target="_blank" rel="noopener">Android：你要的WebView与 JS 交互方式 都在这里了</a>，后面也会纳入参考文献之中</p>
+<h2 id="苹果WKWebView-scriptMessageHandler注入"><a href="#苹果WKWebView-scriptMessageHandler注入" class="headerlink" title="苹果WKWebView scriptMessageHandler注入"></a>苹果WKWebView scriptMessageHandler注入</h2><p>苹果在开放WKWebView这个性能全方位碾压UIWebView的web组件后，也大幅更改了JS与Native交互的方式，提供了专有的交互API<code>scriptMessageHandler</code></p>
+<p>因为这是苹果的API，使用方式搜一下一搜一大堆，我并不详细解释了，直接展示一下代码</p>
+<p><strong>苹果WKWebView scriptMessageHandler注入 - 客户端注入</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//配置对象注入</span></span><br><span class="line">[<span class="keyword">self</span>.webView.configuration.userContentController addScriptMessageHandler:<span class="keyword">self</span> name:<span class="string">@"nativeObject"</span>];</span><br><span class="line"><span class="comment">//移除对象注入</span></span><br><span class="line">[<span class="keyword">self</span>.webView.configuration.userContentController removeScriptMessageHandlerForName:<span class="string">@"nativeObject"</span>];</span><br></pre></td></tr></table></figure>
+<p>需要说明一下，addScriptMessageHandler就像安卓的addJavascriptInterface一样，可以在WKWebView loadUrl之前即可进行相关配置</p>
+<p>但不一样的是，如果当前WebView没用了，需要销毁，需要先移除这个对象注入，否则会造成内存泄漏，WebView和所在VC循环引用，无法销毁。</p>
+<p><strong>苹果WKWebView scriptMessageHandler注入 - JS调用</strong></p>
+<p>刚才注入的js对象叫<code>nativeObject</code>，但不像前边两个注入一样，直接注入到JS上下文全局Global对象里，addScriptMessageHandler方法注入的对象被放到了，全局对象下一个Webkit对象下面，想要拿到这个对象需要这样拿</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">window.webkit.messageHandlers.nativeObject</span><br></pre></td></tr></table></figure>
+<p>并且和之前的两种注入也不同，前两种注入都可以让js任意操作所注入自定义对象的所有方法，而<code>addScriptMessageHandler</code>注入其实只给注入对象起了一个名字<code>nativeObject</code>，但这个对象的能力是不能任意指定的，只有一个函数<code>postMessage</code>，因此JS的调用方式也只能是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//准备要传给native的数据，包括指令，数据，回调等</span></span><br><span class="line"><span class="keyword">var</span> data = &#123;</span><br><span class="line">    action:<span class="string">'xxxx'</span>,</span><br><span class="line">    params:<span class="string">'xxxx'</span>,</span><br><span class="line">    callback:<span class="string">'xxxx'</span>,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//传递给客户端</span></span><br><span class="line"><span class="built_in">window</span>.webkit.messageHandlers.nativeObject.postMessage(data);</span><br></pre></td></tr></table></figure>
+<p><strong>苹果WKWebView scriptMessageHandler注入 - 客户端接收调用</strong></p>
+<p>前两种注入方式，都是在注入的时候，就指定了对应的接收JS调用的Native函数，但是这次不是，在苹果的API设计里，当JS开始调用后，会调用到指定的iOS的delegate里</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)userContentController:(<span class="built_in">WKUserContentController</span> *)userContentController didReceiveScriptMessage:(<span class="built_in">WKScriptMessage</span> *)message&#123;</span><br><span class="line">    <span class="comment">//1 解读JS传过来的JSValue  data数据</span></span><br><span class="line">    <span class="built_in">NSDictionary</span> *msgBody = message.body;</span><br><span class="line">    <span class="comment">//2 取出指令参数，确认要发起的native调用的指令是什么</span></span><br><span class="line">    <span class="comment">//3 取出数据参数，拿到JS传过来的数据</span></span><br><span class="line">    <span class="comment">//4 根据指令调用对应的native方法，传递数据</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="Native-调用-JS-的几种通信方案-1"><a href="#Native-调用-JS-的几种通信方案-1" class="headerlink" title="Native 调用 JS 的几种通信方案"></a>Native 调用 JS 的几种通信方案</h1><p>说完了JS调用Native，我们再聊聊Native发起调用JS</p>
+<h2 id="evaluatingJavaScript-执行JS代码"><a href="#evaluatingJavaScript-执行JS代码" class="headerlink" title="evaluatingJavaScript 执行JS代码"></a>evaluatingJavaScript 执行JS代码</h2><p>上面也简单说了一下，JS是一个脚本语言，可以在无需编译的情况下，直接输入字符串JS代码，直接运行执行看结果，这也是为什么在Chrome里，在网页运行的时候打开控制台，可以输入各种JS指令的看结果的。</p>
+<p>也就是说当Native想要调用JS的时候，可以由Native把需要数据与调用的JS函数，通过字符串拼接成JS代码，交给WebView进行执行</p>
+<p>说明一下，Android/iOS-UIWebView/iOS-WKWebView，都支持这种方法，这是目前最广泛运用的方法，甚至可以说，Chrome的DevTools控制台也是用的同样的方式。</p>
+<p>假如JS网页里已经有了这么一个函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">calljs</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">JSON</span>.parse(data)) </span><br><span class="line">    <span class="comment">//1 识别客户端传来的数据</span></span><br><span class="line">    <span class="comment">//2 对数据进行分析，从而调用或执行其他逻辑  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>那么客户端此时要调用他需要在客户端用OC拼接字符串，拼出一个js代码，传递的数据用json</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//不展开了,data是一个字典，把字典序列化</span></span><br><span class="line"><span class="built_in">NSString</span> *paramsString = [<span class="keyword">self</span> _serializeMessageData:data];</span><br><span class="line"><span class="built_in">NSString</span>* javascriptCommand = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"calljs('%@');"</span>, paramsString];</span><br><span class="line"><span class="comment">//要求必须在主线程执行JS</span></span><br><span class="line"><span class="keyword">if</span> ([[<span class="built_in">NSThread</span> currentThread] isMainThread]) &#123;</span><br><span class="line">    [<span class="keyword">self</span>.webView evaluateJavaScript:javascriptCommand completionHandler:<span class="literal">nil</span>];</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    __<span class="keyword">strong</span> <span class="keyword">typeof</span>(<span class="keyword">self</span>)strongSelf = <span class="keyword">self</span>;</span><br><span class="line">    <span class="built_in">dispatch_sync</span>(dispatch_get_main_queue(), ^&#123;</span><br><span class="line">        [strongSelf.webView evaluateJavaScript:javascriptCommand completionHandler:<span class="literal">nil</span>];</span><br><span class="line">    &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>其实我们拼接出来的js只是一行js代码，当然无论多长多复杂的js代码都可以用这个方式让webview执行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">calljs(&apos;&#123;data:xxx,data2:xxx&#125;&apos;);</span><br></pre></td></tr></table></figure>
+<p>TIPS:安卓4.4以上才可以使用evaluatingJavaScript这个API</p>
+<h2 id="loadUrl-执行JS代码"><a href="#loadUrl-执行JS代码" class="headerlink" title="loadUrl 执行JS代码"></a>loadUrl 执行JS代码</h2><p>安卓在4.4以前是不能用evaluatingJavaScript这个方法的，因此之前安卓都用的是webview直接loadUrl，但是传入的url并不是一个链接，而是以”javascript:”开头的js代码，从而达到让webview执行js代码的作用</p>
+<p>其实这个过程和evaluatingJavaScript没啥差异</p>
+<p>还按着刚才举例，假如JS网页里已经有了这么一个函数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">calljs</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="built_in">JSON</span>.parse(data)) </span><br><span class="line">    <span class="comment">//1 识别客户端传来的数据</span></span><br><span class="line">    <span class="comment">//2 对数据进行分析，从而调用或执行其他逻辑  </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我不太熟悉安卓，就不写安卓的字典数据json序列化的逻辑了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mWebView.loadUrl(<span class="string">"javascript:callJS(\'&#123;data:xxx,data2:xxx&#125;\')"</span>);</span><br></pre></td></tr></table></figure>
+<p>最终实际上相当于执行了一条js代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">calljs(&apos;&#123;data:xxx,data2:xxx&#125;&apos;);</span><br></pre></td></tr></table></figure>
+<h2 id="WKUserScript-执行JS代码"><a href="#WKUserScript-执行JS代码" class="headerlink" title="WKUserScript 执行JS代码"></a>WKUserScript 执行JS代码</h2><p>对于iOS的WKWebView，除了evaluatingJavaScript，还有WKUserScript这个方式可以执行JS代码，他们之间是有区别的</p>
+<ul>
+<li><p>evaluatingJavaScript 是在客户端执行这条代码的时候立刻去执行当条JS代码</p>
+</li>
+<li><p>WKUserScript 是预先准备好JS代码，当WKWebView加载Dom的时候，执行当条JS代码</p>
+</li>
+</ul>
+<p>很明显这个虽然是一种通信方式，但并不能随时随地进行通信，并不适合选则作为设计bridge的核心方案。但这里也简单介绍一下</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//在loadurl之前使用</span></span><br><span class="line"><span class="comment">//time是一个时机参数，可选dom开始加载/dom加载完毕，2个时机进行执行JS</span></span><br><span class="line"><span class="comment">//构建userscript</span></span><br><span class="line"><span class="built_in">WKUserScript</span> *script = [[<span class="built_in">WKUserScript</span> alloc]initWithSource:source injectionTime:time forMainFrameOnly:mainOnly];</span><br><span class="line"><span class="built_in">WKUserContentController</span> *userController = webView.userContentController;</span><br><span class="line"><span class="comment">//配置userscript</span></span><br><span class="line">[userController addUserScript:script]</span><br></pre></td></tr></table></figure>
+<h1 id="几种通信方式的优缺点对比"><a href="#几种通信方式的优缺点对比" class="headerlink" title="几种通信方式的优缺点对比"></a>几种通信方式的优缺点对比</h1><p>说完了JS主动调用Native，也说完了Native主动调用JS，有很多很多的方案我们来聊聊这么些个方案都有哪些局限性，是否值得我们选择</p>
+<h2 id="假请求的通信拦截的问题-–-当下最不该选择的通信方式"><a href="#假请求的通信拦截的问题-–-当下最不该选择的通信方式" class="headerlink" title="假请求的通信拦截的问题 – 当下最不该选择的通信方式"></a>假请求的通信拦截的问题 – 当下最不该选择的通信方式</h2><p>假通信拦截请求这种方式看起来是使用最广泛的，知名的<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a>  和<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a></p>
+<p>为什么这些知名框架选用假请求通信拦截其实有很多原因，但我想说的是，基于眼下设计自己的Hybrid框架，最不应该选择的通信方式就是<code>假请求通信拦截</code></p>
+<p><strong>先说说他为数不多的优点：</strong></p>
+<ul>
+<li>版本兼容性好：iOS6及以前只有这唯一的一种方式</li>
+</ul>
+<p>cordova的前身是phonegap，随手搜一下大概能知道这个框架有多老，也可以看下WebViewJavascriptBridge，最早第一次提交是在5年前，在没有iOS7的时候，有切只有这唯一的一种通信方式，因此他们都选用了他，但看一眼现在已经iOS11了，再看看iOS6及以下的占有度，呵呵，一到iOS7就有更好的全方位碾压的bridge方式了</p>
+<ul>
+<li>webview支持度好：简单地说框架的开发者容易偷懒</li>
+</ul>
+<p>这是所有JS call Native的通信方式里，唯一同时支持安卓webview/苹果UIWebView/苹果WKWebView的一种通信方式，这也就是为什么WebViewJavascriptBridge在即便苹果已经推出了更好的WKWebView并且准备了专属的通信API<code>messageHandler</code>的时候，还依然选择继续沿用假请求通信拦截的原因，代码不用重写了，适合写那种兼容iOS7以下的UIWebView，在iOS8以上换WKWebView的代码，但看一眼现在的版本占有度？没有任何意义</p>
+<p><strong>多说两句：</strong></p>
+<p>即便是老项目还在使用UIWebView，要计划升级到WKWebView的时候，既然是升级就应该全面升级到新的WK式通信，做什么妥协和折中方案？</p>
+<p>而且最重要的一点，想要做到同时支持多个WebView兼容支持并不需要选择妥协方案，在开发框架的时候完全可以在框架侧解决。想要屏蔽这种webview通信差异，通过在Hybrid框架层设计，抽象统一的调用入口出口，把通信差异在内部消化，这样依然能做到统一对外业务代码流程和清晰的代码逻辑，想要做到代码统一不应该以功能上牺牲和妥协的方面去考虑。</p>
+<p>要知道<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a>都专门为WKWebView开发了独有的<a href="https://www.npmjs.com/package/cordova-plugin-wkwebview" target="_blank" rel="noopener">cordova-plugin-wkwebview</a>插件来专门适配WKWebView的更优的官方通信API，而不是像<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a>进行妥协，UI与WK都采取同一种有功能性问题的通信方案</p>
+<p><strong>再说说他最严重的缺点：</strong></p>
+<ul>
+<li>丢消息！ 一个通信方案，结果他最大的问题是丢失通信消息！</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">location.href = <span class="string">'wakaka://wahahalalala/callNativeNslog?param=1111'</span></span><br><span class="line"></span><br><span class="line">location.href = <span class="string">'wakaka://wahahalalala/callNativeNslog?param=2222'</span></span><br></pre></td></tr></table></figure>
+<p>上面是一段JS调用Native的代码，可以靠字面意思猜一下，JS此时的诉求是在同一个运行逻辑内，快速的连续发送出2个通信请求，用客户端本身IDE的log，按顺序打印111，222，那么实际结果是222的通信消息根本收不到，直接会被系统抛弃丢掉。</p>
+<p>原因：因为假跳转的请求归根结底是一种模拟跳转，跳转这件事情上webview会有限制，当JS连续发送多条跳转的时候，webview会直接过滤掉后发的跳转请求，因此第二个消息根本收不到，想要收到怎么办？JS里将第二条消息延时一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//发第一条消息</span><br><span class="line">location.href = &apos;wakaka://wahahalalala/callNativeNslog?param=1111&apos;</span><br><span class="line"></span><br><span class="line">//延时发送第二条消息</span><br><span class="line">setTimeout(500,function()&#123;</span><br><span class="line">    location.href = &apos;wakaka://wahahalalala/callNativeNslog?param=2222&apos;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这根本治标不治本好么，这种框架设计下决定了JS在任何通信逻辑都得考虑是否这个时间有其他的JS通信代码刚交互过，导致消息丢失？是否页面加载完毕的时候不能同时发送<code>页面加载完毕</code>和<code>其他具体业务需要的Native消息</code>，是否任何一个AJax网络请求回来后立刻发起的Native消息，都要谨慎考虑与此同时是否有别的SetTimeout也在发Native消息导致冲突？这TM根本是一个天坑，这么设计绝对是客户端开发舒坦省事写bridge框架代码，坑死天天做活动上线的前端同学的。</p>
+<p>如果想继续使用假跳转请求，又不想换方案怎么办？前端同学在JS框架层包一层队列，所有JS代码调用消息都先进入队列并不立刻发送，然后前端会周期性比如500毫秒，清空flush一次队列，保证在很快的时间内绝对不会连续发2次假请求通信，这种通信队列的设计不光运用解决丢消息的问题，就连RN根本没丢消息问题的JSCore式的通信，也采用了这种方式，归根结底他能减少通信开销，但是！但是！给假通信请求做队列你将面临第二个根本没法解决的问题</p>
+<ul>
+<li>URL长度限制</li>
+</ul>
+<p>假跳转请求归根结底他还是一个跳转，抛给客户端被拦截的时候都已经被封装成一个request了，那么如果url超长了呢？那么这个request里的url的内容还是你想要传递的原内容么？不会丢内容么？尤其是当你采用了队列控制，一次性发送的是多条消息组成的数组数据的时候。</p>
+<p>假跳转是现在这个时候最不该使用的通信方式！！！</p>
+<p>假跳转是现在这个时候最不该使用的通信方式！！！</p>
+<p>假跳转是现在这个时候最不该使用的通信方式！！！</p>
+<p>重要的事情说三遍</p>
+<h2 id="弹窗拦截-1"><a href="#弹窗拦截-1" class="headerlink" title="弹窗拦截"></a>弹窗拦截</h2><p>这个方式其实没啥不好的，而且confirm还可以用更简单的方式处理callback回调，因为confirm天然是需要返回JS内容的，但callback其实也可以用其他的方式实现，也许更好，因此这里按住不表，第二篇文章会整体聊聊，基于这么多种通信手段，如何设计一个自己的Hybrid框架</p>
+<ul>
+<li>UIWebView不支持，但没事UIWebView有更好的JS上下文注入的方式，JSContext不仅支持直接传递对象无需json序列化，还支持传递function函数给客户端呢(借助隐藏的API也可以支持)</li>
+<li>安卓一切正常，不会出现丢消息的情况</li>
+<li>WKWebView一切正常，也不会出现丢消息的情况，但其实WKWebView苹果给了更好的API，何不用那个，至少用这个是可以直接传递对象无需进行json序列化的</li>
+</ul>
+<p>唯一需要注意的一点，如果你的业务开发中经常希望在前端代码里使用系统alert()/confirm()/prompt()那么，你还是挑一个不常用的进行hook，以免干扰常规业务</p>
+<blockquote>
+<p>修订补充优点！</p>
+<p>弹窗拦截也可以支持同步返回！</p>
+<p>prompt( ) 拦截在客户端需要执行confirm(data)从而用同步的方式给客户端返回数据到JS</p>
+</blockquote>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步JS调用Native  JS这边可以直接写 =  !!!</span></span><br><span class="line"><span class="keyword">var</span> nativeNetStatus = nativeObject.getNetStatus();</span><br><span class="line"><span class="comment">//异步JS调用Native JS只能这么写</span></span><br><span class="line">nativeObject.getNetSatus(callback(net)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(net)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<h2 id="JS上下文注入-1"><a href="#JS上下文注入-1" class="headerlink" title="JS上下文注入"></a>JS上下文注入</h2><p>JS上下文注入其实一共3种情况，这3种情况每个情况都不同，我会一一进行优缺点说明</p>
+<h3 id="UIWebView的JSContext注入"><a href="#UIWebView的JSContext注入" class="headerlink" title="UIWebView的JSContext注入"></a>UIWebView的JSContext注入</h3><p>说实话这是我觉得最完美的一种交互方式了，苹果在iOS7开放了JavaScriptCore这个框架，支撑起了RN，Weex这么牛逼的摆脱了WebView的深度混合框架，他的能力是最完美的。</p>
+<p><strong>牛逼的优点:</strong></p>
+<ul>
+<li>支持JS同步返回！</li>
+</ul>
+<p>要知道我们看到的所有JS通信框架设计的都是异步返回，包括RN（这有设计原因，但不代表JSC不支持同步返回），都是设计了一套callback机制，一条通信消息到达Native后，如果需要返回数据，需要调用这个callback接口由Native反向通知JS，他们在JS侧写代码可是差异非常非常非常之大的！</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//同步JS调用Native  JS这边可以直接写=  !!!</span></span><br><span class="line"><span class="keyword">var</span> nativeNetStatus = nativeObject.getNetStatus();</span><br><span class="line"></span><br><span class="line"><span class="comment">//异步JS调用Native JS只能这么写</span></span><br><span class="line">nativeObject.getNetSatus(callback(net)&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(net)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>支持直接传递对象，无需通过字符串序列化</li>
+</ul>
+<p>一个JS对象在JS代码中如果想通过假跳转/弹窗拦截等方式，那么必须把JS对象搞成json，然后才能传递给端，端拿到后还要反解成字典对象，然后才能识别，但是JS上下文注入不需要（其实他本质上是框架层帮你做了这件事情，就是JSValue这个iOS类的能力）</p>
+<ul>
+<li>支持传递JS函数，客户端能够直接快速调用callback</li>
+</ul>
+<p>在JS里如果是一个function，可以直接当做参数发送给客户端，在客户端得到一个JSValue，可以通过JSValue的callWithParmas的方式直接当做函数去调用</p>
+<ul>
+<li>支持直接注入任意客户端类，客户端对象，JS可以直接向调用客户端</li>
+</ul>
+<p>JavaScriptCore有一种使用方法，是可以让任意iOS对象，遵循<code>&lt;JSExport&gt;</code>协议，就可以直接把一整个Native对象直接注入，让JS可以直接操作这个对象，读取这个对象的属性，调用这个对象的方法</p>
+<p><strong>有点尴尬的缺点：</strong></p>
+<ul>
+<li>only UIWebView</li>
+</ul>
+<p>这一点简直是最大的遗憾，只有UIWebView可以用KVC取到JSContext，取到了JSContext才能发挥JavaScriptCore的牛逼能力，但是如果为了更好的性能升级到了WKWebView，那就得忍痛，我依稀记得曾几何时我在哪看到过通过私有API，让WKWebView也能获取JSContext，但我找不到了，希望知道的同学能给我点指引。但我有一个看法 <strong>为了WKWebView的性能提升，舍弃JSContext的优点，值得！</strong></p>
+<ul>
+<li>JSContext获取时机</li>
+</ul>
+<p>UIWebView的JSContext是通过iOS的kvc方法拿到，而非UIWebView的直接接口API，因此UIWebView-JSContext注入使用上要非常注意注入时机</p>
+<ul>
+<li>UIWebView-JSContext 在loadUrl之前注入无效</li>
+<li>UIWebView-JSContext 在FinishLoad之后注入有效但有延迟</li>
+</ul>
+<p>因为WebView每次加载一个新地址都会启用一个新的JSContext，在loadUrl之前注入，会因为旧的JSContext已被舍弃导致注入无效，若在WebView触发FinishLoad事件的时候注入，又会导致在FinishLoad之前执行的JS代码，是无法调用native通信的</p>
+<p>曾经写过一篇文章<a href="http://awhisper.github.io/2017/09/09/injectUIWebView/" target="_blank" rel="noopener">UIWebView代码注入时机与姿势</a>，可以参考看看，有私有API解决办法，不在这里多言</p>
+<p>如果你还在使用UIWebView，真的应该彻底丢弃什么假跳转，直接使用这个方案（iOS7.0现在已经不是门槛了吧），并且深度开发JavaScriptCore这么多牛逼优势所带来的一些黑科技（我感觉会在第三篇文章里提这个）</p>
+<p>如果你还在使用UIWebView，就用JSContext吧！不要犹豫!</p>
+<p>如果你还在使用UIWebView，就用JSContext吧！不要犹豫!</p>
+<p>如果你还在使用UIWebView，就用JSContext吧！不要犹豫!</p>
+<h3 id="安卓的addJavascriptInterface注入"><a href="#安卓的addJavascriptInterface注入" class="headerlink" title="安卓的addJavascriptInterface注入"></a>安卓的addJavascriptInterface注入</h3><p><strong>我不太了解安卓，因此这粗略写一写，此处如果有错误非常希望大家帮我指出</strong></p>
+<p>安卓的addJavascriptInterface注入，其实原理机制几乎和UIWebView的JSContext注入一样，所以UIWebView的JSContext注入的有点他其实都有</p>
+<ul>
+<li>可以同步返回</li>
+<li>无需json化透传数据</li>
+<li>可以传递函数（不确定）</li>
+<li>可以注入Native对象</li>
+</ul>
+<p>但是安卓的addJavascriptInterface没有注入时机这个缺点（类比-UIWebView的JSContext获取时机），原因是UIWebView缺失一个时机由内核通知外围，当前JSContext刚刚创建完毕，还未开始执行相关JS，导致在iOS下无法在这个最应该进行注入的时机进行注入，除非通过私有API，但安卓没事，安卓系统提供了个API来让外围获得这个最佳时机 <code>onResourceloaded</code>，详细说明见 <a href="http://awhisper.github.io/2017/09/09/injectUIWebView/" target="_blank" rel="noopener">UIWebView代码注入时机与姿势</a></p>
+<h3 id="WKWebView的scriptMessageHandler注入"><a href="#WKWebView的scriptMessageHandler注入" class="headerlink" title="WKWebView的scriptMessageHandler注入"></a>WKWebView的scriptMessageHandler注入</h3><p>苹果iOS8之后官方抓们推出的新一代webview，号称全面优化，性能大幅度提升，是和safari一样的web内核引擎，带着光环出生，而scriptMessageHandler正是这个新WKWebView钦点的交互API</p>
+<p><strong>优点:</strong></p>
+<ul>
+<li>无需json化传递数据</li>
+</ul>
+<p>是的，<code>webkit.messageHandlers.xxx.postMessage()</code>是支持直接传递json数据，无需前端客户端字符串处理的</p>
+<ul>
+<li>不会丢消息</li>
+</ul>
+<p>我们团队的以前老代码在丢消息上吃了无数的大亏，导致我对这个事情耿耿于怀，怨念极深！真是坑了好几代前端开发，叫苦不堪</p>
+<p><strong>缺点：</strong></p>
+<ul>
+<li>版本要求iOS8</li>
+</ul>
+<p>我们舍弃了，不是问题</p>
+<ul>
+<li>不支持JSContext那样的同步返回</li>
+</ul>
+<p>丧失了很多黑科技黑玩法的想象力！但我觉得还是有可能有办法哪怕用私有API的方式想办法找回来的，希望知道的朋友提供更多信息</p>
+<p>如果你已经上了WKWebView，就用它，不需要考虑</p>
+<p>如果你已经上了WKWebView，就用它，不需要考虑</p>
+<p>如果你已经上了WKWebView，就用它，不需要考虑</p>
+<h2 id="evaluatingJavaScript-直接执行JS代码"><a href="#evaluatingJavaScript-直接执行JS代码" class="headerlink" title="evaluatingJavaScript 直接执行JS代码"></a>evaluatingJavaScript 直接执行JS代码</h2><p>说完了JS主动调用Native，我们再说说Native主动调用JS，evaluatingJavaScript是一个非常非常通用普遍的方式了，原因也在介绍里解释过，js的脚本引擎天然支持，直接扔字符串进去，当做js代码开始执行</p>
+<p>也没啥优缺点可以说的，除了有个特性需要在介绍WKUserScript的时候在多解释一下</p>
+<p>安卓/UIWebView/WKWebView都支持</p>
+<h2 id="loadUrl-跳转javascript地址执行JS代码"><a href="#loadUrl-跳转javascript地址执行JS代码" class="headerlink" title="loadUrl 跳转javascript地址执行JS代码"></a>loadUrl 跳转javascript地址执行JS代码</h2><p>具体的使用方式不详细介绍了，直说一个优点</p>
+<ul>
+<li>版本支持</li>
+</ul>
+<p>在安卓4.4以前是没有evaluatingJavaScript API的，因此通过他来执行JS代码，但本质上和evaluatingJavaScript区别不大</p>
+<h2 id="WKUserScript-执行JS代码-1"><a href="#WKUserScript-执行JS代码-1" class="headerlink" title="WKUserScript 执行JS代码"></a>WKUserScript 执行JS代码</h2><p>这里要特别说明一下WKUserScript并不适合当做Hybrid Bridge的通信手段，原因是这种Native主动调用JS，只能在WebView加载时期发起，并不能在任意时刻发起通信</p>
+<p>WKUserScript不能采用在Hybrid设计里当做通信手段</p>
+<p>WKUserScript不能采用在Hybrid设计里当做通信手段</p>
+<p>WKUserScript不能采用在Hybrid设计里当做通信手段</p>
+<p>但WKUserScript却有一点值得说一下，上文也提到的UIWebView的注入时机，如果你想在恰当时机让JS上下文执行一段JS代码，在UIWebView你是找不到一个合适的加载时机的，除非你动用私有API，但WKWebView解决了这个问题，在构造WKUserScript的时候可以选择dom load start的时候执行JS，也可以选择在dom load end的时候执行JS。但这个有点其实与设计Hybrid框架的核心通信方案，关系不大，但预加载JS预加载CSS也是一个Hybrid框架的扩展功能，后面第二篇会介绍的。</p>
+<h1 id="横向对比"><a href="#横向对比" class="headerlink" title="横向对比"></a>横向对比</h1><p>如果我们要自主设计一个Hybrid框架，通信方案到底该如何取舍？</p>
+<h2 id="JS主动调用Native的方案"><a href="#JS主动调用Native的方案" class="headerlink" title="JS主动调用Native的方案"></a>JS主动调用Native的方案</h2><table>
+<thead>
+<tr>
+<th>通信方案</th>
+<th style="text-align:center">版本支持</th>
+<th style="text-align:right">丢消息</th>
+<th style="text-align:right">支持同步返回</th>
+<th style="text-align:right">传递对象</th>
+<th style="text-align:right">注入原生对象</th>
+<th style="text-align:right">数据长度限制</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>假跳转</td>
+<td style="text-align:center">全版本全平台</td>
+<td style="text-align:right">会丢失</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">有限制</td>
+</tr>
+<tr>
+<td>弹窗拦截</td>
+<td style="text-align:center">UIWebView不支持</td>
+<td style="text-align:right">不丢失</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">无限制</td>
+</tr>
+<tr>
+<td>JSContext注入</td>
+<td style="text-align:center">只有UIWebView支持</td>
+<td style="text-align:right">不丢失</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">无限制</td>
+</tr>
+<tr>
+<td>安卓interface注入</td>
+<td style="text-align:center">安卓全版本</td>
+<td style="text-align:right">不丢失</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">支持</td>
+<td style="text-align:right">无限制</td>
+</tr>
+<tr>
+<td>MessageHandler注入</td>
+<td style="text-align:center">只有WKWebView支持</td>
+<td style="text-align:right">不丢失</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">不支持</td>
+<td style="text-align:right">无限制</td>
+</tr>
+</tbody>
+</table>
+<h2 id="Native主动调用JS的方案"><a href="#Native主动调用JS的方案" class="headerlink" title="Native主动调用JS的方案"></a>Native主动调用JS的方案</h2><ul>
+<li>iOS: evaluatingJavaScript</li>
+<li>安卓: 其实2个区别不大，使用方法差异也不大<ul>
+<li>4.4以上 evaluatingJavaScript</li>
+<li>4.4以下 loadUrl </li>
+</ul>
+</li>
+</ul>
+<p> 这样对比优缺点，再根据自己项目需要支持的版本号，可以比较方便的选择合适的通信方案，进一步亲自设计一个Hybrid框架</p>
+<h2 id="一点个人看法"><a href="#一点个人看法" class="headerlink" title="一点个人看法"></a>一点个人看法</h2><blockquote>
+<p>即便是老项目还在使用UIWebView，要计划升级到WKWebView的时候，既然是升级就应该全面升级到新的WK式通信，做什么妥协和折中方案？</p>
+</blockquote>
+<blockquote>
+<p>而且最重要的一点，想要做到同时支持多个WebView兼容支持并不需要选择妥协方案，在开发框架的时候完全可以在框架侧解决。想要屏蔽这种webview通信差异，通过在Hybrid框架层设计，抽象统一的调用入口出口，把通信差异在内部消化，这样依然能做到统一对外业务代码流程和清晰的代码逻辑，想要做到代码统一不应该以功能上牺牲和妥协的方面去考虑。</p>
+</blockquote>
+<p>前面其实提到过这个看法不过说的还不彻底，可能有些人会觉得<code>假跳转</code>这个方案最大的好处是全平台全版本的适配与统一，甚至还可以统一安卓平台，可以保证代码一致性，但我认为这绝对不能建立在有严重功能短板导致开发中带来很严重问题的基础之上的，为了代码一致性，而妥协了框架的功能与能力</p>
+<p>可能因为不同的平台/不同的版本/不同的WebView的使用与兼容，导致了我们需要在开发Hybrid框架的时候需要适配，但这一切都是可以通过设计良好的框架对外输入输出，把所有区别适配内部消化，从而做到在框架外层的业务代码依然保持代码一致性，保持干净整洁的。这里所说的框架绝不仅仅包括客户端这一侧，JS侧也同理，谁说区分安卓和IOS平台来进行不同的通信方式代码就不整洁了，那是你框架层设计的不够优秀，合理框架层代码应该可以做到当新的系统组件出现，新的更优秀的通信方案出现的时候，能够立刻的支持和扩充，获得最新的能力和性能，但又在业务上层做到无感知，保持框架外围使用的一致性，这才是良好的设计。</p>
+<p>所以我之前微博曾经说过一小段话：</p>
+<blockquote>
+<p>就为了兼容从而选择放弃更合理的WKWebview 官方注入interface方式，为了凑和UIWebView依然采用无论是iframe还是location.href的糊弄方式，这种我实在不觉得是美学，只是一种偷懒而已，抱着UIWebview时代的包袱不想丢还让WKWebview去迁就</p>
+<p>没错，说的就是WebViewJavascriptBridge</p>
+</blockquote>
+<h1 id="如果是你，你会怎么设计Hybrid框架"><a href="#如果是你，你会怎么设计Hybrid框架" class="headerlink" title="如果是你，你会怎么设计Hybrid框架"></a>如果是你，你会怎么设计Hybrid框架</h1><p>聊了这么多这个好好，如果换做我们项目，我会选择啥？</p>
+<ul>
+<li>iOS：MessageHandler注入/Prompt弹框拦截(JSToNative) + evaluatingJavaScript<br>(NativeToJS)</li>
+</ul>
+<blockquote>
+<p>经过修正，异步返回采用MessageHandler 同步返回采用Prompt弹框拦截(JSToNative)</p>
+<p>其实同步/异步在iOS上都可以采用 <code>Prompt弹框拦截(JSToNative)</code> 但毕竟MessageHandler是系统钦定API，并且拥有直接传递JSON对象，无需手动序列化这一优势，所以我们依然选择2个方案都用，一个用来异步，一个用来同步</p>
+<p>但其实，你也可以同步/异步都使用 Prompt弹框拦截</p>
+</blockquote>
+<ul>
+<li>安卓: 拦截弹窗(JSToNative)+loadUrl(NativeToJS)</li>
+</ul>
+<p>我们安卓还需要支持更低的版本╮(╯_╰)╭</p>
+<blockquote>
+<p>安卓就直接把 <code>Prompt弹框拦截</code> 当做同步/异步都选择的通信方式</p>
+</blockquote>
+<p>以上在设计Hybrid框架API的时候，都考虑了2种sendMessage模式的，一种异步，一种同步</p>
+<p>经过各种优缺点对比，我们确认了最核心的JS与Native通信方案，下一步就是亲自设计一个Hybrid框架了，这篇也太长了，挖个坑后面在写吧</p>
+<h1 id="本篇参考文献"><a href="#本篇参考文献" class="headerlink" title="本篇参考文献"></a>本篇参考文献</h1><p>由于我不是很懂安卓，本篇很多安卓的信息来自我和同事之间的探讨以及这篇文章</p>
+<p><a href="http://blog.csdn.net/carson_ho/article/details/64904691" target="_blank" rel="noopener">Android：你要的WebView与 JS 交互方式 都在这里了</a></p>
+<p>另外聊到UIWebView的JSContext<br>，扯了好多JS上下文时机的事情，详细介绍在我自己的另一篇文章里</p>
+<p><a href="http://awhisper.github.io/2017/09/09/injectUIWebView/" target="_blank" rel="noopener">UIWebView代码注入时机与姿势</a></p>
+<h1 id="系列相关文章"><a href="#系列相关文章" class="headerlink" title="系列相关文章"></a>系列相关文章</h1><p><a href="http://awhisper.github.io/2018/01/02/hybrid-jscomunication/" target="_blank" rel="noopener">从零收拾一个hybrid框架（一）–  从选择JS通信方案开始</a></p>
+<p><a href="http://awhisper.github.io/2018/03/06/hybrid-webcontainer/" target="_blank" rel="noopener">从零收拾一个hybrid框架（二）–  WebView容器基础功能设计思路</a></p>
+<p>从零收拾一个Hybrid框架（三）– WebView 容器的一些脑洞方案思路探讨 （挖坑ing） </p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/07/LakeBaikalGlance/" rel="next" title="“你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游">
+                <i class="fa fa-chevron-left"></i> “你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/01/08/wechatkilluniversallink/" rel="prev" title="微信着手封堵 Universal Link">
+                微信着手封堵 Universal Link <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#几种JS-Native相互通信方式的介绍"><span class="nav-number">1.</span> <span class="nav-text">几种JS Native相互通信方式的介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS-调用-Native-的几种通信方案"><span class="nav-number">1.1.</span> <span class="nav-text">JS 调用 Native 的几种通信方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Native-调用-JS-的几种通信方案"><span class="nav-number">1.2.</span> <span class="nav-text">Native 调用 JS 的几种通信方案</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JS-调用-Native-的几种通信方案-1"><span class="nav-number">2.</span> <span class="nav-text">JS 调用 Native 的几种通信方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#假跳转的请求拦截"><span class="nav-number">2.1.</span> <span class="nav-text">假跳转的请求拦截</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#弹窗拦截"><span class="nav-number">2.2.</span> <span class="nav-text">弹窗拦截</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS上下文注入"><span class="nav-number">2.3.</span> <span class="nav-text">JS上下文注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#苹果UIWebview-JavaScriptCore注入"><span class="nav-number">2.3.1.</span> <span class="nav-text">苹果UIWebview JavaScriptCore注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安卓addJavascriptInterface注入"><span class="nav-number">2.4.</span> <span class="nav-text">安卓addJavascriptInterface注入</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#苹果WKWebView-scriptMessageHandler注入"><span class="nav-number">2.5.</span> <span class="nav-text">苹果WKWebView scriptMessageHandler注入</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Native-调用-JS-的几种通信方案-1"><span class="nav-number">3.</span> <span class="nav-text">Native 调用 JS 的几种通信方案</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#evaluatingJavaScript-执行JS代码"><span class="nav-number">3.1.</span> <span class="nav-text">evaluatingJavaScript 执行JS代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadUrl-执行JS代码"><span class="nav-number">3.2.</span> <span class="nav-text">loadUrl 执行JS代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WKUserScript-执行JS代码"><span class="nav-number">3.3.</span> <span class="nav-text">WKUserScript 执行JS代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#几种通信方式的优缺点对比"><span class="nav-number">4.</span> <span class="nav-text">几种通信方式的优缺点对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#假请求的通信拦截的问题-–-当下最不该选择的通信方式"><span class="nav-number">4.1.</span> <span class="nav-text">假请求的通信拦截的问题 – 当下最不该选择的通信方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#弹窗拦截-1"><span class="nav-number">4.2.</span> <span class="nav-text">弹窗拦截</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#JS上下文注入-1"><span class="nav-number">4.3.</span> <span class="nav-text">JS上下文注入</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#UIWebView的JSContext注入"><span class="nav-number">4.3.1.</span> <span class="nav-text">UIWebView的JSContext注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安卓的addJavascriptInterface注入"><span class="nav-number">4.3.2.</span> <span class="nav-text">安卓的addJavascriptInterface注入</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#WKWebView的scriptMessageHandler注入"><span class="nav-number">4.3.3.</span> <span class="nav-text">WKWebView的scriptMessageHandler注入</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#evaluatingJavaScript-直接执行JS代码"><span class="nav-number">4.4.</span> <span class="nav-text">evaluatingJavaScript 直接执行JS代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#loadUrl-跳转javascript地址执行JS代码"><span class="nav-number">4.5.</span> <span class="nav-text">loadUrl 跳转javascript地址执行JS代码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#WKUserScript-执行JS代码-1"><span class="nav-number">4.6.</span> <span class="nav-text">WKUserScript 执行JS代码</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#横向对比"><span class="nav-number">5.</span> <span class="nav-text">横向对比</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#JS主动调用Native的方案"><span class="nav-number">5.1.</span> <span class="nav-text">JS主动调用Native的方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Native主动调用JS的方案"><span class="nav-number">5.2.</span> <span class="nav-text">Native主动调用JS的方案</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一点个人看法"><span class="nav-number">5.3.</span> <span class="nav-text">一点个人看法</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#如果是你，你会怎么设计Hybrid框架"><span class="nav-number">6.</span> <span class="nav-text">如果是你，你会怎么设计Hybrid框架</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本篇参考文献"><span class="nav-number">7.</span> <span class="nav-text">本篇参考文献</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系列相关文章"><span class="nav-number">8.</span> <span class="nav-text">系列相关文章</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

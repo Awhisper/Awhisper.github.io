@@ -1,0 +1,1522 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Runtime,URLRoute," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="业务需要一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词） 那我们先梳理一下我们现在的业务场景 目前我们有一个首要问题是跳转  书架banner是个运营位置，需要灵活可配的各种跳转 开机弹框也是个运营位置，依然需要各种跳转 push，更别说了，各种跳转 H5书城，运营活动H5落地页，通过Bridge还需要各种跳转  我们现在是怎么做的呢？拿书架banner举例 服">
+<meta name="keywords" content="Runtime,URLRoute">
+<meta property="og:type" content="article">
+<meta property="og:title" content="路由跳转的思考">
+<meta property="og:url" content="http://yoursite.com/2016/06/12/路由跳转的思考/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="业务需要一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词） 那我们先梳理一下我们现在的业务场景 目前我们有一个首要问题是跳转  书架banner是个运营位置，需要灵活可配的各种跳转 开机弹框也是个运营位置，依然需要各种跳转 push，更别说了，各种跳转 H5书城，运营活动H5落地页，通过Bridge还需要各种跳转  我们现在是怎么做的呢？拿书架banner举例 服">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/urlroute.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/mediator1.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/mediator2.png">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/urlaction.png">
+<meta property="og:updated_time" content="2018-04-21T17:03:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="路由跳转的思考">
+<meta name="twitter:description" content="业务需要一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词） 那我们先梳理一下我们现在的业务场景 目前我们有一个首要问题是跳转  书架banner是个运营位置，需要灵活可配的各种跳转 开机弹框也是个运营位置，依然需要各种跳转 push，更别说了，各种跳转 H5书城，运营活动H5落地页，通过Bridge还需要各种跳转  我们现在是怎么做的呢？拿书架banner举例 服">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/06/12/路由跳转的思考/"/>
+
+
+
+
+
+  <title>路由跳转的思考 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/12/路由跳转的思考/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">路由跳转的思考</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-12T10:27:37+08:00">
+                2016-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/06/12/路由跳转的思考/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/06/12/路由跳转的思考/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/06/12/路由跳转的思考/" class="leancloud_visitors" data-flag-title="路由跳转的思考">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="业务需要"><a href="#业务需要" class="headerlink" title="业务需要"></a>业务需要</h1><p>一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词）</p>
+<p>那我们先梳理一下我们现在的业务场景</p>
+<p>目前我们有一个首要问题是跳转</p>
+<ul>
+<li>书架banner是个运营位置，需要灵活可配的<code>各种跳转</code></li>
+<li>开机弹框也是个运营位置，依然需要<code>各种跳转</code></li>
+<li>push，更别说了，<code>各种跳转</code></li>
+<li>H5书城，运营活动H5落地页，通过Bridge还需要<code>各种跳转</code></li>
+</ul>
+<p>我们现在是怎么做的呢？拿书架banner举例</p>
+<p>服务器会下发一个type号，（随便假设）1代表打开webview，2代表打开图书，3代表打开个人中心…等等，相关参数会随着type的不同，下发不同字段，因此代码会长这样</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (type) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//jumping code</span></span><br><span class="line">    <span class="built_in">NSString</span> *url = <span class="comment">/*解析对应url字段*/</span></span><br><span class="line">    <span class="built_in">NSString</span> *title = <span class="comment">/*解析对应title字段*/</span></span><br><span class="line">    <span class="built_in">NSString</span> *ydwebview = [[ydwebview alloc]init];</span><br><span class="line">    ydwebview.url = url;</span><br><span class="line">    ydwebview.navititle = title;</span><br><span class="line">    [<span class="keyword">self</span>.navigationController pushViewController:ydwebview animated:<span class="literal">YES</span>];</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">  &#123;</span><br><span class="line">  	 <span class="comment">//balabalaba</span></span><br><span class="line">  &#125;</span><br><span class="line">  	 <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+<p>可以看下我们的switch有多恐怖</p>
+<ul>
+<li>书架banner跳转有6个switch，其中第一个switch有4种子switch</li>
+<li>开机弹窗有2个switch，支持能力弱</li>
+<li>push，这可了不得有20个switch</li>
+<li>H5bridge跳转，有10+个switch</li>
+</ul>
+<p>那我们每次新增加一个功能模块的时候改怎么办呢？</p>
+<p>假设新作一个模块叫”英式没品笑话百科”(我很爱看的一个微博号╮(╯_╰)╭)</p>
+<p>我们就需要在书架，弹框，push，H5Bridge，四处核心跳转点全都新增代码，先要<code>import “EnglishJoke.h”</code>，然后还要新增一个switch，新增一坨跳转viewcontroller的代码</p>
+<p>有没有感觉？what the fuck！</p>
+<p>我们的代码就好像是这样，一团乱麻。</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
+<p>假如A模块是书架，它本身含有书架banner的跳转代码，所以他需要耦合各种跳转目标。比如跳转到B模块书城，形成了 A==&gt;B</p>
+<p>假如B模块是书城，它本身含有书城H5Brdige的跳转代码，所以他也需要耦合各种跳转目标，比如跳转到A模块书架，形成了 B==&gt;A</p>
+<p>假如所有模块都有这种蛋疼的跳转其他模块的需求，他们之间相互跳来跳去（没错，有时候需求就是这么的不讲道理），那么我们的代码结构就会如图一样，随着业务结构的逐渐庞大，就会变成一张复杂的蜘蛛网，难以维护。</p>
+<h1 id="结构梳理"><a href="#结构梳理" class="headerlink" title="结构梳理"></a>结构梳理</h1><p>仔细思考一下，我们的业务需求的最直接痛点所在就是<code>各种跳转</code>，但往深层考虑一下，这里面其实是耦合的问题，这里说的不是业务<code>逻辑耦合</code>，而是<code>引用耦合</code>。</p>
+<ul>
+<li>逻辑耦合，作为程序员，作为面向对象开发的基本思路，一个业务逻辑模块，做到模块化，不把自己自身的业务逻辑与外部不相干的模块进行混杂，所有都以接口的形式提供给外部调用，这是一个最基本的设计理念，这是没有问题，也是必须要做到的</li>
+<li>引用耦合，被抽象成一个模块，外部要使用的时候势必要import这个模块的头文件，再根据头文件的api，进行调用，这无可厚非，但是如果发生这种处理需要统一跳转多个不同模块的逻辑的时候，引用耦合就会显得混乱不好管理</li>
+</ul>
+<p>当面对这种当引用耦合一团乱麻的情况下，随着业务逐渐壮大，我们将会面对着一张复杂的如同蛛网一般的相互引用关系，这时候我们又该如何去处理？</p>
+<a id="more"></a>
+<p>其实有两种方案，都在被普遍使用</p>
+<ul>
+<li>中间人</li>
+<li>urlroute</li>
+</ul>
+<p>这个思路其实源自这篇文章 <a href="http://www.jianshu.com/p/15e5b83ab70e" target="_blank" rel="noopener">iOS移动端架构的那些事</a>，但只是这篇文章中提到的一部分，我们的app还没发展到需要严谨的组件化设计，庞大的架构才能支撑下多条业务的相互合作</p>
+<p><strong>我们目前的需求相对简单，就是解决跳转问题，但是解决跳转问题的时候，我们能够参考和借鉴，提前预知一些坑和风险，从而设计一个不只停留于表面需求，还能为未来业务扩展进行考虑和设计</strong></p>
+<p>首先看一下，无论是选择哪个方案，归根结底，都是抽象出一个中间层来对纷乱的引用关系来进行统一的跳转，这是软件工程的基本思路，而Mediator和URLRouter两种方案就是在思考下面2个问题上，产生了不同</p>
+<ul>
+<li>中间层如何调用具体的业务模块or组件</li>
+<li>业务模块用什么方式操作中间层</li>
+</ul>
+<p>这两个问题其实来源于<a href="http://wereadteam.github.io/2016/03/19/iOS-Component/" target="_blank" rel="noopener">iOS组件化方案探索</a>，本文也很大程度的参考bang的这篇文章</p>
+<h1 id="URLRoute"><a href="#URLRoute" class="headerlink" title="URLRoute"></a>URLRoute</h1><p>Github上有很多开源的URLRoute方案，一艘能搜到很多，但不外乎都是以注册block，注册viewcontroller为主的，比如<a href="https://github.com/clayallsopp/routable-ios" target="_blank" rel="noopener">Routable-ios</a>,Github上1000多个star</p>
+<p>他就是一种基于注册式的URLRoute的统跳协议</p>
+<ul>
+<li>注册url</li>
+<li>各模块需要一种以字典为媒介的统一创建模式</li>
+<li>openUrl</li>
+</ul>
+<p>希望通过注册URL的方式，来实现通过一个url就能任意打开已注册的界面。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//首先需要注册url，urlroute只能识别注册过的url，在注册url的同时也注册参数信息</span></span><br><span class="line">[[Routable sharedRouter] map:<span class="string">@"users/:id"</span> toController:[UserController <span class="keyword">class</span>]];</span><br><span class="line"></span><br><span class="line"><span class="comment">//其次需要各个界面模块统一一个创建模式，只认分析url分析出来的字典结果</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">UserController</span></span></span><br><span class="line">- (<span class="keyword">id</span>)initWithRouterParams:(<span class="built_in">NSDictionary</span> *)params &#123;</span><br><span class="line">  <span class="keyword">if</span> ((<span class="keyword">self</span> = [<span class="keyword">self</span> initWithNibName:<span class="literal">nil</span> bundle:<span class="literal">nil</span>])) &#123;</span><br><span class="line">    <span class="keyword">self</span>.userId = [params objectForKey:<span class="string">@"id"</span>];</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//任何代码只要想跳转，只需要一个url，使用Router,openurl即可</span></span><br><span class="line"><span class="built_in">NSString</span> *aUrl = <span class="string">@"users/4"</span>;</span><br><span class="line">[[Routable sharedRouter] open:aUrl];</span><br></pre></td></tr></table></figure>
+<p>这种Router一般都支持2种注册</p>
+<ul>
+<li>注册viewcontroller</li>
+<li>注册callback</li>
+</ul>
+<p>一般就是通过一个注册方法<code>-map:toXX:</code>来把一个字符串以及所对应的<code>函数代码块</code>或者<code>界面初始化代码块</code>，在一个统一的hash表里面进行key-value注册。</p>
+<p>当router识别url的时候，发现是对应已注册过的字符key，并且把url字符串里面的参数信息解析完毕后，通过字符key，找到对应的代码块去执行代码。</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/urlroute.png" alt="urlroute"></p>
+<p>发起调用方的模块只依赖URLRoute模块，但是视注册的情况，URLRoute不一定会依赖各个模块，这里说的依赖，简单点说就是import</p>
+<ul>
+<li>以VC形式注册，由于强制要求固定名称和参数的构造函数，以Runtime Call的方案，URLRoute不依赖各个模块（见源码）无需import对应类</li>
+<li>以Block形式注册，由于执行代码是外部block传入的，外部要调用啥类还是需要import，因此在注册block的时候必然会产生模块依赖</li>
+</ul>
+<p>这种方案虽然已经被广泛使用，并且非常适合解决我们的困境，页面之间的各种跳转，对于结构梳理时候的2个问题，他的答案是</p>
+<ul>
+<li>中间层如何调用具体的业务模块or组件</li>
+<li><p>业务模块用什么方式操作中间层</p>
+</li>
+<li><p>中间层如何调用具体的业务模块or组件？</p>
+<ul>
+<li>使用block的形式，在注册的时候模块调用写在block里</li>
+<li>使用map VC的形式，所有VC都统一字典创建入口，在注册的时候识别参数，构建字典</li>
+</ul>
+</li>
+<li>业务模块用什么方式操作中间层？<ul>
+<li>维护一个注册表，只有注册过的apiName，才能被router识别</li>
+<li>将url字符串输入给URLRouter</li>
+</ul>
+</li>
+</ul>
+<p>这个方案看起来就是天生为解决我们的“各种跳转”所设计的，但这种方案并不是我目前打算采用的方案，原因我前面提到了一部分，</p>
+<p><strong>希望不只停留于表面需求，还能为未来业务扩展进行考虑和设计</strong></p>
+<p>后面我还会详细说明，我们先看另外一种。</p>
+<h1 id="中间人"><a href="#中间人" class="headerlink" title="中间人"></a>中间人</h1><p>我们把所有的调用都集合在一起，使用一个中间人来管理，抽象出一个Mediator类</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Mediator.m</span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"ModuleA.h"</span></span></span><br><span class="line"><span class="meta">#import <span class="meta-string">"ModuleB.h"</span></span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Mediator</span></span></span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleA_viewController:(<span class="built_in">NSString</span> *)AName &#123;</span><br><span class="line">	ModuleA *a = [[ModuleA alloc]initWithName:AName];</span><br><span class="line">	<span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleB_viewController:(<span class="built_in">NSString</span> *)BID &#123;</span><br><span class="line">    ModuleB *b = [[ModuleB alloc]initWithID:BID];</span><br><span class="line">	<span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>所有调用的地方只需要使用中间人的方法，就可以调用另外一个模块</p>
+<p><code>[Mediator ModuleA_viewController:@&quot;name&quot;]</code></p>
+<p>这样就形成了这样的引用依赖</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/mediator1.png" alt="中间人1"></p>
+<p>有人会说，你这无非就是封装了一层而已，只是起到了便于维护和管理的作用，但是引用耦合依然存在，以前A与B直接相互引用依赖，现在A引用依赖中间层，中间层引用依赖B，这种引用耦合并没有解决的。</p>
+<p>想解决这种引用耦合？完全没问题，OC有运行时，我完全可以这么做</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Mediator.m</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Mediator</span></span></span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleA_viewController:(<span class="built_in">NSString</span> *)AName &#123;</span><br><span class="line">	Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"ModuleA"</span>);</span><br><span class="line">	<span class="comment">/* runtime msgsend call initWithName*/</span></span><br><span class="line">	<span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleB_viewController:(<span class="built_in">NSString</span> *)BID &#123;</span><br><span class="line">	Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"ModuleB"</span>);</span><br><span class="line">	<span class="comment">/* runtime msgsend call initWithName*/</span></span><br><span class="line">	<span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
+<p>我们完全不importA和B的类，完全通过拼接字符串，使用OC的runtime运行时来动态的调用方法，如何写runtime代码还是比较繁琐，并且要求一定的OC runtime知识，在此我先进行了省略因为后面会介绍一个我自己写的运行时神器工具（自卖自夸一把╮(╯_╰)╭）。</p>
+<p>这样引用关系就变成了这样</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/mediator2.png" alt="中间人2"></p>
+<p>这样做有啥好处呢？引用依赖彻底消失，如果我的工程完全删掉D的代码，整个工程也能build通，完全不会报错，不需要修改代码。</p>
+<p>此外，只要做好Mediator的异常判断和保护，也可以完全不担心，因为删掉D的代码而产生的崩溃。</p>
+<p>这种方案对于结构梳理时候的2个问题，他的答案是</p>
+<ul>
+<li>中间层如何调用具体的业务模块or组件？<ul>
+<li>使用runtime的形式，完全不import，不依赖任何模块代码</li>
+</ul>
+</li>
+<li>业务模块用什么方式操作中间层？<ul>
+<li>直接通过Mediator的头文件接口，直接调用API，享受Xcode代码补全</li>
+</ul>
+</li>
+</ul>
+<p>同时他还有两个好处</p>
+<ul>
+<li><p>可以设计任意形式的跨模块调用API，接口形式没有任何限制，传参种类没有任何限制</p>
+</li>
+<li><p>随着业务模块逐渐增多，还可以以category的形式，按种类，把众多代码分类保存和管理</p>
+</li>
+</ul>
+<blockquote>
+<p>题外话：有人会说，干嘛还要中间人，所有模块之间完全都使用runtime去调用，不就彻底没依赖了么？当然可以，但这也太蛋疼了，对使用者要求高，且代码复杂没有自动提示，封装在mediator里，至少可以保证写mediator的人开发一次，其他使用者就再也不用考虑和担心runtime的问题了。</p>
+</blockquote>
+<h1 id="基于中间人的URLRoute"><a href="#基于中间人的URLRoute" class="headerlink" title="基于中间人的URLRoute"></a>基于中间人的URLRoute</h1><p>从组件解耦回到正题，回到我们一直聊得“各种跳转”的问题，还是那句话，我们要解决业务痛点，我们不是在探讨一个“高大上”的“组件化”话题。</p>
+<p>刚才提到了中间人模式，看起来远没有URLRoute模式简单直观好用，URLRoute仿佛就是天生就是为了灵活的在app内来回任意跳转而设计的，看起来非常符合我们的需求，但URLRouter有没有什么弊端？</p>
+<p><strong>传参限制</strong></p>
+<p>使用url的方式传参，很明显我们要把所有用到的参数都转化成字符串并且拼接到url里面，例如</p>
+<p><code>demo://openLogin?defaultUser=&quot;Name&quot;</code></p>
+<p>这样的结果就是我们只能传那些可以被字符化的参数，简单来说就是json型参数，那些数字，字符串，字典，数组，都可以被json化形成字符串，从而拼接到url里面，但是如果我们的界面初始化需要非json型参数呢？如果未来新的业务需要传入一个UIImage做参数怎么办呢？</p>
+<blockquote>
+<p>有人会说，既然选择了url这种跳转形式，我们自然面临了这样的问题，但是收益也是巨大的，他甚至能统一wap到app得跳转，做到更加灵活和自由</p>
+</blockquote>
+<p>url是一种无论是对服务器的http请求，还是对前端wap页面跳转，都是一套统一的规则，所以我们可以暂且把这种APP内url跳转叫做<code>远程调用</code>，我们把那种传app直接调用称作<code>本地调用</code>。</p>
+<ul>
+<li>远程调用：通过一种server，wap，na都可以认可url协议的形式进行调用和传参。</li>
+<li>本地调用：直接通过NA独有的消息函数的形式进行调用和传参。</li>
+</ul>
+<blockquote>
+<p>远程调用只支持可以字符化json化的数据，本地调用可以支持任何na的参数，所以说<code>远程调用</code>是<code>本地调用</code>的子集</p>
+<p>原文引用自<a href="http://wereadteam.github.io/2016/03/19/iOS-Component/" target="_blank" rel="noopener">iOS组件化方案探索</a></p>
+</blockquote>
+<p>那我们能不能既保留了url这种灵活跨wap/NA的跳转方式，又能支持业务传非json型参数么？答案显然是可以的</p>
+<p>我们的中间人模式，就是一种很明显的<code>本地调用</code>，那我们可以考虑在中间人模式之上，封装一层URL协议解析，从而实现了我们的基于中间人的URLRoute</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/urlaction.png" alt="urlaction"></p>
+<p>这种方案对于结构梳理时候的2个问题，他的答案是</p>
+<ul>
+<li>中间层如何调用具体的业务模块or组件<ul>
+<li>只通过Mediator，走runtime的形式调用业务模块组件</li>
+</ul>
+</li>
+<li>业务模块用什么方式操作中间层<ul>
+<li>需要openURL的时候，解析url，再调用Mediator来实现调用</li>
+<li>需要本地调用的时候，直接通过Mediator来实现调用</li>
+</ul>
+</li>
+</ul>
+<h1 id="VKURLAction"><a href="#VKURLAction" class="headerlink" title="VKURLAction"></a>VKURLAction</h1><p>上面提到一种基于中间人模式的URLRoute，我已经完全实现了源码，并且写好了demo工程，起了个中二的名字 <a href="https://github.com/Awhisper/VKURLAction" target="_blank" rel="noopener">VKURLAction ==&gt; GitHub 地址 </a></p>
+<p>整个代码里包括</p>
+<ul>
+<li>openURL模块 VKURLAction</li>
+<li>URL解析模块 VKURLParser</li>
+<li>中间人模式设计 VKMediatorAction</li>
+<li>runtime工具 VKMsgSend</li>
+</ul>
+<p>既然是基于中间人模式，那么VKMediatorAction就是整个代码的核心<br>VKMediatorAction的主代码并未实现什么核心内容，写了个单例是为了以后可能进行的功能扩展，从现有的代码角度，可以干掉单例，全写成类方法</p>
+<p><strong>本地调用</strong></p>
+<p>VKMediatorAction的category才是中间人的主要代码所在，使用category的方式便于在业务无限庞大的时候，分拆代码便于管理，可以看demo工程中的<code>VKMediatorAction+webVC.m</code>的源码</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)doAlertWebViewControllerWith:(<span class="built_in">NSString</span> *)title withMainUrl:(<span class="built_in">NSString</span> *)url</span><br><span class="line">&#123;</span><br><span class="line">    Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"WebViewController"</span>);</span><br><span class="line">    <span class="keyword">id</span> vc = [[cls alloc]VKCallSelectorName:<span class="string">@"initWithTitle:url:"</span> error:<span class="literal">nil</span>,title,url];</span><br><span class="line">    [vc VKCallSelectorName:<span class="string">@"doAlertAction"</span> error:<span class="literal">nil</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">id</span>)getWebViewControllerWithTitle:(<span class="built_in">NSString</span> *)title withMainUrl:(<span class="built_in">NSString</span> *)url</span><br><span class="line">&#123;</span><br><span class="line">    Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"WebViewController"</span>);</span><br><span class="line">    <span class="keyword">id</span> vc = [[cls alloc]VKCallSelectorName:<span class="string">@"initWithTitle:url:"</span> error:<span class="literal">nil</span>,title,url];</span><br><span class="line">    <span class="keyword">return</span> vc;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看到所有API设计都是native的api，你可以设计任意的参数命名，任意参数种类。</p>
+<p>换句话说我们如果想执行本地调用，只需要引入VKMediatorAction，然后调用你想要的api就够了</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">IBAction</span>)native1click:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    [[VKMediatorAction sharedInstance] doAlertWebViewControllerWith:<span class="string">@"webview"</span> withMainUrl:<span class="string">@"http://awhisper.github.io"</span>];</span><br><span class="line">&#125;</span><br><span class="line">- (<span class="keyword">IBAction</span>)native2click:(<span class="keyword">id</span>)sender &#123;</span><br><span class="line">    <span class="built_in">UIViewController</span> *vc = [[VKMediatorAction sharedInstance]getWebViewControllerWithTitle:<span class="string">@"webview"</span> withMainUrl:<span class="string">@"http://awhisper.github.io"</span>];</span><br><span class="line">    [<span class="keyword">self</span>.navigationController pushViewController:vc animated:<span class="literal">YES</span>];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>需要注意的是，<code>VKMediatorAction+webVC.m</code>内的源码完全不import业务模块，因此需要你使用runtime的方式去调用对应方法，而我的源码里有一个封装的VKMsgSend的工具，使用这个工具可以减少写runtime代码的成本<code>VKCallSelectorName</code>这个方法就是工具提供的，后续还会详细的介绍。</p>
+<p><strong>远程调用</strong></p>
+<p>当你需要使用url的方式打开界面的时候，首先，你需要让中间人有能力接收url传来的字典型参数,所以特意为上面代码的2个mediatoraction，增加了处理字典参数的版本，可以看到，这个代码最初符合设计初衷，url的action最后还是会调用原来的native的action</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)doAlertWebViewControllerWithURLParams:(<span class="built_in">NSDictionary</span> *)params</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *title = params[<span class="string">@"title"</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *url = params[<span class="string">@"url"</span>];</span><br><span class="line">    [<span class="keyword">self</span> doAlertWebViewControllerWith:title withMainUrl:url];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">-(<span class="keyword">id</span>)getWebViewControllerWithURLParams:(<span class="built_in">NSDictionary</span> *)params</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSString</span> *title = params[<span class="string">@"title"</span>];</span><br><span class="line">    <span class="built_in">NSString</span> *url = params[<span class="string">@"url"</span>];</span><br><span class="line">    <span class="keyword">return</span> [<span class="keyword">self</span> getWebViewControllerWithTitle:title withMainUrl:url];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完成了Mediator对URL参数的支持，其实就已经可以直接使用VKURLAction了</p>
+<p><strong>VKURLAction使用</strong></p>
+<p>VKURLAction在使用的时候需要提前指定url的scheme和host，经过指定app的scheme和host，凡是不匹配的scheme与host的url都不会进行识别，具体参见demo源码吧，源码很简单不细说了</p>
+<p>VKURLAction支持对URL加入sign校验，如果url开启了sign校验功能，所有url必须附带sign参数，并且符合签名校验规则，不然不会进行识别跳转，具体看源码吧，这都是细节，不细说了</p>
+<p>只要完成了Mediator对URL参数的支持，其实就已经可以直接使用VKURLAction，比如我们已经写好了<code>getWebViewControllerWithURLParams:</code>方法，那么我们可以直接把<code>getWebViewControllerWithURLParams</code>当做url的path，使用<code>scheme://host/path?params=aa&amp;parms2=bb</code>的形式来打开url，这样就会自动的把url中的参数解析成字典，传入到Mediator得对应方法里</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化URLAction</span></span><br><span class="line">[VKURLAction setupScheme:<span class="string">@"demo"</span> andHost:<span class="string">@"nativeOpenUrl"</span>];</span><br><span class="line"><span class="comment">//写url</span></span><br><span class="line"><span class="built_in">NSString</span> * url =<span class="string">@"demo://nativeOpenUrl/getWebViewControllerWithURLParams?title=webView&amp;url=http%3A%2F%2Fawhisper.github.io"</span>;</span><br><span class="line"><span class="comment">//openURL</span></span><br><span class="line">[VKURLAction doActionWithUrlString:url];</span><br></pre></td></tr></table></figure>
+<p>更多使用方法参见demo工程</p>
+<p><strong>URL生成</strong></p>
+<p>如果不熟悉如何写url，VKURLAction提供了接口来自动生成接口，尤其是开启了签名校验后，url的签名规则会比较复杂，如果想测试，可以使用相关接口来自动生成url，避免手写各种出错</p>
+<p>url的参数必须经过url标准的encode，这一点，自动生成url工具已经实现，如果由别的方式生成url（server下发之类的），请注意调试</p>
+<p><strong>URL简写</strong></p>
+<p>getWebViewControllerWithURLParams当做一个path名字，拼写在url里面实在是有点冗长，并且不好记，因此VKURLAction提供了方法，可以注册简写（注意这不是必须的，不写也一样能够执行url）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//注册简写</span></span><br><span class="line">[VKURLAction mapKeyword:<span class="string">@"openWeb"</span> toActionName:<span class="string">@"getWebViewControllerWithURLParams"</span>];</span><br><span class="line"><span class="comment">//url就可以这么写了</span></span><br><span class="line"><span class="built_in">NSString</span> * url =<span class="string">@"demo://nativeOpenUrl/openWeb?title=webView&amp;url=http%3A%2F%2Fawhisper.github.io"</span>;</span><br></pre></td></tr></table></figure>
+<p>简写注册之后，写url也清爽了不少，也少去了别人猜测我们app代码的问题，╮(╯_╰)╭</p>
+<p><strong>URLParser</strong></p>
+<p>整个VKURLAction都是依托在URLParser这个模块之上，他可以进行解析url，识别出url种的scheme，host，识别出url种的path，识别出url种的每一个参数，拼接成字典，校验签名的可靠性，具体代码见源码吧这块不是很复杂</p>
+<h1 id="运行时工具VKMsgSend"><a href="#运行时工具VKMsgSend" class="headerlink" title="运行时工具VKMsgSend"></a>运行时工具VKMsgSend</h1><p>中间人Mediator之所以可以不import具体业务代码，就能调用各个业务就是因为使用了这个VKMsgSend</p>
+<p><a href="https://github.com/Awhisper/VKMsgSend" target="_blank" rel="noopener">VKMsgSend ==&gt; Github</a></p>
+<p><a href="http://awhisper.github.io/2015/12/31/vk-msgSend/" target="_blank" rel="noopener">VKMsgSend 比系统API好用的MsgSend</a></p>
+<p><a href="http://awhisper.github.io/2015/12/31/%E5%B0%9D%E8%AF%95%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA%E6%9B%B4%E5%A5%BD%E7%94%A8%E7%9A%84performSelector-msgSend/" target="_blank" rel="noopener">VKMsgSend 实现原理详解</a></p>
+<p>简单的说</p>
+<ul>
+<li>系统API performSelector缺点<ul>
+<li>参数限制，performSelector只支持id</li>
+<li>参数个数，performSelector在NSObject里系统最多只支持4个参数</li>
+<li>用法，每加一个参数必须多写一个<code>withObject</code>，过于麻烦</li>
+</ul>
+</li>
+<li>运行时API objc_msgSend缺点<ul>
+<li>32Bit下使用起来非常方便</li>
+<li>64Bit下由于系统底层传参方案改动非常大，因此强制要求进行参数类型，返回类型的函数类型转换，如果不进行类型转换，像32Bit那样直接调用就会crash</li>
+<li>每一次调用都，手写调用函数的类型转换，也是挺麻烦的</li>
+</ul>
+</li>
+<li>运行时API runtime直接取函数<code>Imp</code>调用缺点<ul>
+<li><code>Imp</code>和<code>objc_msgSend</code>其实是同一个原因，二者本是一个意思</li>
+</ul>
+</li>
+</ul>
+<p>VKMsgSend就是为了解决这些使用上不方便的缺点而进行的简单封装</p>
+<h1 id="本文参考博客"><a href="#本文参考博客" class="headerlink" title="本文参考博客"></a>本文参考博客</h1><p><a href="http://www.jianshu.com/p/15e5b83ab70e" target="_blank" rel="noopener">iOS移动端架构的那些事</a></p>
+<p><a href="http://wereadteam.github.io/2016/03/19/iOS-Component/" target="_blank" rel="noopener">iOS 组件化方案探索</a> bang哥的文章，在前一阵子的架构神仙打架的时候，受益匪浅</p>
+<p><a href="http://casatwy.com/iOS-Modulization.html" target="_blank" rel="noopener">iOS应用架构谈 组件化方案</a> casa的文章，本文基本上完全就是casa的思路</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+          
+            <a href="/tags/URLRoute/" rel="tag"># URLRoute</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/22/VKDebugConsole-App黑盒控制台/" rel="next" title="VKDebugConsole App黑盒控制台">
+                <i class="fa fa-chevron-left"></i> VKDebugConsole App黑盒控制台
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/06/16/前端10年读后感/" rel="prev" title="“站在10年研发路上，眺望前端未来”：读后感">
+                “站在10年研发路上，眺望前端未来”：读后感 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#业务需要"><span class="nav-number">1.</span> <span class="nav-text">业务需要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#结构梳理"><span class="nav-number">2.</span> <span class="nav-text">结构梳理</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#URLRoute"><span class="nav-number">3.</span> <span class="nav-text">URLRoute</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#中间人"><span class="nav-number">4.</span> <span class="nav-text">中间人</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#基于中间人的URLRoute"><span class="nav-number">5.</span> <span class="nav-text">基于中间人的URLRoute</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VKURLAction"><span class="nav-number">6.</span> <span class="nav-text">VKURLAction</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#运行时工具VKMsgSend"><span class="nav-number">7.</span> <span class="nav-text">运行时工具VKMsgSend</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#本文参考博客"><span class="nav-number">8.</span> <span class="nav-text">本文参考博客</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '路由跳转的思考', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

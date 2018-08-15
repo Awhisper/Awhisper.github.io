@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="JSPatch,Runtime," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="这是上一篇博客提到的代码的深入剖析 note:这个是JSPatch附属新增的小功能点，想要详细了解JsPatch整体部分的工作及原理戳这个wiki JSPatch实现原理详解 出发点一个不小心引发的bad case工作中遇到了一个case，有一部分代码被重构了，一个函数被彻底的废弃并且.m文件中的具体函数实现已经被整体注释掉了，但是.h文件这个函数还存在. 由于被重构的那部分在客户端很多处代码都有">
+<meta name="keywords" content="JSPatch,Runtime">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JSPatch defineProtocol 实现详解">
+<meta property="og:url" content="http://yoursite.com/2015/12/25/JSPatch-defineProtocol-实现详解/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="这是上一篇博客提到的代码的深入剖析 note:这个是JSPatch附属新增的小功能点，想要详细了解JsPatch整体部分的工作及原理戳这个wiki JSPatch实现原理详解 出发点一个不小心引发的bad case工作中遇到了一个case，有一部分代码被重构了，一个函数被彻底的废弃并且.m文件中的具体函数实现已经被整体注释掉了，但是.h文件这个函数还存在. 由于被重构的那部分在客户端很多处代码都有">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-04-21T17:02:36.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JSPatch defineProtocol 实现详解">
+<meta name="twitter:description" content="这是上一篇博客提到的代码的深入剖析 note:这个是JSPatch附属新增的小功能点，想要详细了解JsPatch整体部分的工作及原理戳这个wiki JSPatch实现原理详解 出发点一个不小心引发的bad case工作中遇到了一个case，有一部分代码被重构了，一个函数被彻底的废弃并且.m文件中的具体函数实现已经被整体注释掉了，但是.h文件这个函数还存在. 由于被重构的那部分在客户端很多处代码都有">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2015/12/25/JSPatch-defineProtocol-实现详解/"/>
+
+
+
+
+
+  <title>JSPatch defineProtocol 实现详解 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/25/JSPatch-defineProtocol-实现详解/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">JSPatch defineProtocol 实现详解</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-12-25T14:01:25+08:00">
+                2015-12-25
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2015/12/25/JSPatch-defineProtocol-实现详解/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2015/12/25/JSPatch-defineProtocol-实现详解/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2015/12/25/JSPatch-defineProtocol-实现详解/" class="leancloud_visitors" data-flag-title="JSPatch defineProtocol 实现详解">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>这是上一篇博客提到的代码的深入剖析</p>
+<p>note:这个是JSPatch附属新增的小功能点，想要详细了解JsPatch整体部分的工作及原理戳这个wiki <a href="https://github.com/bang590/JSPatch/wiki/JSPatch-%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E8%AF%A6%E8%A7%A3" target="_blank" rel="noopener">JSPatch实现原理详解</a></p>
+<h2 id="出发点"><a href="#出发点" class="headerlink" title="出发点"></a>出发点</h2><h3 id="一个不小心引发的bad-case"><a href="#一个不小心引发的bad-case" class="headerlink" title="一个不小心引发的bad case"></a>一个不小心引发的bad case</h3><p>工作中遇到了一个case，有一部分代码被重构了，一个函数被彻底的废弃并且.m文件中的具体函数实现已经被整体注释掉了，但是.h文件这个函数还存在.</p>
+<p>由于被重构的那部分在客户端很多处代码都有调用，没有及时的替换成最新的函数，导致造成了线上crash，<code>unrecognized selector</code>.</p>
+<p>我最开始想用JsPatch发出一个hotfix，既然是<code>unrecognized selector</code>，具体的函数实现不存在，那么我用JSPatch动态补上这个函数实现，就可以封住crash了.</p>
+<p>结果操作后发现，无法实现，原因是.h文件中这个selector里面有一个非id类型的参数.</p>
+<h3 id="JSPatch只能新增参数类型为id的方法"><a href="#JSPatch只能新增参数类型为id的方法" class="headerlink" title="JSPatch只能新增参数类型为id的方法"></a>JSPatch只能新增参数类型为id的方法</h3><p>在JsPatch的Wiki中<a href="https://github.com/bang590/JSPatch/wiki/defineClass%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3）" target="_blank" rel="noopener">defineClass</a> 有一句说明</p>
+<blockquote>
+<p>可以给一个类随意添加 OC 未定义的方法，但所有的参数类型都是 id:</p>
+</blockquote>
+<p>为什么会这样，探究其源码可以发现</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (!overrided) &#123;</span><br><span class="line">     <span class="built_in">NSMutableString</span> *typeDescStr = [<span class="string">@"@@:"</span> mutableCopy];</span><br><span class="line">     <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numberOfArg; i ++) &#123;</span><br><span class="line">         [typeDescStr appendString:<span class="string">@"@"</span>];</span><br><span class="line">     &#125;</span><br><span class="line">     overrideMethod(currCls, selectorName, jsMethod, !isInstance, [typeDescStr cStringUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当使用defineClass对新方法命名的时候，defineClass能通过<code>_</code>自动识别参数的位置和个数，但是并没有能识别参数的类型。</p>
+<p>而在通过这段代码创建新方法的时候，需要输入方法的<code>type encode</code>，由于defineClass只有参数的个数和位置信息，并未获得参数的类型，因此JsPatch默认要求新方法所有输入的参数都是id类型，返回的参数也必须是id类型，通过<code>@@:</code>+参数数量个<code>@</code>来生成，只允许id类型的参数及返回的新方法</p>
+<p>关于<code>type encode</code>后面会详细解释</p>
+<p>当我在尝试通过JsPatch修复我的case的时候，由于我希望新增的方法是一个含有非id类型参数的方法，而JsPatch最终添加的新方法的参数都是id，所以程序运行的时候依然会crash，因为他还是找不到那个他想要的方法，依然是<code>unrecognized selector</code></p>
+<a id="more"></a>
+<h2 id="修改思路"><a href="#修改思路" class="headerlink" title="修改思路"></a>修改思路</h2><h3 id="知道原因，寻找思路"><a href="#知道原因，寻找思路" class="headerlink" title="知道原因，寻找思路"></a>知道原因，寻找思路</h3><ul>
+<li>defineClass为覆盖修改方法而设计，对于新增方法，传入的信息不足，不能生成正确的<code>type encode</code>，所以无法正确的添加任意参数类型的方法，于是统一设定为id类型</li>
+<li>如果由使用者传入足够的信息，借而生成正确的<code>type encode</code>，则我们的目的就可以达成</li>
+</ul>
+<p>我们可以考虑修改defineClass的input，专门在新增方法处开新的接口传入参数，从而使得一切信息都能到手，正常生成正确的新方法。</p>
+<p>但是眼下还有2个问题</p>
+<ul>
+<li>defineClass在设计上，新增方法和覆盖修改方法走的是同一个输入口，单独为新增方法而重新调整输入接口，会使代码逻辑和设计模式变化比较大</li>
+<li>在用户已经养成的JsPatch编写习惯上，新增和覆盖二者本是统一的，为新增方法而大改defineClass的输入模式，势必会让已经习惯使用的用户有很大不便</li>
+<li>寻找一个合适的方案，能不大范围影响现在的设计模式，又能完成我的想法</li>
+</ul>
+<h3 id="defineClass的Protocol"><a href="#defineClass的Protocol" class="headerlink" title="defineClass的Protocol"></a>defineClass的Protocol</h3><p>JsPatch的<a href="https://github.com/bang590/JSPatch/wiki/defineClass%E4%BD%BF%E7%94%A8%E6%96%87%E6%A1%A3）" target="_blank" rel="noopener">defineClass</a> 中提到的Protocol的作用</p>
+<blockquote>
+<p>可以在定义时让一个类实现某些 Protocol 接口，写法跟 OC 一样:</p>
+</blockquote>
+<blockquote>
+<p>defineClass(“JPViewController: UIViewController&lt;UIScrollViewDelegate, UITextViewDelegate&gt;”, {})</p>
+</blockquote>
+<blockquote>
+<p>这样做的作用是，当添加 Protocol 里定义的方法，而类里没有实现的方法时，参数类型不再全是 id，而是自动转为 Protocol 里定义的类型:</p>
+</blockquote>
+<p>看到原作者bang的说明我们就可以明白，defineClass中的Protocol的作用本是借助已经存在的Protocol的定义，从已经存在的Protocol中就可以抽取出描述selector的<code>type encode</code>，进而生成含有非id参数的方法描述，从而能新增出正确的方法。</p>
+<p>我们还可以看下源码，就一清二楚<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (class_respondsToSelector(currCls, <span class="built_in">NSSelectorFromString</span>(selectorName))) &#123;</span><br><span class="line">                overrideMethod(currCls, selectorName, jsMethod, !isInstance, <span class="literal">NULL</span>);</span><br><span class="line">&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="built_in">BOOL</span> overrided = <span class="literal">NO</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="built_in">NSString</span> *protocolName <span class="keyword">in</span> protocols) &#123;</span><br><span class="line">        <span class="keyword">char</span> *types = methodTypesInProtocol(protocolName, selectorName, isInstance, <span class="literal">YES</span>);</span><br><span class="line">        <span class="keyword">if</span> (!types) types = methodTypesInProtocol(protocolName, selectorName, isInstance, <span class="literal">NO</span>);</span><br><span class="line">        <span class="keyword">if</span> (types) &#123;</span><br><span class="line">            overrideMethod(currCls, selectorName, jsMethod, !isInstance, types);</span><br><span class="line">            free(types);</span><br><span class="line">            overrided = <span class="literal">YES</span>;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">if</span> (!overrided) &#123;</span><br><span class="line">        <span class="built_in">NSMutableString</span> *typeDescStr = [<span class="string">@"@@:"</span> mutableCopy];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; numberOfArg; i ++) &#123;</span><br><span class="line">            [typeDescStr appendString:<span class="string">@"@"</span>];</span><br><span class="line">        &#125;</span><br><span class="line">        overrideMethod(currCls, selectorName, jsMethod, !isInstance, [typeDescStr cStringUsingEncoding:<span class="built_in">NSUTF8StringEncoding</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>源码中先判断是否该方法已经存在，存在的情况下进行覆盖，如果不存在，先判断defineClass中是否指定了Protocol，指定了的话从Protocol中寻找匹配的Method进行覆盖和新增，如果在指定Protocol中也找不到，才进行强制id参数类型的方法新增。</p>
+<p>所以我选一个比较好的角度，既不破坏原本defineClass的设计逻辑，又能将新的参数传入其中。</p>
+<p>那就是设计一个全新的接口defineProtocol，在这个全新的接口里面输入足够多的参数信息，进而通过运行时创建全新的Protocol，创建完成的新Protocol就自然可以借助defineClass里面的功能，引入正确的新增方法</p>
+<h2 id="具体实现"><a href="#具体实现" class="headerlink" title="具体实现"></a>具体实现</h2><h3 id="JS接口设计"><a href="#JS接口设计" class="headerlink" title="JS接口设计"></a>JS接口设计</h3><p>一开始我是想直接让使用者输入<code>type encode</code>这样也省了我的事，后来和原作者交流觉得，尽可能的节省使用者的学习成本，毕竟<code>type encode</code>不知道的人还真不太能很快搞明白这一大堆<code>: # @ v b i</code>的乱七八糟字符到底该怎么写，如果输入接口这样，就会比较直观<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">defineProtocol(<span class="string">'lalalala'</span>,&#123;</span><br><span class="line">  testProtocol: &#123;</span><br><span class="line">    paramsType:<span class="string">"int, id"</span>,</span><br><span class="line">    returnType:<span class="string">"BOOL"</span></span><br><span class="line">  &#125;,</span><br><span class="line">  ...</span><br><span class="line">&#125;, &#123;</span><br><span class="line">  ...</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure></p>
+<p>使用者直接输入int,float,id,void等，由代码自动识别生成最终的<code>type encode</code>，而且因为自动识别需代码进行逐一的支持和转换，有些特殊的参数类型，代码转换并不能完全覆盖，于是还添加了一个可选的参数typeEncode，一旦自动转换无法支持的参数类型，就可以通过可选参数，需要使用者自己想办法手写<code>type encode</code>了，主要无法支持的参数是用户自定义的struct</p>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><p>JS接口这部分实现就不详细描述了，和JSPatch其他接口完全一致，</p>
+<p>看下对比是不是和defineClass一模一样？^_^<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">context[<span class="string">@"_OC_defineProtocol"</span>] = ^(<span class="built_in">NSString</span> *protocolDeclaration, JSValue *instProtocol, JSValue *clsProtocol) &#123;</span><br><span class="line">       <span class="keyword">return</span> defineProtocol(protocolDeclaration, instProtocol,clsProtocol);</span><br><span class="line">   &#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">context[<span class="string">@"_OC_defineClass"</span>] = ^(<span class="built_in">NSString</span> *classDeclaration, JSValue *instanceMethods, JSValue *classMethods) &#123;</span><br><span class="line">       <span class="keyword">return</span> defineClass(classDeclaration, instanceMethods, classMethods);</span><br><span class="line">   &#125;;</span><br></pre></td></tr></table></figure></p>
+<p>通过运行时<code>objc_allocateProtocol</code>创建新Protocol，通过<code>protocol_addMethodDescription</code>来为新Protocol增加方法，通过<code>objc_registerProtocol</code>来注册新Protocol，这是基本的runtime代码，不多描述了，源码里都可以看到</p>
+<p>唯一需要注意的是新protocol一经注册生效<code>objc_registerProtocol</code>，就不可在更改了，所以defineProtocol不能修改已经存在的Protocol</p>
+<p><code>protocol_addMethodDescription</code>需要输入seletorName和type encode，接下来重点说下如何在js返回的字典里识别这两个参数</p>
+<h3 id="识别selector"><a href="#识别selector" class="headerlink" title="识别selector"></a>识别selector</h3><p>如接口设计里面的样例testProtocol，是被当做字典中的key，可以直接取出来的，因为我们设计defineProtocol中Js新方法的命名和defineClass一致，都是参数用<code>_</code>代替，原本的_下划线用<code>__</code>代替，所以解析key这个字符串的步骤和defineClass也一致</p>
+<p>NOTES:源码中需要用paramsType的个数来判断函数名结尾是否存在参数，所以在typeEncode可选参数使用的情况下，paramsType可以随意输入任意的字符串，但是必须保证数量匹配</p>
+<h3 id="识别type-encode"><a href="#识别type-encode" class="headerlink" title="识别type encode"></a>识别type encode</h3><p>如接口设计里面的样例，参数会输入”int, id”这样的字符串，返回值会输入”void”这样的字符串，前者再通过<code>,</code>号拆分成字符串数组，就接下来就可以通过代码获取了，我打算构建一个有限字符串映射表typeEncodeDic，以type字符串为key，映射<code>int</code>到<code>i</code>这样。</p>
+<p>typeEncodeDic这个表已经构建好了，这样从js传来的type字符串当做key，直接从这个表里就能get到编码。</p>
+<p>人肉去写这个表太low了，怎么也得用酷炫一点的方式支持一下，看到原作者bang，在JsPatch里面风骚的宏的用法，我也照猫画虎了一个</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSMutableDictionary</span>* typeEncodeDic = [[<span class="built_in">NSMutableDictionary</span> alloc]init];</span><br><span class="line"><span class="meta">#define JP_DEFINE_TYPE_ENCODE_CASE(_type) \</span></span><br><span class="line"><span class="keyword">if</span> ([@<span class="meta">#_type length] &gt; 0) &#123;\</span></span><br><span class="line">    <span class="keyword">char</span>* encode = <span class="keyword">@encode</span>(_type);\</span><br><span class="line">    <span class="built_in">NSString</span> * encodestr = [<span class="built_in">NSString</span> stringWithUTF8String:encode];\</span><br><span class="line">    [typeEncodeDic setObject:encodestr forKey:@<span class="meta">#_type];\</span></span><br><span class="line">&#125;</span><br><span class="line">JP_DEFINE_TYPE_ENCODE_CASE(<span class="keyword">id</span>);</span><br></pre></td></tr></table></figure>
+<p><code>JP_DEFINE_TYPE_ENCODE_CASE</code>这个宏就自动的将输入参数<code>_type</code>通过语法糖<code>@encode()</code>写入字典，这里面还有一处很nb的地方</p>
+<h3 id="宏里面用参数生成静态字符串"><a href="#宏里面用参数生成静态字符串" class="headerlink" title="宏里面用参数生成静态字符串"></a>宏里面用参数生成静态字符串</h3><p>这是一个很trick的地方，原本我的宏是这么设计的<code>JP_DEFINE_TYPE_ENCODE_CASE(@&quot;id&quot;,id)</code>为什么这么设计？因为我搞不定怎么在宏里将id转成@“id”,试了很多种方法都不行╮(╯_╰)╭</p>
+<p>后来原作者bang交流，他给了解决办法，<code>@#_type</code>他在JsPatch里已经用到了，说他当初也遇到一样的困扰，然后查到的。</p>
+<p>所以最终这个宏被设计成了这样。</p>
+<pre><code>JP_DEFINE_TYPE_ENCODE_CASE(id);
+JP_DEFINE_TYPE_ENCODE_CASE(BOOL);
+JP_DEFINE_TYPE_ENCODE_CASE(int);
+JP_DEFINE_TYPE_ENCODE_CASE(void);
+JP_DEFINE_TYPE_ENCODE_CASE(char);
+JP_DEFINE_TYPE_ENCODE_CASE(short);
+JP_DEFINE_TYPE_ENCODE_CASE(unsigned short);
+JP_DEFINE_TYPE_ENCODE_CASE(unsigned int);
+JP_DEFINE_TYPE_ENCODE_CASE(long);
+JP_DEFINE_TYPE_ENCODE_CASE(unsigned long);
+JP_DEFINE_TYPE_ENCODE_CASE(long long);
+JP_DEFINE_TYPE_ENCODE_CASE(float);
+JP_DEFINE_TYPE_ENCODE_CASE(double);
+JP_DEFINE_TYPE_ENCODE_CASE(CGFloat);
+JP_DEFINE_TYPE_ENCODE_CASE(CGSize);
+JP_DEFINE_TYPE_ENCODE_CASE(CGRect);
+JP_DEFINE_TYPE_ENCODE_CASE(CGPoint);
+JP_DEFINE_TYPE_ENCODE_CASE(CGVector);
+JP_DEFINE_TYPE_ENCODE_CASE(UIEdgeInsets);
+JP_DEFINE_TYPE_ENCODE_CASE(NSInteger);
+JP_DEFINE_TYPE_ENCODE_CASE(Class);
+JP_DEFINE_TYPE_ENCODE_CASE(SEL);
+</code></pre><p>从这可以看出来，想要扩展支持更多的参数类型？没问题，在这里添加就好了（不想修改源码，动态添加就走之前说的可选参数typeEncode）</p>
+<h3 id="处理id类型参数"><a href="#处理id类型参数" class="headerlink" title="处理id类型参数"></a>处理id类型参数</h3><p>看到上面我们知道，如果我的新函数中存在id类型，无论是系统类型NSArray还是用户自己写的CustomObject，在使用我们的defineProtocol的时候用户需要自己记得所有的NSObject都要输入<code>id</code>,仔细想想这也挺不方便的对吧？</p>
+<p>所以我额外做了一个处理，当从typeEncodeDic表里面找不到对应的key的时候，就会<code>NSClassFromString</code>来判断是否是一个Oc对象，如果是自动转换为id的类型编码<code>@</code><br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">NSString</span>* argencode = [typeEncodeDic objectForKey:argstr];</span><br><span class="line"><span class="keyword">if</span> (argencode.length &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">    Class cls = <span class="built_in">NSClassFromString</span>(argstr);</span><br><span class="line">    <span class="keyword">if</span> ([(<span class="keyword">id</span>)cls isKindOfClass:[<span class="built_in">NSObject</span> <span class="keyword">class</span>]]) &#123;</span><br><span class="line">        argencode = <span class="string">@"@"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样无论用户输入<code>类名</code>还是<code>id</code>,我这边的处理都是完全一样，等效的</p>
+<pre><code>paramsType:&quot;id&quot;
+paramsType:&quot;CustomObject&quot;
+</code></pre><h3 id="生成SEL的类型编码"><a href="#生成SEL的类型编码" class="headerlink" title="生成SEL的类型编码"></a>生成SEL的类型编码</h3><p>SEL的类型编码命名方式是这样的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>) setSomething:(<span class="keyword">id</span>) anObject</span><br></pre></td></tr></table></figure></p>
+<p>这个函数他的类型编码是</p>
+<pre><code>v@:@
+</code></pre><ul>
+<li>第一个<code>v</code>代表返回值是void即void的类型编码</li>
+<li>第二个<code>@</code>代表self（其实是第一个参数 Self和SEL是任何oc函数的隐藏参数），这个基本是固定的</li>
+<li>第三个<code>:</code>代表SEL（其实是第二个参数 Self和SEL是任何oc函数的隐藏参数），这个基本是固定的</li>
+<li>第四个<code>@</code>代表Oc函数第一个参数的类型即id的类型编码</li>
+</ul>
+<p>通过这些规律，我们可以手写SEL的类型编码了,每一种参数类型可以查询苹果的定义</p>
+<p>代码中可选参数typeEncode优先级最高，如果用户手写了可选参数，则不会执行代码自动生成，直接使用用户输入的typeEncode，生成Protocol。</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (typeEncode) &#123;</span><br><span class="line">    addMethodToProtocol(protocol, selectorName, typeEncode, isInstance);</span><br><span class="line">&#125;<span class="keyword">else</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//type encode string automatic create</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="详探TypeEncode"><a href="#详探TypeEncode" class="headerlink" title="详探TypeEncode"></a>详探TypeEncode</h3><p>我们可以手写typeEncode，其实也可以借助oc代码生成typeEncode</p>
+<p>我们先在代码中实现<code>- (void) setSomething:(id) anObject</code>这个方法，然后使用下面的代码，就能通过系统取出SEL的typeEncode</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Class cls = <span class="keyword">self</span>.class;</span><br><span class="line">SEL selstr = <span class="built_in">NSSelectorFromString</span>(<span class="string">@"setSomething:"</span>);</span><br><span class="line">Method method = class_getInstanceMethod(cls, selstr);</span><br><span class="line"><span class="keyword">const</span> <span class="keyword">char</span>* type = method_getTypeEncoding(method);</span><br></pre></td></tr></table></figure>
+<p>经过系统的读取，惊讶的发现，系统算出来的type居然是<code>v12@0:4@8</code>，这他喵的一堆数字是什么鬼！，刚才不是说<code>v@:@</code>嘛？？？？？？？？！！！！！！</p>
+<p>经过我反复地测试，发现无论是输入<code>v12@0:4@8</code>还是<code>v@:@</code>，Protocol都能正常的生成，一点区别也没有，完全不影响使用，但是他喵的为什么系统就会多出来这么多数字？</p>
+<p>栈溢出的一个回答似乎能解释 <a href="http://stackoverflow.com/questions/11491947/what-are-the-digits-in-an-objc-method-type-encoding-string" target="_blank" rel="noopener">StackOverFlow-What are the digits in an ObjC method type encoding string?</a></p>
+<p>和gitHub上的@DevSonw聊，觉得这可能是一个字节补齐的过程，并不影响使用</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/JSPatch/" rel="tag"># JSPatch</a>
+          
+            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/20/为JSPatch新增defineProtocol功能/" rel="next" title="为JSPatch新增defineProtocol功能">
+                <i class="fa fa-chevron-left"></i> 为JSPatch新增defineProtocol功能
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/31/vk-msgSend/" rel="prev" title="比系统API好用的VKMsgSend">
+                比系统API好用的VKMsgSend <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#出发点"><span class="nav-number">1.</span> <span class="nav-text">出发点</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#一个不小心引发的bad-case"><span class="nav-number">1.1.</span> <span class="nav-text">一个不小心引发的bad case</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#JSPatch只能新增参数类型为id的方法"><span class="nav-number">1.2.</span> <span class="nav-text">JSPatch只能新增参数类型为id的方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#修改思路"><span class="nav-number">2.</span> <span class="nav-text">修改思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#知道原因，寻找思路"><span class="nav-number">2.1.</span> <span class="nav-text">知道原因，寻找思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defineClass的Protocol"><span class="nav-number">2.2.</span> <span class="nav-text">defineClass的Protocol</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#具体实现"><span class="nav-number">3.</span> <span class="nav-text">具体实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#JS接口设计"><span class="nav-number">3.1.</span> <span class="nav-text">JS接口设计</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#代码实现"><span class="nav-number">3.2.</span> <span class="nav-text">代码实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#识别selector"><span class="nav-number">3.3.</span> <span class="nav-text">识别selector</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#识别type-encode"><span class="nav-number">3.4.</span> <span class="nav-text">识别type encode</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#宏里面用参数生成静态字符串"><span class="nav-number">3.5.</span> <span class="nav-text">宏里面用参数生成静态字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#处理id类型参数"><span class="nav-number">3.6.</span> <span class="nav-text">处理id类型参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#生成SEL的类型编码"><span class="nav-number">3.7.</span> <span class="nav-text">生成SEL的类型编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#详探TypeEncode"><span class="nav-number">3.8.</span> <span class="nav-text">详探TypeEncode</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'JSPatch defineProtocol 实现详解', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1460 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渲染," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？ 前言在tableView or collectionView的Cell使用中如果大量出现了view.layer.cornerRa">
+<meta name="keywords" content="渲染">
+<meta property="og:type" content="article">
+<meta property="og:title" content="圆角卡顿刨根问底">
+<meta property="og:url" content="http://yoursite.com/2016/03/12/滚动圆角卡顿刨根问底/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？ 前言在tableView or collectionView的Cell使用中如果大量出现了view.layer.cornerRa">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeCpu.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeCpu.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerMask.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/CPUGPU.png?raw=true">
+<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/frameLine.png?raw=true">
+<meta property="og:updated_time" content="2017-03-12T13:01:12.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="圆角卡顿刨根问底">
+<meta name="twitter:description" content="整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？ 前言在tableView or collectionView的Cell使用中如果大量出现了view.layer.cornerRa">
+<meta name="twitter:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/03/12/滚动圆角卡顿刨根问底/"/>
+
+
+
+
+
+  <title>圆角卡顿刨根问底 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/03/12/滚动圆角卡顿刨根问底/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">圆角卡顿刨根问底</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-12T09:05:01+08:00">
+                2016-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/03/12/滚动圆角卡顿刨根问底/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/03/12/滚动圆角卡顿刨根问底/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/03/12/滚动圆角卡顿刨根问底/" class="leancloud_visitors" data-flag-title="圆角卡顿刨根问底">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在<code>tableView</code> or <code>collectionView</code>的Cell使用中如果大量出现了<code>view.layer.cornerRadius</code> + <code>ClipToBounds</code>or<code>masksToBounds</code>的设置，会造成滚动不流畅，滚动起来十分的卡顿。</p>
+<p>这一点相信很多iOS developer都不陌生，相关的搜索<code>圆角卡顿</code>，<code>圆角性能优化</code>，都能看到很多文章，思路大致如下</p>
+<ul>
+<li>这样切圆角会造成GPU的<code>离屏渲染</code></li>
+<li><code>离屏渲染</code>会消耗太多GPU资源，但是CPU却没有太多的占用</li>
+<li>GPU消耗太大拖慢了单帧绘制</li>
+<li>解决办法，采用CPU预先绘制bitmap，交给GPU直接渲染</li>
+</ul>
+<p>最广泛的办法就是预先用CPU，构建圆角路径贝塞尔曲线<code>UIBezierPath</code>，用原来的图片填充进圆角路径，获得天然的自带圆角透明的bitmap数据<code>UIImage</code>，从而直接交给GPU进行普通渲染</p>
+<p>有不少的blog，以及大量的demo，都验证了这一点，但看完后不禁有几个疑问，于是产生了今天的刨根问底</p>
+<ul>
+<li>什么才是卡顿的根本原因？</li>
+<li>离屏渲染是什么？</li>
+<li>GPU消耗交给CPU，CPU难道就没消耗了么？</li>
+</ul>
+<p>每一种解决方案，都是在一定得特定情景下而产生的最优解，针对CPU预绘bitmap的方案，在相当多的使用场景下，是正确的没有任何问题的。</p>
+<p>但是这里要讲一个真实的case，如果这个方案都无法解决问题，依然还是卡，那么该怎么办？</p>
+<p><strong>到底卡顿根本原因是啥？</strong></p>
+<p><strong>无法彻底缓解卡顿，该怎么办？</strong><br><a id="more"></a></p>
+<h1 id="真实Case"><a href="#真实Case" class="headerlink" title="真实Case"></a>真实Case</h1><p>我们的App有一个用<code>UICollectionView</code>制作了书架的功能，可以放置图书，多本图书叠放在一起自动生成文件夹，如图</p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true" width="263" height="467" alt="icon" align="center"></p>
+<p> 可以看到图中每一本书都是一个圆角矩形，而一个文件夹，如果图书超过4本则是4+1个圆角矩形，普通的用户使用习惯，可能不会有太多的文件夹（也说不准哟！）但是如果文件夹数量超过2个屏幕，每一个文件夹都是4本以上的图书，那么在2各屏幕内来回滚动，产生了很恐怖的结果。。。</p>
+<p>我们的app，在ip6上，同屏幕最多可以有9个Item，每个Item如果都是4个以上图书的文件夹就是5个圆角矩形，换句话说，一个屏幕内最多有45个圆角矩形。在这样的极限情况下，iPhone6上会卡的只有15帧左右！60帧才是满帧啊亲。。。</p>
+<p>更何况我们的app，在iPhone 6 plus上是4*4个item，于是一个屏幕内最多有80个圆角矩形。</p>
+<p>我们还支持iPad universal</p>
+<p><strong>细思极恐</strong></p>
+<h2 id="真实Case环境说明"><a href="#真实Case环境说明" class="headerlink" title="真实Case环境说明"></a>真实Case环境说明</h2><ul>
+<li>测试中的图书阴影为贴图，不是GPU渲染，排除这部分干扰</li>
+<li>测试中的图书均为已下载完成，排除后台下载线程导致的干扰</li>
+<li>测试的书架上半部分大概有20本左右的图书，足够在2个屏幕的范围内来回滚动测试纯图书1圆角的帧率</li>
+<li>测试的书架下半部分大概有20个4本以上图书的文件夹，足够在2个屏幕的范围内来回滚动测试纯文件夹5圆角的帧率</li>
+</ul>
+<h1 id="无优化处理情况"><a href="#无优化处理情况" class="headerlink" title="无优化处理情况"></a>无优化处理情况</h1><p>首先在没有任何优化代码的情况下，都是最直接的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bookProfileImageView.layer.cornerRadius = <span class="number">3.0</span>f;</span><br><span class="line">bookProfileImageView.clipsToBounds = <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure></p>
+<h2 id="性能检测"><a href="#性能检测" class="headerlink" title="性能检测"></a>性能检测</h2><p>让我们看一组<code>Instrument</code>里面<code>core Animation</code>的数据结果</p>
+<p><strong>图书范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeBook.png?raw=true" width="266" height="363" alt="icon" align="center"></p>
+<p>我们可以看出，在全是图书的情况下，仅仅9个圆角矩形，并不会影响帧率，至少能保持在55帧左右，滚动流畅度接近100% 并且Cpu的占用率并不高</p>
+<p><strong>文件夹范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeFolder.png?raw=true" width="307" height="356" alt="icon" align="center"></p>
+<p>可怕地事情来了，在全是文件夹的情况下，已经达到了单屏45个圆角矩形，帧率已经降到了平均15，这是一种什么感觉，满帧率60，现在只达到了滚动流畅的25%，简直惨不忍睹</p>
+<p>大家再看下Cpu占用率，还是不高</p>
+<p><strong>看一下Cpu的消耗情况</strong></p>
+<p>我们仔细看看Cpu都消耗在哪？</p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeCpu.png?raw=true" width="500" height="320" alt="icon" align="center"></p>
+<p>可以看到，Cpu的消耗在曲线图上并没有陡然增高，消耗也都是一些基本的UICollectionView的处理</p>
+<h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><p>可以看到，在极限纯文件夹区域滚动的时候，就只有那4个字可以形容<code>惨不忍睹</code></p>
+<p>这样的产生原因，其实在一开始就提到了，因为圆角遮罩，在Gpu运算的时候会发生<code>离屏渲染</code></p>
+<p><strong>离屏渲染</strong></p>
+<p>将离屏渲染作为关键词去搜索一下你会查到很多的信息，比如<a href="http://www.jianshu.com/p/6d24a4c29e18" target="_blank" rel="noopener">iOS离屏渲染的研究</a></p>
+<blockquote>
+<p>当使用圆角，阴影，遮罩的时候，图层属性的混合体被指定为在未预合成之前不能直接在屏幕中绘制，所以就需要屏幕外渲染被唤起。<br>屏幕外渲染并不意味着软件绘制，但是它意味着图层必须在被显示之前在一个屏幕外上下文中被渲染（不论Cpu还是Gpu）。<br>所以当使用离屏渲染的时候会很容易造成性能消耗，因为在OPENGL里离屏渲染会单独在内存中创建一个屏幕外缓冲区并进行渲染，而屏幕外缓冲区跟当前屏幕缓冲区上下文切换是很耗性能的。</p>
+</blockquote>
+<p>离屏渲染可以是广义的理解为，在屏幕外的时候就要进行渲染，无论是Cpu还是Gpu</p>
+<p>在我们的当前的Case里，因为过度的使用了Gpu去处理圆角遮罩，因此Gpu发生了大量的离屏渲染，大幅度拖慢了速度，导致帧率如此悲惨</p>
+<p>但因为是Gpu那边的资源被过度消耗，Cpu这边显然处于比较清闲的状态，因此，这三张图片里面，Cpu占用率一直不高，并且没有明显的某个异常函数严重消耗Cpu资源</p>
+<h1 id="Cpu绘制bitmap优化处理情况"><a href="#Cpu绘制bitmap优化处理情况" class="headerlink" title="Cpu绘制bitmap优化处理情况"></a>Cpu绘制bitmap优化处理情况</h1><p>那么，我们就对他进行一定的优化</p>
+<p>这段代码是引用来的，因为前一阵子很多人讨论这个话题，已经有了很多优秀的方案，比如 <a href="http://www.jianshu.com/p/f970872fdc22" target="_blank" rel="noopener">iOS高效添加圆角实战讲解</a><br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="keyword">void</span>)kt_addCorner:(<span class="built_in">CGFloat</span>)radius</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>.image) &#123;</span><br><span class="line">        <span class="keyword">self</span>.image = [<span class="keyword">self</span>.image imageAddCornerWithRadius:radius andSize:<span class="keyword">self</span>.bounds.size];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="built_in">UIImage</span>*)imageAddCornerWithRadius:(<span class="built_in">CGFloat</span>)radius andSize:(<span class="built_in">CGSize</span>)size&#123;</span><br><span class="line">    <span class="built_in">CGRect</span> rect = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, size.width, size.height);</span><br><span class="line">    </span><br><span class="line">    <span class="built_in">UIGraphicsBeginImageContextWithOptions</span>(size, <span class="literal">NO</span>, [<span class="built_in">UIScreen</span> mainScreen].scale);</span><br><span class="line">    <span class="built_in">CGContextRef</span> ctx = <span class="built_in">UIGraphicsGetCurrentContext</span>();</span><br><span class="line">    <span class="built_in">UIBezierPath</span> * path = [<span class="built_in">UIBezierPath</span> bezierPathWithRoundedRect:rect byRoundingCorners:<span class="built_in">UIRectCornerAllCorners</span> cornerRadii:<span class="built_in">CGSizeMake</span>(radius, radius)];</span><br><span class="line">    <span class="built_in">CGContextAddPath</span>(ctx,path.CGPath);</span><br><span class="line">    <span class="built_in">CGContextClip</span>(ctx);</span><br><span class="line">    [<span class="keyword">self</span> drawInRect:rect];</span><br><span class="line">    <span class="built_in">CGContextDrawPath</span>(ctx, kCGPathFillStroke);</span><br><span class="line">    <span class="built_in">UIImage</span> * newImage = <span class="built_in">UIGraphicsGetImageFromCurrentImageContext</span>();</span><br><span class="line">    <span class="built_in">UIGraphicsEndImageContext</span>();</span><br><span class="line">    <span class="keyword">return</span> newImage;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到，思路就是绘制一个圆角的路径，然后填充生成一个天生自带圆角的bitmap</p>
+<p>然后注掉了代码中所有的<code>cornerRadius</code> 换上了<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[bookProfileImageView kt_addCorner]</span><br></pre></td></tr></table></figure></p>
+<p>上问题到<code>离屏渲染可以是广义的理解为，在屏幕外的时候就要进行渲染，无论是Cpu还是Gpu</code><br>所以思路就是，既然Gpu目前负荷会比较大，而Cpu则相当空闲，那我们何不让Cpu提前处理一下bitmap数据呢，这也算是另一种Cpu离屏渲染</p>
+<p>让我们看看效果</p>
+<h2 id="性能检测-1"><a href="#性能检测-1" class="headerlink" title="性能检测"></a>性能检测</h2><p>让我们看一组<code>Instrument</code>里面<code>core Animation</code>的数据结果</p>
+<p><strong>图书范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeBook.png?raw=true" width="302" height="381" alt="icon" align="center"></p>
+<p><strong>什么鬼！图书范围的性能居然下降了！！</strong><br>对比前面的截图可以明显看出来，图书范围的滚动帧率从平均55左右下降到平均50，虽然非常的细微，但很明显，在这个优化改动下，图书范围滚动性能反而下降了！</p>
+<p>仔细看一下Cpu占用率，通过前面的图进行对比，还是能看出来有增高，或许不明显，我们继续看</p>
+<p><strong>文件夹范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeFolder.png?raw=true" width="325" height="380" alt="icon" align="center"></p>
+<p>大家注意看，同样的代码下，文件夹区域的滚动性能却有大幅度提升，从刚才的15帧左右提升到了35帧，提升效果超过了100%</p>
+<p>但是我们仔细看，Cpu占用率这次能明显看出提升了很多很多！</p>
+<p><strong>看一下Cpu的消耗情况</strong></p>
+<p>我们仔细看看Cpu都消耗在哪？</p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeCpu.png?raw=true" width="526" height="358" alt="icon" align="center"></p>
+<p>看到了吧，此时此刻，Cpu被大量消耗在了<code>imageAddCornerWithRadius：andSize：</code>这个我们专门为优化而写的函数里，很明显的说明，在Cpu的层面，此处已经在重点消耗Cpu资源了</p>
+<h2 id="性能分析-1"><a href="#性能分析-1" class="headerlink" title="性能分析"></a>性能分析</h2><p>可以看到，我们专门针对Gpu离屏渲染做的专门的优化，似乎？并没有那么有效!是不是？</p>
+<ul>
+<li>首先，9圆角矩形的量级下，性能反而下降，虽然下降并不明显</li>
+<li>其次，即便是在45圆角矩形的量级下，性能还真提升不少，但是依然停留在35帧作用，直观感觉，还是卡！</li>
+</ul>
+<p>到底为什么会这样呢？</p>
+<p>简单的来说就一句话</p>
+<p><strong>Gpu运算会有消耗，转移给Cpu去运算一定也会产生消耗</strong></p>
+<ul>
+<li>在图书区域的对比中可以看到，原本的9个圆角的数量级，在Gpu可以承受的运算范围内，此时此刻并没有很大的Gpu压力，所以还算流畅55帧，</li>
+<li>但是我们的优化方向，再减轻Gpu压力，加大Cpu负荷（虽然也没多大），因此性能反而略微下降到50帧</li>
+<li>在文件夹区域可以看到，45个圆角的数量级，Gpu已经完全不可承受了，压力其大无比，帧率悲剧到15帧</li>
+<li>经过我们的优化，Gpu的压力被大幅度减少，Cpu的压力随之上升，此消彼长，但最终的结果是整体帧率提升到了35帧</li>
+</ul>
+<p>为什么会是这样，还是得从离屏渲染下手</p>
+<p><strong>离屏渲染</strong></p>
+<p>上文提到的离屏渲染 有这样一句话</p>
+<blockquote>
+<p>所以当使用离屏渲染的时候会很容易造成性能消耗，因为在OPENGL里离屏渲染会单独在内存中创建一个屏幕外缓冲区并进行渲染，而屏幕外缓冲区跟当前屏幕缓冲区上下文切换是很耗性能的。</p>
+</blockquote>
+<p>另外一篇文章有这样一句话 <a href="https://lobste.rs/s/ckm4uw/a_performance-minded_take_on_ios_design" target="_blank" rel="noopener"><br>A Performance-minded take on iOS design</a></p>
+<blockquote>
+<p>You’d think the GPU would always be faster than the CPU at this sort of thing, but there are some tricky considerations here. It’s expensive for the GPU to switch contexts from on-screen to off-screen drawing (it must flush its pipelines and barrier), so for simple drawing operations, the setup cost may be greater than the total cost of doing the drawing in CPU via e.g. </p>
+</blockquote>
+<p>我们可以理解为Gpu在处理浮点运算，处理矩阵运算的时候，一定会比Cpu快得，毕竟他天生就是拿来做图形处理的，所以在离屏渲染的数量比较少的时候，我们把运算交给Cpu，反而是略微增加了耗时与卡顿</p>
+<p>就像引文里说的，离屏渲染真正的消耗，在于不同缓冲区的来回切换，一旦圆角的数量增多，计算量加大，这种切换会更加频繁，所以当数量庞大的时候，Gpu最终所有的操作就会更加耗时</p>
+<h2 id="我们面临的特殊问题"><a href="#我们面临的特殊问题" class="headerlink" title="我们面临的特殊问题"></a>我们面临的特殊问题</h2><p>要说明的是，我们这次的case和网上的其他例子比是有不同的</p>
+<ul>
+<li>网上的一些demo都是针对UILabel  UIBotton一些相对简单的UI，来进行的Cpu圆角绘制</li>
+<li>我们的情况是，我们是针对一张张图书封面bookcover，一个个真实的丰富多彩的png图，来进行Cpu圆角绘制,这样更加的耗时</li>
+<li>最终的结果就是，即便我们采用了<code>Cpu离屏渲染</code>，但是帧率依然只有35帧左右，还卡！怎么办！</li>
+</ul>
+<h1 id="其他的优化处理办法"><a href="#其他的优化处理办法" class="headerlink" title="其他的优化处理办法"></a>其他的优化处理办法</h1><p>我们的核心目的是，消除卡顿，感受感受丝般顺滑，但是现有的一些手段，虽然有效果，但还远远达不到目标怎么办？</p>
+<p>有人说了，不要切圆角了，直接让UE出一张圆角切图，把所有的运算都省了</p>
+<p>那我们来试试</p>
+<p>去掉所有圆角代码<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//bookProfileImageView.layer.cornerRadius = 3.0f;</span></span><br><span class="line"><span class="comment">//bookProfileImageView.clipsToBounds = YES;</span></span><br></pre></td></tr></table></figure></p>
+<p>换上这样的一张图，中间透明四个角有背景色</p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerMask.png?raw=true" width="266" height="210" alt="icon" align="center"></p>
+<p>让我们测试下帧率</p>
+<p><strong>图书范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeBook.png?raw=true" width="278" height="350" alt="icon" align="center"></p>
+<p><strong>文件夹范围内滚动帧率</strong></p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeFolder.png?raw=true" width="329" height="343" alt="icon" align="center"></p>
+<p>无论是图书，还是文件夹都已经达到了55帧左右的帧率，接近满帧</p>
+<p><strong>丝般顺滑</strong></p>
+<h1 id="刨根问底深入思考"><a href="#刨根问底深入思考" class="headerlink" title="刨根问底深入思考"></a>刨根问底深入思考</h1><p>这样就满足了么？显然是不可以的，因为如果一旦圆角item背后有背景图，有纹理，那这种贴图的方式根本不能实现了。难道就这么让app卡着凑合用么</p>
+<p>显然不可以</p>
+<h2 id="深入思考卡顿的原理"><a href="#深入思考卡顿的原理" class="headerlink" title="深入思考卡顿的原理"></a>深入思考卡顿的原理</h2><p>解决问题应该从源头入手，所以我们相应地要思考，卡顿是怎么来的？</p>
+<p>这块就要从ibireme大神的 <a href="http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" target="_blank" rel="noopener">iOS 保持界面流畅的技巧</a> 这篇博客来深入学习</p>
+<p>图为原博客中的图</p>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/CPUGPU.png?raw=true" width="552" height="255" alt="icon" align="center"></p>
+<p>iOS设备都是采用双缓冲区+垂直同步开启的方式来进行图形渲染，什么意思呢？</p>
+<ul>
+<li>Cpu运算处理结束后将要渲染的任务提交给Gpu</li>
+<li>Gpu运算渲染完成后讲最终图形放入缓冲区</li>
+<li>Gpu触发离屏渲染，会有多缓冲区来回切换管理等复杂耗时操作</li>
+<li>视频控制器在固定的频率内，从缓冲区取渲染结果，展现到显示器上</li>
+</ul>
+<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/frameLine.png?raw=true" width="449" height="117" alt="icon" align="center"></p>
+<p>这幅图更加直观</p>
+<ul>
+<li>每一个VSync的点，都是垂直同步作用下，控制器去取渲染结果，准备展现的时间点</li>
+<li>当Vsync的点到来时，Cpu蓝色+Gpu红色都运算结束，那么就没有发生掉帧，没有发生卡顿，很顺畅的绘制了下去</li>
+<li>当Vsync的点到来时，运算没有结束，那么说明这一帧还没有渲染完毕，因此无法顺畅绘制，产生了掉帧，也就是卡顿</li>
+<li>红色的Gpu持续时间过长，会导致Vsync点到来时运算没有结束导致卡顿，这是我们Gpu离屏渲染15帧的情况</li>
+<li>蓝色的Cpu持续时间长，也会导致Vsync点到来时运算没有结束导致卡顿，这就是我们Cpu离屏渲染35帧的情况</li>
+</ul>
+<p>当图形的总运算量在那里摆着，就是很大，就是很卡怎么办呢？</p>
+<h2 id="AsyncDisplay"><a href="#AsyncDisplay" class="headerlink" title="AsyncDisplay"></a>AsyncDisplay</h2><p><strong>异步绘制</strong></p>
+<p>简单地说，就是已经采用了Cpu离屏渲染，还是会因为主线程计算耗时很长而卡顿UI，那我们就把Cpu计算bitmap这个过程放到线程里去。</p>
+<p>运算量大怎么办？</p>
+<ul>
+<li>优化运算，合并图层，在需求范围内替换贴图</li>
+<li>开个后台线程慢慢算，算好了再回到主线程绘制</li>
+</ul>
+<p>但因为我们面对的是频繁复用的<code>UICollectionView</code>或者<code>UITableView</code>，所以要有很完善的线程管理机制，再辅助以cache机制</p>
+<p>采用图片的方法已经解决了当下app的卡顿问题，但是后续对AsyncDisplay的支持，等有空了再整理一篇吧。。</p>
+<p>其实 facebook开源的 AsyncDisplayKit 就是实现了这些，功能很强大，我还没用熟，感觉有点重</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渲染/" rel="tag"># 渲染</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/11/reviewcode-cn平台案例整理/" rel="next" title="reviewcode.cn平台案例整理(2016.03.11更新)">
+                <i class="fa fa-chevron-left"></i> reviewcode.cn平台案例整理(2016.03.11更新)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/04/04/MyNewZealandTour/" rel="prev" title="寻访中土世界--新西兰南岛游记">
+                寻访中土世界--新西兰南岛游记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#前言"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#真实Case"><span class="nav-number">2.</span> <span class="nav-text">真实Case</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#真实Case环境说明"><span class="nav-number">2.1.</span> <span class="nav-text">真实Case环境说明</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#无优化处理情况"><span class="nav-number">3.</span> <span class="nav-text">无优化处理情况</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能检测"><span class="nav-number">3.1.</span> <span class="nav-text">性能检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能分析"><span class="nav-number">3.2.</span> <span class="nav-text">性能分析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Cpu绘制bitmap优化处理情况"><span class="nav-number">4.</span> <span class="nav-text">Cpu绘制bitmap优化处理情况</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#性能检测-1"><span class="nav-number">4.1.</span> <span class="nav-text">性能检测</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#性能分析-1"><span class="nav-number">4.2.</span> <span class="nav-text">性能分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们面临的特殊问题"><span class="nav-number">4.3.</span> <span class="nav-text">我们面临的特殊问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#其他的优化处理办法"><span class="nav-number">5.</span> <span class="nav-text">其他的优化处理办法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#刨根问底深入思考"><span class="nav-number">6.</span> <span class="nav-text">刨根问底深入思考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#深入思考卡顿的原理"><span class="nav-number">6.1.</span> <span class="nav-text">深入思考卡顿的原理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AsyncDisplay"><span class="nav-number">6.2.</span> <span class="nav-text">AsyncDisplay</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '圆角卡顿刨根问底', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

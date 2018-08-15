@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="编译原理," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="扯淡：这一周感觉经历了一次技术爆炸  过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个前言，然后又扔那不动了，唔，罪过罪过   今天又想多扯点淡，扯点碎碎念了  标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！ 之前不是写了一篇从antlr扯淡到一点点编译原理么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConv">
+<meta name="keywords" content="编译原理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="扯淡：技术爆炸">
+<meta property="og:url" content="http://yoursite.com/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="扯淡：这一周感觉经历了一次技术爆炸  过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个前言，然后又扔那不动了，唔，罪过罪过   今天又想多扯点淡，扯点碎碎念了  标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！ 之前不是写了一篇从antlr扯淡到一点点编译原理么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConv">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png">
+<meta property="og:updated_time" content="2017-03-25T04:29:33.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="扯淡：技术爆炸">
+<meta name="twitter:description" content="扯淡：这一周感觉经历了一次技术爆炸  过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个前言，然后又扔那不动了，唔，罪过罪过   今天又想多扯点淡，扯点碎碎念了  标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！ 之前不是写了一篇从antlr扯淡到一点点编译原理么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConv">
+<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/"/>
+
+
+
+
+
+  <title>扯淡：技术爆炸 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">扯淡：技术爆炸</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-12-22T23:06:13+08:00">
+                2016-12-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/12/22/扯淡：这一周感觉经历了一次技术爆炸/" class="leancloud_visitors" data-flag-title="扯淡：技术爆炸">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>扯淡：这一周感觉经历了一次技术爆炸</p>
+<blockquote>
+<p>过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个<code>前言</code>，然后又扔那不动了，唔，罪过罪过</p>
+</blockquote>
+<blockquote>
+<p>今天又想多扯点淡，扯点碎碎念了</p>
+</blockquote>
+<p>标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！</p>
+<p>之前不是写了一篇<a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a>么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConvertor到底是怎么运作的，因为JSPatchConvertor目前依然还有一些缺陷和不支持，我想了解这里面更深层面的原因，并且之前YY过一个想法，很多Cfunction需要写Bridge，这个Bridge能不能自动生成，扫描一个<code>xxx.h</code>的头文件，自动生成那些外表很规范的JSPatch Cfunction Bridge（那会JSPatch还没引入libffi），这种种的问题都指向了一件事情</p>
+<ul>
+<li>我需要解析代码字符串<ul>
+<li>JSPatchConvertor的原理就是把oc代码，当做字符串，让一个神秘的东西分析出来了逻辑</li>
+<li>而我想要的自动生成Cfunction Bridge，也是需要解析.h文件的字符串，然后生成对应看起来很模板化的Bridge代码</li>
+</ul>
+</li>
+</ul>
+<p>所以在bang哥的提点和文章介绍下，我才了解到antlr这个东西，（最开始我曾经天真的想用正则的方法解决问题）</p>
+<p>扯淡：</p>
+<blockquote>
+<p>其实槽点来了，我早在15年底就有过JSPatch Cfunction Bridge自动生成的想法，bang哥也给我了提点，一直觉得这块难啃，光看antlr的网站介绍就不想看下去了，于是我一直拖延到16年中，才开始硬着头皮去捉摸antlr，捉摸完了也忘记总结，直到11月份才想起来写个东西给自己留个念想，不光是拖延症的问题，我真的是觉得这玩意好难</p>
+</blockquote>
+<p>后来通过antlr我给自己建立了一个大概的认知</p>
+<ul>
+<li>代码其实是一行一行的字符串</li>
+<li>字符串通过预处理器，转换一些宏和预处理的东西，还是字符串（Preprocesser）</li>
+<li>字符串输入词法分析器，产生经过词法分析后的一个结果（Lexer）</li>
+<li>词法分析后输入语法分析器，产生AST（抽象语法树abstract syntax tree）（Parser）<ul>
+<li>分支：走LLVM编译机器码</li>
+<li>分支：走虚拟机，在虚拟机环境直接运行</li>
+</ul>
+</li>
+</ul>
+<h1 id="周一：滴滴的DynamicCocoa横空出世"><a href="#周一：滴滴的DynamicCocoa横空出世" class="headerlink" title="周一：滴滴的DynamicCocoa横空出世"></a>周一：滴滴的DynamicCocoa横空出世</h1><p><a href="http://mp.weixin.qq.com/s/qRW_akbU3TSd0SxpF3iQmQ" target="_blank" rel="noopener">DynamicCocoa：滴滴 iOS 动态化方案的诞生与起航</a></p>
+<p><a href="http://weibo.com/u/1364395395?refer_flag=1005055010_" target="_blank" rel="noopener">@我就叫Sunny怎么了</a> 大神发布了大新闻，这个新闻相信太多的人都看到了，太厉害太牛逼了，也在我自己的微博上转发了崇拜之情。</p>
+<a id="more"></a>
+<p>我是这么理解的，苹果本身oc是通过clang编译的，也就是说clang本身就含有最完善的把OC代码字符串，通过Preprosessor -&gt; Lexer -&gt; Parser -&gt; AST过程，大神们直接在clang工作流生成AST后进行了接管，在AST传给LLVM生成机器码之前，拿走了AST进行自己的处理也就是滴滴说的codeGen，处理语法树，生成转化为JS代码，再通过底层的JSCore + OCRuntime实现了动态更新，后半部分思路上和JSPatch异曲同工，但前面部分实在牛逼。</p>
+<p>JSPatch本身是有JSPatchConvertor的，但还存在着很多缺陷和不支持，原因就在于很多OC的语法并不是和JS语法是一一对应的，换句话说如果让每个OC语法都照常在JS里面进行实现，还需要做太多太多的事情，其次JSPatchConvertor是借助antlr进行的编译（Preprosessor + Lexer + Parser），antlr的源码是否能做到完美还原出clang的AST这是一个问号？我其实对antlr理解没那么深，但初步看来，C/C++与OC混编，各种预处理，在antlr里想全面支持，以我对antlr目前还算片面的认知，感觉好痛苦。</p>
+<p>但是滴滴绕过了这一步，直接去拿clang的AST结果进行处理，实在是太妙了！但接下来还有一个问题没有解决，所有AST节点类型都直接支持么？语法树中包含OC语言中的各种特性节点，难道都能一一翻译成对应的JS?这里面语法的支持程度有多少呢？（真是迫不及待想看源码啊！嗷嗷嗷嗷嗷！）为了支持足够多的OC语法类型，是否需要对以前JSPatch那一套底层JS-OC runtime进行大刀阔斧的改变呢？</p>
+<p>尽管有这么多问题，尽管迫不及待想看到代码，还没看到但依然觉得这一套DynamicCocoa很恐怖很牛逼，使用者只用写oc不用关注js的，并且转换器与OC编译器保持高度一致性，远比常见的各种不支持的convertor要深入的多得多，并且把hotpatch底层部分为了更贴合编译器做了好多优化和功能扩充，想想就觉得太厉害了</p>
+<h1 id="周四：iOS动态化的故事引出了QQ的OC虚拟机"><a href="#周四：iOS动态化的故事引出了QQ的OC虚拟机" class="headerlink" title="周四：iOS动态化的故事引出了QQ的OC虚拟机"></a>周四：iOS动态化的故事引出了QQ的OC虚拟机</h1><p><a href="http://blog.cnbang.net/tech/3286/" target="_blank" rel="noopener">iOS动态化的故事</a></p>
+<p><a href="http://weibo.com/bang?refer_flag=1005055010_" target="_blank" rel="noopener">@bang</a>哥发了这样一个博文，介绍了iOS这么久以来在动态更新上的探索历程，这篇文章说了很多事情，道出了平台的限制以及如此多的大厂对于动态化的尝试历程。但这篇文章中有一段文字简直如惊雷一般！</p>
+<blockquote>
+<p>手机 QQ 内部也有一个类似的方案，不过更进一步，他们通过 clang 把 OC 代码编译成自己定制的字节码动态下发，然后开发一个虚拟机去执行（惊呆了）</p>
+</blockquote>
+<p>我瞬间想起10月份<a href="http://weibo.com/u/1680627603?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="noopener">@杨萧玉HIT</a>大神的一篇微博</p>
+<p><img src="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png" alt=""></p>
+<p>配合<a href="http://weibo.com/bang?refer_flag=1005055010_" target="_blank" rel="noopener">@bang</a>哥的文字解释，瞬间觉得有点炸天。</p>
+<p>不知道是不是我设想的这样，由clang生成的AST，不再像滴滴那样转换语言到js，然后交给jscore（一个js虚拟机）配合js-oc runtime来生效，而干脆是直接重写了一套虚拟机，所有指令集都是自己设计的，直接把AST输入给虚拟机就能直接运作了</p>
+<p>自己重写一套虚拟机，重写一套虚拟机，一套虚拟机，虚拟机，…… 整个人都吓到了，不过以上这些还没有对应的宣传文章和详细介绍，存在于各位大神的交流的只言片语之中。</p>
+<p>从研究语言编译，更进一步上升到，重新设计指令集，重写一个虚拟机</p>
+<h1 id="突然有点懵逼，感觉自己太多不会太多不懂了"><a href="#突然有点懵逼，感觉自己太多不会太多不懂了" class="headerlink" title="突然有点懵逼，感觉自己太多不会太多不懂了"></a>突然有点懵逼，感觉自己太多不会太多不懂了</h1><p><strong>上面所有的内容其实都是我的认知和猜想，我对这方面的细节完全懵逼，感觉扯了这么多我始终还停留在嘴炮的阶段</strong></p>
+<p><strong>上面所有的内容其实都是我的认知和猜想，我对这方面的细节完全懵逼，感觉扯了这么多我始终还停留在嘴炮的阶段</strong></p>
+<p><strong>上面所有的内容其实都是我的认知和猜想，我对这方面的细节完全懵逼，感觉扯了这么多我始终还停留在嘴炮的阶段</strong></p>
+<p>重要的事情说三遍╮(╯_╰)╭</p>
+<p>之前看编译这块，就觉得让我使用现成的antlr之类的东西，导入现成的grammer规则，让我看看AST如何遍历，如何转化成不同语言，我还勉强能梳理出一个轮廓。</p>
+<p>如果是让我完全独立重写Lexer+Parser我感觉我就彻底懵逼了，Flex/Bison  Lexy/Yacc，确实有关键字可以帮助我查询获取知识，当我搜寻这些关键字的时候，我发现搜出来的文章，一个个单词和字我或许能认识，连成句子以后感觉就不是人话了╮(╯_╰)╭</p>
+<p>这一下更是除了编译这个环节之外，虚拟机的底层实现又出来了。真的觉得要学的太多了。</p>
+<p>我觉得有必要让自己需要系统的了解点相关的知识了，很多人说龙书看不进去，不知道在有了这些我自己产生的浓厚兴趣后，我到底不是能看进去，这话不能说太大说太满╮(╯_╰)╭但我也想尝试一下，学学以前不敢想象，不敢涉及的领域</p>
+<p>PS:</p>
+<p><a href="http://weibo.com/gavinkwoe?refer_flag=1005055013_" target="_blank" rel="noopener">@老郭为人民服务</a>在他的技术群里发来一个东西，看上去感觉很威武很牛逼！</p>
+<p><a href="http://c-smile.sourceforge.net/" target="_blank" rel="noopener">http://c-smile.sourceforge.net/</a></p>
+<blockquote>
+<p>C-SMILE is a scripting language, which inherits it’s syntax and structure from C, C++, Java(tm) and JavaScript. On hypothetical “axis of programming languages” it resides somewhere between Java(tm) and JavaScript.</p>
+</blockquote>
+<blockquote>
+<p>In the same way as in JavaScript, all variables are typeless and as in Java it is mandatory to declare variables before usage. </p>
+</blockquote>
+<blockquote>
+<p>C-SMILE has a compiler, a virtual machine running bytecodes, and a C/C++ extensible runtime. C-SMILE is intended to run in standalone or embedded mode.</p>
+</blockquote>
+<p>简略点说就是一套用c++写的，同时支持c/c++，java，js的四种语言的编译器+字节码虚拟机的源码，不知道我能不能看懂源码，但也想试试</p>
+<p>用C/C++写的一套能运行C/C++代码实时虚拟机，有没有感觉很带感！更何况他同时支持java和js，其实我猜，编译成同一套AST后，可以用一个虚拟机解决3个语言。这个玩意支持程度有多大，我还不了解，因为我觉得我一时半会不见得吃的透，但我觉得这也是一个了解虚拟机底层实现的途径</p>
+<h1 id="苹果爸爸让不让？"><a href="#苹果爸爸让不让？" class="headerlink" title="苹果爸爸让不让？"></a>苹果爸爸让不让？</h1><p>我确实看到了很多人问这样一个问题，这么高调不怕被苹果干掉吗？</p>
+<p>我觉得facebook的rn够高调了。</p>
+<p>但我现在有一个看法，我根本不在意苹果爸爸是否会干掉！</p>
+<p>我倒是觉得，无论苹果爸爸让不让这么做，这都是一个让人激动的事情，其实只要苹果还允许网络通信，各种绕过审核的方案就没可能禁掉，禁了jscore，植入一个V8进去或许更牛更high，怎么禁？虚拟机都是人写的，大不了向qq一样重写一个虚拟机。</p>
+<p>下发脚本语言叫动态更新，服务器做个开关，下发不同的配置展现不同的界面就不叫动态更新？服务器下发不同的文案，按钮展现不同的文字就不叫动态更新？</p>
+<p>有些人会觉得我举得这两个例子有点扯淡，其实有没有想过，webview底层内核，js虚拟机底层源码，很多时候都是同源，或者说本质近似？</p>
+<p>这事或许一开始是因为绕过审核限制而起，我现在倒是丝毫不因为绕过审核而激动，各种人在尝试各种方案的过程中其实是在还原代码的运作本源，字符串编译，字节码运行，探索到这一步其实会发现，平台和语言的界限没那么分明，不再是使用固有语言，编写被提供的限有的api</p>
+<p>这背后其实意味着：很多时候平台限制不再是真正意义的瓶颈，无论是因为苹果禁止，还是一开始平台或语言设计存在缺陷，也许要实现需要的技术壁垒巨高无比，只有大公司大团队才做的起，但背后也是有很大意义与价值甚至商业价值的，意义不一定就是在打破苹果禁令，更多意义在于：有时候平台和语言本身缺陷也不是不可改变了，只能等官方解决了，这背后的技术价值是很令人激动的，但真说绕过审核，规避禁令，我反倒觉得无所谓</p>
+<h1 id="YY中"><a href="#YY中" class="headerlink" title="YY中"></a>YY中</h1><p>如果说程序员编写程序，就好像造物主创造万物，从无到有创造东西，那么这类对底层的探寻，是否有点寻找造物主自己是如何被创造出来的赶脚呢？怎么感觉自己有点在说梦话╮(╯_╰)╭</p>
+<p>其实写了这么多，还是回到了标题，<code>扯淡：这一周感觉经历了一次技术爆炸</code>，说白了还是在扯淡，哈哈哈哈哈哈哈哈哈</p>
+<p>有时候在自己的博客里留一点扯淡，留一点纯思考性的东西，感觉也挺有意思的，上一次是以一个外行人扯淡有关前端发展的观后感。</p>
+<p><a href="http://awhisper.github.io/2016/06/16/%E5%89%8D%E7%AB%AF10%E5%B9%B4%E8%AF%BB%E5%90%8E%E6%84%9F/" target="_blank" rel="noopener">“站在10年研发路上，眺望前端未来”：读后感</a></p>
+<h1 id="相关链接"><a href="#相关链接" class="headerlink" title="相关链接"></a>相关链接</h1><p><a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a></p>
+<p><a href="http://mp.weixin.qq.com/s/qRW_akbU3TSd0SxpF3iQmQ" target="_blank" rel="noopener">DynamicCocoa：滴滴 iOS 动态化方案的诞生与起航</a></p>
+<p><a href="http://blog.cnbang.net/tech/3286/" target="_blank" rel="noopener">iOS动态化的故事</a></p>
+<p><a href="http://c-smile.sourceforge.net/" target="_blank" rel="noopener">http://c-smile.sourceforge.net/</a></p>
+<p><a href="http://awhisper.github.io/2016/06/16/%E5%89%8D%E7%AB%AF10%E5%B9%B4%E8%AF%BB%E5%90%8E%E6%84%9F/" target="_blank" rel="noopener">“站在10年研发路上，眺望前端未来”：读后感</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/编译原理/" rel="tag"># 编译原理</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/12/16/AysncDisplayKit分析-二/" rel="next" title="AsyncDisplayKit源码分析(二)，异步渲染">
+                <i class="fa fa-chevron-left"></i> AsyncDisplayKit源码分析(二)，异步渲染
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/01/17/MyNewZealandTour2/" rel="prev" title="再访中土世界--新西兰北岛游记">
+                再访中土世界--新西兰北岛游记 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#周一：滴滴的DynamicCocoa横空出世"><span class="nav-number">1.</span> <span class="nav-text">周一：滴滴的DynamicCocoa横空出世</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#周四：iOS动态化的故事引出了QQ的OC虚拟机"><span class="nav-number">2.</span> <span class="nav-text">周四：iOS动态化的故事引出了QQ的OC虚拟机</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#突然有点懵逼，感觉自己太多不会太多不懂了"><span class="nav-number">3.</span> <span class="nav-text">突然有点懵逼，感觉自己太多不会太多不懂了</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#苹果爸爸让不让？"><span class="nav-number">4.</span> <span class="nav-text">苹果爸爸让不让？</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#YY中"><span class="nav-number">5.</span> <span class="nav-text">YY中</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#相关链接"><span class="nav-number">6.</span> <span class="nav-text">相关链接</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '扯淡：技术爆炸', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

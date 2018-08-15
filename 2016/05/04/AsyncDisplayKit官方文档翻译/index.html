@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="渲染," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="AsyncDisplayKit 官方文档 最近在拆解学习AsyncDisplayKit这个很知名的轮子，发现这个轮子内容还是非常庞大的，想要分解学习之前必然要先对这个项目如何使用如何工作有一个初步的概念，所以动手准备把官方文档简单的翻译一下，希望更多看不顺英文文档的人，能有个简单的粗略了解，有了这个粗略了解之后，打算再动手准备进行源码分析 完全没有翻译文档的经验，碰到一些用词不合适的时候，还是推荐">
+<meta name="keywords" content="渲染">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AsyncDisplayKit官方文档翻译">
+<meta property="og:url" content="http://yoursite.com/2016/05/04/AsyncDisplayKit官方文档翻译/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="AsyncDisplayKit 官方文档 最近在拆解学习AsyncDisplayKit这个很知名的轮子，发现这个轮子内容还是非常庞大的，想要分解学习之前必然要先对这个项目如何使用如何工作有一个初步的概念，所以动手准备把官方文档简单的翻译一下，希望更多看不顺英文文档的人，能有个简单的粗略了解，有了这个粗略了解之后，打算再动手准备进行源码分析 完全没有翻译文档的经验，碰到一些用词不合适的时候，还是推荐">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-03-12T13:01:48.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="AsyncDisplayKit官方文档翻译">
+<meta name="twitter:description" content="AsyncDisplayKit 官方文档 最近在拆解学习AsyncDisplayKit这个很知名的轮子，发现这个轮子内容还是非常庞大的，想要分解学习之前必然要先对这个项目如何使用如何工作有一个初步的概念，所以动手准备把官方文档简单的翻译一下，希望更多看不顺英文文档的人，能有个简单的粗略了解，有了这个粗略了解之后，打算再动手准备进行源码分析 完全没有翻译文档的经验，碰到一些用词不合适的时候，还是推荐">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2016/05/04/AsyncDisplayKit官方文档翻译/"/>
+
+
+
+
+
+  <title>AsyncDisplayKit官方文档翻译 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/04/AsyncDisplayKit官方文档翻译/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">AsyncDisplayKit官方文档翻译</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-04T20:51:01+08:00">
+                2016-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2016/05/04/AsyncDisplayKit官方文档翻译/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2016/05/04/AsyncDisplayKit官方文档翻译/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2016/05/04/AsyncDisplayKit官方文档翻译/" class="leancloud_visitors" data-flag-title="AsyncDisplayKit官方文档翻译">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><a href="http://asyncdisplaykit.org/docs/getting-started.html" target="_blank" rel="noopener">AsyncDisplayKit 官方文档</a></p>
+<p>最近在拆解学习AsyncDisplayKit这个很知名的轮子，发现这个轮子内容还是非常庞大的，想要分解学习之前必然要先对这个项目如何使用如何工作有一个初步的概念，所以动手准备把官方文档简单的翻译一下，希望更多看不顺英文文档的人，能有个简单的粗略了解，有了这个粗略了解之后，打算再动手准备进行源码分析</p>
+<p>完全没有翻译文档的经验，碰到一些用词不合适的时候，还是推荐对比这原文进行观看</p>
+<p><strong>有些名词，因为水平实在不佳，翻译过来后反而会让人混乱，产生误解，对照英文去看，感觉会清晰一些，哎╮(╯_╰)╭</strong></p>
+<p>如果大家愿意，可以一起帮忙修改，直接提pr</p>
+<p><a href="https://github.com/Awhisper/AsyncDisplayKitDocTranslation" target="_blank" rel="noopener">AsyncDisplayKitDocTranslation Github地址</a></p>
+<h1 id="快速开始"><a href="#快速开始" class="headerlink" title="快速开始"></a>快速开始</h1><h2 id="准备开始"><a href="#准备开始" class="headerlink" title="准备开始"></a>准备开始</h2><p>AsyncDisplayKit的基础单元是Node，ASDisplayNode是UIView的抽象，就好像UIView是CALayer的抽象，但是不同于Views只能在主线程使用，Nodes是线程安全的，你可以并行在后台线程，实例化他们，配置他们整体的层次结构等</p>
+<p>iOS设备有一条黄金准则，想要保持用户交互的流畅和快速响应，你的app必须保证渲染达到每秒60帧。意思就是主线程只有1/60秒的时间来推动每一帧，执行所有布局和绘图代码的时间只有16毫秒！而且由于一些系统级别的开销，你的布局绘图代码一般情况超过10毫秒，就可能引起掉帧</p>
+<p>AsyncDisplayKit可以让你把图形解码，文本计算，渲染，等其他UI开销的操作移出主线程，还有一些其他的小把戏，我们后面会降到</p>
+<h3 id="Nodes节点"><a href="#Nodes节点" class="headerlink" title="Nodes节点"></a>Nodes节点</h3><p>如果你之前使用过views，那么你应该已经知道如何使用nodes，大部分的方法都有一个等效的node，大部分的UIView和CALayer的属性都有类似的可用的。任何情况都会有一点点命名差异（例如，clipsToBounds和masksToBounds），node基本上都是默认使用UIView的名字，唯一的例外是node使用position而不是center</p>
+<p>当然，你也可以直接访问底层view和layer，使用node.view和node.layer</p>
+<p>一些AsyncDisplayKit核心节点包括：</p>
+<ul>
+<li>AsDisplayNode:UIView子类对应使用，用于自定义view。</li>
+<li>AsCellNode:UICollectionviewcell或UITableViewCell类对应使用，用于自定义cell。</li>
+<li>AsControlNode:UIControl类对应使用，用于自定义按钮。</li>
+<li>AsImageNode:UIImageView类对应使用，处理图形解码之类。</li>
+<li>AsTextNode:UITextView类对应使用，建造全功能的富文本支持库。</li>
+</ul>
+<h3 id="Node-Containers节点容器"><a href="#Node-Containers节点容器" class="headerlink" title="Node Containers节点容器"></a>Node Containers节点容器</h3><p>当在项目中替换使用AsyncDisplayKit的时候，一个经常犯的错误就是把一个Node节点直接添加到一个现有的view视图层次结构里。这样做会导致你的节点在渲染的时候会闪烁一下</p>
+<p>相反，你应该你应该把nodes节点，当做一个子节点添加到一个容器类里。这些容器类负责告诉所包含的节点，他们现在都是什么状态，以便于尽可能有效的加载数据与渲染。你可以把这些类当做UIKit和ASDK的整合点</p>
+<p>下面有4种节点容器</p>
+<ul>
+<li>ASViewController. UIViewController 类型的容器，管理子节点</li>
+<li>ASCollectionNode. UICollectionView 类型的容器，管理使用ASCellNode</li>
+<li>ASTableNode. UITableView 类型的容器，管理使用ASCellNode</li>
+<li>ASPagerNode. 一种特殊的ASCollectionNode 可以当做 UIPageViewController类型</li>
+</ul>
+<a id="more"></a>
+<h3 id="排版引擎"><a href="#排版引擎" class="headerlink" title="排版引擎"></a>排版引擎</h3><p>AsyncDisplayKit的排版引擎是非常强大并且独特的，基于CSS FlexBox模型。他提供了一种声明方式来约定自定义节点所属的子节点的大小和布局，当所有的节点同时被默认渲染和展现的时候，通过给每个节点提供一个ASLayoutSpec，异步的测量和布局。</p>
+<p>这套排版引擎那个是基于ASLayouts的概念，他包含了位置，大小，ASLayoutSpecs等信息，ASLayoutSpecs定义了不同的布局概念用于计算输出ASLayout结果，排版区域最终由子节点和其他排版区域一同决定</p>
+<p>其他排版区域包括：</p>
+<ul>
+<li>ASLayoutSpec. 为相关节点提供位置和大小</li>
+<li>ASStackLayoutSpec. 可以把节点按着类似stackview的方式排布</li>
+<li>ASBackgroundLayoutSpec. 设置节点背景.</li>
+<li>ASStaticLayoutSpec. 当要手动定义一组节点静态大小</li>
+</ul>
+<h2 id="收益"><a href="#收益" class="headerlink" title="收益"></a>收益</h2><h3 id="异步性能提升"><a href="#异步性能提升" class="headerlink" title="异步性能提升"></a>异步性能提升</h3><p>AsyncDisplayKit是一个UI框架，最初诞生于Facebook App。最开始Facebook团队面临一个很核心的问题：怎么能保证主线程尽可能的简洁，AsyncDisplayKit就是答案。</p>
+<p>现在，很多应用程序都会频繁使用手势以及物理动画，再不济，你的app也会很广泛使用某种形式的滚动试图，这类型的用户交互是完全决定于主线程的流畅，并且对主线程的负荷十分敏感，一个被阻塞的主线程就意味着掉帧，卡顿，意味着很不愉快的用户体验</p>
+<p>AsyncDisplayKit的Node节点就是一个线程安全的抽象对象，基于UIView和CALayer</p>
+<p>[图就不翻译了]</p>
+<p>当使用node节点的时候，你可以直接访问大部分的view和layer的属性，唯一区别是，当使用正确的时候，nodes通过异步进行计算，布局，最后默认同时进行渲染</p>
+<p>想看更多地异步性能提升，请查看example/ASDKgram app，这个工程对比了基于UIKit的社交媒体demo，和基于ASDK的社交媒体demo</p>
+<p>在iPhone6+上的性能提升不是很明显，但是在4S上，性能差距非常之大</p>
+<h3 id="强大的用户体验"><a href="#强大的用户体验" class="headerlink" title="强大的用户体验"></a>强大的用户体验</h3><p>AsyncDisplayKit所带来的性能提升，可以让你为每个用户在所有设备上，在所有的网络环境下，提供强大的用户体验设计</p>
+<h3 id="强大的开发体验"><a href="#强大的开发体验" class="headerlink" title="强大的开发体验"></a>强大的开发体验</h3><p>AsyncDisplayKit一样也在追求开发人员的使用体验，追求iOS&amp;tvOS跨平台的特性，追求swift&amp;OC语言的兼容性。只需要很少的代码就能构建很棒的app，清晰的架构，健壮的代码（参见examples/ASDKgram这个例子）（开发这个的都是一些超级聪明工作3年多的工程师）</p>
+<h3 id="高级的开发工具"><a href="#高级的开发工具" class="headerlink" title="高级的开发工具"></a>高级的开发工具</h3><p>随着AsyncDisplayKit逐渐成熟，很多聪明的工程师都加入一起构建这个项目，可以大幅度节省作为开发者，使用ASDK的开发时间</p>
+<p>先进技术</p>
+<p>ASRunLoopQueue</p>
+<p>ASRangeController 智能预加载</p>
+<p>网络工具</p>
+<p>automatic batch fetching (e.g. JSON payloads)自动批量抓取</p>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p><strong>CocoaPods安装</strong><br>AsyncDisplayKit可以使用cocoapods安装，将下面的代码添加进入<code>Podfile</code></p>
+<p><code>pod &#39;AsyncDisplayKit&#39;</code></p>
+<p><strong>Carthage安装</strong><br>AsyncDisplayKit可以使用Carthage安装，将下面的代码添加进入<code>Cartfile</code></p>
+<p><code>github &quot;facebook/AsyncDisplayKit&quot;</code></p>
+<p>在终端执行<code>carthage update</code>来构建AsyncDisplayKit库，会自动在项目根目录下生成Carthage名字的文件夹，里面有个build文件夹，可以用来framework到你打算使用的项目中</p>
+<p><strong>静态库</strong><br>AsyncDisplayKit可以当做静态库引入</p>
+<p>1）拷贝整个工程到你的目录下，添加<code>AsyncDisplayKit.xcodeproj</code>到你的workspace</p>
+<p>2）在build phases中，在Target Dependencies下添加AsyncDisplayKit Library</p>
+<p>3）在build phases中，添加libAsyncDisplayKit.a, AssetsLibrary, Photos等框架到Link Binary With Libraries中</p>
+<p>4）在build settings中，添加<code>-lc++</code>和<code>-ObjC</code>到 project linker flags</p>
+<p><strong>引用AsyncDisplayKit</strong></p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#import <span class="meta-string">&lt;AsyncDisplayKit/AsyncDisplayKit.h&gt;</span></span></span><br></pre></td></tr></table></figure>
+<h1 id="核心概念"><a href="#核心概念" class="headerlink" title="核心概念"></a>核心概念</h1><h2 id="智能预加载"><a href="#智能预加载" class="headerlink" title="智能预加载"></a>智能预加载</h2><p>node的功能很强大的原因是具有异步渲染和计算的能力，另一个至关重要的因素是ASDK的智能预加载方案。</p>
+<p>正如在<code>准备开始</code>提到的那样，使用一个在节点容器上下文之外的节点是非常的没有意义的，这是因为所有的节点都有一个当前界面状态的概念。</p>
+<p>这个界面状态的属性是不断的通过ASRangeController来进行更新，ASRangeController是由容器创建和内部维护的。</p>
+<p>一个节点在容器之外被使用，是不会使它的状态得到rangeController的更新。有时候会产生的闪屏现象是由于，一个节点刚刚被渲染到屏幕之后又进行了一次渲染</p>
+<h3 id="界面状态区域"><a href="#界面状态区域" class="headerlink" title="界面状态区域"></a>界面状态区域</h3><p>当节点被添加到滚动或者分页的控件的时候，一般都会遇到下面的几种情况。这就是说scrollview正在滚动，他的界面属性会随着移动一直在更新。<br>每个节点一定会处于以下几种范围：</p>
+<p>数据范围：距离显示最远的区域，他们的数据已经收集准备完毕，无论是通过本地磁盘还是API，但远没有进行显示处理<br>显示范围：在这个范围，显示任务，比如文本光栅化，图像解码等正在进行<br>可见范围：这个node，至少有一个像素已经被渲染到屏幕上</p>
+<h3 id="ASRangeTuningParameters"><a href="#ASRangeTuningParameters" class="headerlink" title="ASRangeTuningParameters"></a>ASRangeTuningParameters</h3><p>每一个范围的大小都是全屏去计算的，一般情况下，默认的尺寸就能很好的工作，但是你也可以通过设置滚动节点的区域类型参数，很简单的进行调整。</p>
+<p>[图就不翻译了，红色是可见范围，橙色是显示范围，黄色是数据范围]</p>
+<p>上图就是一款app的截图，用户可以向下滚动，正如你所看到的，用户滚动方向区域（领先方向）的大小，要比用户离开方向区域（尾随方向）的大小，大得多。如果用户滚动的方向发生了改变，这两个区域的大小会动态的切换，以保证内存的最佳使用。你只需要考虑定义领先方向和尾随方向的区域大小，而不必担心滚动方向的变化。</p>
+<p>在这个截图中，你还可以看到智能的预加载是如何在多维度下工作的，你可以看到一个垂直的滚动容器，你可以看到虽然有些node还未在红色的设备屏幕中出现，但是他有一个范围控制器，也有处在黄色的数据范围的node，和橙色的显示范围的node</p>
+<h3 id="界面状态回调"><a href="#界面状态回调" class="headerlink" title="界面状态回调"></a>界面状态回调</h3><p>随着用户的滚动，nodes会移动穿过这些区域，并做出适当的反应，读取数据，渲染，等等。你自己创建的node子类可以很容易的通过实现相应的回调来精细设计他们</p>
+<p>可见范围回调</p>
+<p><code>- (void)visibilityDidChange:(BOOL)isVisible;</code></p>
+<p>显示范围回调</p>
+<p><code>- (void)displayWillStart</code></p>
+<p><code>- (void)displayDidFinish</code></p>
+<p>数据范围回调</p>
+<p><code>- (void)fetchData</code></p>
+<p><code>- (void)clearFetchedData</code></p>
+<p>最后，千万别忘记调用super</p>
+<h2 id="自定义子类"><a href="#自定义子类" class="headerlink" title="自定义子类"></a>自定义子类</h2><p>写一个node的子类，很像写一个UIView的子类，这有几条准则需要遵守，来确保你能够充分发挥这个框架的潜力，确保你的节点正常工作</p>
+<h3 id="基本重载方法"><a href="#基本重载方法" class="headerlink" title="基本重载方法"></a>基本重载方法</h3><p><code>-init</code></p>
+<p>通常情况下，你都会写一些init方法，包括，调用<code>[super init]</code>，然后设置一些自定义的属性。这里需要记住的尤其重要的一点，你写的（node的）init方法必须能被任何的队列和线程调用，所以尤其要注意的一点就是，在init方法里确保不要初始化任何UIKit的对象</p>
+<p><code>-didLoad</code></p>
+<p>这个方法很像UIViewController的<code>-viewDidLoad</code>，这个时间点支持视图已经被加载完毕，此时可以保证是主线程，因此，你可以在这个时机，设置UIKit相关对象</p>
+<p><code>layoutSpecThatFits</code></p>
+<p>这个方法就是用来建立布局规则对象，产生节点大小以及所有子节点大小的地方，你创建的布局规则对象一直持续到这个方法返回的时间点，经过了这个时间点后，它就不可变了。尤其重要要记住的一点事，千万不要缓存布局规则对象，当你以后需要他的时候，请重新创建</p>
+<p><code>layout</code></p>
+<p>在这个方法里调用super之后，布局规则对象会把所有的子节点都计算并且定位好，所以这个时间点是你手动进行布局所有子view的时机。或许更有用的是，有时候你想手动布局，但并不太容易创建一个布局规则对象，或者有时候你不想等所有子节点布局完毕，而只是很简单的手动设置frame，如果是这样的话，就在这个方法里写</p>
+<h2 id="排版引擎-1"><a href="#排版引擎-1" class="headerlink" title="排版引擎"></a>排版引擎</h2><p>AsyncDisplayKit的排版引擎是基于CSS Box模型，它具有类似UIKit（自动布局）一样的特征，一旦你习惯它，就会发现这是他最有用的特点。只要有足够的联系，你就会越来越习惯通过创建布局声明来实现基础约束。</p>
+<p>想要参与这个过程的主要方式就是通过在子类中实现<code>layoutSpecThatFits:</code>方法，在这里你声明和建立布局规则对象，返回最重的包含所有信息的对象</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize</span><br><span class="line">&#123;</span><br><span class="line">  ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec verticalStackLayoutSpec];</span><br><span class="line">  verticalStack.direction          = ASStackLayoutDirectionVertical;</span><br><span class="line">  verticalStack.spacing            = <span class="number">4.0</span>;</span><br><span class="line">  [verticalStack setChildren:_commentNodes];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> verticalStack;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>尽管这个例子非常简单，但是它给了你一个思路，如何去使用布局规则对象，一个stack布局规则对象为例，定义了一种子节点们相邻的布局方式，确定了方向，间隔的定义，他看起来很像UIStackView，但是可以支持低版本iOS</p>
+<h3 id="ASLayoutable"><a href="#ASLayoutable" class="headerlink" title="ASLayoutable"></a>ASLayoutable</h3><p>布局规则对象的孩子，可以是任何对象，只要他遵从<code>&lt;ASLayoutable&gt;</code>协议，所有的nodes和布局规则对象都遵从这个协议，就是说你的布局，可以用任何你想的对象来建立。</p>
+<p>比如，你想要添加8像素的间隔给这个你刚刚建立好的stack</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize</span><br><span class="line">&#123;</span><br><span class="line">  ASStackLayoutSpec *verticalStack = [ASStackLayoutSpec verticalStackLayoutSpec];</span><br><span class="line">  verticalStack.direction        = ASStackLayoutDirectionVertical;</span><br><span class="line">  verticalStack.spacing            = <span class="number">4.0</span>;</span><br><span class="line">  [verticalStack setChildren:_commentNodes];</span><br><span class="line">  </span><br><span class="line">  <span class="built_in">UIEdgeInsets</span> insets = <span class="built_in">UIEdgeInsetsMake</span>(<span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>, <span class="number">8</span>);</span><br><span class="line">  ASInsetLayoutSpec *insetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets </span><br><span class="line">                                      child:verticalStack];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> insetSpec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>你可以很容易就完成</p>
+<p>当然，使用布局规则对象需要一些联系，可以看layout section部分</p>
+<h1 id="节点容器"><a href="#节点容器" class="headerlink" title="节点容器"></a>节点容器</h1><h2 id="容器总览"><a href="#容器总览" class="headerlink" title="容器总览"></a>容器总览</h2><h3 id="在节点容器中使用节点"><a href="#在节点容器中使用节点" class="headerlink" title="在节点容器中使用节点"></a>在节点容器中使用节点</h3><p>强烈建议你通过节点容器，来使用AsyncDisplayKit的节点，AsyncDisplayKit提供了下面4种节点</p>
+<ul>
+<li>ASViewController 类似 UIKit’s UIViewController</li>
+<li>ASCollectionNode 类似 UIKit’s UICollectionView</li>
+<li>ASPagerNode 类似 UIKit’s UIPageViewController</li>
+<li>ASTableNode 类似 UIKit’s UITableView</li>
+</ul>
+<p>例子demo在每个节点容器的文档中被高亮展示了</p>
+<p>想要详细的从UIKit移植app到AsyncDisplayKit信息，请看移植指南</p>
+<h3 id="使用节点容器有什么好处"><a href="#使用节点容器有什么好处" class="headerlink" title="使用节点容器有什么好处"></a>使用节点容器有什么好处</h3><p>介电容器自动管理着子节点的智能预加载，所有的子节点都可以异步的执行布局计算，获取数据，解码，渲染。正因为此，推荐在节点容器内使用节点</p>
+<p>注意：确实可以直接使用节点不使用节点容器，但他们只会在出现到屏幕上的时候展现一次，这样会导致性能退化，或者闪烁</p>
+<h2 id="ASViewController"><a href="#ASViewController" class="headerlink" title="ASViewController"></a>ASViewController</h2><p>ASViewController是UIViewController的子类，并且添加了很多和ASDisplayNode层级相关的功能</p>
+<p>ASViewController可以被当做UIViewController来使用，包括套在一个UINavigationController，UITabBarController，UISpitViewController里面</p>
+<p>使用ASViewController的一大好处是节省内存，当ASViewController离开屏幕的时候会自动减少其子node的数据范围（前文提到）和显示范围（前文提到），这是大型app管理的关键</p>
+<p>除此之外还有更多地功能，把它当做你app的基础ViewController的基类是一个不错的选择。</p>
+<p>UIViewController提供他自己的view，ASViewController提供了他自己的node，是在<code>-initWithNode:</code>方法中创建的</p>
+<p>你可以参考下面这个ASViewController的子类PhotoFeedNodeController，在ASDKgram sample app里面，你可以看到他是如何管理和使用一个列表节点的</p>
+<p>这个列表节点就是在<code>-initWithNode:</code>方法中创建的</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">  _tableNode = [[ASTableNode alloc] initWithStyle:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line">  <span class="keyword">self</span> = [<span class="keyword">super</span> initWithNode:_tableNode];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    _tableNode.dataSource = <span class="keyword">self</span>;</span><br><span class="line">    _tableNode.delegate = <span class="keyword">self</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果你的app已经有了很复杂的viewcontroller层级，你最好把他们都改成继承自ASViewController，就是说，即便你不使用ASViewController的<code>-initWithNode:</code>方法，你只是把它当做传统的UIViewController来使用，当你一旦选择不同的使用方式，他就能给你节点管理方面的支持</p>
+<h2 id="ASTableNode"><a href="#ASTableNode" class="headerlink" title="ASTableNode"></a>ASTableNode</h2><p>ASTableNode等效于UIKit的UITableview，而且可以拿来替换UITableView</p>
+<p>ASTableNode替换UITableView以下方法<br><code>- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+<p>替换成下面这两种方法之一</p>
+<p><code>- (ASCellNode *)tableView:(ASTableView *)tableView nodeForRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+<p><code>- (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(NSIndexPath *)indexPath</code></p>
+<p>建议你使用nodeBlock的版本，以便这些节点可以同时进行准备和显示处理，所有的子节点都可以在后台线程进行初始化，所以一定要保持他们的代码是线程安全的。</p>
+<p>这两个方法都需要返回一个ASCellNode或者ASCellNodeBlock。一个ASCellNodeBlock是用来在后台创建ASCellNode的，注意ASCellNode在ASTableNode，ASCollectionNode，ASPagerNode都有使用</p>
+<p>请注意这两个方法都不需要重用机制！</p>
+<h3 id="用ASViewController替换UITableViewController"><a href="#用ASViewController替换UITableViewController" class="headerlink" title="用ASViewController替换UITableViewController"></a>用ASViewController替换UITableViewController</h3><p>AsyncDisplayKit并没有提供一个类似UITableViewController的东西，你需要使用ASViewController初始化一个ASTableNode</p>
+<p>继续可以参照ASViewController的子类PhotoFeedNodeController，在ASDKgram sample app里面</p>
+<p>一个ASTableNode在ASViewController的<code>-initWithNode:</code>方法初始化<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">    _tableNode = [[ASTableNode alloc] initWithStyle:<span class="built_in">UITableViewStylePlain</span>];</span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> initWithNode:_tableNode];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">      _tableNode.dataSource = <span class="keyword">self</span>;</span><br><span class="line">      _tableNode.delegate = <span class="keyword">self</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="node-block线程安全警告"><a href="#node-block线程安全警告" class="headerlink" title="node block线程安全警告"></a>node block线程安全警告</h3><p>保证node block 的代码一定要是线程安全的，一方面要保证块里面的数据对外面是可访问的，所以你不应该使用block内的索引</p>
+<p>继续参考子类PhotoFeedNodeController，在ASDKgram sample app里面的例子，<code>-tableView:nodeBlockForRowAtIndexPath:</code>这个方法</p>
+<p>这个例子可以看出来，如何在使用索引，访问photo的模型</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (ASCellNodeBlock)tableView:(ASTableView *)tableView nodeBlockForRowAtIndexPath:(<span class="built_in">NSIndexPath</span> *)indexPath</span><br><span class="line">&#123;</span><br><span class="line">    PhotoModel *photoModel = [_photoFeed objectAtIndex:indexPath.row];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// this may be executed on a background thread - it is important to make sure it is thread safe</span></span><br><span class="line">    ASCellNode *(^cellNodeBlock)() = ^ASCellNode *() &#123;</span><br><span class="line">        PhotoCellNode *cellNode = [[PhotoCellNode alloc] initWithPhoto:photoModel];</span><br><span class="line">        cellNode.delegate = <span class="keyword">self</span>;</span><br><span class="line">        <span class="keyword">return</span> cellNode;</span><br><span class="line">    &#125;;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> cellNodeBlock;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="列表行高"><a href="#列表行高" class="headerlink" title="列表行高"></a>列表行高</h3><p>一个很重要的事情就是，ASTableNode并不提供类似UITableview的<code>-tableView:heightForRowAtIndexPath:</code>方法</p>
+<p>这是因为节点基于自己的约束来确定自己的高度，就是说你不再需要写代码来确定这个细节</p>
+<p>一个node通过<code>-layoutSpecThatFits:</code>方法返回的布局规则确定了行高，所有的节点只要提供了约束大小，就有能力自己确定自己的尺寸</p>
+<p>在默认的情况下，tableNode提供了Cell的尺寸约束范围，最小宽度和最低高度是0，最大宽度是tablenode的宽度，最大高度是MAX_FLOAT，这就是说，tablenode的cell，总是填满tablenode的全宽，他的高度是自己计算自适应的</p>
+<p>如果你对一个ASCellNode调用了<code>setNeedsLayout</code>，他会自动的把布局传递，如果整体所需要的大小发生了变化，表会被告知要进行更新</p>
+<p>和UIKit不同的时，你不需要调用reload，这样很节省了代码，可以看ASDKgram sample来看一个table的具体实现</p>
+<h2 id="ASCollectionNode"><a href="#ASCollectionNode" class="headerlink" title="ASCollectionNode"></a>ASCollectionNode</h2><p>ASCollectionNode就是类似UIKit的UICollectionView，可以拿来代替UICollectionView</p>
+<p>ASCollectionNode替换UICollectionView的时候需要把下面这个方法</p>
+<p><code>- (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath;</code></p>
+<p>替换成下面2个之一</p>
+<p><code>- (ASCellNode *)collectionView:(ASCollectionView *)collectionView nodeForItemAtIndexPath:(NSIndexPath *)indexPath</code></p>
+<p><code>- (ASCellNodeBlock)collectionView:(ASCollectionView *)collectionView nodeBlockForItemAtIndexPath:(NSIndexPath *)indexPath</code></p>
+<p>同tablenode一样，推荐使用block的版本</p>
+<p>正如前面说过的</p>
+<ul>
+<li>ASCollectionNodes不需要重用。</li>
+<li>nodeBlock的方法建议使用。</li>
+<li>块内要求是线程安全的，这一点很重要。</li>
+<li>ASCellNodes可由ASTableNode，ASCollectionNode和ASPagerNode使用</li>
+</ul>
+<h3 id="用ASViewController替换UICollectionViewController"><a href="#用ASViewController替换UICollectionViewController" class="headerlink" title="用ASViewController替换UICollectionViewController"></a>用ASViewController替换UICollectionViewController</h3><p>AsyncDisplayKit并没有提供类似UICollectionViewController的类，你还是需要使用ASViewController，初始化的时候创建一个ASCollectionNode，在<code>-initWithNode:</code>方法里</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)init</span><br><span class="line">&#123;</span><br><span class="line">  _flowLayout     = [[<span class="built_in">UICollectionViewFlowLayout</span> alloc] init];</span><br><span class="line">  _collectionNode = [[ASCollectionNode alloc] initWithCollectionViewLayout:_flowLayout];</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">self</span> = [<span class="keyword">super</span> initWithNode:_collectionNode];</span><br><span class="line">  <span class="keyword">if</span> (<span class="keyword">self</span>) &#123;</span><br><span class="line">    _flowLayout.minimumInteritemSpacing  = <span class="number">1</span>;</span><br><span class="line">    _flowLayout.minimumLineSpacing       = <span class="number">1</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ASTableNode,ASPagerNode都是这样工作的</p>
+<h3 id="访问ASCollectionView"><a href="#访问ASCollectionView" class="headerlink" title="访问ASCollectionView"></a>访问ASCollectionView</h3><p>如果你用过以前版本的ASDK，你会发现，为了方便ASCollectionNode，ASCollectionView已经被移除了，</p>
+<p>ASCollectionView是UICollectionView的子类，仍然是通过ASCollectionNode内部来使用。虽然他不可以被直接创建，但是他可以通过ASCollectionNode的.view属性来访问，但是别忘了，一个节点的视图，只有在viewdidload 或者didload之后，才可以进行访问</p>
+<p>下面的这个例子可以看出来，直接访问ASCollectionView</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)viewDidLoad</span><br><span class="line">&#123;</span><br><span class="line">  [<span class="keyword">super</span> viewDidLoad];</span><br><span class="line">  </span><br><span class="line">  _collectionNode.view.asyncDelegate   = <span class="keyword">self</span>;</span><br><span class="line">  _collectionNode.view.asyncDataSource = <span class="keyword">self</span>;</span><br><span class="line">  _collectionNode.view.allowsSelection = <span class="literal">NO</span>;</span><br><span class="line">  _collectionNode.view.backgroundColor = [<span class="built_in">UIColor</span> whiteColor];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="CELL计算和布局"><a href="#CELL计算和布局" class="headerlink" title="CELL计算和布局"></a>CELL计算和布局</h3><p>就像之前提到过的，ASCollectionNode和ASTableNode不需要计算他们的CellNode的高度</p>
+<p>现在，无论采用哪种UICollectionViewLayout，cell可以根据约束的大小来自动布局自适应，</p>
+<p>不久之后，会有一个类似ASTableNode的<code>constrainedSizeForRow:</code>方法，但是现在，如果你需要在collectionNode里约束一个cellNode，你需要包装处理一下约束规则对象</p>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>最详细的ASCollectionNode例子就是CustomCollectionView，包括自定义的ASCollectionNode与UICollectionViewLayout.</p>
+<p>更多地demo请看</p>
+<ul>
+<li>ASDKgram</li>
+<li>CatDealsCollectionView</li>
+<li>ASCollectionView</li>
+</ul>
+<h2 id="ASPagerNode"><a href="#ASPagerNode" class="headerlink" title="ASPagerNode"></a>ASPagerNode</h2><p>ASPagerNode是ASCollectionNode的子类，他特别定制了UICollectionViewLayout</p>
+<p>使用ASPagerNode可以让你开发类似UIKit中UIPageViewController的效果，ASPagerNode目前只支持在滚动停留到正确的位置，但还不支持循环滚动</p>
+<p>最核心的数据源方法如下</p>
+<p><code>- (NSInteger)numberOfPagesInPagerNode:(ASPagerNode *)pagerNode</code></p>
+<p><code>- (ASCellNode *)pagerNode:(ASPagerNode *)pagerNode nodeAtIndex:(NSInteger)index</code></p>
+<p><code>- (ASCellNodeBlock)pagerNode:(ASPagerNode *)pagerNode nodeBlockAtIndex:(NSInteger)index</code></p>
+<p>后面这两种方法就像ASCollectionNode 和 ASTableNode一样需要返回ASCellNode 或者ASCellNodeBlock，用于创建可以在后台线程运行的ASCellNode</p>
+<p>注意，这些方法都不要写重用逻辑，不像UIKit，这些方法在即将要显示的时候，是不会调用的</p>
+<p><code>-pagerNode:nodeAtIndex:</code>会在主线程被调用, <code>-pagerNode:nodeBlockAtIndex:</code>更推荐使用，因为所有的node的初始化方法都可能在背景线程和主线程中调用，所以一定要确保block中的代码线程安全</p>
+<h3 id="nodeblock线程安全警告"><a href="#nodeblock线程安全警告" class="headerlink" title="nodeblock线程安全警告"></a>nodeblock线程安全警告</h3><p>保证node block 的代码一定要是线程安全的，一方面要保证块里面的数据对外面是可访问的，所以你不应该使用block内的索引</p>
+<p>可以看下面的例子</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (ASCellNodeBlock)pagerNode:(ASPagerNode *)pagerNode nodeBlockAtIndex:(<span class="built_in">NSInteger</span>)index</span><br><span class="line">&#123;</span><br><span class="line">  PhotoModel *photoModel = _photoFeed[index];</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// this part can be executed on a background thread - it is important to make sure it is thread safe!</span></span><br><span class="line">  ASCellNode *(^cellNodeBlock)() = ^ASCellNode *() &#123;</span><br><span class="line">    PhotoCellNode *cellNode = [[PhotoCellNode alloc] initWithPhoto:photoModel];</span><br><span class="line">    <span class="keyword">return</span> cellNode;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="keyword">return</span> cellNodeBlock;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="优化使用ASViewController"><a href="#优化使用ASViewController" class="headerlink" title="优化使用ASViewController"></a>优化使用ASViewController</h3><p>一个很有效的方式是，直接返回ASViewController中初始化好的ASCellNode，所以还是推荐使用ASViewController</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">- (ASCellNode *)pagerNode:(ASPagerNode *)pagerNode nodeAtIndex:(<span class="built_in">NSInteger</span>)index</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">NSArray</span> *animals = <span class="keyword">self</span>.animals[index];</span><br><span class="line">    </span><br><span class="line">    ASCellNode *node = [[ASCellNode alloc] initWithViewControllerBlock:^&#123;</span><br><span class="line">        <span class="keyword">return</span> [[AnimalTableNodeController alloc] initWithAnimals:animals];;</span><br><span class="line">    &#125; didLoadBlock:<span class="literal">nil</span>];</span><br><span class="line">    </span><br><span class="line">    node.preferredFrameSize = pagerNode.bounds.size;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这个例子这种，你可以看到节点通过<code>initWithViewControllerBlock</code>方法进行约束，为了正确的布局，还是需要提供一个希望的framesize</p>
+<p>例子</p>
+<ul>
+<li>PagerNode</li>
+<li>VerticalWithinHorizontalScrolling</li>
+</ul>
+<h1 id="节点"><a href="#节点" class="headerlink" title="节点"></a>节点</h1><h2 id="ASDisplayNode"><a href="#ASDisplayNode" class="headerlink" title="ASDisplayNode"></a>ASDisplayNode</h2><h3 id="最基础的节点"><a href="#最基础的节点" class="headerlink" title="最基础的节点"></a>最基础的节点</h3><p>ASDisplayNode是最主要的UIView和CALayer的抽象对象，他初始化的时候拥有一个UIView，同时UIView在初始化的时候拥有一个CALayer</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ASDisplayNode *node = [[ASDisplayNode alloc] init];</span><br><span class="line">node.backgroundColor = [<span class="built_in">UIColor</span> orangeColor];</span><br><span class="line">node.bounds = <span class="built_in">CGRectMake</span>(<span class="number">0</span>, <span class="number">0</span>, <span class="number">100</span>, <span class="number">100</span>);</span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"Underlying view: %@"</span>, node.view);</span><br></pre></td></tr></table></figure>
+<p>Node和UIView具有一样的属性，所以使用起来非常像UIKit</p>
+<p>无论是view还是layer的属性，都可以通过node进行访问</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ASDisplayNode *node = [[ASDisplayNode alloc] init];</span><br><span class="line">node.clipsToBounds = <span class="literal">YES</span>;                       <span class="comment">// not .masksToBounds</span></span><br><span class="line">node.borderColor = [<span class="built_in">UIColor</span> blueColor];  <span class="comment">//layer name when there is no UIView equivalent</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">NSLog</span>(<span class="string">@"Backing layer: %@"</span>, node.layer);</span><br></pre></td></tr></table></figure>
+<p>你可以看到，默认命名是照着UIView的习惯，除非这个属性是UIView不具备的，你就像处理普通UIView一样，去访问底层的CALayer</p>
+<p>当我们使用了节点容器，节点的属性会在背景线程被设置和使用，背后的view/layer会延迟懒加载生成约束，你不需要去担心跳入背景线程要注意什么，因为框架都处理好了，但是你也要了解都发生了什么</p>
+<h3 id="页面包装"><a href="#页面包装" class="headerlink" title="页面包装"></a>页面包装</h3><p>某些情况下，需要初始化一个节点，提供一个view当做基础view。这些view需要一个block来处理之后被保存的view（有点绕。。我也没太懂。）</p>
+<p>这些节点展示的步骤是同步的，这是因为节点只有在被包上一层_ASDisplayView后，才可以异步，现在他只是包在普通UIView上</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ASDisplayNode *node = [ASDisplayNode alloc] initWithViewBlock:^&#123;</span><br><span class="line">    SomeView *view = [[SomeView alloc] init];</span><br><span class="line">    <span class="keyword">return</span> view;</span><br><span class="line">&#125;];</span><br></pre></td></tr></table></figure>
+<p>这样可以让你把一个UIView子类包装成一个ASDisplayNode子类</p>
+<p>唯一要注意的时node使用position，不是center</p>
+<h2 id="ASCellNode"><a href="#ASCellNode" class="headerlink" title="ASCellNode"></a>ASCellNode</h2><p>ASCellNode 可能是最常用的节点子类了，他可以被用于ASTableNode和ASCollectionNode</p>
+<p>就像其他子类继承自ASDisplayNode，ASCellNode更重要的是需要重写<code>-init</code>方法初始化 <code>-layoutSpecThatFit:</code>来布局和计算，如果需要，重写<code>-didLoad</code>来添加额外的手势或者额外的布局</p>
+<p>如果你不喜欢继承，你也可以使用<code>-initWithView</code>和<code>-initWithViewController</code>方法来返回一个节点，他的内部view就是通过已经存在的view来创建的</p>
+<h2 id="ASTextCellNode"><a href="#ASTextCellNode" class="headerlink" title="ASTextCellNode"></a>ASTextCellNode</h2><p>敬请期待……</p>
+<h2 id="ASControlNode"><a href="#ASControlNode" class="headerlink" title="ASControlNode"></a>ASControlNode</h2><p>敬请期待……</p>
+<p>点击区域可视化</p>
+<p>只用一行代码，就可以轻松的把所有的ASControlNode的点击区域可视化，通过这个工具hit test slop debug tool.</p>
+<h2 id="ASButtonNode"><a href="#ASButtonNode" class="headerlink" title="ASButtonNode"></a>ASButtonNode</h2><p>ASButtonNode是ASControlNode的子类，提供了简单button的功能，有多重状态，标签，图片，和布局选项，开启layerBacking可以显著减少button对主线程的影响</p>
+<p>功能：</p>
+<ul>
+<li>支持更换背景图片</li>
+<li>支持更换标签</li>
+<li>支持更换文字对齐</li>
+<li>支持更换内容边界控制</li>
+<li>提供方法来制作富文本标签</li>
+</ul>
+<p>小心：<br>选择selected属性的逻辑应该由开发者处理，点击buttonNode不会自动的开启selected</p>
+<h2 id="ASTextNode"><a href="#ASTextNode" class="headerlink" title="ASTextNode"></a>ASTextNode</h2><p>敬请期待……</p>
+<h2 id="ASEditableTextNode"><a href="#ASEditableTextNode" class="headerlink" title="ASEditableTextNode"></a>ASEditableTextNode</h2><p>ASEditableTextNode提供了一个灵活的高效的动画有好的可编辑文本控件</p>
+<p>功能：sizeRange比constrainedSize允许更大的长文本，支持占位符<br>小心：不支持 layer backing<br>例子：examples/editableText</p>
+<h2 id="ASImageNode"><a href="#ASImageNode" class="headerlink" title="ASImageNode"></a>ASImageNode</h2><p>敬请期待……</p>
+<p>ASImageNode性能提示</p>
+<p>只需要一行代码就可以方便的查看app没有下载和渲染的过量图形数据，或者低质量的图形数据，使用这个工具pixel scaling debug tool.</p>
+<h2 id="ASNetworkImageNode"><a href="#ASNetworkImageNode" class="headerlink" title="ASNetworkImageNode"></a>ASNetworkImageNode</h2><p>ASNetworkImageNode用来展示那些被远程存储的图片，所有你要做的只是设置好URL，需要是一个NSURL实例，并且图片会异步的被夹在，正确的被读取</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ASNetworkImageNode *imageNode = [[ASNetworkImageNode alloc] init];</span><br><span class="line">imageNode.URL = [<span class="built_in">NSURL</span> URLWithString:<span class="string">@"https://someurl.com/image_uri"</span>];</span><br></pre></td></tr></table></figure>
+<h3 id="布局一个网图节点"><a href="#布局一个网图节点" class="headerlink" title="布局一个网图节点"></a>布局一个网图节点</h3><p>一个网图节点在还没有真实地大小的时候，是有必要指定一个特定得布局的</p>
+<p>方法1：preferredFrameSize</p>
+<p>如果你有一个标准大小，你希望这个image节点可以按着布局，你可以使用这个属性</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constraint</span><br><span class="line">&#123;</span><br><span class="line">    imageNode.preferredFrameSize = <span class="built_in">CGSizeMake</span>(<span class="number">100</span>, <span class="number">200</span>);</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> finalLayoutSpec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>方法2：ASRatioLayoutSpec</p>
+<p>这个场景是一个绝好的使用ASRatioLayoutSpec的场景，不去设置静态的大小，你可以指定当图像下载完成时，和图像保持比例，</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constraint</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">CGFloat</span> ratio = <span class="number">3.0</span>/<span class="number">1.0</span>;</span><br><span class="line">    ASRatioLayoutSpec *imageRatioSpec = [ASRatioLayoutSpec ratioLayoutSpecWithRatio:ratio child:<span class="keyword">self</span>.imageNode];</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">return</span> finalLayoutSpec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="外部引用"><a href="#外部引用" class="headerlink" title="外部引用"></a>外部引用</h3><p>如果你不打算引入PINRemoteImage和PINCache，你会失去对jpeg的更好的支持，你需要自行引入你自己的cache系统，需要遵从ASImageCacheProtocol</p>
+<h3 id="渐进式JPEG支持"><a href="#渐进式JPEG支持" class="headerlink" title="渐进式JPEG支持"></a>渐进式JPEG支持</h3><p>得益于PINRemoteImage，网图节点可以全面支持，有进度下载的JPEG图片，如果你的服务器提供这个功能，你的图片就可以展示的非常快，先加载低质量图，慢慢展示</p>
+<p>逐步加载图片是很重要的，如果服务器被要求使用普通的JPEGS，但是给你提供了多个版本的图片数据，你可以使用ASMultiplexImageNode</p>
+<h3 id="自动缓存"><a href="#自动缓存" class="headerlink" title="自动缓存"></a>自动缓存</h3><p>ASNetworkImageNode使用PINCache 来自动处理网络图片缓存</p>
+<h2 id="ASMultiplexImageNode"><a href="#ASMultiplexImageNode" class="headerlink" title="ASMultiplexImageNode"></a>ASMultiplexImageNode</h2><p>如果你不能使用渐进式JPEG，但是你可以处理同一个图的几个不同尺寸的图形数据，你可以使用ASMultiplexImageNode代替ASNetworkImageNode</p>
+<p>在下面的例子里，你就是在CellNode里用了一个多图形节点，初始化之后，你通常需要做2个事情，</p>
+<p>第一，确保downloadsIntermediateImages设置为YES，这样方便快速下载</p>
+<p>第二，分配一个数组里面对应着图片类型key 和 value，这样将帮助节点选择下载哪个URL，尝试加载</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">instancetype</span>)initWithURLs:(<span class="built_in">NSDictionary</span> *)urls</span><br><span class="line">&#123;</span><br><span class="line">    ...</span><br><span class="line">     _imageURLs = urls;          <span class="comment">// something like @&#123;@"thumb": "/smallImageUrl", @"medium": ...&#125;</span></span><br><span class="line"></span><br><span class="line">    _multiplexImageNode = [[ASMultiplexImageNode alloc] initWithCache:<span class="literal">nil</span> </span><br><span class="line">                                                           downloader:[ASBasicImageDownloader sharedImageDownloader]];</span><br><span class="line">    _multiplexImageNode.downloadsIntermediateImages = <span class="literal">YES</span>;</span><br><span class="line">    _multiplexImageNode.imageIdentifiers = @[ <span class="string">@"original"</span>, <span class="string">@"medium"</span>, <span class="string">@"thumb"</span> ];</span><br><span class="line"></span><br><span class="line">    _multiplexImageNode.dataSource = <span class="keyword">self</span>;</span><br><span class="line">    _multiplexImageNode.delegate   = <span class="keyword">self</span>;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后，如果你已经设置好了一个字典来保存已有的KEY和URL，你就可以简单的返回URL给对应的KEY</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#pragma mark Multiplex Image Node Datasource</span></span><br><span class="line"></span><br><span class="line">- (<span class="built_in">NSURL</span> *)multiplexImageNode:(ASMultiplexImageNode *)imageNode </span><br><span class="line">        URLForImageIdentifier:(<span class="keyword">id</span>)imageIdentifier</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">return</span> _imageURLs[imageIdentifier];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>也有一个delegate可以方便你显示下载进度，展示的时候，你可以根据需求更新你的方法</p>
+<p>比如，下面的例子，当你一个新的图片下载完成后，你需要一个回调</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#pragma mark Multiplex Image Node Delegate</span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)multiplexImageNode:(ASMultiplexImageNode *)imageNode </span><br><span class="line">            didUpdateImage:(<span class="built_in">UIImage</span> *)image </span><br><span class="line">            withIdentifier:(<span class="keyword">id</span>)imageIdentifier </span><br><span class="line">                 fromImage:(<span class="built_in">UIImage</span> *)previousImage </span><br><span class="line">            withIdentifier:(<span class="keyword">id</span>)previousImageIdentifier;</span><br><span class="line">&#123;    </span><br><span class="line">        <span class="comment">// this is optional, in case you want to react to the fact that a new image came in</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="ASMapNode"><a href="#ASMapNode" class="headerlink" title="ASMapNode"></a>ASMapNode</h2><p>ASMapNode提供了一个完整的异步准备，自动预加载，高效内存处理的节点<br>，他的标准模式下，是异步快照的形式，ASTableView 和 ASCollectionView 会自动触发liveMap模式，liveMode模式可以轻松的提供缓存，这是地图交互所必须的</p>
+<p>功能：使用MKMapSnapshotOptions所规定的主要形式，允许无缝过度地图快照和3D相机模式，允许滚动时候自动异步加载</p>
+<p>不足：MKMapView 不是线程安全的</p>
+<h2 id="ASVideoNode"><a href="#ASVideoNode" class="headerlink" title="ASVideoNode"></a>ASVideoNode</h2><p>ASVedioNode是一个新的功能，并且专为方便高效的在滚动试图里嵌入视频</p>
+<p>功能：当对象可见，支持自动播放，哪怕是他们在滚动容器内（ASPagerNode or ASTableNode），如果提供了URL缩略图占位符可以异步下载，如果不提供也可以将解码第一帧当做展位图</p>
+<p>不足：必须使用AVFoundation 这个库</p>
+<p>例子：examples/videosTableview  - examples/videos</p>
+<h2 id="ASScrollNode"><a href="#ASScrollNode" class="headerlink" title="ASScrollNode"></a>ASScrollNode</h2><p>敬请期待……</p>
+<h1 id="排版引擎-2"><a href="#排版引擎-2" class="headerlink" title="排版引擎"></a>排版引擎</h1><h2 id="排版基础"><a href="#排版基础" class="headerlink" title="排版基础"></a>排版基础</h2><h3 id="盒子模型排版"><a href="#盒子模型排版" class="headerlink" title="盒子模型排版"></a>盒子模型排版</h3><p>ASLayout是一个自动的，异步的，纯OC盒子模型排版的布局功能，是一种CSS flex box的简单版，ComponetKit的简化版本，他的目的是让你的布局居右可扩展和复用性</p>
+<p>UIView的实例存储位置，大小是通过center和bounds的属性，当约束条件发生变化，CoreAnimation会调用layoutSubviews，告诉view需要更新界面</p>
+<p><aslayoutable>实例（所有的ASDisplayNodes和子类）不需要大小和位置信息，相反，AsyncDisplayKit会调用layoutSpecThatFits方法通过给一个约束来描述大小和位置信息</aslayoutable></p>
+<h3 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h3><p>术语可能有点混乱，所以在这里对所有ASDK自动布局进行简单的说明：</p>
+<p><aslayoutable>协议定义了测量物体布局的方法，符合<aslayoutable>协议的对象就有相关的能力。通过ASLayout返回的值，必须有2个前提要确定，1，layoutable对象的大小（不一定是位置），2其所有子节点的大小与位置。通过递推树来让父节点计算布局确定最终的结果。</aslayoutable></aslayoutable></p>
+<p>这个协议是所有布局相关协议的家，包含所有的ASXXLayoutSpec协议，这些协议包含着布局的规则和选项，例如，ASStackLayoutSpec具有限定layoutable如何缩小或放大根据可用空间的作用。这些布局选项都保存在ASLayoutOptions类，一般来说你不需要担心布局选项。如果要创建自定义布局规则，你可以扩展去适应新的布局选项。</p>
+<p>所有的ASDisplayNodes和他的子类，以及ASLayoutSpecs都符合这个协议</p>
+<p>一个ASLayoutSpec是一个不可变的描述布局的对象，布局规范的创建要通过layoutSpecThatFits：方法，一个布局规范的创建和修改，一旦它传给ASDK，所有的属性都将变成不可变，并且任何设置改变都将导致断言</p>
+<p>每个ASLayoutSpec至少要作用在一个孩子上，ASLayoutSpec持有这个孩子，一些约束规则如ASInsetLayoutSpec，只需要一个孩子，其他的规则需要多个孩子。</p>
+<p>你不需要了解ASLayout，只需要知道他代表着一个不变的布局树，而且通过遵循<aslayoutable>协议的对象返回</aslayoutable></p>
+<h3 id="UIKit组件布局"><a href="#UIKit组件布局" class="headerlink" title="UIKit组件布局"></a>UIKit组件布局</h3><ul>
+<li>对于直接添加UIView，你需要手动的在<code>didLoad:</code>处理</li>
+<li>对于添加到ASDK得UIView，你可以在<code>layoutSpecThatFits:</code>处理</li>
+</ul>
+<h2 id="布局容器"><a href="#布局容器" class="headerlink" title="布局容器"></a>布局容器</h2><p>AsyncDisplayKit包含有一套布局的组件，下面的LayoutSpecs允许你可以拥有多个孩子</p>
+<ul>
+<li><p>ASStackLayoutSpec 基于CSS Flexbox的一个简化版本，可以水平或者垂直的排布堆栈组件，并制定如何对其，如何适应空间</p>
+</li>
+<li><p>ASStaticLayoutSpec 允许你固定孩子的偏移</p>
+</li>
+</ul>
+<p>下面LayoutSpecs允许你布局单一的孩子</p>
+<ul>
+<li>ASLayoutSpec 可以在没有孩子的时候使用</li>
+<li>ASInsetLayoutSpec 可以处理Inset环绕空余型的孩子</li>
+<li>ASBackgroundLayoutSpec 可以用于拉伸背后一个组件做背景</li>
+<li>ASOverlayLayoutSpec 拼接上面的一个组件</li>
+<li>ASCenterLayoutSpec 中心可用布局</li>
+<li>ASRatioLayoutSpec 固定的比例布局图片GIF视频</li>
+<li>ASRelativeLayoutSpec 9宫格缩放布局</li>
+</ul>
+<h2 id="布局样例"><a href="#布局样例" class="headerlink" title="布局样例"></a>布局样例</h2><p>3个逐渐复杂的样例</p>
+<h3 id="NSSpain-Talk例子"><a href="#NSSpain-Talk例子" class="headerlink" title="NSSpain Talk例子"></a>NSSpain Talk例子</h3><p>[图不翻译了]</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constraint</span><br><span class="line">&#123;</span><br><span class="line">  ASStackLayoutSpec *vStack = [[ASStackLayoutSpec alloc] init];</span><br><span class="line"></span><br><span class="line">  [vStack setChildren:@[titleNode, bodyNode];</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *hstack = [[ASStackLayoutSpec alloc] init];</span><br><span class="line">  hStack.direction          = ASStackLayoutDirectionHorizontal;</span><br><span class="line">  hStack.spacing            = <span class="number">5.0</span>;</span><br><span class="line"></span><br><span class="line">  [hStack setChildren:@[imageNode, vStack]];</span><br><span class="line"></span><br><span class="line">  ASInsetLayoutSpec *insetSpec = [ASInsetLayoutSpec insetLayoutSpecWithInsets:<span class="built_in">UIEdgeInsetsMake</span>(<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>,<span class="number">5</span>) child:hStack];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> insetSpec;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="社交APP布局"><a href="#社交APP布局" class="headerlink" title="社交APP布局"></a>社交APP布局</h3><p>[图不翻译了]</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize</span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// header stack</span></span><br><span class="line">  _userAvatarImageView.preferredFrameSize = <span class="built_in">CGSizeMake</span>(USER_IMAGE_HEIGHT, USER_IMAGE_HEIGHT);  <span class="comment">// constrain avatar image frame size</span></span><br><span class="line"></span><br><span class="line">  ASLayoutSpec *spacer = [[ASLayoutSpec alloc] init];</span><br><span class="line">  spacer.flexGrow      = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *headerStack = [ASStackLayoutSpec horizontalStackLayoutSpec];</span><br><span class="line">  headerStack.alignItems         = ASStackLayoutAlignItemsCenter;       <span class="comment">// center items vertically in horizontal stack</span></span><br><span class="line">  headerStack.justifyContent     = ASStackLayoutJustifyContentStart;    <span class="comment">// justify content to left side of header stack</span></span><br><span class="line">  headerStack.spacing            = HORIZONTAL_BUFFER;</span><br><span class="line"></span><br><span class="line">  [headerStack setChildren:@[_userAvatarImageView, _userNameLabel, spacer, _photoTimeIntervalSincePostLabel]];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// header inset stack</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">UIEdgeInsets</span> insets                = <span class="built_in">UIEdgeInsetsMake</span>(<span class="number">0</span>, HORIZONTAL_BUFFER, <span class="number">0</span>, HORIZONTAL_BUFFER);</span><br><span class="line">  ASInsetLayoutSpec *headerWithInset = [ASInsetLayoutSpec insetLayoutSpecWithInsets:insets child:headerStack];</span><br><span class="line">  headerWithInset.flexShrink = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// vertical stack</span></span><br><span class="line"></span><br><span class="line">  <span class="built_in">CGFloat</span> cellWidth                  = constrainedSize.max.width;</span><br><span class="line">  _photoImageView.preferredFrameSize = <span class="built_in">CGSizeMake</span>(cellWidth, cellWidth);  <span class="comment">// constrain photo frame size</span></span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *verticalStack   = [ASStackLayoutSpec verticalStackLayoutSpec];</span><br><span class="line">  verticalStack.alignItems           = ASStackLayoutAlignItemsStretch;    <span class="comment">// stretch headerStack to fill horizontal space</span></span><br><span class="line"></span><br><span class="line">  [verticalStack setChildren:@[headerWithInset, _photoImageView, footerWithInset]];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> verticalStack;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整的ASDK工程可以查阅 example/ASDKgram</p>
+<h3 id="社交APP布局2"><a href="#社交APP布局2" class="headerlink" title="社交APP布局2"></a>社交APP布局2</h3><p>[图不翻译了]</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line">- (ASLayoutSpec *)layoutSpecThatFits:(ASSizeRange)constrainedSize &#123;</span><br><span class="line"></span><br><span class="line">  ASLayoutSpec *textSpec  = [<span class="keyword">self</span> textSpec];</span><br><span class="line">  ASLayoutSpec *imageSpec = [<span class="keyword">self</span> imageSpecWithSize:constrainedSize];</span><br><span class="line">  ASOverlayLayoutSpec *soldOutOverImage = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imageSpec </span><br><span class="line">                                                                                  overlay:[<span class="keyword">self</span> soldOutLabelSpec]];</span><br><span class="line"></span><br><span class="line">  <span class="built_in">NSArray</span> *stackChildren = @[soldOutOverImage, textSpec];</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *mainStack = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical </span><br><span class="line">                                                                         spacing:<span class="number">0.0</span></span><br><span class="line">                                                                  justifyContent:ASStackLayoutJustifyContentStart</span><br><span class="line">                                                                      alignItems:ASStackLayoutAlignItemsStretch          </span><br><span class="line">                                                                        children:stackChildren];</span><br><span class="line"></span><br><span class="line">  ASOverlayLayoutSpec *soldOutOverlay = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:mainStack </span><br><span class="line">                                                                                overlay:<span class="keyword">self</span>.soldOutOverlay];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> soldOutOverlay;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (ASLayoutSpec *)textSpec &#123;</span><br><span class="line">  <span class="built_in">CGFloat</span> kInsetHorizontal        = <span class="number">16.0</span>;</span><br><span class="line">  <span class="built_in">CGFloat</span> kInsetTop               = <span class="number">6.0</span>;</span><br><span class="line">  <span class="built_in">CGFloat</span> kInsetBottom            = <span class="number">0.0</span>;</span><br><span class="line">  <span class="built_in">UIEdgeInsets</span> textInsets         = <span class="built_in">UIEdgeInsetsMake</span>(kInsetTop, kInsetHorizontal, kInsetBottom, kInsetHorizontal);</span><br><span class="line"></span><br><span class="line">  ASLayoutSpec *verticalSpacer    = [[ASLayoutSpec alloc] init];</span><br><span class="line">  verticalSpacer.flexGrow         = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  ASLayoutSpec *horizontalSpacer1 = [[ASLayoutSpec alloc] init];</span><br><span class="line">  horizontalSpacer1.flexGrow      = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  ASLayoutSpec *horizontalSpacer2 = [[ASLayoutSpec alloc] init];</span><br><span class="line">  horizontalSpacer2.flexGrow      = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">NSArray</span> *info1Children = @[<span class="keyword">self</span>.firstInfoLabel, <span class="keyword">self</span>.distanceLabel, horizontalSpacer1, <span class="keyword">self</span>.originalPriceLabel];</span><br><span class="line">  <span class="built_in">NSArray</span> *info2Children = @[<span class="keyword">self</span>.secondInfoLabel, horizontalSpacer2, <span class="keyword">self</span>.finalPriceLabel];</span><br><span class="line">  <span class="keyword">if</span> ([ItemNode isRTL]) &#123;</span><br><span class="line">    info1Children = [[info1Children reverseObjectEnumerator] allObjects];</span><br><span class="line">    info2Children = [[info2Children reverseObjectEnumerator] allObjects];</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *info1Stack = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal </span><br><span class="line">                                                                          spacing:<span class="number">1.0</span></span><br><span class="line">                                                                   justifyContent:ASStackLayoutJustifyContentStart </span><br><span class="line">                                                                       alignItems:ASStackLayoutAlignItemsBaselineLast children:info1Children];</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *info2Stack = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionHorizontal </span><br><span class="line">                                                                          spacing:<span class="number">0.0</span></span><br><span class="line">                                                                   justifyContent:ASStackLayoutJustifyContentCenter </span><br><span class="line">                                                                       alignItems:ASStackLayoutAlignItemsBaselineLast children:info2Children];</span><br><span class="line"></span><br><span class="line">  ASStackLayoutSpec *textStack = [ASStackLayoutSpec stackLayoutSpecWithDirection:ASStackLayoutDirectionVertical </span><br><span class="line">                                                                         spacing:<span class="number">0.0</span></span><br><span class="line">                                                                  justifyContent:ASStackLayoutJustifyContentEnd</span><br><span class="line">                                                                      alignItems:ASStackLayoutAlignItemsStretch</span><br><span class="line">                                                                        children:@[<span class="keyword">self</span>.titleLabel, verticalSpacer, info1Stack, info2Stack]];</span><br><span class="line"></span><br><span class="line">  ASInsetLayoutSpec *textWrapper = [ASInsetLayoutSpec insetLayoutSpecWithInsets:textInsets </span><br><span class="line">                                                                          child:textStack];</span><br><span class="line">  textWrapper.flexGrow = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> textWrapper;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (ASLayoutSpec *)imageSpecWithSize:(ASSizeRange)constrainedSize &#123;</span><br><span class="line">  <span class="built_in">CGFloat</span> imageRatio = [<span class="keyword">self</span> imageRatioFromSize:constrainedSize.max];</span><br><span class="line"></span><br><span class="line">  ASRatioLayoutSpec *imagePlace = [ASRatioLayoutSpec ratioLayoutSpecWithRatio:imageRatio child:<span class="keyword">self</span>.dealImageView];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">self</span>.badge.layoutPosition = <span class="built_in">CGPointMake</span>(<span class="number">0</span>, constrainedSize.max.height - kFixedLabelsAreaHeight - kBadgeHeight);</span><br><span class="line">  <span class="keyword">self</span>.badge.sizeRange = ASRelativeSizeRangeMake(ASRelativeSizeMake(ASRelativeDimensionMakeWithPercent(<span class="number">0</span>), ASRelativeDimensionMakeWithPoints(kBadgeHeight)), ASRelativeSizeMake(ASRelativeDimensionMakeWithPercent(<span class="number">1</span>), ASRelativeDimensionMakeWithPoints(kBadgeHeight)));</span><br><span class="line">  ASStaticLayoutSpec *badgePosition = [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[<span class="keyword">self</span>.badge]];</span><br><span class="line"></span><br><span class="line">  ASOverlayLayoutSpec *badgeOverImage = [ASOverlayLayoutSpec overlayLayoutSpecWithChild:imagePlace overlay:badgePosition];</span><br><span class="line">  badgeOverImage.flexGrow = <span class="literal">YES</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> badgeOverImage;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (ASLayoutSpec *)soldOutLabelSpec &#123;</span><br><span class="line">  ASCenterLayoutSpec *centerSoldOutLabel = [ASCenterLayoutSpec centerLayoutSpecWithCenteringOptions:ASCenterLayoutSpecCenteringXY </span><br><span class="line">  sizingOptions:ASCenterLayoutSpecSizingOptionMinimumXY child:<span class="keyword">self</span>.soldOutLabelFlat];</span><br><span class="line">  ASStaticLayoutSpec *soldOutBG = [ASStaticLayoutSpec staticLayoutSpecWithChildren:@[<span class="keyword">self</span>.soldOutLabelBackground]];</span><br><span class="line">  ASCenterLayoutSpec *centerSoldOut = [ASCenterLayoutSpec centerLayoutSpecWithCenteringOptions:ASCenterLayoutSpecCenteringXY   sizingOptions:ASCenterLayoutSpecSizingOptionDefault child:soldOutBG];</span><br><span class="line">  ASBackgroundLayoutSpec *soldOutLabelOverBackground = [ASBackgroundLayoutSpec backgroundLayoutSpecWithChild:centerSoldOutLabel background:centerSoldOut];</span><br><span class="line">  <span class="keyword">return</span> soldOutLabelOverBackground;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>完整的ASDK工程可以查阅 example/CatDealsCollectionView</p>
+<h2 id="布局调试"><a href="#布局调试" class="headerlink" title="布局调试"></a>布局调试</h2><p>使用ASC II Art 调试</p>
+<p>ASLayoutSpecPlayground App</p>
+<h2 id="布局选项"><a href="#布局选项" class="headerlink" title="布局选项"></a>布局选项</h2><p>当使用ASDK的时候，你有3种布局选择，注意：UIKit的autolayout不支持</p>
+<h3 id="手动计算布局"><a href="#手动计算布局" class="headerlink" title="手动计算布局"></a>手动计算布局</h3><p>最原始的布局方式，类似于UIKit的布局方法，ASViewControllers使用这种布局方法</p>
+<p>[ASDisplayNode calculateSizeThatFits:] vs. [UIView sizeThatFits:]</p>
+<p>[ASDisplayNode layout] vs. [UIView layoutSubviews]</p>
+<p>优势：（针对UIKit）</p>
+<ul>
+<li>消除了所有主线程布局的开销</li>
+<li>结果缓存</li>
+</ul>
+<p>缺点：（针对UIKit）</p>
+<ul>
+<li>代码之间会有重复代码</li>
+<li>逻辑不可重用</li>
+</ul>
+<h1 id="优化"><a href="#优化" class="headerlink" title="优化"></a>优化</h1><h2 id="层处理-Layer-Backing"><a href="#层处理-Layer-Backing" class="headerlink" title="层处理 Layer-Backing"></a>层处理 Layer-Backing</h2><p>有些时候，大幅度使用Layer而不是使用views，可以提高你的app的性能，但是手动的把基于view开发的界面代码改为基于layer的界面代码，非常的费劲，如果有时候因为要开启触摸或者view特定的功能的时候，你可能要功能回退</p>
+<p>当你使用ASDK的node的时候，如果你打算把所有的view转换成layer，只需要一行代码</p>
+<p><code>rootNode.layerBacked = YES;</code></p>
+<p>如果你想回退，也只需要删除这一行，我们建议不需要触摸处理的所有视图都开启</p>
+<h2 id="同步并发"><a href="#同步并发" class="headerlink" title="同步并发"></a>同步并发</h2><p>敬请期待……</p>
+<h2 id="子树光栅化"><a href="#子树光栅化" class="headerlink" title="子树光栅化"></a>子树光栅化</h2><p>预压缩，扁平化整个视图层级到一个图层，也可以提高性能，node也可以帮你做这件事</p>
+<p><code>rootNode.shouldRasterizeDescendants = YES;</code></p>
+<p>你的整个node层级都会渲染在一个layer下</p>
+<h2 id="绘制优先级"><a href="#绘制优先级" class="headerlink" title="绘制优先级"></a>绘制优先级</h2><p>敬请期待……</p>
+<h1 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h1><h2 id="点击区域扩展"><a href="#点击区域扩展" class="headerlink" title="点击区域扩展"></a>点击区域扩展</h2><p>ASDisplayNode有一个hitTestSlop属性，是UIEdgeInsets，当这个值非零的时候，可以增加点击区域，更加方便进行点击</p>
+<p>ASDisplayNode是所有节点的基类，所以这个属性可以在任何node上使用</p>
+<p>注意：<br>这会影响-hitTest和-pointInside的默认实现，如果子类需要调用，请忽略</p>
+<p>节点的触摸事件受到其父的边界+父HitTestSlop限制，如果想扩展父节点下的一个孩子节点的边界，请直接扩展父节点</p>
+<h2 id="批量获取API"><a href="#批量获取API" class="headerlink" title="批量获取API"></a>批量获取API</h2><p>ASDK的批量获取API可以很方便的让开发者获取大量新数据，如果用户滚动一个列表或者宫格的view，会自动的在特定范围内批量抓取，时机是由ASDK触发的</p>
+<p>作为开发者，可以定义批量抓取的时机，ASTableView和ASCollectionView有个leadingScreensForBatching属性，用来处理这个，默认是2.0</p>
+<p>为了实现批量抓取，必须实现2个delegate</p>
+<p><code>- (BOOL)shouldBatchFetchForTableView:(ASTableView *)tableView</code></p>
+<p>或者</p>
+<p><code>- (BOOL)shouldBatchFetchForCollectionView:(ASCollectionView *)collectionView</code></p>
+<p>在这两个方法你来决定当用户滚动到一定范围的时候，批量获取是否启动。一般是基于数据是否已经抓取完毕，或者本地操作来决定的</p>
+<p>如果<code>- (BOOL)shouldBatchFetchForCollectionView:(ASCollectionView *)collectionView,</code>返回NO，就不会产生新的批量抓取处理，如果返回YES，批量抓取就会开始，会调用下面2个方法</p>
+<p><code>- (void)tableView:(ASTableView *)tableView willBeginBatchFetchWithContext:(ASBatchContext *)context;</code></p>
+<p>或者</p>
+<p><code>- (void)collectionView:(ASCollectionView *)collectionView willBeginBatchFetchWithContext:(ASBatchContext *)context;</code></p>
+<p>首先你要小心，这两个方法是在后台线程被调用的，如果你必须在主线程上操作，你就得把它分派到主线程去完成这些操作</p>
+<p>当你完成数据读取后，要让ASDK知道你已经完成了，必须调用completeBatchFetching:，并且传YES,这就确保整批提取机制保持同步，下一次提取循环可以正常工作，只有传YES上下文才知道在必要的时候准备下一次更新，如果传NO，什么都不会发生</p>
+<p>批量获取demo<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)shouldBatchFetchForTableView:(ASTableView *)tableView </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Decide if the batch fetching mechanism should kick in</span></span><br><span class="line">  <span class="keyword">if</span> (_stillDataToFetch) &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)tableView:(ASTableView *)tableView willBeginBatchFetchWithContext:(ASBatchContext *)context </span><br><span class="line">&#123;</span><br><span class="line">  <span class="comment">// Fetch data most of the time asynchronoulsy from an API or local database</span></span><br><span class="line">  <span class="built_in">NSArray</span> *data = ...;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Insert data into table or collection view</span></span><br><span class="line">  [<span class="keyword">self</span> insertNewRowsInTableView:newPhotos];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Decide if it's still necessary to trigger more batch fetches in the future</span></span><br><span class="line">  _stillDataToFetch = ...;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Properly finish the batch fetch</span></span><br><span class="line">  [context completeBatchFetching:<span class="literal">YES</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>查看更多demo可以看</p>
+<ul>
+<li>ASDKgram</li>
+<li>Kittens</li>
+<li>CatDealsCollectionView</li>
+<li>ASCollectionView</li>
+</ul>
+<h2 id="图片修改块"><a href="#图片修改块" class="headerlink" title="图片修改块"></a>图片修改块</h2><p>敬请期待……</p>
+<h2 id="占位符渐隐"><a href="#占位符渐隐" class="headerlink" title="占位符渐隐"></a>占位符渐隐</h2><p>敬请期待……</p>
+<h2 id="点击区域可视"><a href="#点击区域可视" class="headerlink" title="点击区域可视"></a>点击区域可视</h2><h3 id="可视化的点击区域"><a href="#可视化的点击区域" class="headerlink" title="可视化的点击区域"></a>可视化的点击区域</h3><p>这是一个调试功能，把任何的ASControlNodes加上半透明高亮，点击，手势识别，这个范围定义为ASControlNodes的frame+hitTestSlop的范围</p>
+<p>在下面的截图中你可以看到</p>
+<ul>
+<li>头像图片区域+用户名区域可点击，</li>
+<li>hitTestSlop扩大的点击范围，可以显示出来，更容易点击</li>
+<li>hitTestSlop缩小的点击范围，也可以观察出来</li>
+</ul>
+<p>[图不翻译了]</p>
+<h3 id="限制"><a href="#限制" class="headerlink" title="限制"></a>限制</h3><p>在收到父节点clipsToBounds的剪裁</p>
+<h3 id="用法"><a href="#用法" class="headerlink" title="用法"></a>用法</h3><p>在你的Appdelegate.m中<br>添加[ASControlNode setEnableHitTestDebug:YES] 到你的didFinishLaunchingWithOptions: 方法的最上方，<br>确保在任何ASControllNode初始化前调用这个方法，包括ASButtonNodes, ASImageNodes, and ASTextNodes.</p>
+<h2 id="图片缩放"><a href="#图片缩放" class="headerlink" title="图片缩放"></a>图片缩放</h2><p>可视化的ASImageNode.image像素缩放<br>如果像素图像不符合像素大小，这个调试工具会增加了一个红色的文本出现在ASImageNode右下角，</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">imageSizeInPixels = image.size * image.scale</span><br><span class="line">boundsSizeInPixels = bounds.size * contentsScale</span><br><span class="line">scaleFactor = imageSizeInPixels / boundsSizeInPixels</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (scaleFactor != <span class="number">1.0</span>) &#123;</span><br><span class="line">      <span class="built_in">NSString</span> *scaleString = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%.2fx"</span>, scaleFactor];</span><br><span class="line">      _debugLabelNode.hidden = <span class="literal">NO</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>此调试工具在下面的情况非常有用</p>
+<ul>
+<li>下载和展现的图像数据过多</li>
+<li>放大低质量的图片</li>
+</ul>
+<p>在下面的截图中，你可以看到，低质量图片被放大因此右下角有文字，你需要优化你的功能，控制最终的尺寸和最佳的图像</p>
+<p>[图不翻译了]</p>
+<h3 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h3><p>在appdelegate.m文件中</p>
+<p>导入AsyncDisplayKit+Debug.h</p>
+<p>添加[ASImageNode setShouldShowImageScalingOverlay:YES] 到didFinishLaunchingWithOptions: 方法的最上方</p>
+<h1 id="测试中的功能"><a href="#测试中的功能" class="headerlink" title="测试中的功能"></a>测试中的功能</h1><h2 id="隐藏节点层次管理"><a href="#隐藏节点层次管理" class="headerlink" title="隐藏节点层次管理"></a>隐藏节点层次管理</h2><p>先不翻译了吧。。未稳定的功能</p>
+<h2 id="排版动画API"><a href="#排版动画API" class="headerlink" title="排版动画API"></a>排版动画API</h2><p>先不翻译了把。。未稳定的功能</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/渲染/" rel="tag"># 渲染</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/01/混编ObjectiveC/" rel="next" title="混编ObjectiveC++">
+                <i class="fa fa-chevron-left"></i> 混编ObjectiveC++
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/05/06/AsyncDisplayKit源码分析/" rel="prev" title="AsyncDisplayKit源码分析（一）轮廓梳理">
+                AsyncDisplayKit源码分析（一）轮廓梳理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type = "text/javascript" src = "//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async = "async" ></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/avatar.jpg"
+                alt="唯敬" />
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">62</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">40</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#快速开始"><span class="nav-number">1.</span> <span class="nav-text">快速开始</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备开始"><span class="nav-number">1.1.</span> <span class="nav-text">准备开始</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Nodes节点"><span class="nav-number">1.1.1.</span> <span class="nav-text">Nodes节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Node-Containers节点容器"><span class="nav-number">1.1.2.</span> <span class="nav-text">Node Containers节点容器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#排版引擎"><span class="nav-number">1.1.3.</span> <span class="nav-text">排版引擎</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#收益"><span class="nav-number">1.2.</span> <span class="nav-text">收益</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#异步性能提升"><span class="nav-number">1.2.1.</span> <span class="nav-text">异步性能提升</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强大的用户体验"><span class="nav-number">1.2.2.</span> <span class="nav-text">强大的用户体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#强大的开发体验"><span class="nav-number">1.2.3.</span> <span class="nav-text">强大的开发体验</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级的开发工具"><span class="nav-number">1.2.4.</span> <span class="nav-text">高级的开发工具</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装"><span class="nav-number">1.3.</span> <span class="nav-text">安装</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#核心概念"><span class="nav-number">2.</span> <span class="nav-text">核心概念</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#智能预加载"><span class="nav-number">2.1.</span> <span class="nav-text">智能预加载</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#界面状态区域"><span class="nav-number">2.1.1.</span> <span class="nav-text">界面状态区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ASRangeTuningParameters"><span class="nav-number">2.1.2.</span> <span class="nav-text">ASRangeTuningParameters</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#界面状态回调"><span class="nav-number">2.1.3.</span> <span class="nav-text">界面状态回调</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义子类"><span class="nav-number">2.2.</span> <span class="nav-text">自定义子类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本重载方法"><span class="nav-number">2.2.1.</span> <span class="nav-text">基本重载方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排版引擎-1"><span class="nav-number">2.3.</span> <span class="nav-text">排版引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ASLayoutable"><span class="nav-number">2.3.1.</span> <span class="nav-text">ASLayoutable</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点容器"><span class="nav-number">3.</span> <span class="nav-text">节点容器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#容器总览"><span class="nav-number">3.1.</span> <span class="nav-text">容器总览</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在节点容器中使用节点"><span class="nav-number">3.1.1.</span> <span class="nav-text">在节点容器中使用节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用节点容器有什么好处"><span class="nav-number">3.1.2.</span> <span class="nav-text">使用节点容器有什么好处</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASViewController"><span class="nav-number">3.2.</span> <span class="nav-text">ASViewController</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASTableNode"><span class="nav-number">3.3.</span> <span class="nav-text">ASTableNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用ASViewController替换UITableViewController"><span class="nav-number">3.3.1.</span> <span class="nav-text">用ASViewController替换UITableViewController</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#node-block线程安全警告"><span class="nav-number">3.3.2.</span> <span class="nav-text">node block线程安全警告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#列表行高"><span class="nav-number">3.3.3.</span> <span class="nav-text">列表行高</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCollectionNode"><span class="nav-number">3.4.</span> <span class="nav-text">ASCollectionNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#用ASViewController替换UICollectionViewController"><span class="nav-number">3.4.1.</span> <span class="nav-text">用ASViewController替换UICollectionViewController</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#访问ASCollectionView"><span class="nav-number">3.4.2.</span> <span class="nav-text">访问ASCollectionView</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CELL计算和布局"><span class="nav-number">3.4.3.</span> <span class="nav-text">CELL计算和布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#例子"><span class="nav-number">3.4.4.</span> <span class="nav-text">例子</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASPagerNode"><span class="nav-number">3.5.</span> <span class="nav-text">ASPagerNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#nodeblock线程安全警告"><span class="nav-number">3.5.1.</span> <span class="nav-text">nodeblock线程安全警告</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#优化使用ASViewController"><span class="nav-number">3.5.2.</span> <span class="nav-text">优化使用ASViewController</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#节点"><span class="nav-number">4.</span> <span class="nav-text">节点</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#ASDisplayNode"><span class="nav-number">4.1.</span> <span class="nav-text">ASDisplayNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#最基础的节点"><span class="nav-number">4.1.1.</span> <span class="nav-text">最基础的节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面包装"><span class="nav-number">4.1.2.</span> <span class="nav-text">页面包装</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASCellNode"><span class="nav-number">4.2.</span> <span class="nav-text">ASCellNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASTextCellNode"><span class="nav-number">4.3.</span> <span class="nav-text">ASTextCellNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASControlNode"><span class="nav-number">4.4.</span> <span class="nav-text">ASControlNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASButtonNode"><span class="nav-number">4.5.</span> <span class="nav-text">ASButtonNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASTextNode"><span class="nav-number">4.6.</span> <span class="nav-text">ASTextNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASEditableTextNode"><span class="nav-number">4.7.</span> <span class="nav-text">ASEditableTextNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASImageNode"><span class="nav-number">4.8.</span> <span class="nav-text">ASImageNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASNetworkImageNode"><span class="nav-number">4.9.</span> <span class="nav-text">ASNetworkImageNode</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#布局一个网图节点"><span class="nav-number">4.9.1.</span> <span class="nav-text">布局一个网图节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#外部引用"><span class="nav-number">4.9.2.</span> <span class="nav-text">外部引用</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#渐进式JPEG支持"><span class="nav-number">4.9.3.</span> <span class="nav-text">渐进式JPEG支持</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自动缓存"><span class="nav-number">4.9.4.</span> <span class="nav-text">自动缓存</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASMultiplexImageNode"><span class="nav-number">4.10.</span> <span class="nav-text">ASMultiplexImageNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASMapNode"><span class="nav-number">4.11.</span> <span class="nav-text">ASMapNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASVideoNode"><span class="nav-number">4.12.</span> <span class="nav-text">ASVideoNode</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ASScrollNode"><span class="nav-number">4.13.</span> <span class="nav-text">ASScrollNode</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#排版引擎-2"><span class="nav-number">5.</span> <span class="nav-text">排版引擎</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#排版基础"><span class="nav-number">5.1.</span> <span class="nav-text">排版基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#盒子模型排版"><span class="nav-number">5.1.1.</span> <span class="nav-text">盒子模型排版</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#术语"><span class="nav-number">5.1.2.</span> <span class="nav-text">术语</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#UIKit组件布局"><span class="nav-number">5.1.3.</span> <span class="nav-text">UIKit组件布局</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局容器"><span class="nav-number">5.2.</span> <span class="nav-text">布局容器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局样例"><span class="nav-number">5.3.</span> <span class="nav-text">布局样例</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#NSSpain-Talk例子"><span class="nav-number">5.3.1.</span> <span class="nav-text">NSSpain Talk例子</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#社交APP布局"><span class="nav-number">5.3.2.</span> <span class="nav-text">社交APP布局</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#社交APP布局2"><span class="nav-number">5.3.3.</span> <span class="nav-text">社交APP布局2</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局调试"><span class="nav-number">5.4.</span> <span class="nav-text">布局调试</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#布局选项"><span class="nav-number">5.5.</span> <span class="nav-text">布局选项</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#手动计算布局"><span class="nav-number">5.5.1.</span> <span class="nav-text">手动计算布局</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#优化"><span class="nav-number">6.</span> <span class="nav-text">优化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#层处理-Layer-Backing"><span class="nav-number">6.1.</span> <span class="nav-text">层处理 Layer-Backing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步并发"><span class="nav-number">6.2.</span> <span class="nav-text">同步并发</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#子树光栅化"><span class="nav-number">6.3.</span> <span class="nav-text">子树光栅化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#绘制优先级"><span class="nav-number">6.4.</span> <span class="nav-text">绘制优先级</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#开发工具"><span class="nav-number">7.</span> <span class="nav-text">开发工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#点击区域扩展"><span class="nav-number">7.1.</span> <span class="nav-text">点击区域扩展</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#批量获取API"><span class="nav-number">7.2.</span> <span class="nav-text">批量获取API</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片修改块"><span class="nav-number">7.3.</span> <span class="nav-text">图片修改块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#占位符渐隐"><span class="nav-number">7.4.</span> <span class="nav-text">占位符渐隐</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#点击区域可视"><span class="nav-number">7.5.</span> <span class="nav-text">点击区域可视</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#可视化的点击区域"><span class="nav-number">7.5.1.</span> <span class="nav-text">可视化的点击区域</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#限制"><span class="nav-number">7.5.2.</span> <span class="nav-text">限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#用法"><span class="nav-number">7.5.3.</span> <span class="nav-text">用法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#图片缩放"><span class="nav-number">7.6.</span> <span class="nav-text">图片缩放</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用"><span class="nav-number">7.6.1.</span> <span class="nav-text">使用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#测试中的功能"><span class="nav-number">8.</span> <span class="nav-text">测试中的功能</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#隐藏节点层次管理"><span class="nav-number">8.1.</span> <span class="nav-text">隐藏节点层次管理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#排版动画API"><span class="nav-number">8.2.</span> <span class="nav-text">排版动画API</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: 'AsyncDisplayKit官方文档翻译', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
