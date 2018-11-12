@@ -100,9 +100,9 @@
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78187ccd?w=794&h=214&f=png&s=26547">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdf8971d36?w=790&h=210&f=png&s=24139">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78280c15?w=2800&h=1152&f=png&s=995752">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe7830d2ea?w=1000&h=393&f=webp&s=17032">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/12/16707250e3714d2b?w=1492&h=566&f=png&s=392772">
 <meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe7921f0a9?w=556&h=1092&f=png&s=135979">
-<meta property="og:updated_time" content="2018-11-09T07:47:16.632Z">
+<meta property="og:updated_time" content="2018-11-12T09:08:28.171Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案">
 <meta name="twitter:description" content="本篇不是多复杂的东西，只是苹果的官方 Api 支持能力不足，于是通过 Hack 的方案来补全苹果官方 Api ，但是每当新系统出来，iOS 内部实现经常发生变更，导致以前探索的 Hack 方案会失效，得重新绞尽脑汁 Hack，因此梳理留做记录  前言：TableView Cell 的侧滑功能，一直是一个在 iOS 下比较有特色并且被广泛使用的一种交互 在日常的开发中也总会面临产品或者交互提出的种">
@@ -563,7 +563,7 @@
 <li>展现左滑动画：2个私有 Api 的调用</li>
 <li>收起左滑动画：setEditing：NO</li>
 </ul>
-<p>补充：既然是私有 Api ，如何调用自然是 runtime 了，不管你是 perfermSelector 还是 Object_msgSend 怎么具体的调用我就细说了，但千万要注意一定要把 selector 的字符串进行混淆</p>
+<p>补充：既然是私有 Api ，如何调用自然是 runtime 了，不管你是 perfermSelector 还是 Object_msgSend 怎么具体的调用我就不细说了，但千万要注意一定要把 selector 的字符串进行混淆</p>
 <p>这个方法在 iOS 11 以后有问题！</p>
 <p>这个方法在 iOS 11 以后有问题！</p>
 <p>这个方法在 iOS 11 以后有问题！</p>
@@ -634,7 +634,7 @@
 <h3 id="动态展现-收起左滑动画-（老办法私有-Api-失效…"><a href="#动态展现-收起左滑动画-（老办法私有-Api-失效…" class="headerlink" title="动态展现/收起左滑动画 （老办法私有 Api 失效…"></a>动态展现/收起左滑动画 （老办法私有 Api 失效…</h3><p>看来 iOS 11 对 tableview 内部侧滑按钮的方案改动还真是非常大，不仅仅界面层级失效了，连私有 Api 动态展现侧滑按钮都失败了。想尽一切办法，各种搜索，有且仅有一篇文章可以勉强实现，并且还有瑕疵。</p>
 <p><a href="https://www.jianshu.com/p/2ab258d684b6" target="_blank" rel="noopener">点击Cell上按钮出现Cell的左滑删除编辑界面</a></p>
 <p>大家还记得我在文章中反复提到的左侧 <code>红圈按钮</code> 么？</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe7830d2ea?w=1000&amp;h=393&amp;f=webp&amp;s=17032" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/11/12/16707250e3714d2b?w=1492&amp;h=566&amp;f=png&amp;s=392772" alt=""></p>
 <p>这篇文章的思路其实说的有点多，如果去掉一些细枝末节的逻辑，简化版就是如下（这思路真是野…）</p>
 <ul>
 <li>setEditing: YES 让 cell 进入编辑态，然后同步进入下一步</li>
@@ -667,7 +667,7 @@
 </ul>
 <p>还得另想办法，touch 这条路走不通换了一个思路观察一下手势，因为在 iOS 的触摸事件中，手势识别与触摸响应，是2个不同的流程。于是我在 cell 的类里重写了 UIGestureRecognizerDelegate 的所有 delegate ，只为希望通过这么些 delegate 来观察到底系统的 cell 中的手势是怎么做的，这些 delegate 能否呈现一些蛛丝马迹，结果发现，有且只有2个 delegate 可以被响应</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-(<span class="built_in">BOOL</span>)gestureRecognizer:(<span class="built_in">UIGestureRecognizer</span> *)gestureRecognizer shouldReceiveTouch:(<span class="built_in">UITouch</span> *)touch</span><br><span class="line">- (<span class="built_in">BOOL</span>)gestureRecognizer:(<span class="built_in">UIGestureRecognizer</span> *)gestureRecognizer shouldRequireFailureOfGestureRecognizer:(<span class="built_in">UIGestureRecognizer</span> *)otherGestureRecognizer</span><br></pre></td></tr></table></figure>
-<p>在 gestureRecognizer:shouldReceiveTouch: 中，只会传递出一个 UILongPressGesture，但是我强制 return NO，依然没效果，Touch不触发</p>
+<p>在 gestureRecognizer:shouldReceiveTouch: 中，只会传递出一个 UILongPressGesture，但是我强制 return YES，依然没效果，Touch不触发</p>
 <p>在 gestureRecognizer:shouldRequireFailureOfGestureRecognizer: 中我们可以看到有无数个 gesture 他们之间被相互调用来询问依赖关系，而最可疑的还是那个 UILongPressGesture</p>
 <p>并且还有一个现象，在 <code>左滑动画，漏出右侧按钮</code> 的状态下，无论是点击，还是滑动，都会触发相同的 UILongPressGesture 手势 shouldReceiveTouch 询问，好吧我就觉得这个最可疑，就在这个时机尝试直接调用 setEditing: NO 试试吧，谁知道呢，就靠猜了</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">-(BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch &#123;</span><br><span class="line">    if (self.isEditing &amp;&amp; [gestureRecognizer isKindOfClass:[UILongPressGestureRecognizer class]]) &#123;</span><br><span class="line">        UITableView * table = self.superview;</span><br><span class="line">		//尝试直接在这个时机调用 setEditing: NO</span><br><span class="line">        [table setEditing:NO animated:YES];</span><br><span class="line">    &#125;</span><br><span class="line">    return YES;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -691,7 +691,7 @@
 <ul>
 <li>无止境的通过页面层级去干预系统界面</li>
 <li>没目标的尝试各种 KVO 来猜测系统内部代码</li>
-<li>去头绪的重写 cell 的全部手势 delegate 来猜测系统到底有多少种手势</li>
+<li>无头绪的重写 cell 的全部手势 delegate 来猜测系统到底有多少种手势</li>
 <li>在不知道保险不保险的时机，非正常的调用系统 Api</li>
 <li>受够了因为苹果的 iOS 版本迭代，导致所有的 Hack 尝试手段失效，重新猜测适配</li>
 </ul>
