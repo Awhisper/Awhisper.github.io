@@ -1,0 +1,1619 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="FrontEnd,小程序,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
+<meta name="keywords" content="FrontEnd,小程序">
+<meta property="og:type" content="article">
+<meta property="og:title" content="用大型开发框架开发小程序那点事儿">
+<meta property="og:url" content="http://yoursite.com/2018/11/22/tinyapp-store/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png">
+<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542801758168-5a05a9af-bc3f-4526-83a0-bd0120b500e0.png">
+<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542863443033-858b94ec-4be7-432a-8c85-51f1b43f5a1a.png">
+<meta property="og:updated_time" content="2018-11-22T12:43:26.942Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="用大型开发框架开发小程序那点事儿">
+<meta name="twitter:description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
+<meta name="twitter:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/22/tinyapp-store/">
+
+
+
+
+
+  <title>用大型开发框架开发小程序那点事儿 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/tinyapp-store/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">用大型开发框架开发小程序那点事儿</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-22T20:05:06+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/22/tinyapp-store/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/22/tinyapp-store/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/11/22/tinyapp-store/" class="leancloud_visitors" data-flag-title="用大型开发框架开发小程序那点事儿">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题</p>
+<ul>
+<li>小程序最原始的开发模式有什么弊端？<ul>
+<li>为什么我们很需要一些大型框架</li>
+</ul>
+</li>
+<li>怎么在小程序中科学的运用大型开发框架的设计思想？<ul>
+<li>如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来</li>
+<li>如何在已有现成框架的情况下，深度解读框架设计思想</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这其实是一篇循序渐进的小程序实践记录。对于支付宝小程序：从一开始缺乏整体框架，深感不便。到决定自己融合框架思想自行实现。再到公司内有更优更全面的整体框架后追求的最佳实践。</p>
+</blockquote>
+<p>目录：</p>
+<ul>
+<li>原始小程序开发中面临的问题</li>
+<li>构建一个 store 初步实现数据仓库</li>
+<li>LunaX 的小程序上层开发组件库</li>
+<li>Lux 单 store 数据仓库实践</li>
+<li>LunaX 的其他工具</li>
+</ul>
+<h1 id="小程序开发中面临的问题"><a href="#小程序开发中面临的问题" class="headerlink" title="小程序开发中面临的问题"></a>小程序开发中面临的问题</h1><a id="more"></a>
+<p>原始的小程序开发模式下，天然具备了页面的 data 数据与 xml 渲染 mvvm 能力，同时也维护好了整个 app 与页面 page 的生命周期，在实际开发过程中已经比没有主流框架支持下的前端页面开发要便捷的多。但相比于前端广泛使用的 Vue 开发框架，以及蚂蚁内部对 Vue 进一步封装出来的 Kylin 框架来说，小程序的原始开发模式还是非常原始，存在着非常多的弊端与开发效率问题，逐一举例：</p>
+<ul>
+<li>全局状态管理</li>
+<li>跨页面跨组件通信</li>
+<li>computed 计算能力</li>
+<li>数据 Mock 能力</li>
+<li>研发部署工作流问题</li>
+</ul>
+<h2 id="全局状态管理问题"><a href="#全局状态管理问题" class="headerlink" title="全局状态管理问题"></a>全局状态管理问题</h2><p>在原始的小程序开发模式下，全局的状态只能挂在 app.js 内，可以考虑给 app 对象加一个 globalData 的属性，用来存放和管理全局变量，并且可以在任意代码通过 app 进行访问。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">App(&#123;</span><br><span class="line">  globalData: &#123;</span><br><span class="line">	userName:<span class="string">'hehe'</span></span><br><span class="line">	&#125;,</span><br><span class="line">  onLaunch(options) &#123;&#125;,</span><br><span class="line">&#125;)		</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在页面访问全局状态</span></span><br><span class="line"><span class="keyword">const</span> app = getApp();</span><br><span class="line"><span class="keyword">let</span> userName = app.globalData.userName</span><br></pre></td></tr></table></figure>
+<p>但是小程序的开发中其实是有一种 mvvm 的响应式设计思维融入其中的，页面上的数据可以做到 setData 的时候响应式去改变界面中的渲染内容，但仅限 page 页面内的 data 数据，我能不能让 globalData 也做到这样的响应式。能让我 app 的每个页面，每个组件，但凡需要展示 UserName 的情况下，只需要再 axml 中使用全局 globalData.userName ，就能做到任何时候有任何人操作修改了 globalData.userName ，其他的页面（包括已经展示出来的页面），都能响应式的变更渲染内容？汇总一下我们面临的痛点</p>
+<ul>
+<li>希望在页面/组件的 axml 中，能够可以直接使用全局 globalData 数据进行渲染</li>
+<li>希望 globalData 在发生变化的时候，能够响应式的通知所有用到的页面/组件，更新对应渲染元素</li>
+</ul>
+<h2 id="跨页面跨组件通信"><a href="#跨页面跨组件通信" class="headerlink" title="跨页面跨组件通信"></a>跨页面跨组件通信</h2><p>说完了所有组件对全局状态的痛点，我们再聊聊页面/组件间的通信，小程序原始开发框架中最头疼的莫过于跨页面跨组件进行通信，几乎是完全隔离的，有限的通信手段也非常的不易用，这里举一些例子</p>
+<ul>
+<li>跨页面数据传递问题</li>
+</ul>
+<p>page A 向 page B 传递数据有且只有一个方法，将数据拼接成 url 的 query 然后通过 navigateTo 传递给下一个页面，在 page B 的 onLoad 方法中读取 options 入参。</p>
+<p>痛点1: 还有没有别的办法？有，很山寨的让 page A 在 app 的 globalData 上挂一个全局变量，在 page B 的 onLoad 时机读取这个全局变量，这种方法实在太low了，全局变量太多非常的不易维护，并且 app 对象所有人都可以操作，也会存在风险。</p>
+<p>痛点2: 如果我要传递大量数据，嵌套型数据怎么办？比如我要传递的是一个 object 对象，里面不仅有很多 key value 还有一个 key 的 value 是一个数组，数组里面依然是各种对象，这种情况下怎么传递？各种 key value 还算可以通过拼 url 的方式，那不知道长度的 Array 数组如何拼接 url ？整个 object 对象，用 JSON.stringify 变成字符串，然后经过 urlencode 后拼接进入 url ？ 太麻烦了。</p>
+<ul>
+<li>深层组件嵌套数据传递问题</li>
+</ul>
+<p>page 页面内含有 component A ，这个组件包含引用了 component B ，B 又包含引用了 Component C，这种 page -&gt; component A -&gt; component B -&gt; component C 的界面嵌套层级，如果 component C 希望访问 page 才有的数据该怎么做？在原始的小程序开发方案中，只能通过 component 的 props 一层层透传下去，同一个数据在3个组件中都得写一份并且传递给下一个组件，这个过程耦合了4个页面/组件，而只有 C 才会使用到。</p>
+<p>就好像对于全局状态管理的诉求一样，我们希望在组件 C 中有更方便更解耦的方式来访问跨组件乃至跨页面的数据，并且能够符合小程序 mvvm 的响应式设计思想，一旦访问的数据发生变化，组件 C 也能自动触发元素渲染变更。</p>
+<p>痛点1: 希望能够在组件 C 中直接访问其他组件/其他页面的 data 数据<br>痛点2: 希望能够将组件 C 的 axml 中的其他组件/其他页面 data 的渲染元素，能够响应式的自动根据原数据变化触发渲染更新</p>
+<ul>
+<li>跨页面（主要是跨页面，跨组件理论也需要支持） 函数调用</li>
+</ul>
+<p>在老的前端多页应用开发模式下，2个页面之间是几乎不存在相互调用的问题的，如果 page B 页面执行了某些操作需要在 page B 页面关闭后跳转刷新 page A 页面。一般都会把数据提交给服务器，然后在 page A 页面加载的时候，再从服务器拉取这些数据，而这些数据有可能不见得需要落库存db，有可能只不过是前端中转的一些数据而已，通过服务器就太浪费了。于是前端有 shared worker 可以实现这种页面之间通信。也可以使用单页应用 SPA 的开发模式，用成熟的 Vue 等框架进行组件间调用和通信。</p>
+<p>但是到了原始的小程序开发模式里，所有 page 之间想要进行调用通信就变得很难。虽然小程序本质上所有页面是运行在同一个 JSContext 的 JS 虚拟机上下文中，本质上完全应该可以进行相互通信，但小程序的框架层面并没有开发对应的 page 之间的通信 api，必须自己想办法。</p>
+<p>痛点1: 仿照前端网页开发的方案，把这些数据提交给服务器中转存储？在新页面展现的时候从服务器拉取？说实话这样可以，但这些没必要的网络通信无形中也在浪费着用户的流量与服务器的压力</p>
+<p>痛点2: 利用 globalData 全局暂存临时对象，在 navigateTo 跳转到下一个页面之前，把当前页面的 this 对象挂在全局，当作临时对象暂存，在新页面 onLoad 的时候从全局变量中补货这个临时对象，自己持有，需要的时候直接调用暂存页面 page 的方法。这种临时变量的方案没啥可说的，能不用就别用了。</p>
+<h2 id="computed-计算能力"><a href="#computed-计算能力" class="headerlink" title="computed 计算能力"></a>computed 计算能力</h2><p>习惯了前端页面使用 vue 开发的同学应该都会对 vue 的 computed 与 kylin 的 getter 有所了解，他能够很方便的对数据进行加工再返回页面进行渲染。而在小程序的原始开发模式下，是缺乏这种能力的。</p>
+<p>我们终端团队之前没参与过 kylin 开发的同学可能不太了解，那么举几个最简单的例子：多人账本记录着用户之间的交易行为，大量的地方都在展示着金钱，而金钱的展示需要进行一定的格式化，比如无论是否整数还是小数都得转化为保留2位的格式化比如<code>998.00</code>然后再进行展示。但是服务端下发的数据都是 number 类型，page 中存储的也应该是 number 类型方便后续的计算。</p>
+<p>在小程序的里没有提供相关的计算能力于是只能这么写，再网络返回的数据回掉中同时 set 2个数据，这样就要求任何时候操作 money 的时候，都要同步维护 moneyForShow 的值，如果忘记了，那么页面就不会正常展示。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//在网络请求中调用</span><br><span class="line">this.setData&#123;</span><br><span class="line">	money: result.money;</span><br><span class="line">	moneyForShow: utils.money2show(result.money)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//在axml中使用</span><br><span class="line">&lt;text&gt;&#123;&#123;moneyForShow&#125;&#125;&lt;/text&gt;</span><br></pre></td></tr></table></figure>
+<p>还是希望能有类似 Vuex 中 computed 的能力，在 page 的 data 中只维护一个值 money ，而定义一个 moneyForShow 的 getter 函数，在 axml 中直接写 moneyForShow 这个 getter，就能正常的渲染，并且还能保证响应式的数据同步，每当 money 发生变化，通过 moneyForShow 这个 getter 渲染的元素也能自动刷新。</p>
+<h2 id="数据-Mock-能力"><a href="#数据-Mock-能力" class="headerlink" title="数据 Mock 能力"></a>数据 Mock 能力</h2><p>小程序框架提供了 HttpRequest/Rpc/Mtop 等网络通信的能力，但 Rpc/Mtop 这两种网络请求能力是必须依托在支付宝钱包客户端内才能生效的 jsbridge 能力（大家申请的内部小程序都是 web 小程序，某种程度上讲就是 nebula 容器内核，所有 jsbridge 理论都能直接使用）。但是小程序官方提供的 IDE 开发环境并不是钱包环境，调用 Rpc/Mtop 的请求的时候会直接失败。换句话说在没有 mock 能力的支持下，我们平日里开发的小程序根本不可能在官方 IDE 环境中正常开发调试。官方提供的另外一种命令行 appx + hpm 模拟器的开发模式可以一定程度的解决这个问题。</p>
+<blockquote>
+<p>就好比在开发 kylin 离线 h5 应用的时候，在 chrome 浏览器里也是无法发起 rpc 的，只能通过 hpm 模拟器在支付宝 app 中运行，但 kylin 框架是提供了完善的 mock 方案了</p>
+</blockquote>
+<p>痛点1: 在缺乏架构层面的 mock 解决方案的情况下，想要进行 mock 开发（或者希望在官方 IDE 中进行调试），每个业务只能自行把 json 数据硬编码到临时测试代码里，然后侵入业务逻辑的进行修改返回，这种侵入业务代码的 mock 方式并不优雅。</p>
+<p>痛点2: 不仅仅网络请求需要 mock ，有一些 jsapi ，甚至小程序的 api 也需要 mock ，举个例子，getAuthUserInfo 这个 api 是用来获取用户授权后的用户信息的，但因为 appx + hpm 模拟器的开发模式下，用户授权环节环境差异，这个 api 一定会返回失败，所以在这个环境下，这个小程序 api 也许要 mock 能力</p>
+<h2 id="研发部署工作流问题"><a href="#研发部署工作流问题" class="headerlink" title="研发部署工作流问题"></a>研发部署工作流问题</h2><p>小程序官方推荐的 IDE 研发工作流是一套独立在前端 basement 平台之外的工作流。有着自己的正式环境+发布平台，开发环境+发布平台。更详细的工作流可以参见 <a href="https://yuque.antfin-inc.com/weijing.wdf/no1e3d/sotoez" target="_blank" rel="noopener">小程序环境部署</a></p>
+<ul>
+<li>开发期<ul>
+<li>用官方 IDE 连开发环境进行开发<ul>
+<li>用 IDE 模拟器模拟 </li>
+<li>用 IDE 打包上传生成二维码 + 真机扫码进行调试</li>
+</ul>
+</li>
+<li>不用官方 IDE 用其他编辑器进行开发 <ul>
+<li>用 appx run web ios + hpm 模拟器进行模拟</li>
+<li>用 appx run qrcode 生成二维码 + 真机扫码进行调试</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>测试期<ul>
+<li>用官方 IDE 连开发环境进行打包</li>
+<li>打稳定包上传开发环境发布平台</li>
+<li>用开发环境发布平台生成稳定二维码</li>
+<li>提供二维码给测试</li>
+</ul>
+</li>
+<li>发布期<ul>
+<li>用官方 IDE 连正式环境进行打包 </li>
+<li>用稳定包上传正式环境发布平台</li>
+<li>在发布平台进行预发验收</li>
+<li>在发布平台进行提交审核</li>
+</ul>
+</li>
+</ul>
+<p>痛点: 这里面有一个最关键的问题是，官方 IDE 的工作流都是基于打包人员本地代码的！并不是通过编译打包平台直接捞取仓库主干里那些经过 codereview 后的代码。一旦打包人员进行打包上传的时候，使用的不是仓库中的最新的正确代码，或者打包人员本地调试的时候有略微改动，忘记了就直接打了稳定包进行发布，这种情况将无法保证发布代码的质量！</p>
+<h1 id="构建一个-store-初步实现数据仓库"><a href="#构建一个-store-初步实现数据仓库" class="headerlink" title="构建一个 store 初步实现数据仓库"></a>构建一个 store 初步实现数据仓库</h1><p>多人账本是会员终端团队中最早进行小程序开发的产品，在初期调研准备的时候，参考了微信小程序的一些实战经验。尤其是关于页面组件间通信/关于全局状态管理这块，都有不少成熟的解决方案，比如使用很广泛的基于微信小程序的上层框架 wepy 。但是在支付宝小程序中缺乏这种整体的框架级解决方案，所以我们需要自己来实现一个功能相对简单，能暂时满足基础通信需求的“山寨方案”。同时因为时间问题这个山寨方案支持能力也非常有限，也并不能很好的满足上面的所有痛点，只是解决了最关键的两个问题</p>
+<h2 id="EventBus来实现跨页面跨组件通信"><a href="#EventBus来实现跨页面跨组件通信" class="headerlink" title="EventBus来实现跨页面跨组件通信"></a>EventBus来实现跨页面跨组件通信</h2><p>在原始的小程序开发过程中，对跨组件跨页面进行通信有着严格的限制。因为整个小程序的任何页面任何 js 代码都是运行在同一个 JSContext JS上下文中，也就是小程序的 Service Worker 环境中，所以本质上他们是完全可以进行通信只不过是受小程序约束所致。</p>
+<p>如果我们自己实现一个全局的 eventBus 并挂在 app 对象上，让各个需要发起通信的地方调用 app.event.emit() 发出通知，让需要接收通信的地方调用 app.event.on() 监听通知，就能实现初步的跨小程序自身框架的通信能力</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//简单思路</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="comment">//初始化 callback map 字典</span></span><br><span class="line">    &#125;</span><br><span class="line">    on(eventName, callback) &#123;</span><br><span class="line">  		<span class="comment">//将传入 callback 添加到 eventBus 对象的 key 为 eventName 的数组中</span></span><br><span class="line">		<span class="comment">//添加对 eventName 的监听</span></span><br><span class="line">    &#125;</span><br><span class="line">    emit(eventName, param) &#123;</span><br><span class="line">        <span class="comment">//遍历 eventBus 对象的 key 为 eventName 的数组</span></span><br><span class="line">		<span class="comment">//依次调用数组中存放的 callback 传入参数 param</span></span><br><span class="line">		<span class="comment">//发出 eventName 的消息</span></span><br><span class="line">    &#125;</span><br><span class="line">    clear(eventName) &#123;</span><br><span class="line">        <span class="comment">//清理掉 eventBus 对象的 key 为 eventName 的数组中所有值</span></span><br><span class="line">		<span class="comment">//移除对 eventName 所有监听</span></span><br><span class="line">    &#125;</span><br><span class="line">    off(eventName, callback) &#123;</span><br><span class="line">  		<span class="comment">//清理掉 eventBus 对象的 key 为 eventName 的数组中的 callback这个值</span></span><br><span class="line">	    <span class="comment">//移除对 eventName 的具体某个监听</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Observer;</span><br></pre></td></tr></table></figure>
+<p>但这种模式存在着一定的弊端，因为 eventBus 的通知模式是一种一对多的调用模式，并不适合设计出能支持返回值的 eventBus ，所以如果需要跨页面跨组件通信，获取一定的返回数据，则需要通过2条消息，一去，一回来实现。eventBus 虽然具备一定的弊端，但却是自己实现响应式 mvvm 的核心。如果想要构建出超过小程序页面 page 自身的 data &amp; axml 的 mvvm 能力，那么至少需要在构建起这么一套 eventBus。</p>
+<blockquote>
+<p>但受限于业务的时间非常紧迫，在确定能满足了一期多人账本的需求的情况下，并没有深入对 eventBus 进行进一步优化与扩展。</p>
+<p>后续因为了解到 LunaX 的即将发布，是一套整体的小程序框架解决方案，以后也不打算持续优化，准备将多人账本项目着手迁移到 LunaX 上（下文会介绍）</p>
+</blockquote>
+<h2 id="全局状态的管理与控制"><a href="#全局状态的管理与控制" class="headerlink" title="全局状态的管理与控制"></a>全局状态的管理与控制</h2><p>在多人账本的需求中，确实存在需要全局管理一些通用数据，并且被全局各处页面 axml 使用通用数据的情况，比如 UserName / UserAvatar / WindowHeight / DeviceInfo 等。又因为这些数据大多来自异步的 JSApi 所以存在 app 初始化后数据并未准备好，异步请求回来后必需响应式的同步刷新所有可能出现并渲染出来的元素。</p>
+<p>所以我们的思路就是将 app 下面的 globaData 设计为一个数据仓库，进行统一的维护和管理，想要操作这个仓库里的数据必须通过指定的方法 app.store.commit(key,payload) 来执行，不能通过别的方式。当执行 commit 的时候会通过 eventBus 发出一个 key 变更的通知，来通知各个页面进行数据变更。同时需要 Hook 每个 Page 的生命周期，在 Page OnLoad 的时候，自动的帮助页面开发者添加上 eventBus 的 key 变更的监听，每当 commit 全局发出了通知，监听就会自动生效，将新的 globaData，执行 setData 写入当前 page，从而触发 axml 的页面渲染刷新。</p>
+<ul>
+<li>app.store 提供 commit 能力，进行数据仓库的统一提交管理<ul>
+<li>每当触发 commit 全局发送对应 key 数据变更的通知</li>
+</ul>
+</li>
+<li>app.store 提供 hook 页面的能力，在 OnLoad 时机进行自动化处理<ul>
+<li>将需要的全局仓库里面的数据的 key 通过 setData 写入当前 page</li>
+<li>对需要的 key 监听其数据仓库变化通知<ul>
+<li>当任意地方触发 commit 发出了对应 key 数据变更的通知从而触发监听</li>
+<li>将通知带来 key 与 新value 通过 setData 写入当前 page</li>
+<li>触发页面的响应式渲染更新</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 简单思路</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Store</span> <span class="keyword">extends</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="keyword">super</span>();</span><br><span class="line">        <span class="keyword">this</span>.app = <span class="literal">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// hook app 的创建，将store自己，自动挂载在 app 对象上，便于随时随地调用</span></span><br><span class="line">    createApp(options) &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;</span><br><span class="line">            onLaunch</span><br><span class="line">        &#125; = options;</span><br><span class="line">        <span class="keyword">const</span> store = <span class="keyword">this</span>;</span><br><span class="line">        options.onLaunch = <span class="function"><span class="keyword">function</span> (<span class="params">...params</span>) </span>&#123;</span><br><span class="line">            store.app = <span class="keyword">this</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> onLaunch === <span class="string">'function'</span>) &#123;</span><br><span class="line">                onLaunch.apply(<span class="keyword">this</span>, params);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> options;</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 当调用 commit 的时候，更新 globalData 的值，同时 emit 发出通知</span></span><br><span class="line">    commit(action, payload) &#123;</span><br><span class="line">        <span class="keyword">this</span>.app.globalData[action] = payload;</span><br><span class="line">        <span class="keyword">this</span>.emit(action, payload);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// hook page 的生命周期，将用户需要的 globalData key 设置到 page 的 data 之中</span></span><br><span class="line">	<span class="comment">// 同时设置监听，监听来自 commit 的 key 变化通知，更新 page 的 data</span></span><br><span class="line">    createPage(options) &#123;</span><br><span class="line">        <span class="keyword">const</span> &#123;</span><br><span class="line">            globalData = [],</span><br><span class="line">                watch = &#123;&#125;,</span><br><span class="line">                onLoad,</span><br><span class="line">                onUnload</span><br><span class="line">        &#125; = options;</span><br><span class="line">        <span class="keyword">const</span> store = <span class="keyword">this</span>;</span><br><span class="line">        <span class="keyword">const</span> globalDataWatcher = &#123;&#125;;</span><br><span class="line">        <span class="keyword">const</span> watcher = &#123;&#125;;</span><br><span class="line">        <span class="comment">// 劫持onLoad 绑定监听</span></span><br><span class="line">        options.onLoad = <span class="function"><span class="keyword">function</span> (<span class="params">...params</span>) </span>&#123;</span><br><span class="line">            </span><br><span class="line">            store[bindWatcher](globalData, watch, globalDataWatcher, watcher, <span class="keyword">this</span>);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> onLoad === <span class="string">'function'</span>) &#123;</span><br><span class="line">                onLoad.apply(<span class="keyword">this</span>, params);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 劫持onUnload 解绑监听</span></span><br><span class="line">        options.onUnload = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">            store[unbindWatcher](watcher, globalDataWatcher);</span><br><span class="line">            <span class="keyword">if</span> (<span class="keyword">typeof</span> onUnload === <span class="string">'function'</span>) &#123;</span><br><span class="line">                onUnload.apply(<span class="keyword">this</span>);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">delete</span> options.globalData;</span><br><span class="line">        <span class="keyword">delete</span> options.watch;</span><br><span class="line">        <span class="keyword">return</span> options;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// hook component 的生命周期，功能作用类似 page</span></span><br><span class="line">    createComponent(options) &#123;</span><br><span class="line">        <span class="comment">// 具体实现参考 page</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 绑定监听的具体操作</span></span><br><span class="line">    [bindWatcher](globalData, watch, globalDataWatcher, watcher, instance) &#123;</span><br><span class="line">        <span class="keyword">const</span> instanceData = &#123;&#125;;</span><br><span class="line">        <span class="keyword">let</span> that = <span class="keyword">this</span>;</span><br><span class="line">        globalData.forEach(<span class="function">(<span class="params">prop</span>)=&gt;</span>&#123;</span><br><span class="line">          instanceData[prop] = that.app.globalData[prop];</span><br><span class="line">          globalDataWatcher[prop] = <span class="function"><span class="params">payload</span> =&gt;</span> &#123;</span><br><span class="line">            instance.setData(&#123;</span><br><span class="line">              [prop]: payload</span><br><span class="line">            &#125;)</span><br><span class="line">          &#125;</span><br><span class="line">          that.on(prop, globalDataWatcher[prop]);</span><br><span class="line">        &#125;)</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> prop <span class="keyword">in</span> watch) &#123;</span><br><span class="line">            watcher[prop] = <span class="function"><span class="params">payload</span> =&gt;</span> &#123;</span><br><span class="line">                watch[prop].call(instance, payload);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">this</span>.on(prop, watcher[prop])</span><br><span class="line">        &#125;</span><br><span class="line">        instance.setData(instanceData);</span><br><span class="line">    &#125;</span><br><span class="line">	<span class="comment">// 解绑监听的具体操作</span></span><br><span class="line">    [unbindWatcher](watcher, globalDataWatcher) &#123;</span><br><span class="line">        <span class="comment">// 页面卸载前 解绑对应的回调 释放内存</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> prop <span class="keyword">in</span> watcher) &#123;</span><br><span class="line">            <span class="keyword">this</span>.off(prop, watcher[prop]);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">let</span> prop <span class="keyword">in</span> globalDataWatcher) &#123;</span><br><span class="line">            <span class="keyword">this</span>.off(prop, globalDataWatcher[prop])</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">const</span> store = <span class="keyword">new</span> Store();</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> store;</span><br></pre></td></tr></table></figure>
+<p>这种思路其实还是存在弊端的，因为只解决了所有页面/组件，对于 global 数据仓库里的依赖，以及响应式渲染。如果想进一步解决，page A 对 page B 的 data 响应式数据依赖，乃至 component C 对 page A 的 data 响应式数据依赖，则需要进一步加强数据仓库 store 的管理范围，不仅仅维护 globalData 的数据， 还要将每个页面或者每个组件，都抽象出一个 store 子仓库，统一被 global store 进行管理，这样 app 的 store ，page 的 store ，component 的 store，相互之间通过父子关系构成了一个以 global store 为根的树型解构，从而实现所有页面与所有组件间的数据管理。而每个子仓库的数据字段为了避免重名不好识别，通过 pagename-keyname 或者 pagename-componentname-keyname 来当作 keypath 进行区分管理。</p>
+<ul>
+<li>不只构建一个 global store，为每个 page 每个 component 分别构建一个store</li>
+<li>以 global store 为根，以界面嵌套关系为层级，将每个 store 关联起来，形成一个 store 树</li>
+<li>整个树统一进行管理，统一进行 commit 提交后数据更新以及 event 发送</li>
+<li>以 keypath 作为不同 store 节点下的数据字段区分</li>
+<li>响应式的实现跨页面跨组件的数据更新以及界面变更渲染</li>
+</ul>
+<blockquote>
+<p>但受限于业务的时间非常紧迫，在确定能满足了一期多人账本的需求的情况下，并没有深入对 store 进行进一步优化与扩展。</p>
+<p>后续因为了解到 LunaX 的即将发布，是一套整体的小程序框架解决方案，他内部的 Lux 完全的吸收了前端 Vuex 的能力已经非常出色，所以后续就不打算进一步完善我们自研的 store ，准备将多人账本项目着手迁移到 LunaX + Lux 上（下文会介绍）</p>
+</blockquote>
+<h1 id="LunaX-的小程序上层开发组件库"><a href="#LunaX-的小程序上层开发组件库" class="headerlink" title="LunaX 的小程序上层开发组件库"></a>LunaX 的小程序上层开发组件库</h1><p>LunaX 是一套从支付宝 h5 Hybrid 中心的提供的前端页面组件库 Luna 演进出的面向小程序的组建库。里面有着丰富的工具以及脚手架 cli 支持</p>
+<ul>
+<li><a href="http://lunax.alipay.net/2.tools/lux.html" target="_blank" rel="noopener">Lux 数据仓库管理插件</a> – 小程序最佳实践的核心</li>
+</ul>
+<p>LunaX 内置了一套数据仓库管理组件 Lux ，相比较我们自己初步实现的简单 store 数据管理 ， Lux<br>有着更全面的能力支持，包括 state ，getter，mutation ，action 等仓库能力，以及 commit ，dispatch 的仓库操作，可以完全实现像 Vuex 那样以前端成熟的开发模式来进行小程序开发。</p>
+<ul>
+<li><a href="http://lunax.alipay.net/2.tools/luna-mock-appx.html" target="_blank" rel="noopener">Mock 数据能力</a></li>
+</ul>
+<p>LunaX 也提供了强大的 Mock 组件，支持无论是 rpc 还是 http 还是 jsapi 的无侵入 mock 能力。支持白名单、黑名单过滤，支持网络延迟模拟等多种功能</p>
+<ul>
+<li><a href="http://site.alipay.net/luna-component/luna-appx/docs/index.html" target="_blank" rel="noopener">工具组件库</a></li>
+</ul>
+<p>组件库中封装了丰富的常用工具能力。包括带缓存，防重复提交，有统一交互的 rpc。封装了 Tracert，用于 SPM 埋点。封装了 clue，用于日志上报，监控报警。获取凤蝶区块数据。对 storage 增加了时间戳，解决兼容问题。等等实用功能</p>
+<ul>
+<li><a href="http://lunax.alipay.net/2.tools/appx-template.html" target="_blank" rel="noopener">cli 脚手架</a></li>
+</ul>
+<p>通过 luna-appx 的脚手架创建项目，配置好了统一的 .editorconfig, .eslintc, .gitignore，以及 ts 校验等配置。并且支持完全接入 basement</p>
+<p><img src="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png" alt="undefined"> </p>
+<h1 id="Lux-单-store-数据仓库实践"><a href="#Lux-单-store-数据仓库实践" class="headerlink" title="Lux 单 store 数据仓库实践"></a>Lux 单 store 数据仓库实践</h1><p>在前端开发种 Vue 与数据仓库 Vuex 是一种被广泛运用的开发框架。而 Lux 的设计初衷就是设计出一套核心 Api 与 Vuex 完全保持一致，但又可以脱离 Vue 单独在任意环境（自然包括小程序环境）使用的数据仓库 store。Lux 这种思路吸收了很多 Redux 的设计思想，就像 Redux 也可以在非 React 环境下使用一样，并且也支持中间件与插件机制。</p>
+<p>由于 Lux 的核心 Api 与 Vuex 完全保持一致，在使用上几乎可以还原 Vuex 的开发模式，所以如果之前接触 Vuex 不多，可以先看一下官方文档： <a href="https://vuex.vuejs.org/zh/guide/" target="_blank" rel="noopener">Vuex 官方文档</a> 来了解基本概念，再参考 <a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">Lux 官方文档</a> 来了解如何使用。</p>
+<p>基本上数据仓库，主要就是 state 状态的概念，用来存储一切数据，而为了操作数据，衍生出了 getter ， mutation ， action 几种操作 ， getter 用来对 state 的数据进行加工计算 ， mutation 用 commit 触发来同步提交 state 变更， action 用 dispatch 触发来异步执行操作。</p>
+<p>同时为了能将数据仓库的 state 与小程序的 axml 渲染进行 mvvm 关联，实现响应式数据刷新，Lux 提供了 connect 和 connect4c 2个方法用来 hook 小程序页面/组件的生命周期实现绑定关系，并且在 connect 的时候，可以通过传入 mapConfig 来灵活的自定义关联控制。</p>
+<h2 id="Lux-的基本使用模式"><a href="#Lux-的基本使用模式" class="headerlink" title="Lux 的基本使用模式"></a>Lux 的基本使用模式</h2><p><img src="https://cdn.nlark.com/lark/0/2018/png/132411/1542801758168-5a05a9af-bc3f-4526-83a0-bd0120b500e0.png" alt="undefined"> </p>
+<p>一个小程序页面创建好就会包含四个基本文件，.acss .axml .js .json。如上图，为了使用 Lux 专门给页面创建一个数据仓库目录 store 来重点维护所有数据相关的逻辑代码，并把业务逻辑按着 Vuex 的设计思想抽象成四大块。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store/index.js 文件</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    state: &#123;</span><br><span class="line">    	XX:xx</span><br><span class="line">    &#125;,</span><br><span class="line">    getters: &#123;</span><br><span class="line">    </span><br><span class="line">    &#125;,</span><br><span class="line">    mutaions: &#123;</span><br><span class="line">    	setXXData(commit,payload)&#123;</span><br><span class="line">  			<span class="comment">//同步 提交某个 state 更新</span></span><br><span class="line">		&#125;</span><br><span class="line">			   </span><br><span class="line">    &#125;,</span><br><span class="line">    actions: &#123;</span><br><span class="line">    	requestXXRpc(&#123;commit&#125;,payload)&#123;</span><br><span class="line">  			<span class="comment">//异步 执行某些操作，在返回后再次调用 commit 提交数据更新</span></span><br><span class="line">			xxRpcPromise.then(<span class="function">(<span class="params">result</span>)=&gt;</span>&#123;</span><br><span class="line">  				commit(<span class="string">'setXXData'</span>,result)</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>数据仓库已经创建好了，想要在 page 中进行使用就需要将 store 与 page 进行 connect 并且挂载到 page 对象上，能方便 page 对象操作仓库。</p>
+<p>通过 mapStatesToData 与 mapGettersToData 两个配置信息，进行可选可控的绑定操作，这样就丢弃了 page 自己的 data ，而是通过数据仓库来关联 axml 数据渲染。</p>
+<p>并且在 page.js 中一般情况下只处理 UI 响应等代码，一旦涉及到数据信息状态等内容的修改或者变更，同步的变更用 commit 提交给仓库处理，异步的任务用 dispatch 提交给仓库处理</p>
+<blockquote>
+<p>其实绑定操作就是把数据仓库的 getter 和 states 自动添加到了 page 的 data 中，并且还可以响应式同步更新，只不过对使用者无感知</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 修改 page.js 进行绑定</span><br><span class="line">import &#123; connect &#125; from &apos;@alipay/lux&apos;</span><br><span class="line">import store from &apos;./store&apos;;</span><br><span class="line"></span><br><span class="line">const options = &#123;</span><br><span class="line">  onLoad(options) &#123;</span><br><span class="line">      //触发mutation</span><br><span class="line">	  this.$commit(&apos;mutation name&apos;,data)</span><br><span class="line">  &#125;,</span><br><span class="line">  onShow(options) &#123;</span><br><span class="line">	  //触发action</span><br><span class="line">	  this.$dispatch(&apos;mutation name&apos;,data)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const mapStatesToData = &#123;</span><br><span class="line">    //state map 代码 todo</span><br><span class="line">	//但凡经过 map 过的 state 都可以直接在 axml 中使用，并且响应式同步刷新变化</span><br><span class="line">	xxData: state =&gt; state.xxData,</span><br><span class="line">&#125;;</span><br><span class="line">const mapGettersToData = &#123;</span><br><span class="line">    //getter map 代码 todo</span><br><span class="line">	//但凡经过 map 过的 getter 都可以直接在 axml 中使用，并且响应式同步刷新变化</span><br><span class="line">	xxGetter: &apos;xxGetter&apos;,</span><br><span class="line">&#125;;</span><br><span class="line">const storeConfig = &#123;</span><br><span class="line">    mapGetters: mapGettersToData,</span><br><span class="line">    mapState: mapStatesToData,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//将 store 与他的配置 storeConfig 和 page 进行绑定</span><br><span class="line">Page(connect(store, &#123;</span><br><span class="line">  mapState: mapStateToData,</span><br><span class="line">  mapActions: mapActionsToProps</span><br><span class="line">&#125;)(options));</span><br></pre></td></tr></table></figure>
+<p>进行一个初始化</p>
+<h2 id="Lux-单-store-与多-store-的选择"><a href="#Lux-单-store-与多-store-的选择" class="headerlink" title="Lux 单 store 与多 store 的选择"></a>Lux 单 store 与多 store 的选择</h2><p>其实在 <a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">Lux 官方文档</a> 中已经有介绍这两种模式的使用差异了，这里再多废话一下</p>
+<ul>
+<li>多 store：一个 page 一个 store. 隔离性好, 页面间不会相互干扰</li>
+<li>单 store：整个小程序 App 只有一个 store. 交互性强, 页面间共用同一个 store 每一个 page 一个 module（子 store ）, module 间可相互 dispatch/commit</li>
+</ul>
+<p>这时候最关键就需要回想一下我们之前的那些个痛点了</p>
+<ul>
+<li>store 相关的痛点<ul>
+<li>全局状态管理：既然是全局，多store 肯定不满足，还是单 store 最合适</li>
+<li>跨页面跨组件通信：既然是组件页面之间交互，更需要单 store 来支持</li>
+<li>computed 计算能力：哪种模式都通过 getter 支持了计算能力</li>
+</ul>
+</li>
+<li>store 无关的痛点<ul>
+<li>数据 Mock 能力：LunaX 有 Mock 组件</li>
+<li>研发部署工作流问题：LunaX 有对接 basement</li>
+</ul>
+</li>
+</ul>
+<p>Lux 官方文档中对于单 store 和多 store 模式给的样例代码与使用说明都相对比较简单，整个多人账本算是一个比较复杂的一个项目，在实践中趟了很多坑，也找 LunaX 团队的同学交流，探讨过。在这详细的把整个项目的单 store 实践整理一下，也补上很多细节上容易产生的坑和问题。</p>
+<h2 id="Lux-的多人账本单-store-实践"><a href="#Lux-的多人账本单-store-实践" class="headerlink" title="Lux 的多人账本单 store 实践"></a>Lux 的多人账本单 store 实践</h2><p>单 store 最核心的就是把每一个 page 的子 store 当作一个 module 挂载到 app 的根 store 之下，而把有需要的 component 的子 store 当作一个 module 挂载到 page 的子 store下。最终所有的子 store 型成一个像树一样的整体，也就是挂载在 app 之下的根 store</p>
+<blockquote>
+<p>component 如果没那么复杂可以考虑自己不实现子store，但可以 connect 链接到整个 store 下，从而能实现虽然自己没 store ，但可以自由的 map 别的 page，app 的 state 与 getter</p>
+</blockquote>
+<h3 id="构建-App-根-store"><a href="#构建-App-根-store" class="headerlink" title="构建 App 根 store"></a>构建 App 根 store</h3><p>Lux 的单 store 使用方式是，单独对整个 App 构建一个 store 对象，然后用这个 store 对象通过 Provider 方法将整个 store 挂载在 App 对象上。</p>
+<p>之后如果想给 page 或者 component 进行 connect 子store 操作，执行 connect 使用的方法和多 store 略有不同。要求使用者必须在 connect 的时候不要输入子 store 对象，而是直接输入 mapConfig，在 connect 的时候真正绑定到 page 对象上的实际上都是这个根 store。</p>
+<p>每个 page 的子 store，不需要在页面 connect 的时候挂在 page 上，而是应该作为根 store 初始化的时候的一部分，一起放在根 store 里进行创建。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Lux <span class="keyword">from</span> <span class="string">'@alipay/lux'</span>;</span><br><span class="line"><span class="comment">//导入各个页面的子store</span></span><br><span class="line"><span class="keyword">import</span> home <span class="keyword">from</span> <span class="string">'./pages/home/store'</span>;</span><br><span class="line"><span class="keyword">import</span> billBookDetail <span class="keyword">from</span> <span class="string">'./pages/billBookDetail/store'</span>;</span><br><span class="line"><span class="keyword">import</span> createBillBook <span class="keyword">from</span> <span class="string">'./pages/createBillBook/store'</span>;</span><br><span class="line"><span class="comment">//更多其他 store</span></span><br><span class="line"><span class="comment">//创建根 store 对象</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Lux.Store(&#123;</span><br><span class="line">  state: &#123;</span><br><span class="line">    xx:xx</span><br><span class="line">  &#125;,</span><br><span class="line">  getters: &#123;</span><br><span class="line">    </span><br><span class="line">  &#125;,</span><br><span class="line">  mutations: &#123;</span><br><span class="line">    </span><br><span class="line">  &#125;,</span><br><span class="line">  actions: &#123;</span><br><span class="line">    </span><br><span class="line">  &#125;,</span><br><span class="line"><span class="comment">//将导入的子store 设置到根store下，成为一体</span></span><br><span class="line">  modules: &#123;</span><br><span class="line">    home,</span><br><span class="line">    createBillBook,</span><br><span class="line">    billBookDetail,</span><br><span class="line">	<span class="comment">//... 更多</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;, &#123;</span><br><span class="line">  produce,<span class="comment">//不可变配置，后续聊</span></span><br><span class="line">  plugins: []<span class="comment">//Lux 插件模块，后续聊</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>可以看到根 store 自己就是一个仓库，可以有 state 以及 getter，mutation，action。在此处可以当作全局变量的仓库，管理全局数据，也可以开放一些全局接口（action）供任意地方调用</p>
+<p>每一个页面自己的子 store ，可以放到根 store 的 modules 字段里，形成了树状结构的第一层叶子节点。</p>
+<p>如果业务需要有些复杂的 component 也需要有自己的子 store，那么应该放到他的上层 page 页面子 store 对象的 module 里，形成树状解构的第二层叶子节点。以此类推嵌套型的 component 操作。</p>
+<p>最后将根 store 绑定到 App 上，操作非常简单，<code>App(Provider(store)(appOptions));</code> 一行代码即可</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; luna &#125; <span class="keyword">from</span> <span class="string">'./common/jsapi'</span>;</span><br><span class="line"><span class="keyword">import</span> &#123; Provider &#125; <span class="keyword">from</span> <span class="string">'@alipay/lux'</span>;</span><br><span class="line"><span class="keyword">import</span> store <span class="keyword">from</span> <span class="string">'./app.store'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> appOptions = &#123;</span><br><span class="line">  onLaunch() &#123;</span><br><span class="line">    checkVersion();</span><br><span class="line">    <span class="keyword">this</span>.$dispatch(<span class="string">'getUserInfo'</span>);</span><br><span class="line">    <span class="keyword">this</span>.$dispatch(<span class="string">'getDeviceInfo'</span>);</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">//调用 Provider 进行绑定</span></span><br><span class="line">App(Provider(store)(appOptions));</span><br></pre></td></tr></table></figure>
+<h3 id="page-与单-store-的挂载与绑定"><a href="#page-与单-store-的挂载与绑定" class="headerlink" title="page 与单 store 的挂载与绑定"></a>page 与单 store 的挂载与绑定</h3><p>将子 store 绑定到 page 的操作，和多 store 绑定姿势略有差异</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> &#123; connect &#125; <span class="keyword">from</span> <span class="string">'@alipay/lux'</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> options = &#123;</span><br><span class="line">  onLoad(options) &#123;&#125;,</span><br><span class="line">  onShow(options) &#123;&#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapStatesToData = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> mapGettersToData = &#123;&#125;;</span><br><span class="line"><span class="keyword">const</span> storeConfig = &#123;</span><br><span class="line">    mapGetters: mapGettersToData,</span><br><span class="line">    mapState: mapStatesToData,</span><br><span class="line">&#125;;</span><br><span class="line"><span class="comment">// 注意此处，已经不需要应用 store 并且传给 connect 了</span></span><br><span class="line"><span class="comment">// 只需要传 mapConfig</span></span><br><span class="line">Page(connect(storeConfig)(options));</span><br></pre></td></tr></table></figure>
+<p>归根结底是上面提到的，单 store 模式下，挂载每个 page 下面的 store 依然是根 store，每个page 通过根上面，用 page 的名字就能找到自己对应的 store，用别人 page 的名字也能找到别人对应的 store ，从而能进一步实现多个 page 之间的仓库操作，无论是读取数据，还是写入数据，甚至是派发方法（dispatch action）</p>
+<h3 id="单-store-下的数据映射"><a href="#单-store-下的数据映射" class="headerlink" title="单 store 下的数据映射"></a>单 store 下的数据映射</h3><blockquote>
+<p>connect 默认将 store 的所有状态 map 到了 data 上并监听所有状态变化 默认将所有的 actions map 到了 option, 通过 this.$xxxAction 调用</p>
+</blockquote>
+<p>在 Lux 的文档中介绍着上面这句话，意思是如果完全写 mapState，Connect 也会默认将 store 中所有 state 全都 map 到 page 的 data 上。整个 store 也会照常工作。但是！在单 store 模式下，这句话需要重新解读。</p>
+<p>单 store 是一个树型的结构，所以不同节点 store 的 state 需要从 rootState 通过节点名 pageName来查找，比如 rootState.pageName.xxData。因为所有的 page 绑定的都是根节点，所以 mapStates 的入参 state 代表的是根节点，当前 page 的名字叫 billBookDetail，通过根节点 state.billBookDetail 来映射当前子 store 数据。如果你希望当前页面可以在 axml 里直接使用其他 store 的 state 数据。也可以通过这个根 state 找到其他 store ，直接 map 后使用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapStatesToData = &#123;</span><br><span class="line">  <span class="comment">//当前页面自己的数据</span></span><br><span class="line">  showGuide: <span class="function"><span class="params">state</span> =&gt;</span> state.billBookDetail.showGuide,</span><br><span class="line">  isTotalNumOutIn: <span class="function"><span class="params">state</span> =&gt;</span> state.billBookDetail.isTotalNumOutIn,</span><br><span class="line">  editName: <span class="function"><span class="params">state</span> =&gt;</span> state.billBookDetail.editName,</span><br><span class="line">  memberList: <span class="function"><span class="params">state</span> =&gt;</span> state.billBookDetail.memberList,					 </span><br><span class="line">  <span class="comment">//其他页面的数据，直接在当前页面中使用</span></span><br><span class="line">  curUserInfo: <span class="function"><span class="params">state</span> =&gt;</span> state.home.curUserInfo,</span><br><span class="line">  <span class="comment">//根 store 的 state数据也可以使用</span></span><br><span class="line">  deviceInfo: <span class="function"><span class="params">state</span> =&gt;</span> state.deviceInfo,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapGettersToData = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> storeConfig = &#123;</span><br><span class="line">  mapGetters: mapGettersToData,</span><br><span class="line">  mapState: mapStatesToData</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>state 的映射单/多 store 有所差异，getter 的映射一样存在差异。单 store 下为了区分每个子节点 store 各自的 getter 方法，需要用 keyPath 来识别 getter 方法，keyPath 的格式是 pageName/getterName，所以在进行 map 映射的时候，应该用这种 keyPath 来映射。同样你也可以把其他 store 的getter 映射到当前 page 上</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> mapStatesToData = &#123;&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> mapGettersToData = &#123;</span><br><span class="line">  <span class="comment">//当前 page 是 billBookDetail，keyPath 是 billBookDetail/getterName</span></span><br><span class="line">  bookDetailForShow: <span class="string">'billBookDetail/bookDetailForShow'</span>,</span><br><span class="line">  memberInfoForShow: <span class="string">'billBookDetail/memberForShow'</span>,</span><br><span class="line">  transListForShow: <span class="string">'billBookDetail/transListForShow'</span>,</span><br><span class="line">  dataStatus: <span class="string">'billBookDetail/dataStatus'</span>,</span><br><span class="line">  canWrite: <span class="string">'billBookDetail/canWrite'</span>,</span><br><span class="line">  <span class="comment">//打算使用 home 页面的 getter</span></span><br><span class="line">  curUserForShow: <span class="string">'home/curUserForShow'</span>,</span><br><span class="line">  <span class="comment">//打算使用根 store 的 getter</span></span><br><span class="line">  maxScreenHeight: <span class="string">'maxScreenHeight'</span>,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> storeConfig = &#123;</span><br><span class="line">  mapGetters: mapGettersToData,</span><br><span class="line">  mapState: mapStatesToData</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h3 id="在-store-中跨页面跨组件通信"><a href="#在-store-中跨页面跨组件通信" class="headerlink" title="在 store 中跨页面跨组件通信"></a>在 store 中跨页面跨组件通信</h3><p>从上面的代码样例中可以看到，我们已经能做到初步的跨页面组件间通信了，就是当前页面/组件，可以任意使用其他 store 的 state、getter，来进行自己的渲染，并且享受响应式的页面刷新。但这还不够，我们还希望进一步进行更多的跨页面跨组件通信</p>
+<p>由于 store.js 的文件和 page.js 的文件，js上下文不太一致。所以在 store.js 的文件中访问和操作整个单 store 的方式也和 page.js 不一样</p>
+<ul>
+<li>state </li>
+</ul>
+<p>就是存放当前子 store 数据的地方，并没有什么逻辑代码，不涉及跨组件通信</p>
+<ul>
+<li>mutation</li>
+</ul>
+<p>定义为同步修改当前仓库 state 的方法，因此所有都靠传入参数控制，只修改自己，因此不涉及跨组件通信</p>
+<ul>
+<li>getter</li>
+</ul>
+<p>是用来计算一些数据，提供给外部进行读取，是一种读操作。在 getter 中是有跨页面跨组件读数据的需求的。 pageA 页面的一个 getter 值，可以不仅由 pageA 页面的 state 数据来运算，还可以由其他任意子 store 节点的 state 和 getter 来进行数据运算</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Lux 源码中对 getter 函数的声明描述</span></span><br><span class="line"><span class="keyword">export</span> type Getter&lt;S, R&gt; = <span class="function">(<span class="params">state: S, getters: any, rootState: R, rootGetters: any</span>) =&gt;</span> any;</span><br></pre></td></tr></table></figure>
+<p>通过对 Lux 的 .ts 声明文件进行观察发现，getter 函数，参数其实包括4个对象，我们在简单 demo 中的使用上，很习惯 getter 只写一个入参，省略了其他三个。就是这三个可以做到在 getter 中访问并读取到其他子 store 的数据。所以一个最完整的 getter 写法应该是</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">getters: &#123;</span><br><span class="line">    minRpxHeight(state, getters, rootState, rootGetters) &#123;</span><br><span class="line">      <span class="keyword">if</span> (rootState.deviceInfo) &#123;</span><br><span class="line">        <span class="keyword">let</span> rate = <span class="number">750</span> / rootState.deviceInfo.windowWidth;</span><br><span class="line">        <span class="keyword">let</span> rpxHeight = rootState.deviceInfo.windowHeight * rate;</span><br><span class="line">        <span class="keyword">let</span> statusBarHeight = rootState.deviceInfo.statusBarHeight * rate;</span><br><span class="line">        <span class="keyword">let</span> barHeight = rootState.deviceInfo.titleBarHeight * rate;</span><br><span class="line">        <span class="keyword">let</span> headZone = <span class="number">28</span> + <span class="number">44</span> + <span class="number">26</span> + <span class="number">100</span> + <span class="number">100</span>;<span class="comment">// 顶部css计算</span></span><br><span class="line">        <span class="keyword">let</span> result = rpxHeight - headZone - statusBarHeight - barHeight;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">      &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>action</li>
+</ul>
+<p>是用来描述一个仓库可以被外界调用的操作行为，既可以进行读操作，也可以进行写操作。在 action 中也有跨页面跨组件通信的需求，并且这个需求更大一些，既需要支持对外部仓库的访问读取操作，又需要支持提交执行的操作。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> interface ActionContext&lt;S, R&gt; &#123;</span><br><span class="line">  dispatch: Dispatch;</span><br><span class="line">  commit: Commit;</span><br><span class="line">  state: S;</span><br><span class="line">  getters: any;</span><br><span class="line">  rootState: R;</span><br><span class="line">  rootGetters: any;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">type ActionHandler&lt;S, R&gt; = <span class="function">(<span class="params">injectee: ActionContext&lt;S, R&gt;, payload: any</span>) =&gt;</span> any;</span><br><span class="line">interface ActionObject&lt;S, R&gt; &#123;</span><br><span class="line">  root?: boolean;</span><br><span class="line">  handler: ActionHandler&lt;S, R&gt;;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> type Action&lt;S, R&gt; = ActionHandler&lt;S, R&gt; | ActionObject&lt;S, R&gt;;</span><br></pre></td></tr></table></figure>
+<p>通过对 Lux 代码中 .ts 文件的声明可以看出来，action 接受2个入参，第一个入参是一个对象 ActionContext ，第二个入参是实际传入的参数 payload。而 ActionContext 的定义又包括了6个对象，前两个用来执行提交和调用等操作，后四个用来进行访问读取操作。读取操作：state，getters，rootState，rootGetters 和 getter 中的使用一模一样就不做赘述了</p>
+<p>重点说一下前两个 commit 和 dispatch。这两个2个方法的常规使用方法都是第一个参数为名字，第二个参数为传参。这里只用 commit 举例，dispatch 类似</p>
+<p>在单 store 模式下，action 上下文中使用 commit 无需指定 keyPath，commit(‘memberList’,listData)，即可直接提交给自己的 mutation，但如果此时希望跨仓库进行提交，可以加入第三个参数 {root:true}。然后使用 keyPath 当作名字进行 commit。因此一个完整的 action 写法应该是这样。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">actions: &#123;</span><br><span class="line">    <span class="keyword">async</span> refreshData(&#123;commit,dispatch,state,getters,rootState,rootGetters&#125;,payload) &#123;</span><br><span class="line">  	  <span class="comment">// 获取某个网络请求 rpc promise</span></span><br><span class="line">      <span class="keyword">let</span> req = reqHomePage();</span><br><span class="line">      req.then(<span class="function">(<span class="params">result</span>) =&gt;</span> &#123;</span><br><span class="line">  		<span class="comment">//数据提交给当前页面的 updateData mutation</span></span><br><span class="line">        commit(<span class="string">'updateData'</span>, result);</span><br><span class="line">		<span class="comment">//数据提交给另一个页面的 updateUser mutation</span></span><br><span class="line">	    commit(<span class="string">'user/updateUser'</span>,result.user,&#123;<span class="attr">root</span>:<span class="literal">true</span>&#125;);</span><br><span class="line">		<span class="comment">//触发当前页面的 saveLocalStorage 另一个 action ，进行网络数据缓存 </span></span><br><span class="line">		dispatch(<span class="string">'saveLocalStorage'</span>,result);</span><br><span class="line">		<span class="comment">//触发另一个页面的 saveUserCache 另一个 action ，进行用户数据缓存</span></span><br><span class="line">		dispatch(<span class="string">'user/cacheUser'</span>,result.user,&#123;<span class="attr">root</span>:<span class="literal">true</span>&#125;);</span><br><span class="line">      &#125;).catch(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">        commit(<span class="string">'updateDataError'</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="在-page-中跨页面跨组件通信"><a href="#在-page-中跨页面跨组件通信" class="headerlink" title="在 page 中跨页面跨组件通信"></a>在 page 中跨页面跨组件通信</h3><p>上文说道，因为 page 与 store 的 js 上下文是不太一样的，所以在 page 中跨仓库通信也是略有不同。因为 page 的上下文 this 上挂载的整个单 store 的根，所以在 page 中无论是否是与自己页面的子 store 交互，还是与其他页面的子 store 交互，都必须通过名字访问 or 通过 keyPath 提交执行。</p>
+<ul>
+<li>通过 this.$store 访问整个单 store。在 page.js 中不止可以访问各个仓库的 state ，也可以访问 getter。都是通过各个仓库的名字来查找并访问</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">onLoad(options) &#123;</span><br><span class="line">  <span class="comment">//访问home子仓库下的userName state</span></span><br><span class="line">  <span class="keyword">this</span>.$store.state.home.userName;</span><br><span class="line">  <span class="comment">//访问book自仓库下的billListForShow getter</span></span><br><span class="line">  <span class="keyword">this</span>.$store.getters.book.billListForShow</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<ul>
+<li>通过 this.$commit 与 this.$dispatch ，用 keyPath 直接提交给任意子仓库 mutation or action。需要补充的是，在 page.js 中是强制 {root:false} 的，所以即便提交给自己页面的仓库也不能简写省略 keyPath。（这和在store里不同）</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">onShow() &#123;</span><br><span class="line">  <span class="comment">//提交给 home 子仓库下的 userInfo mutation</span></span><br><span class="line">  <span class="keyword">this</span>.$commit(<span class="string">'home/userInfo'</span>,userinfo);</span><br><span class="line">  <span class="comment">//提交给 billBookDetail 子仓库下的 refreshBookDetail action</span></span><br><span class="line">  <span class="keyword">this</span>.$dispatch(<span class="string">'billBookDetail/refreshBookDetail'</span>);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<h2 id="Lux-的辅助插件"><a href="#Lux-的辅助插件" class="headerlink" title="Lux 的辅助插件"></a>Lux 的辅助插件</h2><p>Lux 还提供了3个辅助插件，和一个 immutable js 的配置</p>
+<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%BA%94%E3%80%81%E6%8F%92%E4%BB%B6-plugins" target="_blank" rel="noopener">Lux 的插件</a></p>
+<ul>
+<li>logger 插件：用来在任意 state 发生变化的时候打印调试信息，包含了 preState 和 nextState</li>
+</ul>
+<p><img src="https://cdn.nlark.com/lark/0/2018/png/132411/1542863443033-858b94ec-4be7-432a-8c85-51f1b43f5a1a.png" alt="undefined"> </p>
+<ul>
+<li><p>batch 插件：可以做到连续多次 commit 提交，可以合并成一次 commit 提交，来实现更好的性能</p>
+</li>
+<li><p>watcher 插件：可以做到更好的监听 state 变化，然后触发监听回掉，进行更细粒度的局部监听局部更新</p>
+</li>
+</ul>
+<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%83%E3%80%81%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%95%B0%E6%8D%AE" target="_blank" rel="noopener">不可变数据</a></p>
+<p>为了更好的管理 store 数据仓库，只允许通过 mutation 更改 state 不允许其他任何代码方式直接操作 state ，也为了更高效的计算 state 变化的 diff，Lux 支持可以自定义不可变数据的方案。可以考虑使用 immer.js（脚手架默认集成） 也可以考虑自己实现 deepClone 来做到不可变数据</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将插件配置到根 app.store.js 上</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Lux <span class="keyword">from</span> <span class="string">'@alipay/lux'</span>;</span><br><span class="line"><span class="keyword">import</span> createLogger <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/logger'</span>;</span><br><span class="line"><span class="keyword">import</span> createBatched <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/batched'</span>;</span><br><span class="line"><span class="keyword">import</span> createWatch <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/watch'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//配置默认集成的 immer 不可变数据</span></span><br><span class="line"><span class="keyword">import</span> &#123; produce &#125; <span class="keyword">from</span> <span class="string">'immer'</span>;</span><br><span class="line"><span class="keyword">import</span> debounce <span class="keyword">from</span> <span class="string">'lodash.debounce'</span>;</span><br><span class="line"><span class="comment">//构建 logger 插件</span></span><br><span class="line"><span class="keyword">const</span> logger = createLogger(&#123;</span><br><span class="line">  predicate: <span class="function"><span class="params">m</span> =&gt;</span> m.type !== <span class="string">'add/updateInputValue'</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//构建 batch 插件</span></span><br><span class="line"><span class="keyword">const</span> batched = createBatched(debounce(<span class="function"><span class="params">notify</span> =&gt;</span> notify(), <span class="number">10</span>));</span><br><span class="line"><span class="comment">//构建 watcher 插件</span></span><br><span class="line"><span class="keyword">const</span> watcher = createWatch();</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Lux.Store(&#123;</span><br><span class="line">  state: &#123;&#125;,</span><br><span class="line">  getters: &#123;&#125;,</span><br><span class="line">  mutations: &#123;&#125;,</span><br><span class="line">  actions: &#123;&#125;,</span><br><span class="line">  modules: &#123;</span><br><span class="line">    home,</span><br><span class="line">    createBillBook,</span><br><span class="line">	...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, &#123;</span><br><span class="line">  produce, <span class="comment">// 注册使用 immer</span></span><br><span class="line">  plugins: [</span><br><span class="line">    logger,<span class="comment">// 注册使用插件</span></span><br><span class="line">    batched,<span class="comment">//也可以不用</span></span><br><span class="line">    watcher,</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="代码文件规范"><a href="#代码文件规范" class="headerlink" title="代码文件规范"></a>代码文件规范</h2><p>多人账本项目，在全面实践 LunaX 的过程中对于代码文件的整理逐渐形成了一定的规范约束。可以参考一下借鉴一下</p>
+<ul>
+<li>components 共用组件总目录：<ul>
+<li>公用组件不实现自己的 store ，遵照原生小程序开发模式。因为引入 store 会导致要把 组件 store 引入到每一处用到子 store 节点下，极大程度的让组件在使用上变得复杂</li>
+<li>公共组件可以视需求而定，进行 mapConfig 来将根 store 绑在 component 上下文</li>
+</ul>
+</li>
+<li>pages 页面逻辑总目录：<ul>
+<li>pageA 页面目录： 一个页面的所有文件<ul>
+<li>component 页面组件：这里用于存放该页面专用的页面组件，如果组件逻辑复杂，可以有自己的子 store，文件结构同 page store</li>
+<li>store 仓库目录：用于存放，子 store 主逻辑，与其他数据处理逻辑<ul>
+<li>index.js 文件：子 store 主逻辑</li>
+<li>rpc.js 文件：用于生成 rpc promise 的逻辑，如果页面接口简单甚至没有，可以省略，写在 index.js 中</li>
+<li>storage.js 文件：用于生成本地存储 promise 的逻辑，可以省略</li>
+</ul>
+</li>
+<li>pageA.js 文件： 进行 store 的 mapConfig</li>
+<li>pageA.axml pageA.acss pageA.json 文件：常规小程序 page文件</li>
+</ul>
+</li>
+<li>pageB    页面目录</li>
+</ul>
+</li>
+<li>app.js 小程序主入口文件：绑定单 store 到 app</li>
+<li>app.store.js 根store文件：单 store 的构建以及插件配置</li>
+</ul>
+<h1 id="LunaX-的其他工具"><a href="#LunaX-的其他工具" class="headerlink" title="LunaX 的其他工具"></a>LunaX 的其他工具</h1><p>前面就已经提到过 LunaX 不仅由 Lux 数据仓库这个组件，还有这其他丰富组件</p>
+<h2 id="Mock-组件"><a href="#Mock-组件" class="headerlink" title="Mock 组件"></a>Mock 组件</h2><p><a href="http://lunax.alipay.net/2.tools/luna-mock-appx.html#%E7%89%B9%E7%82%B9" target="_blank" rel="noopener">小程序本地 mock 方案</a></p>
+<ul>
+<li>mock 在本地维护，切换非常方便灵活</li>
+<li>mock 支持种类丰富<ul>
+<li>支付宝 or 淘宝的 rpc，mtop</li>
+<li>公开或内部的 http 接口，</li>
+<li>同步或异步的 jsapi</li>
+<li>凤蝶的区块数据</li>
+</ul>
+</li>
+<li>IDE，模拟器，真机都可以使用</li>
+<li>跟原 luna-mock 使用方法基本一致</li>
+<li>非常详细的 log 记录</li>
+</ul>
+<p>需要说明的是，原文档中提到在模拟器中进行 mock 存在一定瑕疵，需要侵入一些代码才可以，现在已经不需要了，直接使用即可。使用 LunaX 构建的小程序项目，整个 mock 工具都已经配置好了</p>
+<ul>
+<li>Rpc 的 mock 最常用，直接通过 module.exports 导出一个硬编码对象即可</li>
+<li>同步 JSApi 使用和 Rpc 一致，module.exports 导出一个硬编码对象</li>
+<li>异步 JSApi 使用起来略有差异，需要导出一个方法，把硬编码对象放到 return 结果中去</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> defaultInfo = &#123;<span class="string">'nickName'</span>: <span class="string">'我'</span>, <span class="string">'avatar'</span>: <span class="string">'../../assets/images/head.png'</span>&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = <span class="function"><span class="keyword">function</span> (<span class="params">opts</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    success: defaultInfo,</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<h2 id="小程序埋点"><a href="#小程序埋点" class="headerlink" title="小程序埋点"></a>小程序埋点</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 埋单个数据</span></span><br><span class="line">luna.log.info(<span class="string">'SOME_INFO'</span>, infoData)</span><br><span class="line"><span class="comment">// 埋多个数据</span></span><br><span class="line">luna.log.info(<span class="string">'SOME_INFO'</span>, [infoData1, infoData2])</span><br><span class="line"><span class="comment">// 埋 spm 点位</span></span><br><span class="line"><span class="keyword">const</span> tracert = <span class="keyword">new</span> luna.Tracert(&#123;</span><br><span class="line">  spmAPos: <span class="string">'a230'</span>, <span class="comment">// spma位，必填</span></span><br><span class="line">  spmBPos: <span class="string">'b7449'</span>, <span class="comment">// spmb位，必填</span></span><br><span class="line">  bizType: <span class="string">'AntDevTools'</span>, <span class="comment">// 业务类型，必填</span></span><br><span class="line">  logLevel: <span class="number">2</span>, <span class="comment">// 默认是2</span></span><br><span class="line">  chInfo: luna.config.app <span class="comment">// 渠道</span></span><br><span class="line">&#125;);</span><br><span class="line">tracert.logPv();        <span class="comment">// 记录 pv</span></span><br><span class="line">tracert.click(<span class="string">'c17943.d32288'</span>);   <span class="comment">// 点击埋点</span></span><br><span class="line">tracert.expo(<span class="string">'c17943.d32327'</span>);  <span class="comment">// 曝光埋点</span></span><br></pre></td></tr></table></figure>
+<h2 id="凤蝶区块"><a href="#凤蝶区块" class="headerlink" title="凤蝶区块"></a>凤蝶区块</h2><p>凤蝶区块用于一些运营活动的配置，小程序也可以通过凤蝶的 path 读取凤蝶区块，从而做到不发版改换配置效果。 getH5data(‘path’) 方法返回的是一个 promise，在 promise 执行完毕后，凤蝶区块数据通过 json 返回</p>
+<h2 id="网络请求-Rpc"><a href="#网络请求-Rpc" class="headerlink" title="网络请求 Rpc"></a>网络请求 Rpc</h2><p>LunaX 封装了 rpc 方法，统一处理了 Rpc 的缓存，转菊花方案，默认错误失败处理方案，防重复提交，限流展示等处理。</p>
+<p><a href="http://site.alipay.net/luna-component/luna-appx/docs/luna.html#.rpc" target="_blank" rel="noopener">LunaX Rpc</a></p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>其他更多的插件还有很多，就不一一介绍了，有两个地方可以查看</p>
+<ul>
+<li><p><a href="http://site.alipay.net/luna-component/luna-appx/docs/index.html" target="_blank" rel="noopener">LunaX 小程序业务组件核心库</a></p>
+</li>
+<li><p>src/node_modules/@alipay/luna-appx/src 源码查看</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FrontEnd/" rel="tag"># FrontEnd</a>
+          
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/swipe-tableviewcell/" rel="next" title="Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案">
+                <i class="fa fa-chevron-left"></i> Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    <div class="comments" id="comments">
+      
+        <div id="gitment-container"></div>
+      
+    </div>
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="唯敬">
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">64</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#小程序开发中面临的问题"><span class="nav-number">1.</span> <span class="nav-text">小程序开发中面临的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态管理问题"><span class="nav-number">1.1.</span> <span class="nav-text">全局状态管理问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨页面跨组件通信"><span class="nav-number">1.2.</span> <span class="nav-text">跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computed-计算能力"><span class="nav-number">1.3.</span> <span class="nav-text">computed 计算能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据-Mock-能力"><span class="nav-number">1.4.</span> <span class="nav-text">数据 Mock 能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#研发部署工作流问题"><span class="nav-number">1.5.</span> <span class="nav-text">研发部署工作流问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建一个-store-初步实现数据仓库"><span class="nav-number">2.</span> <span class="nav-text">构建一个 store 初步实现数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus来实现跨页面跨组件通信"><span class="nav-number">2.1.</span> <span class="nav-text">EventBus来实现跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态的管理与控制"><span class="nav-number">2.2.</span> <span class="nav-text">全局状态的管理与控制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LunaX-的小程序上层开发组件库"><span class="nav-number">3.</span> <span class="nav-text">LunaX 的小程序上层开发组件库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lux-单-store-数据仓库实践"><span class="nav-number">4.</span> <span class="nav-text">Lux 单 store 数据仓库实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的基本使用模式"><span class="nav-number">4.1.</span> <span class="nav-text">Lux 的基本使用模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-单-store-与多-store-的选择"><span class="nav-number">4.2.</span> <span class="nav-text">Lux 单 store 与多 store 的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的多人账本单-store-实践"><span class="nav-number">4.3.</span> <span class="nav-text">Lux 的多人账本单 store 实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建-App-根-store"><span class="nav-number">4.3.1.</span> <span class="nav-text">构建 App 根 store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#page-与单-store-的挂载与绑定"><span class="nav-number">4.3.2.</span> <span class="nav-text">page 与单 store 的挂载与绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单-store-下的数据映射"><span class="nav-number">4.3.3.</span> <span class="nav-text">单 store 下的数据映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-store-中跨页面跨组件通信"><span class="nav-number">4.3.4.</span> <span class="nav-text">在 store 中跨页面跨组件通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-page-中跨页面跨组件通信"><span class="nav-number">4.3.5.</span> <span class="nav-text">在 page 中跨页面跨组件通信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的辅助插件"><span class="nav-number">4.4.</span> <span class="nav-text">Lux 的辅助插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码文件规范"><span class="nav-number">4.5.</span> <span class="nav-text">代码文件规范</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LunaX-的其他工具"><span class="nav-number">5.</span> <span class="nav-text">LunaX 的其他工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock-组件"><span class="nav-number">5.1.</span> <span class="nav-text">Mock 组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序埋点"><span class="nav-number">5.2.</span> <span class="nav-text">小程序埋点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#凤蝶区块"><span class="nav-number">5.3.</span> <span class="nav-text">凤蝶区块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络请求-Rpc"><span class="nav-number">5.4.</span> <span class="nav-text">网络请求 Rpc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">5.5.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+<!-- LOCAL: You can save these files to your site and update links -->
+    
+        
+        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
+    
+<!-- END LOCAL -->
+
+    
+
+    
+      <script type="text/javascript">
+      function renderGitment(){
+        var gitment = new Gitmint({
+            id: '用大型开发框架开发小程序那点事儿', 
+            owner: 'Awhisper',
+            repo: 'Awhisper.github.io',
+            
+            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
+            
+            oauth: {
+            
+            
+                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
+            
+                client_id: 'd8b03aa5ea2168f013f7'
+            }});
+        gitment.render('gitment-container');
+      }
+
+      
+      renderGitment();
+      
+      </script>
+    
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
