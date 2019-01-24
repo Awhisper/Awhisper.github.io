@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="扯淡：这一周感觉经历了一次技术爆炸  过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个前言，然后又扔那不动了，唔，罪过罪过   今天又想多扯点淡，扯点碎碎念了  标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！ 之前不是写了一篇从antlr扯淡到一点点编译原理么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConv">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png">
-<meta property="og:updated_time" content="2017-03-25T04:29:33.000Z">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/ocsocs.png">
+<meta property="og:updated_time" content="2019-01-24T07:51:47.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="扯淡：技术爆炸">
 <meta name="twitter:description" content="扯淡：这一周感觉经历了一次技术爆炸  过去的一周里，憋了很久终于把之前欠的ASDK的文章，写出了一个前言，然后又扔那不动了，唔，罪过罪过   今天又想多扯点淡，扯点碎碎念了  标题党了，先道歉，以我片面的学习和认知，我是真的觉得这周大新闻好多，好厉害！ 之前不是写了一篇从antlr扯淡到一点点编译原理么，当时的背景是这样的，使用JSPatch很久以来，我都有个想法，想了解一下JSPatchConv">
-<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png">
+<meta name="twitter:image" content="http://blogpic-qiniu.awhisper.net/ocsocs.png">
 
 
 
@@ -462,7 +462,7 @@
 <p>手机 QQ 内部也有一个类似的方案，不过更进一步，他们通过 clang 把 OC 代码编译成自己定制的字节码动态下发，然后开发一个虚拟机去执行（惊呆了）</p>
 </blockquote>
 <p>我瞬间想起10月份<a href="http://weibo.com/u/1680627603?topnav=1&amp;wvr=6&amp;topsug=1&amp;is_all=1" target="_blank" rel="noopener">@杨萧玉HIT</a>大神的一篇微博</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/ocsocs.png" alt=""></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/ocsocs.png" alt=""></p>
 <p>配合<a href="http://weibo.com/bang?refer_flag=1005055010_" target="_blank" rel="noopener">@bang</a>哥的文字解释，瞬间觉得有点炸天。</p>
 <p>不知道是不是我设想的这样，由clang生成的AST，不再像滴滴那样转换语言到js，然后交给jscore（一个js虚拟机）配合js-oc runtime来生效，而干脆是直接重写了一套虚拟机，所有指令集都是自己设计的，直接把AST输入给虚拟机就能直接运作了</p>
 <p>自己重写一套虚拟机，重写一套虚拟机，一套虚拟机，虚拟机，…… 整个人都吓到了，不过以上这些还没有对应的宣传文章和详细介绍，存在于各位大神的交流的只言片语之中。</p>
