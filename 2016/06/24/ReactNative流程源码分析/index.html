@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理 全文是不是有点太长了，我要不要分拆成几篇文章 函数栈代码流程图，由于采用层次缩进的形式，层次关系">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/RCTRoot.png">
-<meta property="og:updated_time" content="2018-04-21T17:02:28.000Z">
+<meta property="og:image" content="http://yoursite.com/2016/06/24/ReactNative流程源码分析/blogchat-qiniu.awhisper.net/reactnativejiegou.png">
+<meta property="og:image" content="http://yoursite.com/2016/06/24/ReactNative流程源码分析/blogchat-qiniu.awhisper.net/RCTRoot.png">
+<meta property="og:updated_time" content="2019-01-24T07:27:33.938Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ReactNative iOS源码解析（一）">
 <meta name="twitter:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理 全文是不是有点太长了，我要不要分拆成几篇文章 函数栈代码流程图，由于采用层次缩进的形式，层次关系">
-<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png">
+<meta name="twitter:image" content="http://yoursite.com/2016/06/24/ReactNative流程源码分析/blogchat-qiniu.awhisper.net/reactnativejiegou.png">
 
 
 
@@ -458,9 +458,9 @@
 </ul>
 <p>这是一个极度模块化可扩展的桥梁框架，不是说你从facebook的源上拉下来RN的代码，RN的能力就固定一成不变了，他的模块化可扩展，让你缺啥补上啥就好了</p>
 <p><strong>ReactNative 结构图</strong></p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/reactnativejiegou.png" alt="RN结构图"></p>
+<p><img src="blogchat-qiniu.awhisper.net/reactnativejiegou.png" alt="RN结构图"></p>
 <p>大家可以看这个结构图，整个RN的结构分为四个部分，上面提到的，RN桥的模块化可扩展性，就体现在JSBridge/OCBridge里的ModuleConfig，只要遵循RN的协议<code>RCTBridgeModule</code>去写的OC Module对象，使用<code>RCT_EXPORT_MODULE()</code>宏注册类，使用<code>RCT_EXPORT_METHOD()</code>宏注册方法，那么这个OC Module以及他的OC Method都会被JS与OC的ModuleConfig进行统一控制</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/RCTRoot.png" alt="RN类图"></p>
+<p><img src="blogchat-qiniu.awhisper.net/RCTRoot.png" alt="RN类图"></p>
 <p>上面是RN的代码类结构图</p>
 <ul>
 <li><p>大家可以看到<code>RCTRootView</code>是RN的根试图，</p>
