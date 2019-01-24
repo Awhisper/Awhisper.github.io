@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西  比如JSPatchConvertor，他可以做到把OC代码输入后直接转化成JSPatch代码，  比如objc2swift，他可以做到把OC代码输入后直接转化为Swift代码   这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇JSPatchConvertor实现原理，我们可以好好看看。 从这篇文章里，我们看到了一个工具，一个看起">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerparser.png">
-<meta property="og:updated_time" content="2017-03-12T13:06:51.000Z">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/grammerpng.png">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/grammerparser.png">
+<meta property="og:updated_time" content="2019-01-24T07:47:51.383Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="从antlr扯淡到一点点编译原理">
 <meta name="twitter:description" content="网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西  比如JSPatchConvertor，他可以做到把OC代码输入后直接转化成JSPatch代码，  比如objc2swift，他可以做到把OC代码输入后直接转化为Swift代码   这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇JSPatchConvertor实现原理，我们可以好好看看。 从这篇文章里，我们看到了一个工具，一个看起">
-<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png">
+<meta name="twitter:image" content="http://blogpic-qiniu.awhisper.net/grammerpng.png">
 
 
 
@@ -476,9 +476,9 @@
 <p>如果antlr已经安装成功，我们就应该去下载对应的语法描述文件，去生成js的parser了。</p>
 <p><a href="https://github.com/antlr/grammars-v4" target="_blank" rel="noopener">官方的主流各大语言的语法描述下载地址</a></p>
 <p>从这里面我们可以找到<code>Objc</code>的语法文件，下载下来后就发现，里面一共有一个Java文件和4个g4文件</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/grammerpng.png" alt="grammerfile"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/grammerpng.png" alt="grammerfile"></p>
 <p>我们需要对每一个文件执行一次，就看到生成了这些文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ antlr4 -Dlanguage=JavaScript xxxxx.g4</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/grammerparser.png" alt=""></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/grammerparser.png" alt=""></p>
 <h2 id="下载Antlr-JavaScript-Runtime"><a href="#下载Antlr-JavaScript-Runtime" class="headerlink" title="下载Antlr JavaScript Runtime"></a>下载Antlr JavaScript Runtime</h2><ul>
 <li><p>可以去官网下载 <a href="http://www.antlr.org/download.html" target="_blank" rel="noopener">Antlr Downloads</a>,然后倒入自己的工程</p>
 </li>
