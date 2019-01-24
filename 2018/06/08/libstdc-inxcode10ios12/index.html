@@ -87,15 +87,15 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="编译报错 当你开心得升级完新 macOS，以及新 XCode，准备体验了一把 Dark Mode 编程模式，开心的打开自己的老项目的时候，发现编译不通过了╮(╯_╰)╭ 如果你的工程中如果依赖 libstdc++，无论是你本身的功能用 C++ 跨平台编写，还是你引入了某个 SDK 其内部依赖这个 libstdc++,都会导致整个工程编译不通过，报出 Undefined symbols，C++ 的">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15284451861035.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15284453505700.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15284459845986.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15284462107203.jpg">
-<meta property="og:updated_time" content="2018-09-24T11:58:39.000Z">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15284451861035.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15284453505700.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15284459845986.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15284462107203.jpg">
+<meta property="og:updated_time" content="2019-01-24T07:09:57.008Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="libstdc++适配Xcode10与iOS12">
 <meta name="twitter:description" content="编译报错 当你开心得升级完新 macOS，以及新 XCode，准备体验了一把 Dark Mode 编程模式，开心的打开自己的老项目的时候，发现编译不通过了╮(╯_╰)╭ 如果你的工程中如果依赖 libstdc++，无论是你本身的功能用 C++ 跨平台编写，还是你引入了某个 SDK 其内部依赖这个 libstdc++,都会导致整个工程编译不通过，报出 Undefined symbols，C++ 的">
-<meta name="twitter:image" content="http://ouz34cilp.bkt.clouddn.com/15284451861035.jpg">
+<meta name="twitter:image" content="http://mweb-qiniu.awhisper.net/15284451861035.jpg">
 
 
 
@@ -420,10 +420,10 @@
       
 
       
-        <h1 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h1><p><img src="http://ouz34cilp.bkt.clouddn.com/15284451861035.jpg" alt=""></p>
+        <h1 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h1><p><img src="http://mweb-qiniu.awhisper.net/15284451861035.jpg" alt=""></p>
 <p>当你开心得升级完新 macOS，以及新 XCode，准备体验了一把 Dark Mode 编程模式，开心的打开自己的老项目的时候，发现编译不通过了╮(╯_╰)╭</p>
 <p>如果你的工程中如果依赖 <code>libstdc++</code>，无论是你本身的功能用 C++ 跨平台编写，还是你引入了某个 SDK 其内部依赖这个 <code>libstdc++</code>,都会导致整个工程编译不通过，报出 <code>Undefined symbols</code>，C++ 的 List 找不到了</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15284453505700.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15284453505700.jpg" alt=""></p>
 <p>原因是苹果在 XCode10 和 iOS12 中移除了 <code>libstdc++</code> 这个库，由 <code>libc++</code> 这个库取而代之，苹果的解释是 <code>libstdc++</code> 已经标记为废弃有5年了，建议大家使用经过了 llvm 优化过并且全面支持C++11的 <code>libc++</code> 库。</p>
 <h1 id="临时解决办法"><a href="#临时解决办法" class="headerlink" title="临时解决办法"></a>临时解决办法</h1><a id="more"></a>
 <ul>
@@ -436,16 +436,16 @@
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/libstdc++.* /Applications/Xcode-beta.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/</span><br><span class="line"></span><br><span class="line">cp /Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/lib/libstdc++.* /Applications/Xcode-beta.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/lib/</span><br></pre></td></tr></table></figure>
 <p>现在 XCode10 正式发布了，很多人已经没有 XCode9 来拷贝了，于是这里放出来文件提供下载</p>
-<p>将 <a href="http://ouz34cilp.bkt.clouddn.com/libstdc++.6.0.9.tbd.zip" target="_blank" rel="noopener">libstdc++.6.0.9.tbd.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/</span><br></pre></td></tr></table></figure></p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15284459845986.jpg" alt=""></p>
+<p>将 <a href="http://mweb-qiniu.awhisper.net/libstdc++.6.0.9.tbd.zip" target="_blank" rel="noopener">libstdc++.6.0.9.tbd.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS.sdk/usr/lib/</span><br></pre></td></tr></table></figure></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15284459845986.jpg" alt=""></p>
 <p>拷贝过去后，你就可以在新 XCode（黑暗模式真心舒服）下面看到<code>libstdc++</code>了，放心的添加到工程里吧</p>
 <ul>
 <li>模拟器运行</li>
 </ul>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15284462107203.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15284462107203.jpg" alt=""></p>
 <p>拷贝<code>libstdc++</code>之后就可以编译通过了，但 App 在模拟器里一运行就崩溃，就会报动态链接库装载出错，看出错提示说是 .dylib 与这个模拟器不符合。这是 XCode10 自带的 iOS12 模拟器的问题，在 XCode10 中安装 iOS11 的模拟器运行环境，然后切换到 iOS11 模拟器运行，一切问题没有。如果想在 XCode12 iOS12 模拟器中运行：</p>
-<p>a. 将 <a href="http://ouz34cilp.bkt.clouddn.com/libstdc++_sim.zip" target="_blank" rel="noopener">libstdc++_sim.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/lib/</span><br></pre></td></tr></table></figure></p>
-<p>b. 将 <a href="http://ouz34cilp.bkt.clouddn.com/libstdc++.dylib_sim.zip" target="_blank" rel="noopener">libstdc++.dylib_sim.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/</span><br></pre></td></tr></table></figure></p>
+<p>a. 将 <a href="http://mweb-qiniu.awhisper.net/libstdc++_sim.zip" target="_blank" rel="noopener">libstdc++_sim.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneSimulator.platform/Developer/SDKs/iPhoneSimulator.sdk/usr/lib/</span><br></pre></td></tr></table></figure></p>
+<p>b. 将 <a href="http://mweb-qiniu.awhisper.net/libstdc++.dylib_sim.zip" target="_blank" rel="noopener">libstdc++.dylib_sim.zip</a> 解压，放到目录<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/Library/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/usr/lib/</span><br></pre></td></tr></table></figure></p>
 <ul>
 <li>真机运行</li>
 </ul>

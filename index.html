@@ -1970,10 +1970,10 @@
 
       
         
-          <h1 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h1><p><img src="http://ouz34cilp.bkt.clouddn.com/15284451861035.jpg" alt=""></p>
+          <h1 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h1><p><img src="http://mweb-qiniu.awhisper.net/15284451861035.jpg" alt=""></p>
 <p>当你开心得升级完新 macOS，以及新 XCode，准备体验了一把 Dark Mode 编程模式，开心的打开自己的老项目的时候，发现编译不通过了╮(╯_╰)╭</p>
 <p>如果你的工程中如果依赖 <code>libstdc++</code>，无论是你本身的功能用 C++ 跨平台编写，还是你引入了某个 SDK 其内部依赖这个 <code>libstdc++</code>,都会导致整个工程编译不通过，报出 <code>Undefined symbols</code>，C++ 的 List 找不到了</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15284453505700.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15284453505700.jpg" alt=""></p>
 <p>原因是苹果在 XCode10 和 iOS12 中移除了 <code>libstdc++</code> 这个库，由 <code>libc++</code> 这个库取而代之，苹果的解释是 <code>libstdc++</code> 已经标记为废弃有5年了，建议大家使用经过了 llvm 优化过并且全面支持C++11的 <code>libc++</code> 库。</p>
 <h1 id="临时解决办法"><a href="#临时解决办法" class="headerlink" title="临时解决办法"></a>临时解决办法</h1>
           <!--noindex-->
