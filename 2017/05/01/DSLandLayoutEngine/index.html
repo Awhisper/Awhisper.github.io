@@ -87,13 +87,13 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="Jasonette 与 Tangram很早的时候火了一阵子Jasonette，打出来的宣传语是用json写出纯native的app(牛皮其实有点大，其实只是写动态界面，完全不是写动态App)。 前一阵子，天猫又开源了跨多个平台的Tangram，一套通用的UI解决方案，仔细阅读文档我们会发现，他们也是在用json来实现这套七巧板布局。一套灵活的跨平台的UI解决方案。 Jasonette的牛皮其实有点">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://my.csdn.net/uploads/201208/11/1344657195_1730.png">
+<meta property="og:image" content="https://user-gold-cdn.xitu.io/2017/10/25/9cb491d4bd5d326aeb16632280411283?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
 <meta property="og:image" content="http://blogpic-qiniu.awhisper.net/webkit.png">
-<meta property="og:updated_time" content="2019-01-24T06:32:56.141Z">
+<meta property="og:updated_time" content="2019-01-24T06:39:22.082Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="动态界面：DSL&amp;布局引擎">
 <meta name="twitter:description" content="Jasonette 与 Tangram很早的时候火了一阵子Jasonette，打出来的宣传语是用json写出纯native的app(牛皮其实有点大，其实只是写动态界面，完全不是写动态App)。 前一阵子，天猫又开源了跨多个平台的Tangram，一套通用的UI解决方案，仔细阅读文档我们会发现，他们也是在用json来实现这套七巧板布局。一套灵活的跨平台的UI解决方案。 Jasonette的牛皮其实有点">
-<meta name="twitter:image" content="http://my.csdn.net/uploads/201208/11/1344657195_1730.png">
+<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2017/10/25/9cb491d4bd5d326aeb16632280411283?imageView2/0/w/1280/h/960/format/webp/ignore-error/1">
 
 
 
@@ -583,7 +583,7 @@
 <p>我们知道不同的节点，是可以用不同的算法进行他与内部子节点的布局计算的。</p>
 <p>拿iOS开发举例子，我们完全可以同一个页面内，有的view是用frame方式写死的绝对布局，有的view是用masnory进行的autolayout，甚至父view是写死的绝对布局，子view是autolayou，或者反过来。</p>
 <p>拿浏览器CSS来说，浏览器内核C++代码里一个RenderObject的基本子类之一就是RenderBox，该类表示遵从CSS盒子模型的对象，每一个盒子有四条边界：外边距边界 margin edge, 边框边界 border edge, 内边距边界 padding edge 与内容边界 content edge。这四层边界，形成一层层的盒子包裹起来。这种基础RenderBox有着自己的layout()算法。而在新的CSS里引入了更多不同的布局方式，比如运用非常广泛的Flexbox弹性盒子布局，Grid布局，多列布局等等。</p>
-<p><img src="http://my.csdn.net/uploads/201208/11/1344657195_1730.png" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2017/10/25/9cb491d4bd5d326aeb16632280411283?imageView2/0/w/1280/h/960/format/webp/ignore-error/1" alt=""></p>
 <p>在排版引擎的设计模式里，如果你想引入一种新的布局算法，或者一种新的专属布局效果锁对应的布局计算，你只需要创建一种新的RenderNode，并且实现这种node的layout()函数，你就可以为你的排版引擎，持续扩展支持更多的排版能力了</p>
 <p><em>Jasonette是怎么做的？</em></p>
 <p><em>jasonette其实根本没自己实现布局算法，也没有抽象出renderNode这种树状结构，他直接用原始的Dom字典直接开始遍历递归。</em></p>
@@ -642,8 +642,7 @@
 </ul>
 <p>在绘制阶段，浏览器内核并不会直接使用RenderTree进行绘制，还会进一步将renderTree处理成LayerTree，遍历这个LayerTree，将内容显示在屏幕上。</p>
 <p>浏览器本身并不能直接改变屏幕的像素输出，它需要通过系统本身的 GUI Toolkit。所以，一般来说浏览器会将一个要显示的网页包装成一个 UI 组件，通常叫做 WebView，然后通过将 WebView 放置于应用的 UI 界面上，从而将网页显示在屏幕上。但具体浏览器内核内部的渲染机制是怎么工作的有什么弊端，还取决于各个浏览器的底层实现。</p>
-<p><a href="http://blog.csdn.net/rogeryi/article/details/23686609" target="_blank" rel="noopener">How Rendering Work (in WebKit and Blink)</a></p>
-<p>从这里面可以详细看出来，浏览器内核的渲染其实是可以做到下面这些多种功能的，但不同平台，不懂浏览器内核的支持能力不同，不是所有的WebView或者浏览器App都是同样的性能与效果</p>
+<p>浏览器内核的渲染其实是可以做到下面这些多种功能的，但不同平台，不同浏览器内核的支持能力不同，不是所有的WebView或者浏览器App都是同样的性能与效果</p>
 <ul>
 <li>直接调用平台的系统GUI API</li>
 <li>设计自己的高效的Webview图形缓存</li>
