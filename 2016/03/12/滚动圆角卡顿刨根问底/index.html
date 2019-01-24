@@ -87,23 +87,23 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？ 前言在tableView or collectionView的Cell使用中如果大量出现了view.layer.cornerRa">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeBook.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeFolder.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeCpu.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeBook.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeFolder.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeCpu.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerMask.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeBook.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeFolder.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/CPUGPU.png?raw=true">
-<meta property="og:image" content="http://7xsoey.com1.z0.glb.clouddn.com/frameLine.png?raw=true">
-<meta property="og:updated_time" content="2017-03-12T13:01:12.000Z">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerAppShow.PNG?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerNoOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerNoOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerNoOptimizeCpu.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerCpuOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerCpuOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerCpuOptimizeCpu.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerMask.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerPicOptimizeBook.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/cornerPicOptimizeFolder.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/CPUGPU.png?raw=true">
+<meta property="og:image" content="http://corner-qiniu.awhisper.net/frameLine.png?raw=true">
+<meta property="og:updated_time" content="2019-01-24T07:56:32.731Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="圆角卡顿刨根问底">
 <meta name="twitter:description" content="整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？ 前言在tableView or collectionView的Cell使用中如果大量出现了view.layer.cornerRa">
-<meta name="twitter:image" content="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true">
+<meta name="twitter:image" content="http://corner-qiniu.awhisper.net/cornerAppShow.PNG?raw=true">
 
 
 
@@ -449,7 +449,7 @@
 <p><strong>到底卡顿根本原因是啥？</strong></p>
 <p><strong>无法彻底缓解卡顿，该怎么办？</strong><br><a id="more"></a></p>
 <h1 id="真实Case"><a href="#真实Case" class="headerlink" title="真实Case"></a>真实Case</h1><p>我们的App有一个用<code>UICollectionView</code>制作了书架的功能，可以放置图书，多本图书叠放在一起自动生成文件夹，如图</p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerAppShow.PNG?raw=true" width="263" height="467" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerAppShow.PNG?raw=true" width="263" height="467" alt="icon" align="center"></p>
 <p> 可以看到图中每一本书都是一个圆角矩形，而一个文件夹，如果图书超过4本则是4+1个圆角矩形，普通的用户使用习惯，可能不会有太多的文件夹（也说不准哟！）但是如果文件夹数量超过2个屏幕，每一个文件夹都是4本以上的图书，那么在2各屏幕内来回滚动，产生了很恐怖的结果。。。</p>
 <p>我们的app，在ip6上，同屏幕最多可以有9个Item，每个Item如果都是4个以上图书的文件夹就是5个圆角矩形，换句话说，一个屏幕内最多有45个圆角矩形。在这样的极限情况下，iPhone6上会卡的只有15帧左右！60帧才是满帧啊亲。。。</p>
 <p>更何况我们的app，在iPhone 6 plus上是4*4个item，于是一个屏幕内最多有80个圆角矩形。</p>
@@ -464,15 +464,15 @@
 <h1 id="无优化处理情况"><a href="#无优化处理情况" class="headerlink" title="无优化处理情况"></a>无优化处理情况</h1><p>首先在没有任何优化代码的情况下，都是最直接的<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">bookProfileImageView.layer.cornerRadius = <span class="number">3.0</span>f;</span><br><span class="line">bookProfileImageView.clipsToBounds = <span class="literal">YES</span>;</span><br></pre></td></tr></table></figure></p>
 <h2 id="性能检测"><a href="#性能检测" class="headerlink" title="性能检测"></a>性能检测</h2><p>让我们看一组<code>Instrument</code>里面<code>core Animation</code>的数据结果</p>
 <p><strong>图书范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeBook.png?raw=true" width="266" height="363" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerNoOptimizeBook.png?raw=true" width="266" height="363" alt="icon" align="center"></p>
 <p>我们可以看出，在全是图书的情况下，仅仅9个圆角矩形，并不会影响帧率，至少能保持在55帧左右，滚动流畅度接近100% 并且Cpu的占用率并不高</p>
 <p><strong>文件夹范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeFolder.png?raw=true" width="307" height="356" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerNoOptimizeFolder.png?raw=true" width="307" height="356" alt="icon" align="center"></p>
 <p>可怕地事情来了，在全是文件夹的情况下，已经达到了单屏45个圆角矩形，帧率已经降到了平均15，这是一种什么感觉，满帧率60，现在只达到了滚动流畅的25%，简直惨不忍睹</p>
 <p>大家再看下Cpu占用率，还是不高</p>
 <p><strong>看一下Cpu的消耗情况</strong></p>
 <p>我们仔细看看Cpu都消耗在哪？</p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerNoOptimizeCpu.png?raw=true" width="500" height="320" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerNoOptimizeCpu.png?raw=true" width="500" height="320" alt="icon" align="center"></p>
 <p>可以看到，Cpu的消耗在曲线图上并没有陡然增高，消耗也都是一些基本的UICollectionView的处理</p>
 <h2 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h2><p>可以看到，在极限纯文件夹区域滚动的时候，就只有那4个字可以形容<code>惨不忍睹</code></p>
 <p>这样的产生原因，其实在一开始就提到了，因为圆角遮罩，在Gpu运算的时候会发生<code>离屏渲染</code></p>
@@ -492,16 +492,16 @@
 <p>让我们看看效果</p>
 <h2 id="性能检测-1"><a href="#性能检测-1" class="headerlink" title="性能检测"></a>性能检测</h2><p>让我们看一组<code>Instrument</code>里面<code>core Animation</code>的数据结果</p>
 <p><strong>图书范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeBook.png?raw=true" width="302" height="381" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerCpuOptimizeBook.png?raw=true" width="302" height="381" alt="icon" align="center"></p>
 <p><strong>什么鬼！图书范围的性能居然下降了！！</strong><br>对比前面的截图可以明显看出来，图书范围的滚动帧率从平均55左右下降到平均50，虽然非常的细微，但很明显，在这个优化改动下，图书范围滚动性能反而下降了！</p>
 <p>仔细看一下Cpu占用率，通过前面的图进行对比，还是能看出来有增高，或许不明显，我们继续看</p>
 <p><strong>文件夹范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeFolder.png?raw=true" width="325" height="380" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerCpuOptimizeFolder.png?raw=true" width="325" height="380" alt="icon" align="center"></p>
 <p>大家注意看，同样的代码下，文件夹区域的滚动性能却有大幅度提升，从刚才的15帧左右提升到了35帧，提升效果超过了100%</p>
 <p>但是我们仔细看，Cpu占用率这次能明显看出提升了很多很多！</p>
 <p><strong>看一下Cpu的消耗情况</strong></p>
 <p>我们仔细看看Cpu都消耗在哪？</p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerCpuOptimizeCpu.png?raw=true" width="526" height="358" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerCpuOptimizeCpu.png?raw=true" width="526" height="358" alt="icon" align="center"></p>
 <p>看到了吧，此时此刻，Cpu被大量消耗在了<code>imageAddCornerWithRadius：andSize：</code>这个我们专门为优化而写的函数里，很明显的说明，在Cpu的层面，此处已经在重点消耗Cpu资源了</p>
 <h2 id="性能分析-1"><a href="#性能分析-1" class="headerlink" title="性能分析"></a>性能分析</h2><p>可以看到，我们专门针对Gpu离屏渲染做的专门的优化，似乎？并没有那么有效!是不是？</p>
 <ul>
@@ -540,12 +540,12 @@
 <p>那我们来试试</p>
 <p>去掉所有圆角代码<br><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//bookProfileImageView.layer.cornerRadius = 3.0f;</span></span><br><span class="line"><span class="comment">//bookProfileImageView.clipsToBounds = YES;</span></span><br></pre></td></tr></table></figure></p>
 <p>换上这样的一张图，中间透明四个角有背景色</p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerMask.png?raw=true" width="266" height="210" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerMask.png?raw=true" width="266" height="210" alt="icon" align="center"></p>
 <p>让我们测试下帧率</p>
 <p><strong>图书范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeBook.png?raw=true" width="278" height="350" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerPicOptimizeBook.png?raw=true" width="278" height="350" alt="icon" align="center"></p>
 <p><strong>文件夹范围内滚动帧率</strong></p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/cornerPicOptimizeFolder.png?raw=true" width="329" height="343" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/cornerPicOptimizeFolder.png?raw=true" width="329" height="343" alt="icon" align="center"></p>
 <p>无论是图书，还是文件夹都已经达到了55帧左右的帧率，接近满帧</p>
 <p><strong>丝般顺滑</strong></p>
 <h1 id="刨根问底深入思考"><a href="#刨根问底深入思考" class="headerlink" title="刨根问底深入思考"></a>刨根问底深入思考</h1><p>这样就满足了么？显然是不可以的，因为如果一旦圆角item背后有背景图，有纹理，那这种贴图的方式根本不能实现了。难道就这么让app卡着凑合用么</p>
@@ -553,7 +553,7 @@
 <h2 id="深入思考卡顿的原理"><a href="#深入思考卡顿的原理" class="headerlink" title="深入思考卡顿的原理"></a>深入思考卡顿的原理</h2><p>解决问题应该从源头入手，所以我们相应地要思考，卡顿是怎么来的？</p>
 <p>这块就要从ibireme大神的 <a href="http://blog.ibireme.com/2015/11/12/smooth_user_interfaces_for_ios/" target="_blank" rel="noopener">iOS 保持界面流畅的技巧</a> 这篇博客来深入学习</p>
 <p>图为原博客中的图</p>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/CPUGPU.png?raw=true" width="552" height="255" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/CPUGPU.png?raw=true" width="552" height="255" alt="icon" align="center"></p>
 <p>iOS设备都是采用双缓冲区+垂直同步开启的方式来进行图形渲染，什么意思呢？</p>
 <ul>
 <li>Cpu运算处理结束后将要渲染的任务提交给Gpu</li>
@@ -561,7 +561,7 @@
 <li>Gpu触发离屏渲染，会有多缓冲区来回切换管理等复杂耗时操作</li>
 <li>视频控制器在固定的频率内，从缓冲区取渲染结果，展现到显示器上</li>
 </ul>
-<p><img src="http://7xsoey.com1.z0.glb.clouddn.com/frameLine.png?raw=true" width="449" height="117" alt="icon" align="center"></p>
+<p><img src="http://corner-qiniu.awhisper.net/frameLine.png?raw=true" width="449" height="117" alt="icon" align="center"></p>
 <p>这幅图更加直观</p>
 <ul>
 <li>每一个VSync的点，都是垂直同步作用下，控制器去取渲染结果，准备展现的时间点</li>
