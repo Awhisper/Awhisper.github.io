@@ -87,12 +87,12 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧 关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png">
-<meta property="og:updated_time" content="2018-04-21T17:02:10.000Z">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/10AD9595-5A1C-4633-856D-283B75FDF578.png">
+<meta property="og:updated_time" content="2019-01-24T07:33:54.276Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Talk about ReactNative Image Component">
 <meta name="twitter:description" content="相关系列文章  ReactNative iOS源码解析（一） ReactNative iOS源码解析（二） Talk about ReactNative Image Component  最近好像唠叨了好多RN的东西╮(╯_╰)╭，唠叨的我都觉得有点贫，就当随手记笔记吧 关于ReactNative的Image组件，我一直很好奇他内部具体的工作过程，这里面有很多有意思的东西，毕竟Image这个东西即">
-<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png">
+<meta name="twitter:image" content="http://blogpic-qiniu.awhisper.net/10AD9595-5A1C-4633-856D-283B75FDF578.png">
 
 
 
@@ -492,7 +492,7 @@
 <p>rn的打包是通过在rn根目录下，执行node.js的一行打包脚本命令，最终把我们编辑过程中的js业务文件，js框架文件，res资源文件，整体打包到bundle目录之下，对于图片来说，我本以为只是把图片换个打包目录另存为而已，但当我一步一步追踪源码的时候，我发现我错了。</p>
 <p><code>require(&#39;./res/kakaka.jpg&#39;)</code> 举例来说，在这个目录下的kakaka.jpg文件会另存为到<code>bundle/asset/res/kakaka.jpg</code>这个位置，成为rn包中的一部分。</p>
 <p>但绝不仅仅是另存为，打包脚本还会在图片文件中植入一行js代码，如果你在<code>AssetRegistry.js</code>的<code>registerAsset</code>方法打上断点，去查看调用栈，你会发现，居然调用栈里的一行JS代码，来自这个图片文件，有图为证（床说中贴吧各种往图片里藏老司机开车的种子连接，就是用这种方式╮(╯_╰)╭）</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/10AD9595-5A1C-4633-856D-283B75FDF578.png" alt="chrome 断点"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/10AD9595-5A1C-4633-856D-283B75FDF578.png" alt="chrome 断点"></p>
 <p>这行JS代码是</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">module</span>.exports = <span class="built_in">require</span>(<span class="string">"react-native/Libraries/Image/AssetRegistry"</span>).registerAsset(&#123;<span class="string">"__packager_asset"</span>:<span class="literal">true</span>,<span class="string">"fileSystemLocation"</span>:<span class="string">"/Users/Awhisper/Desktop/yuedu_RN_BRANCH/Main/YDReactNative/res"</span>,<span class="string">"httpServerLocation"</span>:<span class="string">"/assets/res"</span>,<span class="string">"width"</span>:<span class="number">1242</span>,<span class="string">"height"</span>:<span class="number">150</span>,<span class="string">"scales"</span>:[<span class="number">1</span>],<span class="string">"files"</span>:[<span class="string">"/Users/Awhisper/Desktop/yuedu_RN_BRANCH/Main/YDReactNative/res/kakaka.jpg"</span>],<span class="string">"hash"</span>:<span class="string">"319fbd6959f45c18b1843e71d3bdd991"</span>,<span class="string">"name"</span>:<span class="string">"kakaka"</span>,<span class="string">"type"</span>:<span class="string">"jpg"</span>&#125;);</span><br></pre></td></tr></table></figure>
 <p>这说明，在打包脚本执行的时候，打包脚本会把这个图片的所有信息，包括打包前原来的绝对路径，打包后的相对路径，打包后的host路径，打包后的文件hash，打包后的文件名全都以源码js写入的方式，写进图片文件里。并且这个图片文件还执行了一行代码<code>AssetRegistry. registerAsset</code></p>
