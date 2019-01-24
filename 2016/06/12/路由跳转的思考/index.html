@@ -87,16 +87,16 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="业务需要一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词） 那我们先梳理一下我们现在的业务场景 目前我们有一个首要问题是跳转  书架banner是个运营位置，需要灵活可配的各种跳转 开机弹框也是个运营位置，依然需要各种跳转 push，更别说了，各种跳转 H5书城，运营活动H5落地页，通过Bridge还需要各种跳转  我们现在是怎么做的呢？拿书架banner举例 服">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/urlroute.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/mediator1.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/mediator2.png">
-<meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/urlaction.png">
-<meta property="og:updated_time" content="2018-04-21T17:03:12.000Z">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/urlroute.png">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/mediator1.png">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/mediator2.png">
+<meta property="og:image" content="http://blogpic-qiniu.awhisper.net/urlaction.png">
+<meta property="og:updated_time" content="2019-01-24T07:58:09.981Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="路由跳转的思考">
 <meta name="twitter:description" content="业务需要一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词） 那我们先梳理一下我们现在的业务场景 目前我们有一个首要问题是跳转  书架banner是个运营位置，需要灵活可配的各种跳转 开机弹框也是个运营位置，依然需要各种跳转 push，更别说了，各种跳转 H5书城，运营活动H5落地页，通过Bridge还需要各种跳转  我们现在是怎么做的呢？拿书架banner举例 服">
-<meta name="twitter:image" content="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
+<meta name="twitter:image" content="http://blogpic-qiniu.awhisper.net/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png">
 
 
 
@@ -445,7 +445,7 @@
 <p>我们就需要在书架，弹框，push，H5Bridge，四处核心跳转点全都新增代码，先要<code>import “EnglishJoke.h”</code>，然后还要新增一个switch，新增一坨跳转viewcontroller的代码</p>
 <p>有没有感觉？what the fuck！</p>
 <p>我们的代码就好像是这样，一团乱麻。</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
 <p>假如A模块是书架，它本身含有书架banner的跳转代码，所以他需要耦合各种跳转目标。比如跳转到B模块书城，形成了 A==&gt;B</p>
 <p>假如B模块是书城，它本身含有书城H5Brdige的跳转代码，所以他也需要耦合各种跳转目标，比如跳转到A模块书架，形成了 B==&gt;A</p>
 <p>假如所有模块都有这种蛋疼的跳转其他模块的需求，他们之间相互跳来跳去（没错，有时候需求就是这么的不讲道理），那么我们的代码结构就会如图一样，随着业务结构的逐渐庞大，就会变成一张复杂的蜘蛛网，难以维护。</p>
@@ -485,7 +485,7 @@
 </ul>
 <p>一般就是通过一个注册方法<code>-map:toXX:</code>来把一个字符串以及所对应的<code>函数代码块</code>或者<code>界面初始化代码块</code>，在一个统一的hash表里面进行key-value注册。</p>
 <p>当router识别url的时候，发现是对应已注册过的字符key，并且把url字符串里面的参数信息解析完毕后，通过字符key，找到对应的代码块去执行代码。</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/urlroute.png" alt="urlroute"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/urlroute.png" alt="urlroute"></p>
 <p>发起调用方的模块只依赖URLRoute模块，但是视注册的情况，URLRoute不一定会依赖各个模块，这里说的依赖，简单点说就是import</p>
 <ul>
 <li>以VC形式注册，由于强制要求固定名称和参数的构造函数，以Runtime Call的方案，URLRoute不依赖各个模块（见源码）无需import对应类</li>
@@ -516,13 +516,13 @@
 <p>所有调用的地方只需要使用中间人的方法，就可以调用另外一个模块</p>
 <p><code>[Mediator ModuleA_viewController:@&quot;name&quot;]</code></p>
 <p>这样就形成了这样的引用依赖</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/mediator1.png" alt="中间人1"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/mediator1.png" alt="中间人1"></p>
 <p>有人会说，你这无非就是封装了一层而已，只是起到了便于维护和管理的作用，但是引用耦合依然存在，以前A与B直接相互引用依赖，现在A引用依赖中间层，中间层引用依赖B，这种引用耦合并没有解决的。</p>
 <p>想解决这种引用耦合？完全没问题，OC有运行时，我完全可以这么做</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//Mediator.m</span></span><br><span class="line"><span class="class"><span class="keyword">@implementation</span> <span class="title">Mediator</span></span></span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleA_viewController:(<span class="built_in">NSString</span> *)AName &#123;</span><br><span class="line">	Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"ModuleA"</span>);</span><br><span class="line">	<span class="comment">/* runtime msgsend call initWithName*/</span></span><br><span class="line">	<span class="keyword">return</span> a;</span><br><span class="line">&#125;</span><br><span class="line">+ (<span class="built_in">UIViewController</span> *)ModuleB_viewController:(<span class="built_in">NSString</span> *)BID &#123;</span><br><span class="line">	Class cls = <span class="built_in">NSClassFromString</span>(<span class="string">@"ModuleB"</span>);</span><br><span class="line">	<span class="comment">/* runtime msgsend call initWithName*/</span></span><br><span class="line">	<span class="keyword">return</span> b;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">@end</span></span><br></pre></td></tr></table></figure>
 <p>我们完全不importA和B的类，完全通过拼接字符串，使用OC的runtime运行时来动态的调用方法，如何写runtime代码还是比较繁琐，并且要求一定的OC runtime知识，在此我先进行了省略因为后面会介绍一个我自己写的运行时神器工具（自卖自夸一把╮(╯_╰)╭）。</p>
 <p>这样引用关系就变成了这样</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/mediator2.png" alt="中间人2"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/mediator2.png" alt="中间人2"></p>
 <p>这样做有啥好处呢？引用依赖彻底消失，如果我的工程完全删掉D的代码，整个工程也能build通，完全不会报错，不需要修改代码。</p>
 <p>此外，只要做好Mediator的异常判断和保护，也可以完全不担心，因为删掉D的代码而产生的崩溃。</p>
 <p>这种方案对于结构梳理时候的2个问题，他的答案是</p>
@@ -566,7 +566,7 @@
 </blockquote>
 <p>那我们能不能既保留了url这种灵活跨wap/NA的跳转方式，又能支持业务传非json型参数么？答案显然是可以的</p>
 <p>我们的中间人模式，就是一种很明显的<code>本地调用</code>，那我们可以考虑在中间人模式之上，封装一层URL协议解析，从而实现了我们的基于中间人的URLRoute</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/urlaction.png" alt="urlaction"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/urlaction.png" alt="urlaction"></p>
 <p>这种方案对于结构梳理时候的2个问题，他的答案是</p>
 <ul>
 <li>中间层如何调用具体的业务模块or组件<ul>

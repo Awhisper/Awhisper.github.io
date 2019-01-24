@@ -1452,7 +1452,7 @@
 <p>我们就需要在书架，弹框，push，H5Bridge，四处核心跳转点全都新增代码，先要<code>import “EnglishJoke.h”</code>，然后还要新增一个switch，新增一坨跳转viewcontroller的代码</p>
 <p>有没有感觉？what the fuck！</p>
 <p>我们的代码就好像是这样，一团乱麻。</p>
-<p><img src="http://o8n2av4n7.bkt.clouddn.com/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
+<p><img src="http://blogpic-qiniu.awhisper.net/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
 <p>假如A模块是书架，它本身含有书架banner的跳转代码，所以他需要耦合各种跳转目标。比如跳转到B模块书城，形成了 A==&gt;B</p>
 <p>假如B模块是书城，它本身含有书城H5Brdige的跳转代码，所以他也需要耦合各种跳转目标，比如跳转到A模块书架，形成了 B==&gt;A</p>
 <p>假如所有模块都有这种蛋疼的跳转其他模块的需求，他们之间相互跳来跳去（没错，有时候需求就是这么的不讲道理），那么我们的代码结构就会如图一样，随着业务结构的逐渐庞大，就会变成一张复杂的蜘蛛网，难以维护。</p>
