@@ -87,14 +87,14 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="本篇文章的全文可以用另一个文章标题来概括！ 我们为什么压根不应该使用AsyncDisplayKit 而我的异步绘制的后面那一篇文章也可以用另一个文章标题来概括！ 不用AsyncDisplayKit，我们怎么异步绘制 前言Facebook出得这个AsyncDisplayKit严格意义上讲，已经远远超出了超出了AsyncDisplay的范围. 我个人在最开始思考AsyncDisplay的时候，以为这只">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://7xu1rc.com1.z0.glb.clouddn.com/asdknodeshow.png">
-<meta property="og:image" content="http://7xu1rc.com1.z0.glb.clouddn.com/nodetree.png">
-<meta property="og:image" content="http://7xu1rc.com1.z0.glb.clouddn.com/chubuliucheng.png">
-<meta property="og:updated_time" content="2017-03-12T13:01:51.000Z">
+<meta property="og:image" content="http://asdk-qiniu.awhisper.net/asdknodeshow.png">
+<meta property="og:image" content="http://asdk-qiniu.awhisper.net/nodetree.png">
+<meta property="og:image" content="http://asdk-qiniu.awhisper.net/chubuliucheng.png">
+<meta property="og:updated_time" content="2019-01-24T06:06:55.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AsyncDisplayKit源码分析（一）轮廓梳理">
 <meta name="twitter:description" content="本篇文章的全文可以用另一个文章标题来概括！ 我们为什么压根不应该使用AsyncDisplayKit 而我的异步绘制的后面那一篇文章也可以用另一个文章标题来概括！ 不用AsyncDisplayKit，我们怎么异步绘制 前言Facebook出得这个AsyncDisplayKit严格意义上讲，已经远远超出了超出了AsyncDisplay的范围. 我个人在最开始思考AsyncDisplay的时候，以为这只">
-<meta name="twitter:image" content="http://7xu1rc.com1.z0.glb.clouddn.com/asdknodeshow.png">
+<meta name="twitter:image" content="http://asdk-qiniu.awhisper.net/asdknodeshow.png">
 
 
 
@@ -430,7 +430,7 @@
 <p>对于我们来说，想要引入ASDK，确实太重了，我们不妨把它当做一个学习样本，去拆解分析一下这里面是如何运作的</p>
 <h1 id="AsyncDisplayKit-轮廓梳理"><a href="#AsyncDisplayKit-轮廓梳理" class="headerlink" title="AsyncDisplayKit 轮廓梳理"></a>AsyncDisplayKit 轮廓梳理</h1><h1 id="核心基础ASDisplayNode"><a href="#核心基础ASDisplayNode" class="headerlink" title="核心基础ASDisplayNode"></a>核心基础ASDisplayNode</h1><a id="more"></a>
 <p>就好像所有的UIKit最重都是从UIView继承一样，ASDisplayNode就是整个AsyncDisplayKit的基石，几乎所有的AS对象都是从ASDisplayNode继承出来（ASViewController，ASRangeController，ASDataController等例外）</p>
-<p><img src="http://7xu1rc.com1.z0.glb.clouddn.com/asdknodeshow.png" alt="ASNode"></p>
+<p><img src="http://asdk-qiniu.awhisper.net/asdknodeshow.png" alt="ASNode"></p>
 <p>此图是官网一个截图，便于我们去进行类比理解 ASDisplayNode VS UIView</p>
 <p>CALayer</p>
 <ul>
@@ -454,7 +454,7 @@
 <li>ASDiplayNode通过对异步处理的改造，让使用者可以在安全的在线程进行操作</li>
 </ul>
 <h1 id="ASNode的控件继承结构"><a href="#ASNode的控件继承结构" class="headerlink" title="ASNode的控件继承结构"></a>ASNode的控件继承结构</h1><p>可以看看ASXXNode系列，都有哪些，下图里面并没有举例完所有的public ASNode，只是粗略列出常用的</p>
-<p><img src="http://7xu1rc.com1.z0.glb.clouddn.com/nodetree.png" alt="asnodetree"></p>
+<p><img src="http://asdk-qiniu.awhisper.net/nodetree.png" alt="asnodetree"></p>
 <p>是不是很像，UIView-&gt;UIControl-&gt;UIButton的UIKit继承结构</p>
 <h1 id="ASDK的容器"><a href="#ASDK的容器" class="headerlink" title="ASDK的容器"></a>ASDK的容器</h1><p>每一个Node节点是可以直接通过UIView的<code>addSubnode</code>方法添加到原本的UIView之上，但是官方在文档里并不推荐这么做，我前一篇的官方文档翻译中有写</p>
 <blockquote>
@@ -478,7 +478,7 @@
 <li>ASLayout布局功能：ASDK专门基于CSS Flex Box布局方案，重写了一套自己的布局算法，没有依赖于UIKit的布局，就是为了能让这套算法在异步线程里也能运算页面布局，ASDisplayNode，可以直接对他设置约束，也可以直接设定frame，postion，并且有专门的measure方法可以线程安全的去计算自己，以及所有子节点的布局位置。</li>
 <li>ASAsyncTransaction异步控制：ASDK专为异步渲染而写的一套异步队列控制，每当ASDisplayNode内部的ASDisplayLayer发生<code>display</code>方法的时候，就是主线程将要发生绘制的时候，会把相关绘制的操作，ASDisplayNode会将绘制任务提交给ASAsyncTransaction，在他内部的线程队列里进行绘制运算，当运算完毕，将绘制结果抛回主线程渲染到屏幕上。</li>
 </ul>
-<h1 id="OverView"><a href="#OverView" class="headerlink" title="OverView"></a>OverView</h1><p><img src="http://7xu1rc.com1.z0.glb.clouddn.com/chubuliucheng.png" alt="流程"></p>
+<h1 id="OverView"><a href="#OverView" class="headerlink" title="OverView"></a>OverView</h1><p><img src="http://asdk-qiniu.awhisper.net/chubuliucheng.png" alt="流程"></p>
 <p>大致的轮廓可以看上面，ASDK非常大，里面还有太多太多的细节，比如专门为ASText相关的Node，写了一整套独特的ASTextLayout，整个框架里很多关键的类都可以深入展开，详细说太多太多</p>
 <h1 id="AsyncDisplay（等待下篇）"><a href="#AsyncDisplay（等待下篇）" class="headerlink" title="AsyncDisplay（等待下篇）"></a>AsyncDisplay（等待下篇）</h1><p>下一篇分析就决定从ASDisplayNode + ASAsyncTransaction入手，重点去拆解学习，异步渲染这个过程。聚焦于整个Display环节。</p>
 <p>我的本意是重点学习和分析异步渲染，然后可以不引入ASDK如此大的framework来解决实际项目中遇到的渲染性能问题。</p>
