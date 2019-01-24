@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Runtime,Github,">
+  <meta name="keywords" content="Github,Runtime,">
 
 
 
@@ -80,7 +80,7 @@
 
 
 <meta name="description" content="VKMarkHelper Github地址 前言 - 这只是一篇工作笔记这里面其实没啥技术含量，出发点只是工作中，关于标记位相似的需求越来越多，于是想统一写个工具进行处理。 写工具的时候又不满足于一开始简单设计一个通用API，在扩展每个具体标记使用场景的时候，还要麻烦的调用API进行二次写码（虽然就几行，也懒得写），于是想办法尽可能的动态去实现。 希望使用者只需要给标记起个名字，其他的什么都不需要">
-<meta name="keywords" content="Runtime,Github">
+<meta name="keywords" content="Github,Runtime">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VKMarkHelper动态标记位">
 <meta property="og:url" content="http://yoursite.com/2016/04/16/VKMarkHelper/index.html">
@@ -486,9 +486,9 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
-          
             <a href="/tags/Github/" rel="tag"># Github</a>
+          
+            <a href="/tags/Runtime/" rel="tag"># Runtime</a>
           
         </div>
       
@@ -549,11 +549,9 @@
           
 
   
-    <div class="comments" id="comments">
-      
+    
         <div id="gitment-container"></div>
-      
-    </div>
+    
 
   
 
@@ -854,42 +852,27 @@
 
 
 
+     
+     
+     
+     
+     <link rel="stylesheet" href="https://www.wenjunjiang.win/css/gitment.css">
+     <script src="https://www.wenjunjiang.win/js/gitment.js"></script>
+     
+         <script type="text/javascript">
+             var gitment = new Gitment({
+                 id: 'VKMarkHelper动态标记位', 
+                 owner: 'Awhisper',
+                 repo: 'Awhisper.github.io',
+                 oauth: {
+                     client_id: 'd8b03aa5ea2168f013f7',
+                     client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711'
+                 }});
+             gitment.render('gitment-container');
+         </script>
+     
+ 
 
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: 'VKMarkHelper动态标记位', 
-            owner: 'Awhisper',
-            repo: 'Awhisper.github.io',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
-            
-                client_id: 'd8b03aa5ea2168f013f7'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 

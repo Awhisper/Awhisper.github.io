@@ -810,11 +810,9 @@
           
 
   
-    <div class="comments" id="comments">
-      
+    
         <div id="gitment-container"></div>
-      
-    </div>
+    
 
   
 
@@ -1115,42 +1113,27 @@
 
 
 
+     
+     
+     
+     
+     <link rel="stylesheet" href="https://www.wenjunjiang.win/css/gitment.css">
+     <script src="https://www.wenjunjiang.win/js/gitment.js"></script>
+     
+         <script type="text/javascript">
+             var gitment = new Gitment({
+                 id: 'ReactNative iOS源码解析（二）', 
+                 owner: 'Awhisper',
+                 repo: 'Awhisper.github.io',
+                 oauth: {
+                     client_id: 'd8b03aa5ea2168f013f7',
+                     client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711'
+                 }});
+             gitment.render('gitment-container');
+         </script>
+     
+ 
 
-<!-- LOCAL: You can save these files to your site and update links -->
-    
-        
-        <link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-        <script src="https://aimingoo.github.io/gitmint/dist/gitmint.browser.js"></script>
-    
-<!-- END LOCAL -->
-
-    
-
-    
-      <script type="text/javascript">
-      function renderGitment(){
-        var gitment = new Gitmint({
-            id: 'ReactNative iOS源码解析（二）', 
-            owner: 'Awhisper',
-            repo: 'Awhisper.github.io',
-            
-            lang: "" || navigator.language || navigator.systemLanguage || navigator.userLanguage,
-            
-            oauth: {
-            
-            
-                client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711',
-            
-                client_id: 'd8b03aa5ea2168f013f7'
-            }});
-        gitment.render('gitment-container');
-      }
-
-      
-      renderGitment();
-      
-      </script>
-    
 
 
 
