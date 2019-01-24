@@ -87,18 +87,18 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App具体细节可以看 微信着手封堵 Universal Link 但Univeral Link 还是可以学习学习看看的~毕竟几遍在Safari下还有个好处，可以干掉schema跳转的那个难看的错误弹框 – 以上来自2018.1.8修改  前言： 文章会适当说一些如何开发iOS上的universal link，但类似的文章">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/1504334347900.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/1504334376521.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15043348932645.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15043372687469.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15043386160170.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/1504334347900.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/1504334376521.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15043348932645.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15043372687469.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15043386160170.jpg">
 <meta property="og:image" content="http://upload-images.jianshu.io/upload_images/2271929-54258e880f10ce3c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15043399516932.jpg">
-<meta property="og:updated_time" content="2018-04-21T17:04:09.000Z">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15043399516932.jpg">
+<meta property="og:updated_time" content="2019-01-24T07:38:44.622Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Universal Link 前端部署采坑记">
 <meta name="twitter:description" content="号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App具体细节可以看 微信着手封堵 Universal Link 但Univeral Link 还是可以学习学习看看的~毕竟几遍在Safari下还有个好处，可以干掉schema跳转的那个难看的错误弹框 – 以上来自2018.1.8修改  前言： 文章会适当说一些如何开发iOS上的universal link，但类似的文章">
-<meta name="twitter:image" content="http://ouz34cilp.bkt.clouddn.com/1504334347900.jpg">
+<meta name="twitter:image" content="http://mweb-qiniu.awhisper.net/1504334347900.jpg">
 
 
 
@@ -466,11 +466,11 @@
 <li>延迟后，跳转下载App</li>
 </ul>
 <p>在第一个环节，安卓上schema打开失败，没有任何反映，也没有任何提示，一切顺利，但是iOS就不同了。</p>
-<p>schema会弹个可恶的跳转失败的框<br><img src="http://ouz34cilp.bkt.clouddn.com/1504334347900.jpg" alt="1504334347900"></p>
-<p>然后再延迟后弹跳转AppStore的框<br><img src="http://ouz34cilp.bkt.clouddn.com/1504334376521.jpg" alt="1504334376521"></p>
+<p>schema会弹个可恶的跳转失败的框<br><img src="http://mweb-qiniu.awhisper.net/1504334347900.jpg" alt="1504334347900"></p>
+<p>然后再延迟后弹跳转AppStore的框<br><img src="http://mweb-qiniu.awhisper.net/1504334376521.jpg" alt="1504334376521"></p>
 <h2 id="Schema被很多App禁止，比如微信手百"><a href="#Schema被很多App禁止，比如微信手百" class="headerlink" title="Schema被很多App禁止，比如微信手百"></a>Schema被很多App禁止，比如微信手百</h2><p>Schema被广泛使用，从浏览器中唤起打开专门的App，但这并不被很多App认可，比如<code>微信</code>，<code>手机百度</code>，他们本身除了浏览网页以外有其他的使用场景，所以站在微信/手百的角度，并不希望用户为了看一些分享和内容就跳出微信/手百的App，于是这些客户端拦截了Schema，使得所有Schema都无法生效。</p>
 <p>于是不得已，广大开发者只好针对，微信/手百，等特殊UA信息，展现出蒙层，引导用户用系统/外部浏览器打开</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15043348932645.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15043348932645.jpg" alt=""></p>
 <h2 id="Universal-Link-解决-Schema的弊端"><a href="#Universal-Link-解决-Schema的弊端" class="headerlink" title="Universal Link 解决 Schema的弊端"></a>Universal Link 解决 Schema的弊端</h2><p>开篇就说了，如果你单纯为了能让wap打开App，Schema就能做到了，Universal Link的意义则是把普通url，也赋予了能打开App的能力，而不必编写专门的Schema Url去唤起App</p>
 <p>Schema 的2个弊端确实能通过Universal Link解决</p>
 <p>不同于Schema，在没装App的时候，Universal Link他也是一个合法的url链接，浏览器可以正常跳转，因此不会出现在iOS上讨人厌的框</p>
@@ -485,7 +485,7 @@
 </ul>
 <p>怎么写json其实没啥可教的，满世界的文章都教你咋写了，我们看个例子，点下面的链接，你的浏览器就会自动把知乎的<code>apple-app-association</code>的json file给down下来</p>
 <p><a href="https://oia.zhihu.com/apple-app-site-association" target="_blank" rel="noopener">知乎的 apple-app-association 文件</a></p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15043372687469.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15043372687469.jpg" alt=""></p>
 <p><strong>划重点</strong></p>
 <p>有心人可能看到，知乎的Universal Link配置的是 <code>oia.zhihu.com</code> 这个域名，并且对这个域名下比如/answers /questions /people 等urlpath进行了识别，也就是说，知乎的universal link，只有当你访问 <code>https://oia.zhihu.com/questions/xxxx</code>，在移动端会触发Universal Link，而知乎正经的Url<code>https//www.zhihu.com/questions/xxx</code>是不会触发Universal Link的，知乎为什么制作，为什么不把他的主域名配置Universal Link，这是由于Universal Link的一个大坑所致</p>
 <p><strong>PS.</strong></p>
@@ -497,7 +497,7 @@
 <p><strong>测试是否正确</strong></p>
 <p>苹果官方提供了一个网站来测试你配置的域名apple-app-association是否正常work</p>
 <p><a href="https://search.developer.apple.com/appsearch-validation-tool/" target="_blank" rel="noopener">https://search.developer.apple.com/appsearch-validation-tool/</a></p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15043386160170.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15043386160170.jpg" alt=""></p>
 <p>这个网站有点SB，就是你用他测试不通过，其实Universal Link也可能不生效的，比如我把知乎的<code>oia.zhihu.com</code>输入进去，他就没感应到，认为没有。我搜索的时候，发现也有人发现了这个问题，反正可以当个参考</p>
 <h2 id="配置iOS-App工程"><a href="#配置iOS-App工程" class="headerlink" title="配置iOS App工程"></a>配置iOS App工程</h2><ul>
 <li>开发者中心证书打开Associated Domains</li>
@@ -531,7 +531,7 @@
 <p>是不是不太好理解，那直接拿知乎举例子</p>
 <p><a href="https://www.zhihu.com/question/22914651" target="_blank" rel="noopener">https://www.zhihu.com/question/22914651</a></p>
 <p>知乎的一般网页URL都是<code>www.zhihu.com</code>域名，你在微信朋友圈看到了知乎的问题分享，如果copy url 你就能看到这样的链接</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15043399516932.jpg" alt=""></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15043399516932.jpg" alt=""></p>
 <p>微信里其实是屏蔽Schema的，但是你依然能看到大大的一个按钮<code>App内打开</code>，这确实就是通过Universal Link来实现的，但如果知乎把Universal Link 配在了<code>www.zhihu.com</code>域名，那么即便已经安装了App，Universal Link也是不会生效的。</p>
 <p>一般的公司都会有自己的主域名，比如知乎的<code>www.zhihu.com</code>，在各处分享传播的时候，也都是直接分享基于主域名的url，但为了解决苹果强制要求跨域才生效的问题，Universal Link就不能配置在主域名下，于是知乎才会准备一个<code>oia.zhihu.com</code>域名，专为Universal Link使用，不会跟任何主动传播分享的域名撞车，从而在任何活动WAP页面里，都能顺利让Universal Link生效。</p>
 <p>简单一句话</p>
