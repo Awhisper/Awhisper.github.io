@@ -87,17 +87,17 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="一个奇怪的业务场景，引发的胡乱思考 问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西 本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲  我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/appwaphead.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049523772825.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049524279135-1.jpg">
-<meta property="og:image" content="http://ouz34cilp.bkt.clouddn.com/15049532969678.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/wenkuwaphead.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/appwaphead.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15049523772825.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15049524279135-1.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15049532969678.jpg">
 <meta property="og:image" content="http://o8n2av4n7.bkt.clouddn.com/webkit.png">
-<meta property="og:updated_time" content="2018-04-21T16:59:06.000Z">
+<meta property="og:updated_time" content="2019-01-24T06:44:57.573Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UIWebView代码注入时机与姿势">
 <meta name="twitter:description" content="一个奇怪的业务场景，引发的胡乱思考 问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西 本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲  我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接">
-<meta name="twitter:image" content="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg">
+<meta name="twitter:image" content="http://mweb-qiniu.awhisper.net/wenkuwaphead.jpg">
 
 
 
@@ -429,9 +429,9 @@
 </blockquote>
 <p>我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接入APP尝试，快速的也在APP里进行传播。（后续验证可行和有效后，也会纳入APP的功能规划里，以最流畅的体验进行呈现）</p>
 <p>但这样会有一些问题，纯为WAP开发的页面，直接扔到APP的WebView里表现并不好</p>
-<p>WAP的团队开发出来的界面一般长这样<br><img src="http://ouz34cilp.bkt.clouddn.com/wenkuwaphead.jpg" alt="15049394419512"></p>
+<p>WAP的团队开发出来的界面一般长这样<br><img src="http://mweb-qiniu.awhisper.net/wenkuwaphead.jpg" alt="15049394419512"></p>
 <p>如果这样的页面不做任何处理直接在APP中<code>低成本接入</code>会变成这样</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/appwaphead.jpg" alt="15049394419512"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/appwaphead.jpg" alt="15049394419512"></p>
 <p>问题就在于APP是有自己的NavigationBar的，而WAP的页面一般都为浏览器而生，浏览器没有自己的导航条于是WAP的团队很自然都会在WAP页面里开发出一个导航条，如果这个页面不做任何针对APP的处理，直接放入APP的WebView中，就会出现这样丑陋的双导航条，一个是native App自己的，一个是WAP网页自己画的</p>
 <blockquote>
 <p>这是一个非常常见的场景</p>
@@ -574,9 +574,9 @@
 <p>简单的说，这个开源库也找到了一种<code>UnDocumented API</code>来准确捕捉到了新JSContext刚创建的时机，通过<code>WebFrameLoadDelegate</code></p>
 <p><code>WebFrameLoadDelegate</code>这个词随便在网上一搜，你就能搜到API和OC/Swift代码，但很可惜，这个代码仅限<code>macOS</code></p>
 <p><a href="https://developer.apple.com/documentation/webkit/webframeloaddelegate?language=objc" target="_blank" rel="noopener">Apple关于WebFrameLoadDelegate的官方文档URL</a></p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15049523772825.jpg" alt="15049523772825"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15049523772825.jpg" alt="15049523772825"></p>
 <p>从这个官方文档中你可以发现比UIWebViewDelegate多很多的各种Webkit内核的事件</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15049524279135-1.jpg" alt="15049524279135"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15049524279135-1.jpg" alt="15049524279135"></p>
 <p>看到其中最重要的一个delegate没？</p>
 <p><code>webView:didCreateJavaScriptContext:forFrame:</code></p>
 <p>没错就是他，意思是说，其实Webkit内核早就把这类事件都抛出来了，并且在macOS的SDK中把这些事件都暴露给了开发者，但是在iOS的SDK中，UIWebView的头文件设计却把这些事件都吞掉了，没暴露出来，不让开发者使用</p>
@@ -584,7 +584,7 @@
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if (_xxDelegate &amp;&amp; [_xxDelegate respondsToSelector:@selector(webView:didCreateJavaScriptContext:forFrame:)]) &#123;</span><br><span class="line">     [_xxDelegate webView:webView didCreateJavaScriptContext:ctx forFrame:frame];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果苹果把这个delegate给藏了起来，没有写进UIWebViewDelegate的Protocol里，但我们自己把这个函数实现了，按着苹果的尿性，就应当可以触发</p>
 <p>于是<a href="https://github.com/TomSwift/UIWebView-TS_JavaScriptContext" target="_blank" rel="noopener">TS_JavaScriptContext</a>这个项目就按着这个思路去尝试并且真的成功了，他给NSObject添加了一个category，使得NSObject拥有了<code>webView:didCreateJavaScriptContext:forFrame:</code>的implement，因此<code>respondsToSelector</code>的判定就会生效，从而我们就拿到了JS环境的创建事件</p>
-<p><img src="http://ouz34cilp.bkt.clouddn.com/15049532969678.jpg" alt="15049532969678"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15049532969678.jpg" alt="15049532969678"></p>
 <p>既然已经拿到了正确的时机，后面注入JS就好了，效果杠杠的，</p>
 <h2 id="一些探讨和猜测"><a href="#一些探讨和猜测" class="headerlink" title="一些探讨和猜测"></a>一些探讨和猜测</h2><p>到了这一步，单纯的找到时机，已经能解决我的问题了，不过<code>WebFrameLoadDelegate</code>里面的其他事件让我产生了很大的好奇心</p>
 <p><a href="https://developer.apple.com/documentation/webkit/webframeloaddelegate?language=objc" target="_blank" rel="noopener">Apple关于WebFrameLoadDelegate的官方文档URL</a></p>
