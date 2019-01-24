@@ -87,17 +87,17 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="前言 这个工具在早期的VKDebugConsole的基础上完全推翻重做了，核心思路都不变，只是重新整理了工具的使用方式，工具的界面呈现，工具的模块划分，模块化可扩展支持 旧文档链接 – VKDebugConsole App黑盒控制台  VKDevTooLApp内调试工具 Github VKDevTool 允许在  在脱离Xcode Debug的情况下 黑盒真机情况下  进行App的调试工作，包括：">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://o7bhtwerg.bkt.clouddn.com/devtoolmain4.jpeg">
-<meta property="og:image" content="http://o7bhtwerg.bkt.clouddn.com/devscript4.jpeg">
+<meta property="og:image" content="http://blogchat-qiniu.awhisper.net/devtoolmain4.jpeg">
+<meta property="og:image" content="http://blogchat-qiniu.awhisper.net/devscript4.jpeg">
 <meta property="og:image" content="http://ww2.sinaimg.cn/mw690/678c3e91jw1f4cejgkcipg20900gfasa.gif">
-<meta property="og:image" content="http://o7bhtwerg.bkt.clouddn.com/debuglog4.jpeg">
-<meta property="og:image" content="http://o7bhtwerg.bkt.clouddn.com/devnet4.jpeg">
-<meta property="og:image" content="http://o7bhtwerg.bkt.clouddn.com/devview4.jpeg">
-<meta property="og:updated_time" content="2018-04-21T17:01:54.000Z">
+<meta property="og:image" content="http://blogchat-qiniu.awhisper.net/debuglog4.jpeg">
+<meta property="og:image" content="http://blogchat-qiniu.awhisper.net/devnet4.jpeg">
+<meta property="og:image" content="http://blogchat-qiniu.awhisper.net/devview4.jpeg">
+<meta property="og:updated_time" content="2019-01-24T07:41:00.494Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VKDevTool App黑盒调试工具">
 <meta name="twitter:description" content="前言 这个工具在早期的VKDebugConsole的基础上完全推翻重做了，核心思路都不变，只是重新整理了工具的使用方式，工具的界面呈现，工具的模块划分，模块化可扩展支持 旧文档链接 – VKDebugConsole App黑盒控制台  VKDevTooLApp内调试工具 Github VKDevTool 允许在  在脱离Xcode Debug的情况下 黑盒真机情况下  进行App的调试工作，包括：">
-<meta name="twitter:image" content="http://o7bhtwerg.bkt.clouddn.com/devtoolmain4.jpeg">
+<meta name="twitter:image" content="http://blogchat-qiniu.awhisper.net/devtoolmain4.jpeg">
 
 
 
@@ -455,7 +455,7 @@
 <li>模拟器下，使用键盘command+x快捷键唤起菜单</li>
 <li>真机运行下，使用摇一摇唤起菜单</li>
 </ul>
-<p><img src="http://o7bhtwerg.bkt.clouddn.com/devtoolmain4.jpeg" alt="main"></p>
+<p><img src="http://blogchat-qiniu.awhisper.net/devtoolmain4.jpeg" alt="main"></p>
 <p>主菜单模块包含4个模块</p>
 <ul>
 <li>DebugScript</li>
@@ -473,7 +473,7 @@
 <li>上面是代码输入框</li>
 <li>下面是输出框</li>
 </ul>
-<p><img src="http://o7bhtwerg.bkt.clouddn.com/devscript4.jpeg" alt="main"></p>
+<p><img src="http://blogchat-qiniu.awhisper.net/devscript4.jpeg" alt="main"></p>
 <p>以上是一个预览界面，上方输入的代码都是基于JSPatch的，所有JSPatch的语法规则这里都一模一样可以使用，戳这里看JSPatch如何使用 <a href="https://github.com/bang590/JSPatch/wiki" target="_blank" rel="noopener">JSPatch语法</a></p>
 <ul>
 <li>真机摇一摇 or 模拟器Command+X 可以唤起DebugScript模块子菜单</li>
@@ -502,7 +502,7 @@
 <li>NSLog记录采用宏覆盖的方式，拦截接管了所有NSLog请求，以白色展现在界面内。</li>
 <li>NSError记录采用Runtime Swizzle的方式，拦截了NSError的init，以红色展现在界面内</li>
 </ul>
-<p><img src="http://o7bhtwerg.bkt.clouddn.com/debuglog4.jpeg" alt="log1"></p>
+<p><img src="http://blogchat-qiniu.awhisper.net/debuglog4.jpeg" alt="log1"></p>
 <p>真机摇一摇 or 模拟器Command+X 可以唤起ConsoleLog模块子菜单</p>
 <ul>
 <li>NSError Hook:开启和关闭NSError拦截</li>
@@ -518,7 +518,7 @@
 <li>Change Filter:可以通过过滤器，过滤含有固定字符串的网络请求，方便查找搜索</li>
 <li>Exit:退出</li>
 </ul>
-<p><img src="http://o7bhtwerg.bkt.clouddn.com/devnet4.jpeg" alt="net1"></p>
+<p><img src="http://blogchat-qiniu.awhisper.net/devnet4.jpeg" alt="net1"></p>
 <p>如果NetworkHook无效，查看是否是因为AFN sessionManager需要注册NSURLProtocol导致的</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">NSURLSessionConfiguration *configuration= [NSURLSessionConfiguration defaultSessionConfiguration];</span><br><span class="line">NSArray *protocolArray = @[[VKURLProtocol class]];</span><br><span class="line">configuration.protocolClasses = protocolArray</span><br></pre></td></tr></table></figure>
 <h2 id="页面层级ViewHierarchy3D"><a href="#页面层级ViewHierarchy3D" class="headerlink" title="页面层级ViewHierarchy3D"></a>页面层级ViewHierarchy3D</h2><p>VKDevTool采用YY大神开源的<a href="https://github.com/ibireme/YYViewHierarchy3D" target="_blank" rel="noopener">YYViewHierarchy3D</a>,实现了这个页面层级模块</p>
@@ -526,7 +526,7 @@
 <li>真机摇一摇 or 模拟器Command+X 可以唤起ViewHierarchy3D模块子菜单</li>
 <li>模拟器下Command+X可能不好使，通过模拟器菜单<code>Shake Gesture</code>功能模拟摇一摇，依旧可以唤起</li>
 </ul>
-<p><img src="http://o7bhtwerg.bkt.clouddn.com/devview4.jpeg" alt="view1"></p>
+<p><img src="http://blogchat-qiniu.awhisper.net/devview4.jpeg" alt="view1"></p>
 <h2 id="其他扩展代码"><a href="#其他扩展代码" class="headerlink" title="其他扩展代码"></a>其他扩展代码</h2><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[VKDevTool changeNetworktModuleFilter:@“xxxxx”];</span><br></pre></td></tr></table></figure>
 <p>这个接口控制网络请求HookLog的过滤器，只拦截含有xxxx字符串的http网络请求，同时在DevTool内还可以通过菜单，修改网络拦截过滤器</p>
 <p>如果全都拦截，可以省略</p>
