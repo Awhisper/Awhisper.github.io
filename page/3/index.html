@@ -304,6 +304,178 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/universallink/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/02/universallink/" itemprop="url">Universal Link 前端部署采坑记</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-02T12:09:23+08:00">
+                2017-09-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/09/02/universallink/" class="leancloud_visitors" data-flag-title="Universal Link 前端部署采坑记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="号外！号外！微信已经封禁Universal-Link，已经不能实现跳出微信打开App"><a href="#号外！号外！微信已经封禁Universal-Link，已经不能实现跳出微信打开App" class="headerlink" title="号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App"></a>号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App</h1><p>具体细节可以看</p>
+<p><a href="http://awhisper.github.io/2018/01/08/wechatkilluniversallink/" target="_blank" rel="noopener">微信着手封堵 Universal Link</a></p>
+<p>但Univeral Link 还是可以学习学习看看的~毕竟几遍在Safari下还有个好处，可以干掉schema跳转的那个难看的错误弹框</p>
+<p>– 以上来自2018.1.8修改</p>
+<blockquote>
+<p>前言：</p>
+<p>文章会适当说一些如何开发iOS上的universal link，但类似的文章太多了一艘一大堆，每篇都介绍的挺清楚，因此也不是重点</p>
+<p>本文更加会侧重从前端的角度，将整个universal link 部署应用到wap app中的一些策略和一些问题解决办法</p>
+<p>其实整个Universal Link没啥难的，真正上线过Universal link的人这些应该都趟过一遍了，本文主要是我们team去应用Universal link的时候一些文档沉淀和记录</p>
+</blockquote>
+<h1 id="Schema-VS-Universal-Link"><a href="#Schema-VS-Universal-Link" class="headerlink" title="Schema VS Universal Link"></a>Schema VS Universal Link</h1><p>Deeplink相关的技术，在wap中唤起app其实应用最最广泛的并不是Universal Link，而是直接Schema跳转</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location.href = <span class="string">'schema://xxxx'</span></span><br></pre></td></tr></table></figure>
+<p>并且一般各大APP都会给自己做一套路由体系，这样其实可以直接在schema头后面对接路由体系，做到一行schema定位打开任意App内功能界面（我就不详细扯路由的事了）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</span><br><span class="line">    <span class="keyword">if</span> ([[url absoluteString] hasPrefix:<span class="string">@"schema://"</span>]) &#123;</span><br><span class="line">        [[<span class="built_in">WKDispatcher</span> sharedInstance] operationObjectFromRouteURL:[url absoluteString]];<span class="comment">//路由</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果单纯为了实现deeplink – 在WAP上打开App，并且传递来数据信息，定位App内的具体逻辑，那么Schema就够了，其实没必要上Universal Link，Schema相当于是很特殊的Url，他是<code>schema://xxx</code>这种样子，如果安装了APP才能支撑跳转这种Schema Url，如果没安装APP就没任何效果，而Universal Link则是把普通url，长<code>http://xxx.xxx.xxx/xxx</code>这样的Normal Url，如果安装了App，就能像Schema一样传递给App，延续App内逻辑，如果没装App，则还会继续在浏览器里跳转这个Normal Url</p>
+<h1 id="Schema的弊端"><a href="#Schema的弊端" class="headerlink" title="Schema的弊端"></a>Schema的弊端</h1><h2 id="Schema无法判断是否安装App"><a href="#Schema无法判断是否安装App" class="headerlink" title="Schema无法判断是否安装App"></a>Schema无法判断是否安装App</h2>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/02/universallink/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/20/MicrosoftAIMaster/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1961,180 +2133,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/01/17/MyTeamDaNangTour/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/01/17/MyTeamDaNangTour/" itemprop="url">一起折腾一起High Team越南岘港游记</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-01-17T18:05:56+08:00">
-                2017-01-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/旅行游记/" itemprop="url" rel="index">
-                    <span itemprop="name">旅行游记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/01/17/MyTeamDaNangTour/" class="leancloud_visitors" data-flag-title="一起折腾一起High Team越南岘港游记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>16年的春节，整个部门大冬天杀奔韩国开的年会，因此17年年会，在南边找了个温暖的地方开年会–越南岘港</p>
-<p>由于整个行程统一由部门安排机票与酒店住宿，并且确定半天合照与年会宴会，其他时间完全自由行，由各个team自己选择景点与项目</p>
-<p>因为是集体活动，这篇文章重点就是纯流水账游记啦，关于越南旅游的签证护照，旅店住宿，通信通勤等都被部门助理安排的很好，而景点选择交通选择都被部门给力的小伙伴们安排的非常开心和舒适！全程我都是属于一个跟着大部队一起High的没脑子状态，咩哈哈哈哈</p>
-<p>相片来自手机，相机，GoPro等各种设备，可能色彩以及镜头焦距各不相同效果不同，人多力量大，同事们各种出好看的照片</p>
-<h1 id="行程"><a href="#行程" class="headerlink" title="行程"></a>行程</h1><p>来回的飞机都是红眼航班，飞机上大概飞4个小时左右，1月12日是凌晨1点到了越南岘港，入住在距离粉红色<code>岘港大教堂</code>很近的一家Green Plaza酒店，这里也算是市中心了。</p>
-<p><strong>Day1安排：</strong> 山茶半岛，海云岭，岘港大教堂（部门统一安排照相活动），晚上年会宴会（部门统一安排）</p>
-<p><strong>Day2安排：</strong> 巴拿山一日游</p>
-<p><strong>Day3安排：</strong> 占婆岛一日游，出海/快艇/浮潜/沙滩（后因风浪原因，改为木雕村，迦南岛，水椰林，石雕村）</p>
-<p><strong>Day4安排：</strong> 闲逛购物，会安古城（部门统一安排）</p>
-<p>在会安古城逛到夜晚，回机场准备回京。</p>
-<p><strong>自由行:</strong> 岘港自由行一般都是包车，摩托车，出租车。</p>
-<p>整个岘港城市道路上95%跑的都是摩托车，导游和我们说岘港还算是越南摩托车比例最低的城市╮(╯_╰)╭，但摩托车因为部门出游人数众多，非常的不安全，因此禁止租赁摩托车出游。</p>
-<p>包车是在选定目的地后，可以通过酒店打电话给旅游包车公司，约司机前来，也可以直接通过电话约一日游的行程。如果自行在淘宝上买了一些知名景点的门票，完全可以只包车包接送就好。</p>
-<p>其实岘港的出租车也挺便宜的，路边招手就停，但是去不了远处，很多景点都是在市区之外。出租车都是打表的，坑人骗人的问题没遇到过，尤其是推荐随身携带一个酒店名片，可以很方便的找出租车回酒店。</p>
-<p><strong>货币：</strong></p>
-<p>岘港的货币大概是1块钱RMB = 3200多越南盾。所以到了这边会感受到一种花钱如流水的赶脚，讨价还价都是几万几万的，大概一万块约等于3人民币，按着这个去跟国内物价大致做一个比较，其实物价还是便宜一点点，但也没有便宜的很夸张。</p>
-<p><img src="http://danang-qiniu.awhisper.net/IMG_8250.JPG" alt=""></p>
-<h1 id="Day-1"><a href="#Day-1" class="headerlink" title="Day 1"></a>Day 1</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/01/17/MyTeamDaNangTour/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2187,7 +2185,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">66</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2209,7 +2207,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

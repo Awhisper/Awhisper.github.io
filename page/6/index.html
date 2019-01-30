@@ -304,6 +304,182 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/11/iOSBrowserDomainBridge/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/05/11/iOSBrowserDomainBridge/" itemprop="url">iOS app与浏览器深度链接 DeeperLink</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-11T16:57:52+08:00">
+                2016-05-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/05/11/iOSBrowserDomainBridge/" class="leancloud_visitors" data-flag-title="iOS app与浏览器深度链接 DeeperLink">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Update-2016-11-23"><a href="#Update-2016-11-23" class="headerlink" title="Update 2016.11.23"></a>Update 2016.11.23</h1><p>更新一个最新的方案，老文章里面介绍的2个方案都不如这个易操作，唯一的问题是就看iOS10的覆盖率了，覆盖率不够之前下文的<code>设备指纹方案</code>可以与这个方案互补</p>
+<ul>
+<li>只支持iOS10以上</li>
+<li>通过剪切板</li>
+<li>跨越浏览器app与宿主app，传递数据</li>
+</ul>
+<p><a href="https://github.com/zenorocha/clipboard.js" target="_blank" rel="noopener">clipboard.js</a></p>
+<p>一个1w Star的js库</p>
+<p>因为iOS10系统给js开放了API可以操作剪切板，因此直接使用这个库，可以很方便的在任何App的webview（包含safari，微信，qq，百度框等）将数据存入剪切板</p>
+<p>然后很方便的在其他任何app中，读取出剪贴板的数据用于互通</p>
+<p>这个方案在准确度上，成功率上，适用范围上全面优于下文讨论的<code>设备指纹</code>和<code>SafariViewController方案</code></p>
+<p>忘掉<code>SafariViewController方案</code>吧，这个方案现在非常的坑</p>
+<p>原因是，SFViewController的方案，Openurl事件会以各种方式被系统吞吃掉事件，duplicate等等，都会导致失败率非常的高</p>
+<h1 id="Deeper-Link-简介"><a href="#Deeper-Link-简介" class="headerlink" title="Deeper Link 简介"></a>Deeper Link 简介</h1><p>本文主要介绍，app跨域访问app外部的浏览器的数据的方案，包括外部safari，或者QQ，微信，手百等外部app内的浏览器。</p>
+<p>主要使用场景就是：</p>
+<p>用户在别的wap网页上，产生了用户行为，用户数据，但是还没下载app，当用户下载app后，打算直接在app内延续之前在wap上的行为和数据的时候，就需要运用到跨越浏览器与app鸿沟的，互通方案。</p>
+<p>简单举个例子就是：</p>
+<p>用户在微信浏览器里，访问某个页面，感兴趣并且登陆了，然后引导下载了app，等用户下载完app后第一次打开，希望能自动就完成登陆，甚至同步下来一些刚才用户在wap页面上操作的数据</p>
+<p><strong>如果能发生跨浏览器与app的互通，除了这个case之外，还可以有更多地自由发挥，设计出更加舒畅的用户体验</strong></p>
+<p><strong>这就是 Deeper Link</strong><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/05/11/iOSBrowserDomainBridge/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </p></div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/06/AsyncDisplayKit源码分析/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1794,164 +1970,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/01/26/关于信息安全/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/01/26/关于信息安全/" itemprop="url">关于信息安全</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-26T14:08:46+08:00">
-                2016-01-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/01/26/关于信息安全/" class="leancloud_visitors" data-flag-title="关于信息安全">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>头一次这么心惊胆战。。。</p>
-<p>手中的刀子越锋利，就一定要做好一切安全措施，不然被人利用就是对自己不负责，对用户不负责。</p>
-<p>什么事情到了安全层面，千万不能大意轻心。。。</p>
-<p>遇事都想着</p>
-<p>能那么攻击的都是专业黑客，太少了，我们也防不住<br>这是不可取的，因为漏洞可能造成很严重的影响，并且无限扩大。</p>
-<p>作为开发，我们可能不是专业的安全工程师，但是安全这根弦一定不能掉以轻心。。。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2004,7 +2022,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">66</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2026,7 +2044,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

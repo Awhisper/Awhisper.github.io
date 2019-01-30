@@ -304,6 +304,168 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/08/libstdc-inxcode10ios12/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/06/08/libstdc-inxcode10ios12/" itemprop="url">libstdc++适配Xcode10与iOS12</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-08T15:55:38+08:00">
+                2018-06-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/06/08/libstdc-inxcode10ios12/" class="leancloud_visitors" data-flag-title="libstdc++适配Xcode10与iOS12">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="编译报错"><a href="#编译报错" class="headerlink" title="编译报错"></a>编译报错</h1><p><img src="http://mweb-qiniu.awhisper.net/15284451861035.jpg" alt=""></p>
+<p>当你开心得升级完新 macOS，以及新 XCode，准备体验了一把 Dark Mode 编程模式，开心的打开自己的老项目的时候，发现编译不通过了╮(╯_╰)╭</p>
+<p>如果你的工程中如果依赖 <code>libstdc++</code>，无论是你本身的功能用 C++ 跨平台编写，还是你引入了某个 SDK 其内部依赖这个 <code>libstdc++</code>,都会导致整个工程编译不通过，报出 <code>Undefined symbols</code>，C++ 的 List 找不到了</p>
+<p><img src="http://mweb-qiniu.awhisper.net/15284453505700.jpg" alt=""></p>
+<p>原因是苹果在 XCode10 和 iOS12 中移除了 <code>libstdc++</code> 这个库，由 <code>libc++</code> 这个库取而代之，苹果的解释是 <code>libstdc++</code> 已经标记为废弃有5年了，建议大家使用经过了 llvm 优化过并且全面支持C++11的 <code>libc++</code> 库。</p>
+<h1 id="临时解决办法"><a href="#临时解决办法" class="headerlink" title="临时解决办法"></a>临时解决办法</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/08/libstdc-inxcode10ios12/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/04/webnativeui/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2038,178 +2200,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/universallink/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/02/universallink/" itemprop="url">Universal Link 前端部署采坑记</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-02T12:09:23+08:00">
-                2017-09-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/09/02/universallink/" class="leancloud_visitors" data-flag-title="Universal Link 前端部署采坑记">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="号外！号外！微信已经封禁Universal-Link，已经不能实现跳出微信打开App"><a href="#号外！号外！微信已经封禁Universal-Link，已经不能实现跳出微信打开App" class="headerlink" title="号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App"></a>号外！号外！微信已经封禁Universal Link，已经不能实现跳出微信打开App</h1><p>具体细节可以看</p>
-<p><a href="http://awhisper.github.io/2018/01/08/wechatkilluniversallink/" target="_blank" rel="noopener">微信着手封堵 Universal Link</a></p>
-<p>但Univeral Link 还是可以学习学习看看的~毕竟几遍在Safari下还有个好处，可以干掉schema跳转的那个难看的错误弹框</p>
-<p>– 以上来自2018.1.8修改</p>
-<blockquote>
-<p>前言：</p>
-<p>文章会适当说一些如何开发iOS上的universal link，但类似的文章太多了一艘一大堆，每篇都介绍的挺清楚，因此也不是重点</p>
-<p>本文更加会侧重从前端的角度，将整个universal link 部署应用到wap app中的一些策略和一些问题解决办法</p>
-<p>其实整个Universal Link没啥难的，真正上线过Universal link的人这些应该都趟过一遍了，本文主要是我们team去应用Universal link的时候一些文档沉淀和记录</p>
-</blockquote>
-<h1 id="Schema-VS-Universal-Link"><a href="#Schema-VS-Universal-Link" class="headerlink" title="Schema VS Universal Link"></a>Schema VS Universal Link</h1><p>Deeplink相关的技术，在wap中唤起app其实应用最最广泛的并不是Universal Link，而是直接Schema跳转</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location.href = <span class="string">'schema://xxxx'</span></span><br></pre></td></tr></table></figure>
-<p>并且一般各大APP都会给自己做一套路由体系，这样其实可以直接在schema头后面对接路由体系，做到一行schema定位打开任意App内功能界面（我就不详细扯路由的事了）</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="built_in">BOOL</span>)application:(<span class="built_in">UIApplication</span> *)application openURL:(<span class="built_in">NSURL</span> *)url sourceApplication:(<span class="built_in">NSString</span> *)sourceApplication annotation:(<span class="keyword">id</span>)annotation &#123;</span><br><span class="line">    <span class="keyword">if</span> ([[url absoluteString] hasPrefix:<span class="string">@"schema://"</span>]) &#123;</span><br><span class="line">        [[<span class="built_in">WKDispatcher</span> sharedInstance] operationObjectFromRouteURL:[url absoluteString]];<span class="comment">//路由</span></span><br><span class="line">        <span class="keyword">return</span> <span class="literal">YES</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>如果单纯为了实现deeplink – 在WAP上打开App，并且传递来数据信息，定位App内的具体逻辑，那么Schema就够了，其实没必要上Universal Link，Schema相当于是很特殊的Url，他是<code>schema://xxx</code>这种样子，如果安装了APP才能支撑跳转这种Schema Url，如果没安装APP就没任何效果，而Universal Link则是把普通url，长<code>http://xxx.xxx.xxx/xxx</code>这样的Normal Url，如果安装了App，就能像Schema一样传递给App，延续App内逻辑，如果没装App，则还会继续在浏览器里跳转这个Normal Url</p>
-<h1 id="Schema的弊端"><a href="#Schema的弊端" class="headerlink" title="Schema的弊端"></a>Schema的弊端</h1><h2 id="Schema无法判断是否安装App"><a href="#Schema无法判断是否安装App" class="headerlink" title="Schema无法判断是否安装App"></a>Schema无法判断是否安装App</h2>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/02/universallink/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2262,7 +2252,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">65</span>
+                  <span class="site-state-item-count">66</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2284,7 +2274,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">44</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
