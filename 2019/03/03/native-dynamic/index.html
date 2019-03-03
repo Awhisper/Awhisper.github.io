@@ -82,24 +82,25 @@
 <meta name="description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
 <meta name="keywords" content="Layout,Hybrid">
 <meta property="og:type" content="article">
-<meta property="og:title" content="原生动态化探讨">
+<meta property="og:title" content="原生动态化探讨与实现">
 <meta property="og:url" content="http://yoursite.com/2019/03/03/native-dynamic/index.html">
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&display=inline&height=231&name=image.png&originHeight=462&originWidth=1256&size=38739&status=done&width=628">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551324054111-bbf17c76-e0bc-403d-8486-af368e15b69e.png#align=left&display=inline&height=219&name=image.png&originHeight=219&originWidth=230&size=3833&status=done&width=230">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825192186-82f33353-dcbb-40b7-b4ef-5c557fb4df3f.png#align=left&display=inline&height=248&name=image.png&originHeight=496&originWidth=1424&size=41243&status=done&width=712">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825476665-8adcf057-222a-4b90-b4bc-56943310361f.png#align=left&display=inline&height=457&name=image.png&originHeight=914&originWidth=1418&size=89510&status=done&width=709">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515944591065.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515944830251.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515945004818.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515945270280.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515954076979.jpg">
 <meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&display=inline&height=317&name=image.png&originHeight=634&originWidth=1192&size=94231&status=done&width=596">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551177844276-db3aea78-cea2-4154-8f51-1d1be11fdc8c.png#align=left&display=inline&height=412&name=image.png&originHeight=412&originWidth=789&size=32392&status=done&width=789">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551261410009-2a720fd5-a5b3-4e13-8e12-74918d142c97.png#align=left&display=inline&height=1322&name=image.png&originHeight=1322&originWidth=1422&size=238013&status=done&width=1422">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551269759965-0e14bbe6-7d11-41b1-a90a-ae51131e281c.png#align=left&display=inline&height=6010&name=image.png&originHeight=6010&originWidth=4922&size=1296045&status=done&width=4922">
-<meta property="og:updated_time" content="2019-03-03T06:18:54.199Z">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515954287860.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515956953257.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515957510019.jpg">
+<meta property="og:updated_time" content="2019-03-03T06:51:00.169Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="原生动态化探讨">
+<meta name="twitter:title" content="原生动态化探讨与实现">
 <meta name="twitter:description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
-<meta name="twitter:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&display=inline&height=231&name=image.png&originHeight=462&originWidth=1256&size=38739&status=done&width=628">
+<meta name="twitter:image" content="http://mweb-qiniu.awhisper.net/15515944591065.jpg">
 
 
 
@@ -135,7 +136,7 @@
 
 
 
-  <title>原生动态化探讨 | 折腾范儿の味精</title>
+  <title>原生动态化探讨与实现 | 折腾范儿の味精</title>
   
 
 
@@ -331,7 +332,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">原生动态化探讨</h2>
+          <h2 class="post-title" itemprop="name headline">原生动态化探讨与实现</h2>
         
 
         <div class="post-meta">
@@ -393,7 +394,7 @@
 
           
           
-             <span id="/2019/03/03/native-dynamic/" class="leancloud_visitors" data-flag-title="原生动态化探讨">
+             <span id="/2019/03/03/native-dynamic/" class="leancloud_visitors" data-flag-title="原生动态化探讨与实现">
                <span class="post-meta-divider">|</span>
                <span class="post-meta-item-icon">
                  <i class="fa fa-eye"></i>
@@ -478,7 +479,7 @@
 <p>布局引擎并不是因为动态化的诉求而产生的，本质上是为了解决屏幕多尺寸适配的问题，为了能用一种“通用”的描述方式，通过传入的窗口区域大小，实时的运算出每一个子元素在当前窗口里的 x y w h 绝对坐标，这个过程便是布局算法</p>
 </blockquote>
 <p>类似的布局算法有很多种，但可以确定的是，浏览器内核中的布局引擎是眼下最完美的，并且还在被 W3C 以及浏览器厂商不断的完善，浏览器内核的布局引擎的输入是 HTML 这种文件来表达界面元素层级描述  CSS 这种文件来表达布局约束信息与样式信息，并且支持绝对布局，相对布局，盒子模型，弹性盒子（知名的 FlexBox），网格布局等多种布局算法相互之间嵌套使用～本质上是一种多种算法可扩展的布局引擎。（后面会略微详细介绍一下布局算法）</p>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&amp;display=inline&amp;height=231&amp;name=image.png&amp;originHeight=462&amp;originWidth=1256&amp;size=38739&amp;status=done&amp;width=628" alt="image.png"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515944591065.jpg" alt="-w623"></p>
 <p>这种布局引擎本质上还是 native 的（浏览器内核是用c++）写的，如果不是直接使用 WebView，也有很多有着几乎一样思路的 native 布局 SDK</p>
 <ul>
 <li>iOS 的 AutoLayout ：iOS中的 xib 布局文件，本质上就是一种树型的 XML，它里面包含着界面层级信息与样式信息，经过原生代码 initWithNibName: 来读取这种 xml 最终生成界面。而如果不使用 xib，而是代码创建约束，那么原生 VFL 其实本质上也是一种DSL，而他内部的算法是通过计算约束 N 元一次方程组得出最终渲染坐标的，其算法性能出了名的差，在很多情况下即便原生 autolyout 非常的卡（在iOS 12以后得到优化）</li>
@@ -516,7 +517,7 @@
 <p>词法分析：使用栈或者二叉树，一个字符一个字符的读取，读到数字压栈，读到符号/括号，压入符号栈</p>
 <p>语法分析：根据你规划的 + - * / 的运算符优先级，以及括号的优先级，构建一个运算树</p>
 <p>抽象语法树AST：这个树就可以执行出运算结果</p>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551324054111-bbf17c76-e0bc-403d-8486-af368e15b69e.png#align=left&amp;display=inline&amp;height=219&amp;name=image.png&amp;originHeight=219&amp;originWidth=230&amp;size=3833&amp;status=done&amp;width=230" alt="image.png"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515944830251.jpg" alt="-w260"></p>
 </blockquote>
 <p>目前最广泛使用的解释执行编程语言就是 JavaScript ～</p>
 <p><strong>Binding:</strong></p>
@@ -527,7 +528,7 @@
 <li>js 是没有能力进行本地存储的，浏览器之所以能够用 js 写 localstorage ，就是因为浏览器把本地建值存储的模块 binding 给了 js ，并且在 js 里封装成了 localstorage API</li>
 <li>等等</li>
 </ul>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825192186-82f33353-dcbb-40b7-b4ef-5c557fb4df3f.png#align=left&amp;display=inline&amp;height=248&amp;name=image.png&amp;originHeight=496&amp;originWidth=1424&amp;size=41243&amp;status=done&amp;width=712" alt="image.png"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515945004818.jpg" alt="-w705"></p>
 <blockquote>
 <p>我们平时给webview 写的各种 jsbridge ，其实就是浏览器里面对js 的 binding 概念的延伸，只不过浏览器里面 binding 的各种能力，都是经过 W3C 协会沉淀了十几年的标准，必须具备通用型和可扩展性，不是你想要啥功能都能给你 binding上 的。但我们做客户端的就有这个优势，在我们的自主 App 内，我们就可以利用 native 开发，自行扩展 js 的任意 native 业务能力。</p>
 <p>这也就是所谓的前端开发受限于浏览器，浏览器不支持，前端就做不到，但客户端开发本身就在开发浏览器，前端想做而做不到的我们都能补上。</p>
@@ -541,7 +542,7 @@
 <li><p>C++的游戏引擎 cocos2dx-lua 也是这个思路，c2d引擎小组的成员真的把一整个引擎的所有 C++ API 统统 binding 给了 lua，所以在游戏圈里，大量用纯 Lua 开发游戏，只有在引擎C++控件不满足需求的时候，才需要少量C++开发的开发模式。</p>
 </li>
 </ul>
-<h2 id="Web技术思路下的原生动态化与跨平台"><a href="#Web技术思路下的原生动态化与跨平台" class="headerlink" title="Web技术思路下的原生动态化与跨平台"></a>Web技术思路下的原生动态化与跨平台</h2><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825476665-8adcf057-222a-4b90-b4bc-56943310361f.png#align=left&amp;display=inline&amp;height=457&amp;name=image.png&amp;originHeight=914&amp;originWidth=1418&amp;size=89510&amp;status=done&amp;width=709" alt="image.png"></p>
+<h2 id="Web技术思路下的原生动态化与跨平台"><a href="#Web技术思路下的原生动态化与跨平台" class="headerlink" title="Web技术思路下的原生动态化与跨平台"></a>Web技术思路下的原生动态化与跨平台</h2><p><img src="http://mweb-qiniu.awhisper.net/15515945270280.jpg" alt="-w699"></p>
 <p>布局引擎 + 脚本引擎，构成了Web技术最重要的2大模块，同时也是浏览器内核最重要的2个核心，而后续所有的非编译结果的那种动态化方案，全都是Web技术思路下而产生的动态化方案。</p>
 <p>并且这些方案本来就是跨平台的，底层用c去实现内核，实现脚本引擎，只要底层环境在各个平台都有，那么上层的 DSL 与 JS 就可以跨平台。</p>
 <ul>
@@ -564,8 +565,12 @@
 </ul>
 </li>
 </ul>
-<h1 id="鸟巢工作流程分析"><a href="#鸟巢工作流程分析" class="headerlink" title="鸟巢工作流程分析"></a>鸟巢工作流程分析</h1><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&amp;display=inline&amp;height=317&amp;name=image.png&amp;originHeight=634&amp;originWidth=1192&amp;size=94231&amp;status=done&amp;width=596" alt="image.png"></p>
-<p>鸟巢的官网介绍的是开发的过程中可以用 HTML + CSS + JS来开发，其实鸟巢的工作机制上和浏览器内核的原理一模一样，也是将 HTML &amp; CSS  在内核中整到一个树上，并且把 JS 整体输入虚拟机，但鸟巢有一些差异。</p>
+<h1 id="一些原生动态化技术工作流程分析"><a href="#一些原生动态化技术工作流程分析" class="headerlink" title="一些原生动态化技术工作流程分析"></a>一些原生动态化技术工作流程分析</h1><p>相信 Weex 与 ReactNative 的源码已经有无数人分析过了，大家也或多或少的看了很多各种架构与设计分析，其实还有很多大公司内部有一套自己自研，更适合自身业务的原生动态化技术。这些技术摆脱了开源的可维护与可扩展性以及易学习的包袱重担，很多内部自研技术在适当耦合了自身业务与后端服务的前提下，根据公司业务特点取舍性的设计原生动态化能力，反而可能获得一些性能上的优势。</p>
+<p>简单地说，就是不求设计一个大而全，牛逼的原生动态化框架与丰富的组件生态。而是根据自身业务需求量身定制，在一样的原理和思路下，根据业务量体裁衣，做出最适合自己业务的轻量级原生动态化框架。</p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515954076979.jpg" alt="-w614"></p>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&amp;display=inline&amp;height=317&amp;name=image.png&amp;originHeight=634&amp;originWidth=1192&amp;size=94231&amp;status=done&amp;width=596" alt="image.png"></p>
+<p>很多公司内部都开发过直接用 HTML + CSS + JS 的网页写法，直接转 Native 原生动态化的技术，比如百度内部的自研技术 HtmlNative ，滴滴的@戴铭 老师也介绍过滴滴那边直接写 原生 html 代码生成 native 的技术，还有蚂蚁的鸟巢。</p>
+<p>这类技术让前端开发用所熟练的传统 HTML + CSS + JS 来快速实现可动态部署的 native 页面。其工作机制上和浏览器内核的原理一模一样，也是将 HTML &amp; CSS  在内核中整到一个树上，并且把 JS 整体输入虚拟机，但各自细微机制的取舍上还是存在一些差异。</p>
 <h2 id="服务器远端处理Dom"><a href="#服务器远端处理Dom" class="headerlink" title="服务器远端处理Dom"></a>服务器远端处理Dom</h2><ul>
 <li>Dom 流程差异：<ul>
 <li>鸟巢：解析识别 HTML &amp; CSS 的过程不发生在客户端，是在服务端/ 开发阶段 IDE 中进行，最后把界面元素与样式合并成一个json树状结构：JSON格式 Dom 下发给客户端，行程树状内存 Dom 对象</li>
@@ -579,20 +584,8 @@
 </li>
 </ul>
 <p>简单的说，鸟巢是先构建 Dom 后下载整个 Dom树，而 WebKit 是先下载所有代码资源文件，后在客户端本地构建 Dom树，在鸟巢里一个模板id 一个包，一个网络链接下载下来，并且辅助以 native 的缓存与更新机制。在 WebKit 里无论是 html css 还是 js，都可以按文件拆分，每个文件都可以由浏览器独立进行下载，并且按着浏览器的缓存机制按着 Header 的 cache-control 等信息进行缓存控制。</p>
-<h2 id="客户端本地内核模块"><a href="#客户端本地内核模块" class="headerlink" title="客户端本地内核模块"></a>客户端本地内核模块</h2><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551177844276-db3aea78-cea2-4154-8f51-1d1be11fdc8c.png#align=left&amp;display=inline&amp;height=412&amp;name=image.png&amp;originHeight=412&amp;originWidth=789&amp;size=32392&amp;status=done&amp;width=789" alt="image.png"></p>
-<p>上面是简单的画了一下鸟巢的iOS客户端代码结构图，总共分2个 Bundle ，一个是鸟巢的主模块，一个是鸟巢核心依赖的3个三方 C 库。</p>
-<blockquote>
-<p>鸟巢另外包含2个 bundle ：</p>
-<ul>
-<li>ApAutoPage</li>
-<li>ApAutoPageBiz</li>
-</ul>
-</blockquote>
-<p>这篇文章主要讨论鸟巢原理的机制，这 ApAutoPage 的封装主要是介绍把鸟巢的能力封装成类似 Nebula 容器一样的 MicroApplication ，AppId 统一为 20001002，通过这个 AppId ，可以完全0客户端迭代，纯在鸟巢的平台开发一个纯鸟巢的应用页面</p>
-<blockquote>
-<p>因此可以认为 ApAutoPage  是 BirdNest 的上层封装，关注鸟巢内核本身原理的时候，只需要关注 BirdNest  Bundle 源码就好了</p>
-<p>进行一个简单的类比，BirdNest 就相当于 WebView 而 ApAutoPage 就相当于 Nebula</p>
-</blockquote>
+<h2 id="客户端本地内核模块"><a href="#客户端本地内核模块" class="headerlink" title="客户端本地内核模块"></a>客户端本地内核模块</h2><p><img src="http://mweb-qiniu.awhisper.net/15515954287860.jpg" alt="-w730"></p>
+<p>上面是简单的画了一下鸟巢的结构图，总共分2个 Bundle ，一个是鸟巢的主模块，一个是鸟巢核心依赖的3个三方 C 库。</p>
 <ul>
 <li><p>BirdNest</p>
 <ul>
@@ -627,7 +620,7 @@
 <li>主动拉：业务的服务端集成mobiletms的近端jar包，由客户端发起请求，mobiletms近端包返回templateJson模板信息，客户端把templateJson给鸟巢sdk，由鸟巢sdk判断是否需要更新模板。</li>
 <li>sync推：通过sync机制，往客户端全局推送模板。（由于sync全局推送方式，不符合需求发布的三板斧原则，该功能目前只开放于紧急bug修复，不适用于需求变更，所有需求变更都需要走近端接入方式）</li>
 </ul>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551261410009-2a720fd5-a5b3-4e13-8e12-74918d142c97.png#align=left&amp;display=inline&amp;height=1322&amp;name=image.png&amp;originHeight=1322&amp;originWidth=1422&amp;size=238013&amp;status=done&amp;width=1422" alt="image.png"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515956953257.jpg" alt="-w595"></p>
 <h2 id="Dom树本地工作流"><a href="#Dom树本地工作流" class="headerlink" title="Dom树本地工作流"></a>Dom树本地工作流</h2><p>View Builder 的主要工作就是构建一整个 FBDocument ，而 FBDocument 前边介绍了，他是整个鸟巢界面的核心，本身包含着整个界面的 ViewModel 数据，也就是 Dom 树</p>
 <p>这就是 FBDocument 的初始化流程</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)initWithHtml:(<span class="built_in">NSString</span>*)html withData:(<span class="built_in">NSString</span>*)data andDelegate:(<span class="keyword">id</span>)delegate andFallbackDelegate:(<span class="keyword">id</span>)fallbackDelegate andOption:(<span class="keyword">long</span>)option docName:(<span class="built_in">NSString</span> *)docName &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 一大堆 property 对象的 初始化</span></span><br><span class="line">    <span class="keyword">self</span>.xxx = xxx;</span><br><span class="line">    <span class="keyword">self</span>.xxx = xx;</span><br><span class="line">  	<span class="comment">// 等等...</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//主要是 fb_node.c 对象，每个node 就是一个dom节点，需要计算整体布局就递归调用 layout.c 的算法</span></span><br><span class="line">    <span class="keyword">if</span> (!_core) &#123;</span><br><span class="line">        <span class="comment">//构建排版内核对象</span></span><br><span class="line">        _core = fb_core_new(); </span><br><span class="line">        <span class="comment">//设置布局计算完毕后的回掉</span></span><br><span class="line">        _core-&gt;core_layout_notify = core_layout_notify; </span><br><span class="line">        <span class="comment">//设置 meta 信息处理的外部回掉</span></span><br><span class="line">        _core-&gt;tpl_content_handler = platform_content_handler;</span><br><span class="line">      	<span class="comment">//设置整个 Dom 处理完毕后的回掉</span></span><br><span class="line">        _core-&gt;core_load_finish_notify = core_load_finish_notify;</span><br><span class="line">        <span class="comment">//保存当前 Document 对象指针给 core ，便于 core 的一些处理</span></span><br><span class="line">        _core-&gt;context = (__bridge <span class="keyword">void</span> *)(<span class="keyword">self</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 开始加载 模板 </span></span><br><span class="line">    <span class="comment">// - 传入数据 json 形态的 dom 数据（html参数）</span></span><br><span class="line">    <span class="comment">// - 传入数据 json 形态的 data 数据（data参数）</span></span><br><span class="line">    fb_core_load_l(_core, [html UTF8String], [data UTF8String], <span class="literal">false</span>, option);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -644,7 +637,7 @@
 <p>layout.c 代码本来是源自 ReactNative 里面的源码，后续 Weex 以及聚划算的 LuaView 都曾经使用过 layout.c 这个纯 FlexBox算法的开源库，并且进行了自己的优化修改。而 FaceBook 也在不断优化，重新整理封装独立开源成了名为 Yoga 的库。</p>
 <p>无论是哪一家的 FlexBox 的算法原理都差不多，有兴趣的可以详细了解一下，主要核心就是 FlexBox 把界面划分为横纵两个轴，视 css 的值来决定主次，然后在算法里会沿着主次轴，对内部元素进行弹性填充计算</p>
 <p>参考资料：<a href="https://halfrost.com/weex_flexbox/" target="_blank" rel="noopener">https://halfrost.com/weex_flexbox/</a></p>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551269759965-0e14bbe6-7d11-41b1-a90a-ae51131e281c.png#align=left&amp;display=inline&amp;height=6010&amp;name=image.png&amp;originHeight=6010&amp;originWidth=4922&amp;size=1296045&amp;status=done&amp;width=4922" alt="image.png"></p>
+<p><img src="http://mweb-qiniu.awhisper.net/15515957510019.jpg" alt="-w441"></p>
 <p>这里我就简单的过一下，不深入详解 FlexBox 算法了</p>
 <ul>
 <li>递归节点，判断是否使用缓存，还是重新layout<ul>
@@ -708,19 +701,7 @@
 <li>fb_core_add_action 的作用就是创建 DOM_UPDATE_FUNC 事件，并且放入执行队列</li>
 </ul>
 <p>这块还是比较复杂，涵盖整个 js 与 oc 2个上下文交互，可以的话推荐阅读这两个类的源码</p>
-<h1 id="动态化方案对比思考"><a href="#动态化方案对比思考" class="headerlink" title="动态化方案对比思考"></a>动态化方案对比思考</h1><h2 id="账单详情页鸟巢尝试的阻碍"><a href="#账单详情页鸟巢尝试的阻碍" class="headerlink" title="账单详情页鸟巢尝试的阻碍"></a>账单详情页鸟巢尝试的阻碍</h2><p>当初账单详情页因为追求动态化，曾经切换过鸟巢，后来因为种种原因又切换为了现在的H5，异草留下了一篇当时的文档  <a href="https://yuque.antfin-inc.com/aone488674/qzz32g/kav7rq" target="_blank" rel="noopener">https://yuque.antfin-inc.com/aone488674/qzz32g/kav7rq</a></p>
-<ul>
-<li>鸟巢虽然是采用 H5 语言来开发，但是仅支持部分 HTML、CSS，实现方式会受限；</li>
-<li>没有框架支持，只能使用原生的 JS，比较 ReactNative 和 Weex 有一定差距，没有样式库；</li>
-<li>调用原生组件不够丰富，业务开发需要依赖鸟巢资源投入，不过后期有所改善；</li>
-<li>调试不方便，对开发来说比较影响效率，部分 Bug 需要调鸟巢源码进行调试；</li>
-<li>动态更新前期存在很多问题，处于不可用状态，离线包失败没有fallback；</li>
-</ul>
-<p>简单的说：</p>
-<p>产品功能上：由于只是 H5 WebKit 的子集，一些HTML CSS 方式受限，效果受限<br>开发效率上：原生组件，样式库，以及JS脚手架等框架支持少，调试工具不健全，开发效率不高<br>部署与稳定性上：有灰度与更新机制，但相关监控机制不足，回滚机制不足</p>
-<p>综合一句话就是：</p>
-<p>鸟巢的整个机制与扩展性上还好，缺乏的是相关技术生态的框架建设</p>
-<h2 id="思考技术发展的趋势脉络"><a href="#思考技术发展的趋势脉络" class="headerlink" title="思考技术发展的趋势脉络"></a>思考技术发展的趋势脉络</h2><table>
+<h1 id="动态化方案对比思考"><a href="#动态化方案对比思考" class="headerlink" title="动态化方案对比思考"></a>动态化方案对比思考</h1><h2 id="思考技术发展的趋势脉络"><a href="#思考技术发展的趋势脉络" class="headerlink" title="思考技术发展的趋势脉络"></a>思考技术发展的趋势脉络</h2><table>
 <thead>
 <tr>
 <th></th>
@@ -1031,7 +1012,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译动态化"><span class="nav-number">1.</span> <span class="nav-text">编译动态化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果动态化"><span class="nav-number">1.1.</span> <span class="nav-text">编译结果动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果跨平台"><span class="nav-number">1.2.</span> <span class="nav-text">编译结果跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web技术动态化-“不要写死”"><span class="nav-number">2.</span> <span class="nav-text">Web技术动态化 - “不要写死”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#布局引擎-界面动态化"><span class="nav-number">2.1.</span> <span class="nav-text">布局引擎 - 界面动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释执行-逻辑动态化"><span class="nav-number">2.2.</span> <span class="nav-text">解释执行 - 逻辑动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web技术思路下的原生动态化与跨平台"><span class="nav-number">2.3.</span> <span class="nav-text">Web技术思路下的原生动态化与跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#鸟巢工作流程分析"><span class="nav-number">3.</span> <span class="nav-text">鸟巢工作流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器远端处理Dom"><span class="nav-number">3.1.</span> <span class="nav-text">服务器远端处理Dom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地内核模块"><span class="nav-number">3.2.</span> <span class="nav-text">客户端本地内核模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地更新流程"><span class="nav-number">3.3.</span> <span class="nav-text">客户端本地更新流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dom树本地工作流"><span class="nav-number">3.4.</span> <span class="nav-text">Dom树本地工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FlexBox布局算法简单介绍"><span class="nav-number">3.5.</span> <span class="nav-text">FlexBox布局算法简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生页面的创建与渲染"><span class="nav-number">3.6.</span> <span class="nav-text">原生页面的创建与渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生控件与JS代码之间交互"><span class="nav-number">3.7.</span> <span class="nav-text">原生控件与JS代码之间交互</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态化方案对比思考"><span class="nav-number">4.</span> <span class="nav-text">动态化方案对比思考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#账单详情页鸟巢尝试的阻碍"><span class="nav-number">4.1.</span> <span class="nav-text">账单详情页鸟巢尝试的阻碍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考技术发展的趋势脉络"><span class="nav-number">4.2.</span> <span class="nav-text">思考技术发展的趋势脉络</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译动态化"><span class="nav-number">1.</span> <span class="nav-text">编译动态化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果动态化"><span class="nav-number">1.1.</span> <span class="nav-text">编译结果动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果跨平台"><span class="nav-number">1.2.</span> <span class="nav-text">编译结果跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web技术动态化-“不要写死”"><span class="nav-number">2.</span> <span class="nav-text">Web技术动态化 - “不要写死”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#布局引擎-界面动态化"><span class="nav-number">2.1.</span> <span class="nav-text">布局引擎 - 界面动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释执行-逻辑动态化"><span class="nav-number">2.2.</span> <span class="nav-text">解释执行 - 逻辑动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web技术思路下的原生动态化与跨平台"><span class="nav-number">2.3.</span> <span class="nav-text">Web技术思路下的原生动态化与跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#一些原生动态化技术工作流程分析"><span class="nav-number">3.</span> <span class="nav-text">一些原生动态化技术工作流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器远端处理Dom"><span class="nav-number">3.1.</span> <span class="nav-text">服务器远端处理Dom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地内核模块"><span class="nav-number">3.2.</span> <span class="nav-text">客户端本地内核模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地更新流程"><span class="nav-number">3.3.</span> <span class="nav-text">客户端本地更新流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dom树本地工作流"><span class="nav-number">3.4.</span> <span class="nav-text">Dom树本地工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FlexBox布局算法简单介绍"><span class="nav-number">3.5.</span> <span class="nav-text">FlexBox布局算法简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生页面的创建与渲染"><span class="nav-number">3.6.</span> <span class="nav-text">原生页面的创建与渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生控件与JS代码之间交互"><span class="nav-number">3.7.</span> <span class="nav-text">原生控件与JS代码之间交互</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态化方案对比思考"><span class="nav-number">4.</span> <span class="nav-text">动态化方案对比思考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#思考技术发展的趋势脉络"><span class="nav-number">4.1.</span> <span class="nav-text">思考技术发展的趋势脉络</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -1218,7 +1199,7 @@
      
          <script type="text/javascript">
              var gitment = new Gitment({
-                 id: '原生动态化探讨', 
+                 id: '原生动态化探讨与实现', 
                  owner: 'Awhisper',
                  repo: 'Awhisper.github.io',
                  oauth: {
