@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Layout,Hybrid,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
+<meta name="keywords" content="Layout,Hybrid">
+<meta property="og:type" content="article">
+<meta property="og:title" content="原生动态化探讨">
+<meta property="og:url" content="http://yoursite.com/2019/03/03/native-dynamic/index.html">
+<meta property="og:site_name" content="折腾范儿の味精">
+<meta property="og:description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&display=inline&height=231&name=image.png&originHeight=462&originWidth=1256&size=38739&status=done&width=628">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551324054111-bbf17c76-e0bc-403d-8486-af368e15b69e.png#align=left&display=inline&height=219&name=image.png&originHeight=219&originWidth=230&size=3833&status=done&width=230">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825192186-82f33353-dcbb-40b7-b4ef-5c557fb4df3f.png#align=left&display=inline&height=248&name=image.png&originHeight=496&originWidth=1424&size=41243&status=done&width=712">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825476665-8adcf057-222a-4b90-b4bc-56943310361f.png#align=left&display=inline&height=457&name=image.png&originHeight=914&originWidth=1418&size=89510&status=done&width=709">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&display=inline&height=317&name=image.png&originHeight=634&originWidth=1192&size=94231&status=done&width=596">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551177844276-db3aea78-cea2-4154-8f51-1d1be11fdc8c.png#align=left&display=inline&height=412&name=image.png&originHeight=412&originWidth=789&size=32392&status=done&width=789">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551261410009-2a720fd5-a5b3-4e13-8e12-74918d142c97.png#align=left&display=inline&height=1322&name=image.png&originHeight=1322&originWidth=1422&size=238013&status=done&width=1422">
+<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551269759965-0e14bbe6-7d11-41b1-a90a-ae51131e281c.png#align=left&display=inline&height=6010&name=image.png&originHeight=6010&originWidth=4922&size=1296045&status=done&width=4922">
+<meta property="og:updated_time" content="2019-03-03T06:18:54.199Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="原生动态化探讨">
+<meta name="twitter:description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
+<meta name="twitter:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&display=inline&height=231&name=image.png&originHeight=462&originWidth=1256&size=38739&status=done&width=628">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"hide","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/03/03/native-dynamic/">
+
+
+
+
+
+  <title>原生动态化探讨 | 折腾范儿の味精</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?90a1b03fdfcbdb12076a667e33612bce";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">折腾范儿の味精</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description">Awhisper's Blog</h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/03/native-dynamic/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">原生动态化探讨</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T14:08:39+08:00">
+                2019-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2019/03/03/native-dynamic/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2019/03/03/native-dynamic/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2019/03/03/native-dynamic/" class="leancloud_visitors" data-flag-title="原生动态化探讨">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。</p>
+<h1 id="编译动态化"><a href="#编译动态化" class="headerlink" title="编译动态化"></a>编译动态化</h1><a id="more"></a>
+<p>每一行代码本质上他就是一个字符串，他不具备任何的可运行的能力，之所以能被运行是因为他经过了一系列的编译，把一行行人能读懂的有逻辑有语意的字符串，变成了机器可以读懂的一条条指令集</p>
+<ul>
+<li>输入：代码字符串</li>
+<li>编译：（简单介绍一下不展开 <a href="http://awhisper.github.io/2017/02/26/%E6%89%AF%E6%B7%A1%EF%BC%9A%E5%A4%A7%E7%99%BD%E8%AF%9D%E8%81%8A%E8%81%8A%E7%BC%96%E8%AF%91%E9%82%A3%E7%82%B9%E4%BA%8B%E5%84%BF/" target="_blank" rel="noopener">http://awhisper.github.io/2017/02/26/扯淡：大白话聊聊编译那点事儿/</a>）<ul>
+<li>编译前端<ul>
+<li>词法分析        一句话解释：识别字符串中的语言关键字</li>
+<li>语法分析                        ：识别循环，判断，跳转，调用等代码逻辑</li>
+<li>生成抽象语法树 AST        ：将代码字符串转化为机器可理解可遍历可处理的语法树</li>
+</ul>
+</li>
+<li>编译后端<ul>
+<li>生成中间码 IR                ：将语法树向可执行结果产物进行转化，先产生个中间产物</li>
+<li>生成结果                        ：将中间码根据个平台的差异，生成不同的运行结果</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>输出：平台可运行的结果<ul>
+<li>iOS：可执行二进制 Mach-O 文件（汇编代码装载进入内存后即可执行）</li>
+<li>安卓：JVM的字节码（在任何有JVM的平台中都可以执行）</li>
+</ul>
+</li>
+</ul>
+<h2 id="编译结果动态化"><a href="#编译结果动态化" class="headerlink" title="编译结果动态化"></a>编译结果动态化</h2><p>编译的最终结果想要执行，都得装载到运行环境里去，iOS是直接装载到内存上，而安卓是加载到JVM虚拟机里，而这个加载过程天然是支持“动态”加载的，并且这种动态化的开发模式是非常贴近原生的。</p>
+<ul>
+<li>安卓：插件化技术，dexloader 加载</li>
+<li>iOS：动态链接库技术，dlopen 加载</li>
+</ul>
+<p>安卓我不了解就不细说了，但iOS确实值得咬文嚼字一下，dylib 的全程叫动态链接库，我们有时候自己做一些通用组件库的时候都可以选择创建一个“静态链接库”又或者“动态链接库”，差异取决在是否在app启动截断就第一时间加载。但次动态指的是动态“链接（加载）” 而非 “动态更新”。</p>
+<p>静态库中的代码都会与主程序编译到同一个可执行文件中，如果多个程序引用了同一个静态库，那么这个静态库是会在多个程序的可执行文件中存在多个副本。而动态库他的本质是希望让多个可执行文件间共用代码段，在链接装载期间，通过把独立于主程序可执行文件之外的 dylib 链接到主程序的虚拟地址上，故名：动态链接</p>
+<p>但既然是动态链接，那么在本次加载的时候通过网络下载了最新的 dylib 文件，在下次加载最新文件，自然也能做到 “动态更新”，下面看一个在运行期间用代码，手动链接 dylib 的例子</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#define Dylib_PATH  <span class="meta-string">"/System/Library/PrivateFrameworks/xxxxx/xxxxx/xxxxx"</span></span></span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)dynamicLibraryLoad</span><br><span class="line">&#123; </span><br><span class="line">  <span class="comment">// dlopen 去动态加载 dylib</span></span><br><span class="line">  <span class="keyword">void</span> *kit = dlopen(Dylib_PATH,RTLD_LAZY);   </span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 在运行期动态加载的dylib应该如何调用里面的代码？  OC有运行时与反射</span></span><br><span class="line">  </span><br><span class="line">  Class pacteraClass = <span class="built_in">NSClassFromString</span>(<span class="string">@"DynamicOpenMenth"</span>);</span><br><span class="line">  <span class="keyword">if</span> (!pacteraClass) &#123;</span><br><span class="line">      <span class="built_in">NSLog</span>(<span class="string">@"Unable to get TestDylib class"</span>);</span><br><span class="line">      <span class="keyword">return</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="built_in">NSObject</span> *pacteraObject = [pacteraClass new];</span><br><span class="line">  [pacteraObject performSelector:<span class="keyword">@selector</span>(startWithObject:withBundle:) withObject:<span class="keyword">self</span> withObject:frameworkBundle];</span><br><span class="line"></span><br><span class="line">  <span class="comment">// 只有OC的代码才能动态调用么？C代码一样有办法 dlsym 通过函数符号获取动态加载后的函数地址，进行调用</span></span><br><span class="line">  </span><br><span class="line">  <span class="built_in">NSString</span> *imsi = <span class="literal">nil</span>;</span><br><span class="line">  <span class="keyword">int</span> (*<span class="built_in">CTSIMSupportCopyMobileSubscriberIdentity</span>)() = dlsym(kit, <span class="string">"CTSIMSupportCopyMobileSubscriberIdentity"</span>);</span><br><span class="line">  imsi = (<span class="built_in">NSString</span>*)<span class="built_in">CTSIMSupportCopyMobileSubscriberIdentity</span>(<span class="literal">nil</span>);</span><br><span class="line">  </span><br><span class="line">  <span class="comment">// 卸载动态库</span></span><br><span class="line">  dlclose(kit);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>只可惜这条看似最佳的动态化的路被苹果堵死了，dlopen 这个函数在 debug 包下运行以上代码，动态加载畅通无阻，但在 release 的包上，就会被苹果加入签名校验逻辑，凡事没经过签名的dylib/framework，都会动态链接失败，所以这条路在 iOS 上是被封死的，但是在安卓上，各种插件化的方案还在继续</p>
+<h2 id="编译结果跨平台"><a href="#编译结果跨平台" class="headerlink" title="编译结果跨平台"></a>编译结果跨平台</h2><p>本身 Java 就被设计为一种一次编译处处运行的语言，只要对应平台有 JVM 这个虚拟机运行环境，换句话说跨平台的差异被 JVM 给打平了，但很可惜 iOS 平台并没有选择 JVM ，所以也就不跨到了 iOS 上。</p>
+<p>那么剩下的跨平台的语言就是 C/C++ 了，安卓与iOS都支持用C与C++的编译产物，在iOS上 OC 与 C 和 C++ 几乎是无缝支持，而在安卓上需要 JNI 来进行桥梁与 java 互通。早年间流行的游戏引擎 cocos2dx 就是用 C++ 进行的逻辑与渲染（lua容后再表），Flutter的渲染平台就是用 C++ 写的 skia 渲染引擎做的，安卓与iOS两个平台其实都存在很多知名的库或者本地算法，底层是用 C++ 实现的。</p>
+<p>本质上：编译后台的设计分为，先编译出中间码，再由中间码根据平台差异编译成最终结果，本身就是一个为了跨平台而做的设计“增加一个中间层”，但由于很多语言在发展过程中，不同语言的作者在做开发语言编译器的时候，使用的IR中间码，并不是统一的一套，所以设计很丰满，现实很骨干，IR中间码并没有完全解决跨平台的问题。</p>
+<h1 id="Web技术动态化-“不要写死”"><a href="#Web技术动态化-“不要写死”" class="headerlink" title="Web技术动态化 - “不要写死”"></a>Web技术动态化 - “不要写死”</h1><p>我们在开发的过程中即便是纯native开发，也经常会伴随着一些开发理念“不要写死”</p>
+<ul>
+<li>界面的文案？不要写死，服务器下发</li>
+<li>界面的文案的样式？不要写死，阴影，加粗，斜体，下划线服务器下发</li>
+<li>tableView 的Cell？不要写死，七八种cell模板，服务器下发啥渲染啥</li>
+<li>程序逻辑？不要写死，根据服务器返回的type开关，看情况跳转</li>
+<li>功能模块？不要写死，看开关可以整体隐藏关闭</li>
+</ul>
+<p>在编译运行的过程中，代码字符串被编译成了可执行的编译结果，在对应平台上运行。在“不要写死”这个思路中，描述配置信息等json字符串，被通过网络在程序运行的过程中，实时根据配置改变运行结果。</p>
+<p>所有的这些“不要写死”，其实是一种可以通过网络下发的描述性值的信息，以json形式，从代码逻辑通过读取这些描述信息，去改变预先准备好的功能逻辑，从而做到功能改变。甚至有些功能页面例如“账单详情”，他的现在几乎进入了高度后端可配的状态，面对不同商家不同种类交易，完全无需前端迭代，纯靠后端强大的配置平台即可完成频繁的各业务方接入需求。</p>
+<p>原则上讲，如果我们的描述配置语言设计的足够全面，应用程序中固化的那部分识别描述配置并且执行的固有能力也足够全面。既能考虑到任意当前已规划的需求，以及胜任未来的功能需求，那么我们的描述配置语言，无形中其实就是一种动态更新，这种描述配置语言其实也就形成了 DSL 领域专用语言，在你的应用程序配置体系中专用的描述语言。</p>
+<h2 id="布局引擎-界面动态化"><a href="#布局引擎-界面动态化" class="headerlink" title="布局引擎 - 界面动态化"></a>布局引擎 - 界面动态化</h2><p>在界面这一块确实就存在这种几乎能够完美涵盖所有界面需求的“DSL”设计，也存在着能够解析这种完美“DSL”设计的native固定代码“布局引擎”，从而做到一套布局引擎的程序代码，根据输入的 “DSL” 不同，呈现出风格迥异的页面。</p>
+<blockquote>
+<p>布局引擎并不是因为动态化的诉求而产生的，本质上是为了解决屏幕多尺寸适配的问题，为了能用一种“通用”的描述方式，通过传入的窗口区域大小，实时的运算出每一个子元素在当前窗口里的 x y w h 绝对坐标，这个过程便是布局算法</p>
+</blockquote>
+<p>类似的布局算法有很多种，但可以确定的是，浏览器内核中的布局引擎是眼下最完美的，并且还在被 W3C 以及浏览器厂商不断的完善，浏览器内核的布局引擎的输入是 HTML 这种文件来表达界面元素层级描述  CSS 这种文件来表达布局约束信息与样式信息，并且支持绝对布局，相对布局，盒子模型，弹性盒子（知名的 FlexBox），网格布局等多种布局算法相互之间嵌套使用～本质上是一种多种算法可扩展的布局引擎。（后面会略微详细介绍一下布局算法）</p>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550736277924-7753cbb6-a546-4882-9a35-34a4ff1b0e16.png#align=left&amp;display=inline&amp;height=231&amp;name=image.png&amp;originHeight=462&amp;originWidth=1256&amp;size=38739&amp;status=done&amp;width=628" alt="image.png"></p>
+<p>这种布局引擎本质上还是 native 的（浏览器内核是用c++）写的，如果不是直接使用 WebView，也有很多有着几乎一样思路的 native 布局 SDK</p>
+<ul>
+<li>iOS 的 AutoLayout ：iOS中的 xib 布局文件，本质上就是一种树型的 XML，它里面包含着界面层级信息与样式信息，经过原生代码 initWithNibName: 来读取这种 xml 最终生成界面。而如果不使用 xib，而是代码创建约束，那么原生 VFL 其实本质上也是一种DSL，而他内部的算法是通过计算约束 N 元一次方程组得出最终渲染坐标的，其算法性能出了名的差，在很多情况下即便原生 autolyout 非常的卡（在iOS 12以后得到优化）</li>
+<li>安卓的 XML 写界面：安卓的布局也很像浏览器内核，他也支持用 XML 去写，并且同样支持几种布局，从而满足丰富的界面展现需求</li>
+<li>DTCoreText：基于 iOS原生 CoreText 排版库的上层封装，可以识别 HTML 从而直接渲染出native的</li>
+<li>RN / Weex 的渲染框架：实际上也是 HTML/CSS 来通过 FlexBox 弹性盒子这种布局算法，构建出Native界面</li>
+<li>Texture 框架：原名 AsyncDisplayKit ，FB 出品，也是基于 FlexBox 弹性盒子这种布局算法，其实还有 YogaKit ， ComponentsKit 等，归根结底还是来自 FB 开源的 FlexBox 布局算法库 “Yoga”（我们的鸟巢也是来源自 yoga 同一个布局内核）</li>
+</ul>
+<blockquote>
+<p>所以本质上，HTML+CSS 这种网页的界面编写模式，和安卓原生的 xml 写界面，和 iOS  原生的 xib 渲染界面本质上是没区别的，甚至有时候还比原生快（iOS Autolayout被人喷太慢了） ，浏览器与H5慢是多方复杂原因共同导致的，但在布局渲染这块，Web的技术体系在UI的描述能力以及灵活度上确实设计得非常优秀，越来越多的原生动态化方案，在渲染这块都还离不开这一套技术体系</p>
+</blockquote>
+<h2 id="解释执行-逻辑动态化"><a href="#解释执行-逻辑动态化" class="headerlink" title="解释执行 - 逻辑动态化"></a>解释执行 - 逻辑动态化</h2><p>单纯通过界面动态化，这样我们做出来的这样的一个动态App，一个界面的 DSL 中给可点击交互的元素加上一个 scheme 的路由属性，每当这个元素被点击的时候，就跳转这个路由，打开一个新界面，而新的界面又是全新的一个新下载下来的 DSL，从而实现了纯展示型页面跳转的 “动态” App。仔细分析一下，这其实就是早期最原始的浏览器的网页，每个网页由一个 url 去下载 html/css ，然后布局展现页面，每个元素的点击交互的效果是跳转一个新的 url，所以可以认为这样的一种 “动态界面” App，是最纯正的网页技术，虽然他是 Native 的。</p>
+<p>但这种动态远不是我们所希望，我们希望可以在不同的交互与生命周期下进行：</p>
+<ul>
+<li>发出一个网络请求，获取最新最全的数据</li>
+<li>进行本地数据存储读取，数据持久化</li>
+<li>针对数据进行多方逻辑判断，根据逻辑结果，呈现给用户不通的表现</li>
+<li>等等</li>
+</ul>
+<p>纯界面动态化是不可能满足这种需求的，俺着我们的上面探讨的思路，我们需要一种“能够描述逻辑的表达式”，以字符串的形式下发到客户端，然后通过客户端内置的一套固定的“运行环境”，来展现出不同的运行结果。</p>
+<p>对比一下界面动态</p>
+<ul>
+<li>“能够描述界面的表达式-字符串”：就是一种描述语言 DSL （领域特定语言）</li>
+<li>“运行环境”：执行描述表达式需要一套用 native 代码编写的布局引擎，包含各种布局算法</li>
+</ul>
+<p>逻辑动态会复杂的多</p>
+<ul>
+<li>“能够描述逻辑的表达式-字符串”：单纯是 DSL 已经无法满足需求，我们需要正经代码编程的语言（脚本语言）</li>
+<li>“运行环境”：编程语言的编译结果能否再任何平台下直接执行？我们需要的是一个用c编写的，脚本语言（JS/Lua）的虚拟机</li>
+</ul>
+<p>脚本语言的虚拟机会严格遵照编译原理中的编译前端，即便是主体程序运行期间输入一段目标编程语言的代码逻辑，它也会先经过词法/语法分析，从而生成抽象语法树 AST，最终也会把程序转化为一条一条的运行指令，在虚拟机运行期把编译出来的指令集按顺序执行完并最终得到执行结果。（推荐一本书：《<strong>Lua设计与实现》</strong>）</p>
+<p>而脚本语言的内存控制统一被虚拟机进行整体控制，随着指令集在执行的过程中进行对象与内存空间的分配与管理，因此脚本语言的内存是跑在虚拟机的一个上下文之中，这个上下文与原生内存是隔离开的。</p>
+<blockquote>
+<p>大家上大学的时候是否在学习计算机数据结构的时候，被老师要求做一个计算器，输入一个 “1+2*3-4/5”这种字符串，用栈这种数据结构去解析这个字符串运算出结果？这个过程就非常的像解释执行</p>
+<p>词法分析：使用栈或者二叉树，一个字符一个字符的读取，读到数字压栈，读到符号/括号，压入符号栈</p>
+<p>语法分析：根据你规划的 + - * / 的运算符优先级，以及括号的优先级，构建一个运算树</p>
+<p>抽象语法树AST：这个树就可以执行出运算结果</p>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551324054111-bbf17c76-e0bc-403d-8486-af368e15b69e.png#align=left&amp;display=inline&amp;height=219&amp;name=image.png&amp;originHeight=219&amp;originWidth=230&amp;size=3833&amp;status=done&amp;width=230" alt="image.png"></p>
+</blockquote>
+<p>目前最广泛使用的解释执行编程语言就是 JavaScript ～</p>
+<p><strong>Binding:</strong></p>
+<p>脚本语言能运行，只能执行逻辑，for 循环 / if 选择判断 / 函数方法 / 执行回调 等语言逻辑，但是想要命令设备去执行一些操作，还是需要调用原生平台的各类 API ，比如磁盘读写，比如网络请求，比如图形渲染。  脚本语言 JS 再怎么编写各种三方js库，也都只是在虚拟机内的上下文中进行运行，无法操作设备。想要让 js 代码所执行的虚拟机能够操作原生环境的硬件，就得构建一个桥梁叫做 Binding（对，其实就是是jsbridge，但 Binding 是更科学的叫法）</p>
+<ul>
+<li>js 是没有发起网络请求的能力的，浏览器之所以能用 js 写 ajax 网络请求，是因为本身浏览器用 c/c++ 写了网络模块，然后把这个模块 binding 给了 js ，并且在js里封装成了 XMLHttpRequest  对象与 API</li>
+<li>js 是没有能力改变界面渲染的，是的没错！浏览器内布局引擎与脚本引擎是2个独立的模块，布局引擎纯native的，js是没有能力去直接访问的，但是浏览器专门把布局引擎 binding 给了js，并且在 js里封装成了 Document 对象与 Dom 操作 API</li>
+<li>js 是没有能力进行本地存储的，浏览器之所以能够用 js 写 localstorage ，就是因为浏览器把本地建值存储的模块 binding 给了 js ，并且在 js 里封装成了 localstorage API</li>
+<li>等等</li>
+</ul>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825192186-82f33353-dcbb-40b7-b4ef-5c557fb4df3f.png#align=left&amp;display=inline&amp;height=248&amp;name=image.png&amp;originHeight=496&amp;originWidth=1424&amp;size=41243&amp;status=done&amp;width=712" alt="image.png"></p>
+<blockquote>
+<p>我们平时给webview 写的各种 jsbridge ，其实就是浏览器里面对js 的 binding 概念的延伸，只不过浏览器里面 binding 的各种能力，都是经过 W3C 协会沉淀了十几年的标准，必须具备通用型和可扩展性，不是你想要啥功能都能给你 binding上 的。但我们做客户端的就有这个优势，在我们的自主 App 内，我们就可以利用 native 开发，自行扩展 js 的任意 native 业务能力。</p>
+<p>这也就是所谓的前端开发受限于浏览器，浏览器不支持，前端就做不到，但客户端开发本身就在开发浏览器，前端想做而做不到的我们都能补上。</p>
+</blockquote>
+<p>Tips：</p>
+<p>问题：如果说所有 native 能力全都 binding 给 js，把每一个 iOS 的系统 Api（可能几万个）都 binding 给 js，那么是不是就可以直接用纯 js 直接写原生 app 的全功能了？把图形渲染能力也 binding 给 js 是不是就不需要 html/css 外加一个复杂的布局引擎，直接用 js 调用 binding 好的 UIView initWithView , addSubview ，就能写出任意的界面了？</p>
+<p>回答：说的没错，但这样也是有代价的，每调用一次 binding 的 api 都是一次跨越上下文的接口调用，这个过程非常的耗时过程，在JS上下文的对象，需要进行序列化，然后通过一个通道与原生内存的上下文进行通信，然后在原生内存中还得反序列化才能会被正常的原生代码进行处理（js 与 lua 这个通道的底层处理都是在 c 这一层通过 data buffer 的压栈出栈处理传递数据），所以理论可行的用 js / lua 直接编写原生 App 性能还是存在问题的</p>
+<ul>
+<li><p>在JSPatch 没被封杀的时候，不仅拿 JSPatch 来 hotfix bug，直接用 JSPatch 构建全新的动态更新的功能页面，就是这个原理，只不过区别是 JSPatch 不需要把几万个 iOS 系统原生 Api 都 binding 了，因为 iOS 有 runtime，只需要把 Objc_msgSend 和 NSInvocation 给 binding 了，就可以做到用 js 代码，调用任意原生 iOS API，安卓也有反射，安卓也可以做到只用 js 代码，写出并调用任意安卓原生 API （以前我们写过在 app 黑盒运行期的调试工具，可以输入任意代码，动态调试安卓 与 iOS app，非常方便在bug现场的情况下任意调试代码，调试内存，快速追踪问题）</p>
+</li>
+<li><p>C++的游戏引擎 cocos2dx-lua 也是这个思路，c2d引擎小组的成员真的把一整个引擎的所有 C++ API 统统 binding 给了 lua，所以在游戏圈里，大量用纯 Lua 开发游戏，只有在引擎C++控件不满足需求的时候，才需要少量C++开发的开发模式。</p>
+</li>
+</ul>
+<h2 id="Web技术思路下的原生动态化与跨平台"><a href="#Web技术思路下的原生动态化与跨平台" class="headerlink" title="Web技术思路下的原生动态化与跨平台"></a>Web技术思路下的原生动态化与跨平台</h2><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550825476665-8adcf057-222a-4b90-b4bc-56943310361f.png#align=left&amp;display=inline&amp;height=457&amp;name=image.png&amp;originHeight=914&amp;originWidth=1418&amp;size=89510&amp;status=done&amp;width=709" alt="image.png"></p>
+<p>布局引擎 + 脚本引擎，构成了Web技术最重要的2大模块，同时也是浏览器内核最重要的2个核心，而后续所有的非编译结果的那种动态化方案，全都是Web技术思路下而产生的动态化方案。</p>
+<p>并且这些方案本来就是跨平台的，底层用c去实现内核，实现脚本引擎，只要底层环境在各个平台都有，那么上层的 DSL 与 JS 就可以跨平台。</p>
+<ul>
+<li>WebKit：如上图，输入 HTML / CSS / JS  ，由浏览器内核实现</li>
+<li>ReactNative：<ul>
+<li>输入的是 JSX 但实际上，也是HTML CSS JS 混合在了一起</li>
+<li>布局引擎是 c 写的 FB 的开源 Yoga Flexbox 布局引擎</li>
+<li>渲染是通过 binding 模式直接调用各平台原生渲染 API ，构造 View ，Add View</li>
+<li>通过 javascriptCore 这个开源 js 解析引擎来作为虚拟机，运行构建 js 上下文</li>
+<li>通过把各种丰富的原生能力，原生界面组件，binding 给 js，从而丰富各种原生能力能够动态调用</li>
+</ul>
+</li>
+<li>鸟巢：<ul>
+<li>输入是 HTML / CSS / JS ，但是会在服务器端被分析合成一个 json 树结构模板，下发到客户端</li>
+<li>客户端SDK输入是 json 树结构，遍历进行布局与渲染</li>
+<li>布局引擎是 c 写的 FB 的开源 Yoga Flexbox 布局引擎</li>
+<li>渲染是通过 binding 模式直接调用各平台原生渲染 API ，构造 View ，Add View</li>
+<li>通过 dukTape 这个开源嵌入式 js 解析引擎来作为虚拟机，运行构建 js 上下文</li>
+<li>接口 API 上提供扩展，让接入鸟巢SDK的业务方也很方便能 binding 各种 native 能力</li>
+</ul>
+</li>
+</ul>
+<h1 id="鸟巢工作流程分析"><a href="#鸟巢工作流程分析" class="headerlink" title="鸟巢工作流程分析"></a>鸟巢工作流程分析</h1><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&amp;display=inline&amp;height=317&amp;name=image.png&amp;originHeight=634&amp;originWidth=1192&amp;size=94231&amp;status=done&amp;width=596" alt="image.png"></p>
+<p>鸟巢的官网介绍的是开发的过程中可以用 HTML + CSS + JS来开发，其实鸟巢的工作机制上和浏览器内核的原理一模一样，也是将 HTML &amp; CSS  在内核中整到一个树上，并且把 JS 整体输入虚拟机，但鸟巢有一些差异。</p>
+<h2 id="服务器远端处理Dom"><a href="#服务器远端处理Dom" class="headerlink" title="服务器远端处理Dom"></a>服务器远端处理Dom</h2><ul>
+<li>Dom 流程差异：<ul>
+<li>鸟巢：解析识别 HTML &amp; CSS 的过程不发生在客户端，是在服务端/ 开发阶段 IDE 中进行，最后把界面元素与样式合并成一个json树状结构：JSON格式 Dom 下发给客户端，行程树状内存 Dom 对象</li>
+<li>WebKit：解析识别 HTML &amp; CSS 的过程发生在客户端，网络模块只下载 HTML CSS 源码，解析识别后最终生成 Dom 树状结构：内存中树状格式的 Dom 对象</li>
+</ul>
+</li>
+<li>JS 流程的差别：<ul>
+<li>鸟巢：JS代码最后被一起放入了 JSON格式的 Dom 之中，当下载到客户端本地的时候，从 Dom 中取出来直接输入虚拟机的上下文运行环境之中</li>
+<li>Webkit：支持解析 HTML 中的 script 标签，也支持直接加载 js 代码，网络模块下载到的 js 源码，会直接输入虚拟机的上下文运行环境之中</li>
+</ul>
+</li>
+</ul>
+<p>简单的说，鸟巢是先构建 Dom 后下载整个 Dom树，而 WebKit 是先下载所有代码资源文件，后在客户端本地构建 Dom树，在鸟巢里一个模板id 一个包，一个网络链接下载下来，并且辅助以 native 的缓存与更新机制。在 WebKit 里无论是 html css 还是 js，都可以按文件拆分，每个文件都可以由浏览器独立进行下载，并且按着浏览器的缓存机制按着 Header 的 cache-control 等信息进行缓存控制。</p>
+<h2 id="客户端本地内核模块"><a href="#客户端本地内核模块" class="headerlink" title="客户端本地内核模块"></a>客户端本地内核模块</h2><p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551177844276-db3aea78-cea2-4154-8f51-1d1be11fdc8c.png#align=left&amp;display=inline&amp;height=412&amp;name=image.png&amp;originHeight=412&amp;originWidth=789&amp;size=32392&amp;status=done&amp;width=789" alt="image.png"></p>
+<p>上面是简单的画了一下鸟巢的iOS客户端代码结构图，总共分2个 Bundle ，一个是鸟巢的主模块，一个是鸟巢核心依赖的3个三方 C 库。</p>
+<blockquote>
+<p>鸟巢另外包含2个 bundle ：</p>
+<ul>
+<li>ApAutoPage</li>
+<li>ApAutoPageBiz</li>
+</ul>
+</blockquote>
+<p>这篇文章主要讨论鸟巢原理的机制，这 ApAutoPage 的封装主要是介绍把鸟巢的能力封装成类似 Nebula 容器一样的 MicroApplication ，AppId 统一为 20001002，通过这个 AppId ，可以完全0客户端迭代，纯在鸟巢的平台开发一个纯鸟巢的应用页面</p>
+<blockquote>
+<p>因此可以认为 ApAutoPage  是 BirdNest 的上层封装，关注鸟巢内核本身原理的时候，只需要关注 BirdNest  Bundle 源码就好了</p>
+<p>进行一个简单的类比，BirdNest 就相当于 WebView 而 ApAutoPage 就相当于 Nebula</p>
+</blockquote>
+<ul>
+<li><p>BirdNest</p>
+<ul>
+<li><p>View Builder： 算是作为整个鸟巢内核的使用入口，提供一体化的模板处理入口，内部包含 Template Manager 的模板管理模块，而 View Builder 经过一体化的处理，产出结果是 Document 对象</p>
+<ul>
+<li>Template Manager： 是鸟巢模板的管理模块，主要包括模板的下载模板，下载队列控制，版本更新判断，模板读取。鸟巢模板后台提供灰度能力，统一由服务器下发模板的更新信息，根据不同的网络环境以及本地模板状态判断，模板更新流程</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>FBDocument： 是鸟巢的Dom 对象，本身继承自 ViewController ，统一管理模板生成出来的的 VM - Dom 树，由 Dom 树进行布局生成的 View ，以及 各个 View的 UI 交互触摸事件的响应</p>
+<ul>
+<li>FBView： Dom树会经过布局流程算出每一个子 View 的 frame，然后通过 getView 的方法，按着计算出来的 frame ，一个个创建出对应的 native View，然后汇总成最终的用于展示的 Native 界面，这里会根据 Div 的种类，创造出 Button  Image Input Switch Vedio 等，并且支持横向扩展</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>BirdNestBase</p>
+<ul>
+<li><p>layout：FBDocument内部进行布局流程的时候，主要依赖的 C++ Flexbox 布局算法，从代码里看来自 RN 与 Weex 都使用过的 Yoga layout.c 代码片段，但已经被二次改造过</p>
+</li>
+<li><p>duktap：一个轻量级嵌入式 js 解释引擎，不像RN 与 Weex 使用的是 JavascriptCore 这个开源 js 引擎，鸟巢使用的是一个更轻量级的</p>
+</li>
+<li><p>fbJSON：服务器生成的 JSON 格式的 Dom 结构，也就是模板，需要进行 JSON 解析，这个是所依赖的底层 JSON 解析库</p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="客户端本地更新流程"><a href="#客户端本地更新流程" class="headerlink" title="客户端本地更新流程"></a>客户端本地更新流程</h2><ul>
+<li>主动拉：业务的服务端集成mobiletms的近端jar包，由客户端发起请求，mobiletms近端包返回templateJson模板信息，客户端把templateJson给鸟巢sdk，由鸟巢sdk判断是否需要更新模板。</li>
+<li>sync推：通过sync机制，往客户端全局推送模板。（由于sync全局推送方式，不符合需求发布的三板斧原则，该功能目前只开放于紧急bug修复，不适用于需求变更，所有需求变更都需要走近端接入方式）</li>
+</ul>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551261410009-2a720fd5-a5b3-4e13-8e12-74918d142c97.png#align=left&amp;display=inline&amp;height=1322&amp;name=image.png&amp;originHeight=1322&amp;originWidth=1422&amp;size=238013&amp;status=done&amp;width=1422" alt="image.png"></p>
+<h2 id="Dom树本地工作流"><a href="#Dom树本地工作流" class="headerlink" title="Dom树本地工作流"></a>Dom树本地工作流</h2><p>View Builder 的主要工作就是构建一整个 FBDocument ，而 FBDocument 前边介绍了，他是整个鸟巢界面的核心，本身包含着整个界面的 ViewModel 数据，也就是 Dom 树</p>
+<p>这就是 FBDocument 的初始化流程</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">id</span>)initWithHtml:(<span class="built_in">NSString</span>*)html withData:(<span class="built_in">NSString</span>*)data andDelegate:(<span class="keyword">id</span>)delegate andFallbackDelegate:(<span class="keyword">id</span>)fallbackDelegate andOption:(<span class="keyword">long</span>)option docName:(<span class="built_in">NSString</span> *)docName &#123;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">self</span> = [<span class="keyword">super</span> init];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 一大堆 property 对象的 初始化</span></span><br><span class="line">    <span class="keyword">self</span>.xxx = xxx;</span><br><span class="line">    <span class="keyword">self</span>.xxx = xx;</span><br><span class="line">  	<span class="comment">// 等等...</span></span><br><span class="line">    </span><br><span class="line">    <span class="comment">//主要是 fb_node.c 对象，每个node 就是一个dom节点，需要计算整体布局就递归调用 layout.c 的算法</span></span><br><span class="line">    <span class="keyword">if</span> (!_core) &#123;</span><br><span class="line">        <span class="comment">//构建排版内核对象</span></span><br><span class="line">        _core = fb_core_new(); </span><br><span class="line">        <span class="comment">//设置布局计算完毕后的回掉</span></span><br><span class="line">        _core-&gt;core_layout_notify = core_layout_notify; </span><br><span class="line">        <span class="comment">//设置 meta 信息处理的外部回掉</span></span><br><span class="line">        _core-&gt;tpl_content_handler = platform_content_handler;</span><br><span class="line">      	<span class="comment">//设置整个 Dom 处理完毕后的回掉</span></span><br><span class="line">        _core-&gt;core_load_finish_notify = core_load_finish_notify;</span><br><span class="line">        <span class="comment">//保存当前 Document 对象指针给 core ，便于 core 的一些处理</span></span><br><span class="line">        _core-&gt;context = (__bridge <span class="keyword">void</span> *)(<span class="keyword">self</span>);</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 开始加载 模板 </span></span><br><span class="line">    <span class="comment">// - 传入数据 json 形态的 dom 数据（html参数）</span></span><br><span class="line">    <span class="comment">// - 传入数据 json 形态的 data 数据（data参数）</span></span><br><span class="line">    fb_core_load_l(_core, [html UTF8String], [data UTF8String], <span class="literal">false</span>, option);</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">self</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>而这其中最核心的就是  fb_core_load_l 这个方法，这个方法干的事情比较多，精简一下代码，然后解释一下流程，对关键环节进行逻辑标注</p>
+<ul>
+<li>解析 data json </li>
+<li>解析 html json 为 body header</li>
+<li>构建 js 虚拟机上下文，把 body header data中的 js 标签里的 js 代码，执行进入虚拟机</li>
+<li>用layout.c的flexbox排版算法，递归整个 body 的 Dom 树，算出每个ui元素的 frame坐标</li>
+<li>发出load finish事件，触发页面渲染构建</li>
+</ul>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> fb_core_load_l(fb_core_t* core,</span><br><span class="line">                  <span class="keyword">const</span> <span class="keyword">char</span> *page,</span><br><span class="line">                  <span class="keyword">const</span> <span class="keyword">char</span> *data,</span><br><span class="line">                  <span class="keyword">bool</span> js_debuggable,</span><br><span class="line">                  <span class="keyword">const</span> <span class="keyword">long</span> flags) &#123;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line">  </span><br><span class="line">		<span class="comment">// 解析传入的 data json 数据</span></span><br><span class="line">    <span class="keyword">if</span> (data != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        core-&gt;last_data = fbJSON_Parse(data);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line">  </span><br><span class="line">	  <span class="comment">// 解析传入的 html json 数据</span></span><br><span class="line">    core-&gt;html = fb_parser_json(core, page);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// html 解析结果里面分拆出 body 与 head</span></span><br><span class="line">    core-&gt;head = fb_node_by_tag(core-&gt;html, FB_tag_head);</span><br><span class="line">    core-&gt;body = fb_node_by_tag(core-&gt;html, FB_tag_body);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//### 如果head或者body为空，那么就无法正常渲染了，直接返回失败</span></span><br><span class="line">    <span class="keyword">if</span> (!core-&gt;head || !core-&gt;body) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">//无 js 的鸟巢业务，即精简模式下不构建 js 虚拟机，非精简模式，构建 js 虚拟机上下文</span></span><br><span class="line">    <span class="keyword">if</span> (!core-&gt;isLiteMode) &#123;</span><br><span class="line">        fb_core_init_script_engine(core);</span><br><span class="line">    &#125;</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// ... 省略部分代码</span></span><br><span class="line"></span><br><span class="line">  	<span class="comment">// 非精简模式下，遍历 data  body  head 中的 script 标签数据，读取出js代码，输入 duktape 虚拟机上下文</span></span><br><span class="line">    <span class="keyword">if</span> (!core-&gt;isLiteMode) &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="keyword">bool</span> dataIsJson = fb_tools_is_json(data);</span><br><span class="line">        fb_script_execute_string_l(core-&gt;scriptEngine, data, flags);</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; core-&gt;head-&gt;cssNode.children_count; i++) &#123;</span><br><span class="line">            fb_node_t *node = core-&gt;head-&gt;subNodes[i];</span><br><span class="line">            <span class="keyword">if</span> (node-&gt;tag == FB_tag_script) &#123;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">const</span> <span class="keyword">char</span> *src = fb_node_get_attr(node, <span class="string">"src"</span>);</span><br><span class="line">                <span class="keyword">if</span> (src) &#123;</span><br><span class="line">                    <span class="keyword">char</span> *data = fb_platform_load_file(node-&gt;core, src);</span><br><span class="line">                    fb_script_execute_string(core-&gt;scriptEngine, data);</span><br><span class="line">                    <span class="keyword">if</span> (data &amp;&amp; strlen(data) != <span class="number">0</span>) &#123;</span><br><span class="line">                        free(data);</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">const</span> <span class="keyword">char</span> *text = fb_node_get_attr(node, <span class="string">"text"</span>);</span><br><span class="line">                <span class="keyword">if</span> (text) &#123;</span><br><span class="line">                    fb_script_execute_string(core-&gt;scriptEngine, text);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// ... 省略部分代码        </span></span><br><span class="line">      </span><br><span class="line">        <span class="comment">//查看整个节点中是否包含 js 的 onload 事件，如果有则执行 onload</span></span><br><span class="line">        fb_script_cb_t *onload = fb_node_get_event(core-&gt;body, <span class="string">"onload"</span>);</span><br><span class="line">        <span class="keyword">if</span> (onload) &#123;</span><br><span class="line">            fb_script_execute(core-&gt;scriptEngine, onload, <span class="literal">NULL</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//查看整个节点中是否包含 js 的 onreload 事件，如果有则执行 onreload</span></span><br><span class="line">        <span class="keyword">if</span> (data &amp;&amp; dataIsJson) &#123;</span><br><span class="line">            fb_script_cb_t *onreload = fb_node_get_event(core-&gt;body, <span class="string">"onreload"</span>);</span><br><span class="line">            <span class="keyword">if</span> (onreload &amp;&amp; data) &#123;</span><br><span class="line">                core-&gt;hasOnReload = <span class="literal">true</span>;</span><br><span class="line">                fb_script_execute_javascript_with_json(core-&gt;scriptEngine,</span><br><span class="line">                                                       onreload-&gt;js_callback,</span><br><span class="line">                                                       data);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">  </span><br><span class="line">    <span class="comment">//### 最终layout一次，递归整个树，让每个 dom（即 node 节点对象，都经过layout.c的算法计算好了frame）</span></span><br><span class="line">    fb_core_layout(core);</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// ... 省略部分代码 </span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送 Document Load Finish 回掉，触发后续的渲染流程</span></span><br><span class="line">    <span class="keyword">if</span> (core-&gt;core_load_finish_notify) &#123;</span><br><span class="line">        core-&gt;core_load_finish_notify(core);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="FlexBox布局算法简单介绍"><a href="#FlexBox布局算法简单介绍" class="headerlink" title="FlexBox布局算法简单介绍"></a>FlexBox布局算法简单介绍</h2><p>上面介绍的代码流程里 fb_core_layout 就是进行布局计算的算法，可以仔细看他的源码，他的核心就是调用 layout.c 这个 BirdNestBase 里面的布局库的 layoutNode 方法，传入了 core-&gt; body -&gt; cssNode 的树的根节点，然后这个算法会层层递归完整个树，计算每个节点的UI元素应有的 frame</p>
+<p>layout.c 代码本来是源自 ReactNative 里面的源码，后续 Weex 以及聚划算的 LuaView 都曾经使用过 layout.c 这个纯 FlexBox算法的开源库，并且进行了自己的优化修改。而 FaceBook 也在不断优化，重新整理封装独立开源成了名为 Yoga 的库。</p>
+<p>无论是哪一家的 FlexBox 的算法原理都差不多，有兴趣的可以详细了解一下，主要核心就是 FlexBox 把界面划分为横纵两个轴，视 css 的值来决定主次，然后在算法里会沿着主次轴，对内部元素进行弹性填充计算</p>
+<p>参考资料：<a href="https://halfrost.com/weex_flexbox/" target="_blank" rel="noopener">https://halfrost.com/weex_flexbox/</a></p>
+<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1551269759965-0e14bbe6-7d11-41b1-a90a-ae51131e281c.png#align=left&amp;display=inline&amp;height=6010&amp;name=image.png&amp;originHeight=6010&amp;originWidth=4922&amp;size=1296045&amp;status=done&amp;width=4922" alt="image.png"></p>
+<p>这里我就简单的过一下，不深入详解 FlexBox 算法了</p>
+<ul>
+<li>递归节点，判断是否使用缓存，还是重新layout<ul>
+<li>计算盒子边框边距的基础参数</li>
+<li>针对主侧轴，分别判断在边距边框下的可用size</li>
+<li>沿着主轴遍历子视图，摆放子视图<ul>
+<li>子视图是否可拉伸，取决于递归子视图直到子视图拥有最大或最小或确定的尺寸</li>
+</ul>
+</li>
+<li>在主轴上通过 flex 的一些 css 属性来确定可受弹性变化的子视图的位置微调</li>
+<li>在侧轴上通过 flex 的一些 css 属性来确定子视图的位置微调</li>
+<li>确定子视图绝对布局坐标 frame</li>
+</ul>
+</li>
+</ul>
+<p>整个算法由7个主要的大循环组成，不详细分析代码了，已经给出参考链接</p>
+<blockquote>
+<p>FlexBox弹性盒子布局算法，只是 WebKit 布局能力的一部分，可以说 FlexBox 的布局能力只是 WebKit的子集</p>
+<p>所以可以认为鸟巢（还包括 RN Weex 等所有用FlexBox的框架）的界面布局表达能力，只是WebView的界面布局表达能力的子集，但如果这个子集足够满足大部分的需求，那么也可以满足业务需要</p>
+</blockquote>
+<h2 id="原生页面的创建与渲染"><a href="#原生页面的创建与渲染" class="headerlink" title="原生页面的创建与渲染"></a>原生页面的创建与渲染</h2><p>当 layoutNode 布局计算结束后，会触发 core-&gt;core_load_finish_notify(core) 回掉，就会回到 FBDocument 这个类里去调用 updateLayout 这个 OC 方法，进行渲染</p>
+<p>渲染过程依赖一个核心队列  _core-&gt;actionSeq 这个队列其实是在服务器构建 JSON 化的 Dom 数据的时候，就被服务器创建好了，简单的说一下这里面的内容其实就是根据 Dom 树的层级，生成一个渲染指令队列，例如</p>
+<ul>
+<li>创建一个根视图 RootView</li>
+<li>创建一个子视图 AView</li>
+<li>更新子视图 AView 的属性，会用到布局计算的 frame结果，来更新frame属性</li>
+<li>将子视图 AView 添加到 RootView 上</li>
+<li>创建一个子视图 BImage</li>
+<li>更新子视图 BImage 的属性，会用到布局计算的 frame结果，来更新frame属性</li>
+<li>将子视图 BImage 添加到 RootView 上</li>
+<li>…</li>
+</ul>
+<p>所以我们来分析一下原生页面创建与渲染的代码工作流程</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)updateLayout</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//循环指令队列，执行每个指令</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; _core-&gt;actionSeq-&gt;length; ++i) &#123;</span><br><span class="line">        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">        </span><br><span class="line">        <span class="comment">//### 指令已经无效，跳过</span></span><br><span class="line">        <span class="keyword">if</span> (op-&gt;node == <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">continue</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">//判断指令类型</span></span><br><span class="line">        <span class="keyword">switch</span> (op-&gt;op) &#123;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">//### 创建view</span></span><br><span class="line">            <span class="keyword">case</span> DOM_CREATE: &#123;</span><br><span class="line"></span><br><span class="line">                FBView *view = <span class="literal">nil</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//创建 root View</span></span><br><span class="line">                <span class="keyword">if</span> (op-&gt;node-&gt;tag == FB_tag_body) &#123;</span><br><span class="line">                    </span><br><span class="line">                    _root = [[FBView alloc] initWithNode:_core-&gt;body</span><br><span class="line">                                                withDocument:<span class="keyword">self</span></span><br><span class="line">                                                  withView:<span class="literal">nil</span>];</span><br><span class="line">                    </span><br><span class="line">                    view = _root;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">// 创建其他嵌入 View</span></span><br><span class="line">                    <span class="comment">// 识别子View 的native ui 类型</span></span><br><span class="line">                    <span class="keyword">switch</span> (op-&gt;node-&gt;tag) &#123;</span><br><span class="line">                    </span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//容器空 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_div: &#123;</span><br><span class="line">                            view = [[FBView alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                   withDocument:<span class="keyword">self</span></span><br><span class="line">                                                       withView:<span class="literal">nil</span>];</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//原生勾选框 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_checkbox: &#123;</span><br><span class="line">                            view = [[FBCheckbox alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                       withDocument:<span class="keyword">self</span></span><br><span class="line">                                                           withView:<span class="literal">nil</span>];</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//原生开关 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_switch: &#123;</span><br><span class="line">                            view = [[FBSwitch alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                       withDocument:<span class="keyword">self</span></span><br><span class="line">                                                           withView:<span class="literal">nil</span>];</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//原生文本标签 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_label: &#123;</span><br><span class="line">                            </span><br><span class="line">                            <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%llx"</span>, (<span class="keyword">long</span> <span class="keyword">long</span>)op-&gt;node];</span><br><span class="line">                            view = [<span class="keyword">self</span>.dictLabel objectForKey:key];</span><br><span class="line">                            <span class="keyword">if</span> (view == <span class="literal">nil</span>) &#123;</span><br><span class="line">                                view = [[FBLabel alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                        withDocument:<span class="keyword">self</span></span><br><span class="line">                                                            withView:<span class="literal">nil</span>];</span><br><span class="line">                                </span><br><span class="line">                                [<span class="keyword">self</span>.dictLabel setObject:view forKey:key];</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                [view associateNode:op-&gt;node];</span><br><span class="line">                            &#125;</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//原生图片 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_img: &#123;</span><br><span class="line">                            </span><br><span class="line">                            <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%llx"</span>, (<span class="keyword">long</span> <span class="keyword">long</span>)op-&gt;node];</span><br><span class="line">                            view = [<span class="keyword">self</span>.dictImg objectForKey:key];</span><br><span class="line">                            <span class="keyword">if</span> (view == <span class="literal">nil</span>) &#123;</span><br><span class="line">                                view = [[FBImg alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                        withDocument:<span class="keyword">self</span></span><br><span class="line">                                                            withView:<span class="literal">nil</span>];</span><br><span class="line">                                </span><br><span class="line">                                [<span class="keyword">self</span>.dictImg setObject:view forKey:key];</span><br><span class="line">                            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                                [view associateNode:op-&gt;node];</span><br><span class="line">                            &#125;</span><br><span class="line">                            </span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">//原生按钮 View</span></span><br><span class="line">                        <span class="keyword">case</span> FB_tag_button: &#123;</span><br><span class="line">                            view = [[FBButton alloc] initWithNode:op-&gt;node</span><br><span class="line">                                                  withDocument:<span class="keyword">self</span></span><br><span class="line">                                                      withView:<span class="literal">nil</span>];</span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">// 可以横向扩展各种原生 View</span></span><br><span class="line">                        </span><br><span class="line">                        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">                        </span><br><span class="line">                        <span class="keyword">default</span>: &#123;</span><br><span class="line">                            </span><br><span class="line">                            <span class="keyword">break</span>;</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">// ... 省略部分代码 </span></span><br><span class="line"></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">// 把一个 View add 到另一个View 成为子 View</span></span><br><span class="line">            <span class="keyword">case</span> DOM_ADDVIEW: &#123;</span><br><span class="line">                FBView *subView = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                FBView *superView = [<span class="keyword">self</span> findViewByNode:op-&gt;node-&gt;superNode];</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">if</span> (superView &amp;&amp; subView) &#123;</span><br><span class="line">                    [superView addSubview:subView];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">else</span> &#123;</span><br><span class="line">                    <span class="comment">//assert(false);</span></span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">// 删除一个 View</span></span><br><span class="line">            <span class="keyword">case</span> DOM_DELETEVIEW: &#123;</span><br><span class="line">                FBView *subView = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                [subView removeFromSuperview];</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//### label 需要从 cache中移除</span></span><br><span class="line">                <span class="keyword">unsigned</span> tag = op-&gt;tag;</span><br><span class="line">                <span class="keyword">if</span> (tag == FB_tag_label) &#123;</span><br><span class="line">                    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%llx"</span>, (<span class="keyword">long</span> <span class="keyword">long</span>)op-&gt;node];</span><br><span class="line">                    [<span class="keyword">self</span>.dictLabel removeObjectForKey:key];</span><br><span class="line">                &#125;</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//### img 需要从 cache中移除</span></span><br><span class="line">                <span class="keyword">if</span> (tag == FB_tag_img) &#123;</span><br><span class="line">                    <span class="built_in">NSString</span> *key = [<span class="built_in">NSString</span> stringWithFormat:<span class="string">@"%llx"</span>, (<span class="keyword">long</span> <span class="keyword">long</span>)op-&gt;node];</span><br><span class="line">                    [<span class="keyword">self</span>.dictImg removeObjectForKey:key];</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                [<span class="keyword">self</span> removeView:op-&gt;node fbView:subView];</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">//### 更新 view 的 rect，rect 来自 layout.c 的计算结果</span></span><br><span class="line">            <span class="keyword">case</span> DOM_UPDATE_RECT: &#123;</span><br><span class="line">                FBView *view = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                [view updateRect];</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">//### 更新 view 的其他 css属性</span></span><br><span class="line">            <span class="keyword">case</span> DOM_UPDATE_CSS: &#123;</span><br><span class="line">                FBView *view = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">NSString</span> *style = [<span class="built_in">NSString</span> stringWithUTF8String:(<span class="keyword">char</span>*)op-&gt;param];</span><br><span class="line">                <span class="built_in">NSArray</span> *arrKeyAndValue = [style componentsSeparatedByString:PARAM_DELIMITER_OC];</span><br><span class="line">                <span class="keyword">if</span> (arrKeyAndValue.count == <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="built_in">NSString</span> *key = [arrKeyAndValue objectAtIndex:<span class="number">0</span>];</span><br><span class="line">                    <span class="built_in">NSString</span> *value = [arrKeyAndValue objectAtIndex:<span class="number">1</span>];</span><br><span class="line">                    [view updateCSS:key withValue:value];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">         </span><br><span class="line">            <span class="comment">//部分View 的native属性，比如字体粗细，比如背景色，需要进行设置</span></span><br><span class="line">            <span class="keyword">case</span> DOM_UPDATE_ATTR: &#123;</span><br><span class="line">                FBView *view = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line"></span><br><span class="line">                <span class="built_in">NSString</span> *style = [<span class="built_in">NSString</span> stringWithUTF8String:(<span class="keyword">char</span>*)op-&gt;param];</span><br><span class="line">                <span class="built_in">NSArray</span> *arrKeyAndValue = [style componentsSeparatedByString:PARAM_DELIMITER_OC];</span><br><span class="line">                <span class="keyword">if</span> (arrKeyAndValue.count == <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="built_in">NSString</span> *key = [arrKeyAndValue objectAtIndex:<span class="number">0</span>];</span><br><span class="line">                    <span class="built_in">NSString</span> *value = [arrKeyAndValue objectAtIndex:<span class="number">1</span>];</span><br><span class="line">                    [view updateAttr:key withValue:value];</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">//部分 View 可以接受交互事件，比如点击事件 onClick，需要把原生的点击事件，与点击事件响应的js 绑定起来</span></span><br><span class="line">            <span class="comment">//因此这个 action 用于绑定 js 函数给 native 的点击事件 </span></span><br><span class="line">            <span class="keyword">case</span> DOM_UPDATE_EVENT: &#123;</span><br><span class="line">                FBView *view = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                </span><br><span class="line">                <span class="built_in">NSString</span> *style = [<span class="built_in">NSString</span> stringWithUTF8String:(<span class="keyword">char</span>*)op-&gt;param];</span><br><span class="line">                <span class="built_in">NSArray</span> *arrKeyAndValue = [style componentsSeparatedByString:PARAM_DELIMITER_OC];</span><br><span class="line">                <span class="keyword">if</span> (arrKeyAndValue.count == <span class="number">2</span>) &#123;</span><br><span class="line">                    <span class="built_in">NSString</span> *key = [arrKeyAndValue objectAtIndex:<span class="number">0</span>];</span><br><span class="line">                    <span class="built_in">NSString</span> *value = [arrKeyAndValue objectAtIndex:<span class="number">1</span>];</span><br><span class="line">                    [view updateEvent:key withValue:value];</span><br><span class="line">                &#125;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">                </span><br><span class="line">            <span class="comment">//部分 View 可以接受 JS 代码控制，提供给 JS Native 方法可以调用</span></span><br><span class="line">            <span class="comment">//因此这个 action 用于绑定 native 方法给 js</span></span><br><span class="line">            <span class="keyword">case</span> DOM_UPDATE_FUNC: &#123;</span><br><span class="line">                FBView *view = [<span class="keyword">self</span> findViewByNode:op-&gt;node];</span><br><span class="line">                </span><br><span class="line">                [view updateFunc:[<span class="built_in">NSString</span> stringWithUTF8String:(<span class="keyword">char</span>*)op-&gt;param] withValue:PARAM_DELIMITER_OC];</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">default</span>:</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// ... 省略部分代码 </span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当 updateLayout 执行完毕后，对 FBDocument 调用他的 getView 方法，就能直接获取 RootView，也就是整个鸟巢界面了。</p>
+<h2 id="原生控件与JS代码之间交互"><a href="#原生控件与JS代码之间交互" class="headerlink" title="原生控件与JS代码之间交互"></a>原生控件与JS代码之间交互</h2><ul>
+<li>DOM_UPDATE_EVENT  </li>
+<li>DOM_UPDATE_FUNC</li>
+</ul>
+<p>其实就是上面介绍的2个核心的 actionSeq 指令，而这两个指令会分别调用 FBView 的下面两个方法</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">- (<span class="keyword">void</span>)updateEvent:(<span class="built_in">NSString</span>*)key withValue:(<span class="built_in">NSString</span>*)value;</span><br><span class="line">- (<span class="keyword">void</span>)updateFunc:(<span class="built_in">NSString</span>*)key withValue:(<span class="built_in">NSString</span>*)value;</span><br></pre></td></tr></table></figure>
+<p>FBView 会有2个空方法实现，不同的原生 View 组件会根据自己的组件设计去重写这两个方法，从而识别正确下发的 key  与 value</p>
+<ul>
+<li>DOM_UPDATE_EVENT</li>
+</ul>
+<p>拿 FBImage 举例，FBImg 就是一个可以接受点击，触发点击事件的原生组件，所以在 FBImg 的 updateEvent 代码中，native 代码会识别 value 为“onClick” 的时候，知道要给 FBImg 构建一个 tap 手势识别器，当发生点击的时候，会调用 onClicked：方法，触发 fb_platform_onclick 来调用 js</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)updateEvent:(<span class="built_in">NSString</span> *)key withValue:(<span class="built_in">NSString</span> *)value</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> ([value isEqualToString:<span class="string">@"onclick"</span>]) &#123;</span><br><span class="line">        [<span class="keyword">self</span>.view setUserInteractionEnabled:<span class="literal">YES</span>];</span><br><span class="line">        <span class="keyword">if</span> (_tapRecognizer == <span class="literal">nil</span>) &#123;</span><br><span class="line">            _tapRecognizer = [[<span class="built_in">UITapGestureRecognizer</span> alloc] initWithTarget:<span class="keyword">self</span> action:<span class="keyword">@selector</span>(onClicked:)];</span><br><span class="line">            [<span class="keyword">self</span>.view addGestureRecognizer:_tapRecognizer];</span><br><span class="line">            <span class="keyword">const</span> fb_node_t *fbNode = [<span class="keyword">self</span> getFbNode];</span><br><span class="line">            <span class="keyword">if</span> (fbNode != <span class="literal">nil</span> &amp;&amp; fbNode-&gt;_<span class="keyword">id</span> != <span class="literal">NULL</span>) &#123;</span><br><span class="line">                <span class="built_in">NSString</span> *seed = [[<span class="built_in">NSString</span> alloc] initWithUTF8String:[<span class="keyword">self</span> getFbNode]-&gt;_<span class="keyword">id</span>];</span><br><span class="line">                SEL selector = <span class="keyword">@selector</span>(setActionName:);</span><br><span class="line">                <span class="keyword">if</span> ([_tapRecognizer respondsToSelector:selector]) &#123;</span><br><span class="line">                    [_tapRecognizer performSelector:selector withObject:seed];</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)onClicked:(<span class="keyword">id</span>)sender</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span> (_imageView)</span><br><span class="line">        <span class="keyword">self</span>.doc.focusView = _imageView;</span><br><span class="line"></span><br><span class="line">    fb_platform_onclick([<span class="keyword">self</span> getFbNode]);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>fb_platform_onclick 这个方法核心是用 js 的 duktap 解释器，调用 fb_script_execute 去执行 js 代码，类似于 WebView 的 evaluateScript</p>
+<ul>
+<li>DOM_UPDATE_FUNC</li>
+</ul>
+<p>拿 FBInput 举例，FBInput 就是一个可以被 js 主动调用 focus/unfocus 2个方法的控件，native 应该把聚焦/失焦，以 focus/blur 2个命名，提供给 JS</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- (<span class="keyword">void</span>)updateFunc:(<span class="built_in">NSString</span>*)key withValue:(<span class="built_in">NSString</span>*)value &#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> ([key isEqualToString:<span class="string">@"focus"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [_textfield becomeFirstResponder];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> <span class="keyword">if</span> ([key isEqualToString:<span class="string">@"blur"</span>]) &#123;</span><br><span class="line"></span><br><span class="line">        [_textfield resignFirstResponder];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span> &#123;</span><br><span class="line">        [<span class="keyword">super</span> updateFunc:key withValue:value];</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在这种 JS 主动调用 native 的情况下，真正的链接 native 与 js duktape 引擎的是两个 fb_script.c &amp; fb_script_ductape.c 的类，这两个类的主要工作是进行 js 的内存数据序列化反序列化成 native 的数据，对识别出来的数据，从而调用对应的native 方法，传递数据。</p>
+<p>略微展开一下就是：</p>
+<ul>
+<li>fb_script_duktape 中的 fb_script_register_doc 方法，把所有的 native可提供的方法表的名字字符绑定到了js环境，当任意 js 代码调用了这些绑定名，会触发 fb_script_doc_func 方法</li>
+<li>fb_script_doc_func 方法会触发 fb_script_bind_node 方法</li>
+<li>fb_script_bind_node 方法会触发 fb_script_node_func 方法</li>
+<li>fb_script_node_func 中会识别方法名，如果是 ‘blur’ / “focus” 会触发 fb_core_add_action</li>
+<li>fb_core_add_action 的作用就是创建 DOM_UPDATE_FUNC 事件，并且放入执行队列</li>
+</ul>
+<p>这块还是比较复杂，涵盖整个 js 与 oc 2个上下文交互，可以的话推荐阅读这两个类的源码</p>
+<h1 id="动态化方案对比思考"><a href="#动态化方案对比思考" class="headerlink" title="动态化方案对比思考"></a>动态化方案对比思考</h1><h2 id="账单详情页鸟巢尝试的阻碍"><a href="#账单详情页鸟巢尝试的阻碍" class="headerlink" title="账单详情页鸟巢尝试的阻碍"></a>账单详情页鸟巢尝试的阻碍</h2><p>当初账单详情页因为追求动态化，曾经切换过鸟巢，后来因为种种原因又切换为了现在的H5，异草留下了一篇当时的文档  <a href="https://yuque.antfin-inc.com/aone488674/qzz32g/kav7rq" target="_blank" rel="noopener">https://yuque.antfin-inc.com/aone488674/qzz32g/kav7rq</a></p>
+<ul>
+<li>鸟巢虽然是采用 H5 语言来开发，但是仅支持部分 HTML、CSS，实现方式会受限；</li>
+<li>没有框架支持，只能使用原生的 JS，比较 ReactNative 和 Weex 有一定差距，没有样式库；</li>
+<li>调用原生组件不够丰富，业务开发需要依赖鸟巢资源投入，不过后期有所改善；</li>
+<li>调试不方便，对开发来说比较影响效率，部分 Bug 需要调鸟巢源码进行调试；</li>
+<li>动态更新前期存在很多问题，处于不可用状态，离线包失败没有fallback；</li>
+</ul>
+<p>简单的说：</p>
+<p>产品功能上：由于只是 H5 WebKit 的子集，一些HTML CSS 方式受限，效果受限<br>开发效率上：原生组件，样式库，以及JS脚手架等框架支持少，调试工具不健全，开发效率不高<br>部署与稳定性上：有灰度与更新机制，但相关监控机制不足，回滚机制不足</p>
+<p>综合一句话就是：</p>
+<p>鸟巢的整个机制与扩展性上还好，缺乏的是相关技术生态的框架建设</p>
+<h2 id="思考技术发展的趋势脉络"><a href="#思考技术发展的趋势脉络" class="headerlink" title="思考技术发展的趋势脉络"></a>思考技术发展的趋势脉络</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>原生</th>
+<th>鸟巢</th>
+<th>ReactNative Weex</th>
+<th>WebView 小程序</th>
+<th>WebView  H5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>渲染能力</td>
+<td>任何效果都能实现</td>
+<td>只有 FlexBox 布局支持的效果</td>
+<td>只支持 FlexBox 算法的效果</td>
+<td>只支持 Web 标准的各算法效果<br>暂不算 Canvas 能力</td>
+<td>只支持 Web 标准的各算法效果<br>暂不算 Canvas 能力</td>
+</tr>
+<tr>
+<td>布局性能</td>
+<td>frame布局最佳<br>autolayout布局视算法而定</td>
+<td>FlexBox 性能公认不错</td>
+<td>FlexBox 性能公认不错</td>
+<td>支持各种布局算法混合使用，在布局运算上，css写的越乱性能越差，优先使用 FlexBox 也会有不错的性能</td>
+<td>支持各种布局算法混合使用，在布局运算上，css写的越乱性能越差，优先使用 FlexBox 也会有不错的性能</td>
+</tr>
+<tr>
+<td>渲染性能</td>
+<td>原生渲染，可直接底层图形渲染API，也可原生UI组件渲染</td>
+<td>原生UI组件渲染</td>
+<td>原生UI组件渲染</td>
+<td>WebView 渲染 + 原生组件UI贴片<br>混合式渲染</td>
+<td>WebView 渲染<br>底层直接调用平台的系统GUI API</td>
+</tr>
+<tr>
+<td>运算性能</td>
+<td>性能最佳</td>
+<td>js 虚拟机运行执行，性能不如原生<br>有 js 与原生上下文切换开销</td>
+<td>js 虚拟机执行，性能不如原生<br>js 运行环境有庞大 React JS 框架<br>有 js 与原生上下文切换开销</td>
+<td>js 虚拟机执行，性能不如原生<br>js 运行环境有庞大 React JS 框架<br>有 js 与原生上下文切换开销</td>
+<td>js 虚拟机执行，性能不如原生<br>是否有庞大 JS 框架取决于业务<br>是否有JS与原生上下文切换取决于是否 Hybrid</td>
+</tr>
+<tr>
+<td>更新包内容</td>
+<td>纯数据更新，只能靠网络接口刷新数据展现</td>
+<td>html css js 合成一体的 JSON 模板更新</td>
+<td>html css js 图片资源打包成 jsbundle 整体包更新</td>
+<td>html css js 图片 打包成小程序离线包整体更新</td>
+<td>html css js 图片各资源分散独立，各自更新各自的</td>
+</tr>
+<tr>
+<td>部署更新机制</td>
+<td>无法热更新</td>
+<td>整个包进行版本更新控制</td>
+<td>整个包进行版本更新控制<br>如果包过大可以辅助拆包分包更新策略</td>
+<td>整个包进行版本更新控制<br>包过大有拆包分包更新策略</td>
+<td>每个文件独立更新控制，受 WebView 缓存协议管控更新</td>
+</tr>
+<tr>
+<td>native发版依赖</td>
+<td>每次都要发版</td>
+<td>只有鸟巢组件与框架不足需要扩充才要发版（但是鸟巢组件相比RN不够全面）</td>
+<td>只有 RN 的 Native 组件与框架不足需要扩充才要发版（相对来说 Native组件比较完善，发版频次少于鸟巢）</td>
+<td>只有 RN 的 Native 组件与框架不足需要扩充才要发版（相对来说 小程序有很多Web组件，Native组件不多，发版机会也少）</td>
+<td>完全不需要发版<br>除非 Hybrid WebView 容器框架迭代开发</td>
+</tr>
+</tbody>
+</table>
+<p>好多人都会画这种对比表格，来表明哪种技术方案优劣，但仔细看这个表格，你会发现在 Web 技术动态化这个方向上，所有的技术方案不是割裂的，而是一脉相承的。</p>
+<ul>
+<li>Native 是动态化之路的起点，动态能力几乎为0</li>
+<li>WebView 是动态化之路的终点，动态能力堪称完美（毕竟是W3C标准组织沉淀了一二十年）</li>
+</ul>
+<p>但因为移动端的机器性能不及PC电脑，所以在PC端已经极致成熟的Web庞大功能，在移动端施展不开。于是就在移动端，重新根据移动端设备的性能，沿着 Web 标准发展路线，优先选取最需要的动态能力，融入移动端</p>
+<ul>
+<li>Native 是动态化之路的起点，动态能力几乎为0<ul>
+<li>–&gt; 从 Native 朝着 WebView 去发展 去扩充<ul>
+<li>只选取性能最高的 FlexBox 布局能力</li>
+<li>极简 JS 引擎框架</li>
+<li>整包整体下载后离线运行</li>
+</ul>
+</li>
+<li>– &gt; 形成了鸟巢<ul>
+<li>扩充了更完善的Native UI组件</li>
+<li>扩充了JS层高效的 React 开发框架</li>
+<li>jsbundle的整包分包拆包更新机制</li>
+<li>更加合理的整套框架设计</li>
+</ul>
+</li>
+<li>– &gt; 形成了 RN</li>
+</ul>
+</li>
+<li>WebView 是动态化之路的终点，动态能力堪称完美（毕竟是W3C标准组织沉淀了一二十年）<ul>
+<li>– &gt; 从 WebView 朝着 Native 去发展 去删减不必要的功能开销<ul>
+<li>删减掉 WebView 的每个文件细粒度实时更新控制与缓存控制，改为离线包本地加载</li>
+<li>在CSS这块尽量推荐使用 FlexBox 的布局设计</li>
+<li>在JS这块强制框架引入 MVVM 框架与 dom diff 算法，禁止任意操作dom导致性能下降</li>
+<li>多 WebView 共用 service worker 统一逻辑 js 上下文异步运行js</li>
+<li>在 WebView 的基础上 融入 原生UI组件，Hybrid 渲染，提高一些特殊组件的性能效果</li>
+</ul>
+</li>
+<li>– &gt; 形成了 WebView 小程序</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>一个共识是现阶段原生动态化大家相对都认可的：那就是看齐Web的几个标准。因为Web的技术体系在UI的描述能力以及灵活度上确实设计得很优秀的，而且相关的开发人员也好招。所以，如果说混合开发指的是Native里运行一个Web标准，来看齐Runtime来写GUI，并桥接一部分Native能力给这个Runtime来调用的话，那么它应该是一个永恒的潮流。<br>引用自： <a href="http://awhisper.github.io/2016/06/16/%E5%89%8D%E7%AB%AF10%E5%B9%B4%E8%AF%BB%E5%90%8E%E6%84%9F/" target="_blank" rel="noopener">http://awhisper.github.io/2016/06/16/前端10年读后感/</a></p>
+</blockquote>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Layout/" rel="tag"># Layout</a>
+          
+            <a href="/tags/Hybrid/" rel="tag"># Hybrid</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/01/30/hokkaido-trip/" rel="next" title="童话一般的雪世界 -- 北海道之行">
+                <i class="fa fa-chevron-left"></i> 童话一般的雪世界 -- 北海道之行
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async="async"></script>
+</div>
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+    
+        <div id="gitment-container"></div>
+    
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="唯敬">
+            
+              <p class="site-author-name" itemprop="name">唯敬</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">67</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">46</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/awhisper" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="http://weibo.com/agvicking" target="_blank" title="Weibo">
+                      
+                        <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#编译动态化"><span class="nav-number">1.</span> <span class="nav-text">编译动态化</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果动态化"><span class="nav-number">1.1.</span> <span class="nav-text">编译结果动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#编译结果跨平台"><span class="nav-number">1.2.</span> <span class="nav-text">编译结果跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Web技术动态化-“不要写死”"><span class="nav-number">2.</span> <span class="nav-text">Web技术动态化 - “不要写死”</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#布局引擎-界面动态化"><span class="nav-number">2.1.</span> <span class="nav-text">布局引擎 - 界面动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#解释执行-逻辑动态化"><span class="nav-number">2.2.</span> <span class="nav-text">解释执行 - 逻辑动态化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Web技术思路下的原生动态化与跨平台"><span class="nav-number">2.3.</span> <span class="nav-text">Web技术思路下的原生动态化与跨平台</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#鸟巢工作流程分析"><span class="nav-number">3.</span> <span class="nav-text">鸟巢工作流程分析</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器远端处理Dom"><span class="nav-number">3.1.</span> <span class="nav-text">服务器远端处理Dom</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地内核模块"><span class="nav-number">3.2.</span> <span class="nav-text">客户端本地内核模块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#客户端本地更新流程"><span class="nav-number">3.3.</span> <span class="nav-text">客户端本地更新流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Dom树本地工作流"><span class="nav-number">3.4.</span> <span class="nav-text">Dom树本地工作流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#FlexBox布局算法简单介绍"><span class="nav-number">3.5.</span> <span class="nav-text">FlexBox布局算法简单介绍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生页面的创建与渲染"><span class="nav-number">3.6.</span> <span class="nav-text">原生页面的创建与渲染</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#原生控件与JS代码之间交互"><span class="nav-number">3.7.</span> <span class="nav-text">原生控件与JS代码之间交互</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#动态化方案对比思考"><span class="nav-number">4.</span> <span class="nav-text">动态化方案对比思考</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#账单详情页鸟巢尝试的阻碍"><span class="nav-number">4.1.</span> <span class="nav-text">账单详情页鸟巢尝试的阻碍</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#思考技术发展的趋势脉络"><span class="nav-number">4.2.</span> <span class="nav-text">思考技术发展的趋势脉络</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">唯敬</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Mist</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+     
+     
+     
+     
+     <link rel="stylesheet" href="https://www.wenjunjiang.win/css/gitment.css">
+     <script src="https://www.wenjunjiang.win/js/gitment.js"></script>
+     
+         <script type="text/javascript">
+             var gitment = new Gitment({
+                 id: '原生动态化探讨', 
+                 owner: 'Awhisper',
+                 repo: 'Awhisper.github.io',
+                 oauth: {
+                     client_id: 'd8b03aa5ea2168f013f7',
+                     client_secret: '87a2964ce06fef83f1fa3fcb29259213f2bf1711'
+                 }});
+             gitment.render('gitment-container');
+         </script>
+     
+ 
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.4.js"></script>
+  <script>AV.initialize("2CRhJaep0D0KNieQj7siPjH6-gzGzoHsz", "B1yrUMJm78YNPB2PMSasWiaK");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -304,6 +304,224 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/09/injectUIWebView/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/09/09/injectUIWebView/" itemprop="url">UIWebView代码注入时机与姿势</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-09T13:06:27+08:00">
+                2017-09-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/09/09/injectUIWebView/" class="leancloud_visitors" data-flag-title="UIWebView代码注入时机与姿势">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>一个奇怪的业务场景，引发的胡乱思考</p>
+<p>问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西</p>
+<p>本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲</p>
+</blockquote>
+<p>我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接入APP尝试，快速的也在APP里进行传播。（后续验证可行和有效后，也会纳入APP的功能规划里，以最流畅的体验进行呈现）</p>
+<p>但这样会有一些问题，纯为WAP开发的页面，直接扔到APP的WebView里表现并不好</p>
+<p>WAP的团队开发出来的界面一般长这样<br><img src="http://mweb-qiniu.awhisper.net/wenkuwaphead.jpg" alt="15049394419512"></p>
+<p>如果这样的页面不做任何处理直接在APP中<code>低成本接入</code>会变成这样</p>
+<p><img src="http://mweb-qiniu.awhisper.net/appwaphead.jpg" alt="15049394419512"></p>
+<p>问题就在于APP是有自己的NavigationBar的，而WAP的页面一般都为浏览器而生，浏览器没有自己的导航条于是WAP的团队很自然都会在WAP页面里开发出一个导航条，如果这个页面不做任何针对APP的处理，直接放入APP的WebView中，就会出现这样丑陋的双导航条，一个是native App自己的，一个是WAP网页自己画的</p>
+<blockquote>
+<p>这是一个非常常见的场景</p>
+<p>想要实现也非常简单</p>
+<p>WAP识别APP的UA，进行定制化的开发就好了</p>
+<p>为什么说他奇怪？</p>
+</blockquote>
+<p>团队不同，业务场景不同，也面临不一样的问题，对于我们来说，这个问题不在于如何实现，而在于如何做到让WAP开发最省事。因为背景交代过了，WAP的前端团队和APP完全不是一拨人，如果能有什么办法让WAP前端团队在开发工作中尽量的无感知，尽量的少操作，不需要WAP团队在开发的时候人工的判断UA，选择性渲染，于是蛋疼的问题来了</p>
+<ul>
+<li>直接让WAP开发人员定制开发<ul>
+<li>后端渲染的时候判断UA</li>
+<li>前端模板隐藏UI</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>现有老的开发模式就是这样，每次都是人工适配，纯体力活，有时候项目紧急WAP团队就会忘了，上线的时候一发现，咦？在App里好丑啊，虽然改动很小，但一块后端判定UA，一块前端模板选择渲染，代码分散在几处，改起来很麻烦</p>
+<p>单纯是Bar的话不是问题，写进WAP基类就行，问题是类似的场景看业务功能，有时候不止是Bar，会有定制化的东西，在APP里表现，不能和WAP一样</p>
+</blockquote>
+<ul>
+<li>WAP的编译框架支持<ul>
+<li>这确实是可行的，并且是很好的解决方案之一</li>
+<li>厂里的前端使用的是FIS的编译打包框架，支持一定的插件扩展，可以在前端代码编译环节，就自动加入UA判断，对特定的UI，进行有规律的渲染控制</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>这个太底层了，对每天几千万UV的WAP来说，进行这么大的改动，风险高，收益低（毕竟这个界面适配APP只是搂草打兔子捎带手）有点难推动，后续确实可以尝试一下</p>
+</blockquote>
+<ul>
+<li>WAP的JS插件支持<ul>
+<li>基础模板引入JS脚本</li>
+<li>用JS脚本在client里判断UA</li>
+<li>提取特定Dom</li>
+<li>隐藏Dom</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>最大的问题在于，JS在client里执行的时机，JS执行的时候，这个Dom已经被渲染出来了，当你判断UA，要移除的时候，画面那个bar会闪一下，整体效果是，整个页面带着bar加载出来了，但是会突然闪一下bar消失</p>
+</blockquote>
+<ul>
+<li>App在WebView里注入CSS<ul>
+<li>让WAP只需要对需要隐藏的Dom做个标记比如<code>XXWAPBAR</code>（WAP只用写几个字母）</li>
+<li>在WAP浏览器里，无感知，完全不需要定制化开发</li>
+<li>在App WebView加载网页的时候，注入额外的CSS，将含有<code>XXWAPBAR</code>标记的Dom隐藏</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>看起来靠谱，看起来是一种WAP开发人员几乎不用管不用操心，也不会影响WAP，只在APP里有独有效果的设计，试试看</p>
+</blockquote>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/09/09/injectUIWebView/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/universallink/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1951,188 +2169,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" itemprop="url">扯淡：大白话聊聊编译那点事儿</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-26T23:05:23+08:00">
-                2017-02-26
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" class="leancloud_visitors" data-flag-title="扯淡：大白话聊聊编译那点事儿">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下</p>
-<p>很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正</p>
-<p>我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统</p>
-</blockquote>
-<p>作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。我们写好的那一行行代码，其实就是最普通的文本字符串，这些个文本字符串是怎么变成一个个漂亮的界面，一个个大数据量吞吐的服务器，一个个聪明的人工智能AI的？这里面其实经历了三个过程,<code>编译</code>,<code>链接</code>,<code>装载</code>(脚本语言会特殊一些，本文后面也会提及)</p>
-<ul>
-<li><p>编译：编译系统会读取我们写的文本字符串，去解读这里面代码所蕴含的意义，解读出来后会翻译成机器能看懂的汇编语言，我们管这个结果叫目标文件，这个过程叫编译</p>
-</li>
-<li><p>链接：每个类，每个文件都会被编译成不同的目标文件，链接器把这每个目标文件穿起来，让他们之间能够相互调用，最后生成可执行文件，这个过程叫链接</p>
-</li>
-<li><p>装载：把已经生成的可执行文件放到操作系统里，在系统专属的进程与内存控制下，找到机器可以识别的汇编代码入口，开始按着汇编去执行机器码<br>，并且能与操作系统级别的各种系统Api对接起来，这个过程叫装载</p>
-</li>
-</ul>
-<p>这一篇主要聊聊编译，但我会持续把大白话聊链接，装载坚持写完</p>
-<h1 id="编译步骤"><a href="#编译步骤" class="headerlink" title="编译步骤"></a>编译步骤</h1><p>怎么能让编译系统理解你写出来的一行行字符串，让机器去<code>读懂</code>你写的代码？这里面其实经历了很多步骤，我之前<a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a>里提到过一点点，这里我们再扯一扯~</p>
-<ul>
-<li>预编译</li>
-<li>词法分析</li>
-<li>语法分析</li>
-<li>语义分析</li>
-<li>生成抽象语法树</li>
-<li>生成中间码</li>
-<li>目标代码生成</li>
-<li>目标代码优化</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/02/26/扯淡：大白话聊聊编译那点事儿/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2185,7 +2221,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">66</span>
+                  <span class="site-state-item-count">67</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
