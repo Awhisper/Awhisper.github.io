@@ -92,11 +92,10 @@
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515945004818.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515945270280.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515954076979.jpg">
-<meta property="og:image" content="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&display=inline&height=317&name=image.png&originHeight=634&originWidth=1192&size=94231&status=done&width=596">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515954287860.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515956953257.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/15515957510019.jpg">
-<meta property="og:updated_time" content="2019-03-03T06:51:00.169Z">
+<meta property="og:updated_time" content="2019-03-03T06:52:24.878Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="原生动态化探讨与实现">
 <meta name="twitter:description" content="现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。 编译动态化">
@@ -568,7 +567,6 @@
 <h1 id="一些原生动态化技术工作流程分析"><a href="#一些原生动态化技术工作流程分析" class="headerlink" title="一些原生动态化技术工作流程分析"></a>一些原生动态化技术工作流程分析</h1><p>相信 Weex 与 ReactNative 的源码已经有无数人分析过了，大家也或多或少的看了很多各种架构与设计分析，其实还有很多大公司内部有一套自己自研，更适合自身业务的原生动态化技术。这些技术摆脱了开源的可维护与可扩展性以及易学习的包袱重担，很多内部自研技术在适当耦合了自身业务与后端服务的前提下，根据公司业务特点取舍性的设计原生动态化能力，反而可能获得一些性能上的优势。</p>
 <p>简单地说，就是不求设计一个大而全，牛逼的原生动态化框架与丰富的组件生态。而是根据自身业务需求量身定制，在一样的原理和思路下，根据业务量体裁衣，做出最适合自己业务的轻量级原生动态化框架。</p>
 <p><img src="http://mweb-qiniu.awhisper.net/15515954076979.jpg" alt="-w614"></p>
-<p><img src="https://intranetproxy.alipay.com/skylark/lark/0/2019/png/132411/1550832142625-a5344979-a7f7-48a6-ac9b-baa1fdf4e6c4.png#align=left&amp;display=inline&amp;height=317&amp;name=image.png&amp;originHeight=634&amp;originWidth=1192&amp;size=94231&amp;status=done&amp;width=596" alt="image.png"></p>
 <p>很多公司内部都开发过直接用 HTML + CSS + JS 的网页写法，直接转 Native 原生动态化的技术，比如百度内部的自研技术 HtmlNative ，滴滴的@戴铭 老师也介绍过滴滴那边直接写 原生 html 代码生成 native 的技术，还有蚂蚁的鸟巢。</p>
 <p>这类技术让前端开发用所熟练的传统 HTML + CSS + JS 来快速实现可动态部署的 native 页面。其工作机制上和浏览器内核的原理一模一样，也是将 HTML &amp; CSS  在内核中整到一个树上，并且把 JS 整体输入虚拟机，但各自细微机制的取舍上还是存在一些差异。</p>
 <h2 id="服务器远端处理Dom"><a href="#服务器远端处理Dom" class="headerlink" title="服务器远端处理Dom"></a>服务器远端处理Dom</h2><ul>
