@@ -304,211 +304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/01/cssprotocol/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/01/cssprotocol/" itemprop="url">iOS上的CSS样式协议 VKCssProtocol</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-01T16:23:35+08:00">
-                2016-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具代码/" itemprop="url" rel="index">
-                    <span itemprop="name">工具代码</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/01/cssprotocol/" class="leancloud_visitors" data-flag-title="iOS上的CSS样式协议 VKCssProtocol">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="CSS产生的想法"><a href="#CSS产生的想法" class="headerlink" title="CSS产生的想法"></a>CSS产生的想法</h1><p>早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式<code>CSS Class</code>然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定<code>CSS Class</code>的名字就能自动生效。</p>
-<ul>
-<li>样式和界面完全隔离解耦</li>
-<li>样式之间可以自由任意排列组合创建新CSS Class</li>
-<li>对任意界面元素指定样式Class名就能自动生效</li>
-</ul>
-<p><strong>客户端场景</strong></p>
-<ul>
-<li>UI出App设计图也会有一套标准UI库</li>
-<li>不同的底色，字号，字色，圆角，字体，阴影等等样式属性相互组合</li>
-<li>UI有时候更换整体设计风格的时候，所有项目中用到的标准组件，应该随着UI设计一起变为最新的设计效果</li>
-<li>标准UI库扩展延伸一下，就是客户端主题风格，换肤等系统</li>
-</ul>
-<p><strong>工厂模式</strong></p>
-<p>看到上面的设计需求，相信很多人第一时间想到的都是客户端里构建一套工厂模式</p>
-<ul>
-<li>由工厂模式统一生成UI设计的标准控件</li>
-<li>所有需要使用标注控件的地方都用工厂去生成</li>
-<li>当UI需要整体修改样式属性，修改工厂模式的构造方法就能实现整体应用新效果</li>
-</ul>
-<p>我不是很喜欢这种模式</p>
-<ul>
-<li>写法不统一，必须让使用者使用工厂的构造方法来创建标准UI，非标准UI写法就随意了</li>
-<li>耦合性比较强，必须引入工厂模块</li>
-</ul>
-<p><strong>Css样式,Protocol协议</strong></p>
-<ul>
-<li>希望引入Css的样式思想，让样式与界面分离</li>
-<li>将UI给的统一标准设计图，专心的写成<code>.css</code>文件</li>
-<li>可以动态下发，可以动态替换，动态更新效果。</li>
-<li>希望像iOS Protocol协议那样工作</li>
-<li>不管控件是Label Button Image View，CSSClass都可以直接指定一个协议名字，样式功能就自动生效</li>
-<li>不管控件是用工厂创建的，还是Xib拖线的，还是手写代码写的，都能无缝接入这个cssprotocol</li>
-<li><code>xxview.protocol = &quot;cssclassname1 cssclassname2&quot;</code> 这种感觉</li>
-<li>协议可以同时指定多个样式，以空格区分，样式之间自由组合</li>
-</ul>
-<p><strong>我不想动态修改界面元素布局，动态创建全新的界面</strong></p>
-<p>大家都知道，CSS有一个很大的用途就是用于界面布局，并且css的布局写法和iOS原生的布局写法有很大的区别，所以在这里我想强调一点，我这里写的cssprotocol，不想包含任何跟布局有关，只是单纯的动态配置外观样式，丝毫不影响布局。</p>
-<p>原因是，项目里总会存在着各种各样的布局方式，有frame布局，有masonry autolayout，也有XIB拖线autolayout，我希望我写的东西能让使用的人很快的在自己项目里接入，而不是一下删掉旧的布局方案，全都替换成我的。</p>
-<p>我希望使用者直接在现有的代码里，无论是哪种方式实现的界面，取到UIView，直接指定cssprotocol，就自动样式生效了，不要让使用者需要大规模改动现有代码。</p>
-<p>同理，我也没想让这一套能够动态的创建UI，真要动态创建原生UI，直接用samurai reactnative weex好了。</p>
-<p>还原我的初衷，我还是希望原生开发者能在不改变自己的项目的情况下，很快的接入这个工具，对于主题样式能够控制的更灵活和方便。</p>
-<blockquote>
-<p>题外话：</p>
-<p>我就很不喜欢ASDK的设计，一整套异步渲染，flexbox页面布局，网络，缓存，滚动控制等等一堆完整解决方案杂糅在一起，让使用者的代价异常的高，哪怕提供了UIKit转ASNode的简单入口也无法改变这一笨重无比的事实</p>
-<p>其实ASDK每一个feature，单看源码，单独拆出来模块，学习思想，吸收进入自己的项目都是很好地。</p>
-</blockquote>
-<h1 id="VKCssProtocol"><a href="#VKCssProtocol" class="headerlink" title="VKCssProtocol"></a>VKCssProtocol</h1><p><a href="https://github.com/Awhisper/VKCssProtocol" target="_blank" rel="noopener">VKCssProtocol  Github地址</a></p>
-<p>整个项目的代码，以及使用demo，都在上面</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/01/cssprotocol/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/30/wxappdemo/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2018,6 +1813,163 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/16/前端10年读后感/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/16/前端10年读后感/" itemprop="url">“站在10年研发路上，眺望前端未来”：读后感</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-16T22:56:23+08:00">
+                2016-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/06/16/前端10年读后感/" class="leancloud_visitors" data-flag-title="“站在10年研发路上，眺望前端未来”：读后感">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>以下内容感觉都是嘴炮，没啥干货，也没啥源码，就是自己的一点乱七八糟的想法，甚至可能是个人单方面的yy。。。我还是不归类在搬砖里，归类在扯淡里吧</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/06/16/前端10年读后感/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2070,7 +2022,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">69</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

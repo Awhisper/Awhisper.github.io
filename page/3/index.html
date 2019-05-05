@@ -304,186 +304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/wechatkilluniversallink/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/08/wechatkilluniversallink/" itemprop="url">微信着手封堵 Universal Link</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-08T17:50:25+08:00">
-                2018-01-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/01/08/wechatkilluniversallink/" class="leancloud_visitors" data-flag-title="微信着手封堵 Universal Link">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>之前写了一篇文章<a href="http://awhisper.github.io/2017/09/02/universallink/" target="_blank" rel="noopener">Universal Link 前端部署采坑记</a>，当时还信誓旦旦的说（仔细看了一眼，我当初说话还加了个括号，还好没立flag）</p>
-<blockquote>
-<p>Universal Link目前还没有基于iOS的UI/WKWebView的应用进行拦截，所以目前看还是能突破微信/手百的封锁。（以后，不好说啊~）</p>
-</blockquote>
-<p>于是微信的这个屠刀终于挥了下来╮(╯_╰)╭</p>
-<h1 id="业务上线Universal-Link-以前就有坑"><a href="#业务上线Universal-Link-以前就有坑" class="headerlink" title="业务上线Universal Link 以前就有坑"></a>业务上线Universal Link 以前就有坑</h1><p>做前端最头疼的就是浏览器适配，这次在Universal Link上也一样体现了痛苦。</p>
-<p>我本来认为，Universal Link完全是走的系统控制，App应该是无法干预的，但在最初上线的时候就发现<code>UC浏览器</code>和<code>QQ浏览器</code>（非手机QQ）无效，我曾经天真的想这俩浏览器是不是因为自己做了内核不用系统WebView所以可以这样吧，于是乎没刨根问底，这事情就没细究</p>
-<h1 id="封禁方案"><a href="#封禁方案" class="headerlink" title="封禁方案"></a>封禁方案</h1><p>早上小伙伴给我说微信封杀我们的Universal Link了，我吓了一跳觉得不可能，还以为是小伙伴他点过什么返回原App被苹果策略屏蔽了，直到亲自试了一下才发现，卧槽！是真的！</p>
-<p>在试一下知乎/今日头条2款App，也废了╮(╯_╰)╭看来真是下手了这到底是怎么做到的</p>
-<p>小伙伴给我贴了个stackoverflow的链接</p>
-<p><a href="https://stackoverflow.com/questions/38450586/prevent-universal-links-from-opening-in-wkwebview-uiwebview" target="_blank" rel="noopener">Prevent universal links from opening in <code>WKWebView</code>/<code>UIWebView</code>
-</a></p>
-<p>看到里面有一个回答是这么说明的</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">sourcecode for WebKit:</span><br><span class="line"></span><br><span class="line">static const WKNavigationActionPolicy WK_API_AVAILABLE(macosx(10.11), ios(9.0)) _WKNavigationActionPolicyAllowWithoutTryingAppLink = (WKNavigationActionPolicy)(WKNavigationActionPolicyAllow + 2);</span><br><span class="line"></span><br><span class="line">if you are using WKWebView, just use WKNavigationActionPolicyAllow + 2 instead of WKNavigationActionPolicyAllow</span><br></pre></td></tr></table></figure>
-<p>好么~WebKit源码其实本就准备了不触发UniversalLink的控制代码</p>
-<p><code>_WKNavigationActionPolicyAllowWithoutTryingAppLink</code></p>
-<p>只不过这个枚举值是私有的并没有对外暴露，但你会发现这个值等于<code>WKNavigationActionPolicyAllow</code>这个系统公开枚举值+2，于是乎封掉Universal Link的方法呼之欲出了。如果你在使用WKWebView，尝试在decidePolicy的时候返回这个枚举值！</p>
-<p>尝试写个demo App，使用WKWebView，然后实现webView:decidePolicyForNavigationAction:decisionHandler:这个delegate，还拿我们的线上universal link页面测试，果然，返回+2了以后 Universal Link是被彻底封堵了</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//就是这么的简单粗暴</span></span><br><span class="line">- (<span class="keyword">void</span>)webView:(<span class="built_in">WKWebView</span> *)webView decidePolicyForNavigationAction:(<span class="built_in">WKNavigationAction</span> *)navigationAction decisionHandler:(<span class="keyword">void</span> (^)(<span class="built_in">WKNavigationActionPolicy</span>))decisionHandler &#123;</span><br><span class="line">    <span class="comment">//返回+2的枚举值</span></span><br><span class="line">    decisionHandler(<span class="built_in">WKNavigationActionPolicyAllow</span> + <span class="number">2</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>微博上的@Vong_HUST 还跟进逆向了一下</p>
-<blockquote>
-<p>腾讯系的都可以打开，应该是设置了白名单。dump 了一下头文件，也确实发现了一些类似 isCloseUniversallink 的方法，感觉可以投诉到苹果那边了</p>
-</blockquote>
-<p>嘿！看到没？还isCloseUniversallink，这充分说明这TM还是个远程开关，随开随关可控，我说为啥命名微信没发版本，咋就跪了</p>
-<h1 id="做用户流量的一条路又废了"><a href="#做用户流量的一条路又废了" class="headerlink" title="做用户流量的一条路又废了"></a>做用户流量的一条路又废了</h1><p>我们从自身业务出发，确实想从各种别人的App，别人的浏览器里，往自己App跳，往自己App导流</p>
-<p>但换位思考一下如果你是浏览器APP，你是微信，你肯定不希望用户离开微信进入别的App，因此最早Schema式跳转是被各大浏览器老早就封杀的</p>
-<p>最早还寄希望于Universal Link是系统机制，或许封杀不到，然鹅……</p>
-<p>让我们猜猜，手百的Universal Link，还能活多久？</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/hybrid-jscomunication/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2124,6 +1944,189 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/15/MySempornaDive/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/04/15/MySempornaDive/" itemprop="url">探秘水下世界：仙本那OW+AOW潜水记</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-04-15T22:05:41+08:00">
+                2017-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/旅行游记/" itemprop="url" rel="index">
+                    <span itemprop="name">旅行游记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/04/15/MySempornaDive/" class="leancloud_visitors" data-flag-title="探秘水下世界：仙本那OW+AOW潜水记">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>之前在新西兰达成了上天成就–高空跳伞，媳妇就已经计划下海成就–水肺潜水。约好了小伙伴，计划好行程，目的地：仙本那，目标：拿下OW潜水证+AOW潜水证，就是清明小假期！走你！</p>
+<h1 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h1><p><strong>Scuba Dive</strong></p>
+<p>Self-Contained Underwater Breathing Apparatus</p>
+<p>Scuba这个单词就是水肺潜水的意思</p>
+<p><strong>PADI 国际专业潜水教练协会</strong></p>
+<p>PADI是全球都承认的水肺潜水教学机构，在全球各大潜水胜地，各大潜店，都是与PADI合作教学多种Level的潜水课程，发布潜水证书。在任何一家潜店拿到的PADI证书后，就可以在全球任意PADI合作潜店租赁设备，体验潜水的无限魅力。</p>
+<p>PADI的水肺潜水课程包含好几个Level</p>
+<ul>
+<li>Open Water Diver 开放水域潜水员</li>
+<li>Advance Water Diver 进阶开放水域潜水员</li>
+<li>Emergency F.A. 紧急第一反应</li>
+<li>Rescue Diver 救援潜水员</li>
+<li>Deep Diver 深潜潜水员</li>
+<li>Nitrox Diver 高氧潜水员</li>
+<li>Wreck Diver 沉船潜水员</li>
+<li>Diver Propulsion Veh  DPV推进器潜水员</li>
+<li>Carern Diver 洞潜潜水员</li>
+<li>Master Scuba Diver 名仕潜水员</li>
+<li>Dive Master 潜水长</li>
+<li>Scuba Instructor 水肺潜水教练</li>
+</ul>
+<p>其中OW是入门级，教你水下的各种基础生存技能，基础应急技能，有了OW你就可以在全世界各处体验潜水了，每次潜水都会有一名熟悉当地水域的Dive Master带队，一般一位DM会带4-5人，OWer跟着DM，听从DM的指挥，在水下领略美好风光。</p>
+<p>一些潜水水域要求必须有AOW的级别，AOW主要教你一些复杂水域的适应技能，比如适应洋流环境，深度潜水，识别水下鱼类等。仙本那最著名的潜水胜地<code>Sipadan诗巴丹</code>就是一个必须要AOW才能去的水域。AOWer依然需要在DM的带队下潜水。</p>
+<p>有了这两个证基本上就能随心所欲的去全球绝大部分的潜水水域，领略无尽水下风光了。</p>
+<p>至于PADI的其他课程，可以让你学习更多潜水技巧，最后进阶成为一名水肺潜水教练，全球所有的潜店教练都是经过了一系列的证书考验具有PADI发布Scuba Instructor证书。</p>
+<p>拥有PADI的Scuba Instructor证书的人，可以随心所欲的去全球各处水域，找当地的潜店，当临时的教练与潜导，我们在潜水的时候就遇到了个大连的DiveMaster，在仙本那那边呆几个月，顺便当教练与潜导。</p>
+<p><strong>预定课程</strong></p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/15/MySempornaDive/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2176,7 +2179,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">69</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
