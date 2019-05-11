@@ -304,604 +304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/02/hybrid-jscomunication/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/01/02/hybrid-jscomunication/" itemprop="url">从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-02T19:58:50+08:00">
-                2018-01-02
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/01/02/hybrid-jscomunication/" class="leancloud_visitors" data-flag-title="从零收拾一个hybrid框架（一）-- 从选择JS通信方案开始">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>相信很多人都在项目里熟练使用各种Hybrid技术，无论是使用了知名得 <a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a> 框架来做自己的Hybrid Web容器，又或是自己从头着手写了一个满足自己业务需求的bridge，从而构建起自己的Hybrid Web容器，也有的干脆直接使用了<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a> 这一大型Hybrid容器框架，<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a> + <a href="http://www.ionic-china.com/" target="_blank" rel="noopener">ionic</a> 来进行Hybrid的开发</p>
-<p>拆解学习框架源码是一个好事，但是在拆解优秀框架源码的背后，如何将多个优秀源码的精华打碎重塑，结合自己的产品业务需求重新组合成为适合自己的，并且扎实掌握可以灵活修改自如控制的代码，这也算是另一个层面的提升。</p>
-<ul>
-<li>选择合适的JS通信方案（第一篇）</li>
-<li>实现基本的WebView容器能力（第二篇 待续）</li>
-<li>尝试拓展WebView容器的额外能力（第三篇 待续）</li>
-</ul>
-<p>这系列文章我想表达的并不是在推广什么我自己的新Bridge轮子，也不是针对某个开源Bridge框架进行深度的源码分析。我们从看开源框架轮子如何设计，如何使用，源码如何工作的思维方式中跳出来</p>
-<p>换一种模式去从目的出发，从需求出发，思考当你什么都没有的时候，你要从零思考构建一个hybrid框架的时候，你都要考虑哪些方面？这些方面采用怎样的设计思想能做到未来在使用中灵活自如，不至于面临局限</p>
-<p>这一篇先重点聊聊 <strong>JS与Native通信的通信方案</strong></p>
-<h1 id="几种JS-Native相互通信方式的介绍"><a href="#几种JS-Native相互通信方式的介绍" class="headerlink" title="几种JS Native相互通信方式的介绍"></a>几种JS Native相互通信方式的介绍</h1><p>大家可能看了很多大框架源码，无论是<a href="http://cordova.axuer.com/" target="_blank" rel="noopener">cordova</a>还是<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a>他们核心的通信方式就都是 <strong>假跳转请求拦截</strong></p>
-<p>但其实JS与Native通信并不止一种方式，还有很多种通信方式，尤为重要的是，不同的通信方式有着不同的特点，有的甚至虽然受限于安卓/苹果平台差异不通用，但独有的优点却是 <strong>假跳转请求拦截</strong> 无法比拟的</p>
-<h2 id="JS-调用-Native-的几种通信方案"><a href="#JS-调用-Native-的几种通信方案" class="headerlink" title="JS 调用 Native 的几种通信方案"></a>JS 调用 Native 的几种通信方案</h2><ul>
-<li>假跳转的请求拦截</li>
-<li>弹窗拦截<ul>
-<li>alert()</li>
-<li>prompt()</li>
-<li>confirm()</li>
-</ul>
-</li>
-<li>JS上下文注入<ul>
-<li>苹果JavaScriptCore注入</li>
-<li>安卓addJavascriptInterface注入</li>
-<li>苹果scriptMessageHandler注入</li>
-</ul>
-</li>
-</ul>
-<h2 id="Native-调用-JS-的几种通信方案"><a href="#Native-调用-JS-的几种通信方案" class="headerlink" title="Native 调用 JS 的几种通信方案"></a>Native 调用 JS 的几种通信方案</h2><p>JS是一个脚本语言，在设计之初就被设计的任何时候都可以执行一段字符串js代码，换句话说，任何一个js引擎都是可以在任意时机直接执行任意的JS代码，我们可以把任何Native想要传递的消息/数据直接写进JS代码里，这样就能传递给JS了</p>
-<ul>
-<li>evaluatingJavaScript 直接注入执行JS代码</li>
-</ul>
-<p>大家在PC上用电脑，用Chrome的时候都知道，可以直接用’javascript:xxxx’来简单的执行一些JS代码，弹个框，这个方法只有安卓可以用，因为iOS必须先将url字符串生成Request再交给webview去load，这种’javascript:xxxx’生成request会失败</p>
-<ul>
-<li>loadUrl 浏览器用’javascript:’+JS代码做跳转地址</li>
-</ul>
-<p>WKWebView官方提供了一个Api，可以让WebView在加载页面的时候，自动执行注入一些预先准备好的JS</p>
-<ul>
-<li>WKUserScript WKWebView的addUserScript方法，在加载时机注入</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/01/02/hybrid-jscomunication/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/07/LakeBaikalGlance/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/10/07/LakeBaikalGlance/" itemprop="url">“你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-07T15:51:53+08:00">
-                2017-10-07
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/旅行游记/" itemprop="url" rel="index">
-                    <span itemprop="name">旅行游记</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/10/07/LakeBaikalGlance/" class="leancloud_visitors" data-flag-title="“你清澈又神秘，在贝加尔湖畔” -- 贝加尔湖轻度游">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>在我的怀里 在你的眼里~<br>那里春风沉醉 那里绿草如茵~</p>
-<p>月光把爱恋 洒满了湖面~<br>两个人的篝火 照亮整个夜晚~</p>
-<p>多少年以后 如云般游走~<br>那变换的脚步 让我们难牵手~</p>
-<p>这一生一世 有多少你我~<br>被吞没在月光如水的夜里~</p>
-<p>多想某一天 往日又重现~<br>我们流连忘返 在贝加尔湖畔~</p>
-</blockquote>
-<p><img src="http://mweb-qiniu.awhisper.net/WechatIMG126.jpeg" alt="WechatIMG126"></p>
-<blockquote>
-<p>多少年以后 往事随云走~<br>那纷飞的冰雪容不下那温柔~</p>
-<p>这一生一世 这时间太少~<br>不够证明融化冰雪的深情~</p>
-<p>就在某一天 你忽然出现~<br>你清澈又神秘 在贝加尔湖畔~<br>你清澈又神秘 像贝加尔湖畔~</p>
-</blockquote>
-<p><img src="http://mweb-qiniu.awhisper.net/WechatIMG122.jpeg" alt="WechatIMG122"></p>
-<h1 id="深秋的贝加尔湖之旅"><a href="#深秋的贝加尔湖之旅" class="headerlink" title="深秋的贝加尔湖之旅"></a>深秋的贝加尔湖之旅</h1><p>又到了十一，又到了长假四处蹦跶的时候，这次的目的地选择贝加尔湖，听着《贝加尔湖畔》的歌声，流连忘返在<code>贝加尔湖畔</code>，金色的树叶，碧蓝的湖水，想象画面应该是会十分美妙~~</p>
-<p>这次行程不是很长，并没有计划一个很长时间的旅行，我和媳妇不打算做太长的旅行，前后总共游玩的时间大概3天，之后回到家里还能休息放松两天。同行的还有一个小伙伴，折腾帝<code>鱼雷</code>，不过他在这3天之后还会杀奔<code>莫斯科</code>和<code>圣彼得堡</code>，折腾无极限。</p>
-<ul>
-<li>Day 1 伊尔库兹克市内游 </li>
-</ul>
-<p>凌晨1点多飞机落地，在酒店休息，睡醒后，逛整个伊尔库兹克市区</p>
-<ul>
-<li>Day 2 环湖蒸汽小火车</li>
-</ul>
-<p>从伊尔库兹克市区火车站上车，一整天的环湖小火车之旅，环湖边走边停，晚上在倒数第二站利镇下车</p>
-<ul>
-<li>Day 3 利斯特维扬卡镇</li>
-</ul>
-<p><code>落叶镇</code>利斯特维扬卡，湖畔的宁静的小镇，贝加尔湖的大门，逛到下午回到伊尔库兹克市区，晚上飞机回京</p>
-<h1 id="漫步伊尔库兹克"><a href="#漫步伊尔库兹克" class="headerlink" title="漫步伊尔库兹克"></a>漫步伊尔库兹克</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/10/07/LakeBaikalGlance/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/09/injectUIWebView/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/09/09/injectUIWebView/" itemprop="url">UIWebView代码注入时机与姿势</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-09T13:06:27+08:00">
-                2017-09-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/09/09/injectUIWebView/" class="leancloud_visitors" data-flag-title="UIWebView代码注入时机与姿势">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>一个奇怪的业务场景，引发的胡乱思考</p>
-<p>问题其实不难解决，只是顺着这个问题，发散出了一些有意思的东西</p>
-<p>本文旨在讨论UIWebView，WKWebView有自己的机制，不用这么费劲</p>
-</blockquote>
-<p>我们的业务最大的最重要的流量还是在PC与WAP，也就是说主要业务还是以Web的形式进行开发的，WAP上很多活动/页面/功能，他们不是由APP的H5团队主导开发的，也不在APP整体的规划功能内，但经常会以所谓低成本的形式接入APP尝试，快速的也在APP里进行传播。（后续验证可行和有效后，也会纳入APP的功能规划里，以最流畅的体验进行呈现）</p>
-<p>但这样会有一些问题，纯为WAP开发的页面，直接扔到APP的WebView里表现并不好</p>
-<p>WAP的团队开发出来的界面一般长这样<br><img src="http://mweb-qiniu.awhisper.net/wenkuwaphead.jpg" alt="15049394419512"></p>
-<p>如果这样的页面不做任何处理直接在APP中<code>低成本接入</code>会变成这样</p>
-<p><img src="http://mweb-qiniu.awhisper.net/appwaphead.jpg" alt="15049394419512"></p>
-<p>问题就在于APP是有自己的NavigationBar的，而WAP的页面一般都为浏览器而生，浏览器没有自己的导航条于是WAP的团队很自然都会在WAP页面里开发出一个导航条，如果这个页面不做任何针对APP的处理，直接放入APP的WebView中，就会出现这样丑陋的双导航条，一个是native App自己的，一个是WAP网页自己画的</p>
-<blockquote>
-<p>这是一个非常常见的场景</p>
-<p>想要实现也非常简单</p>
-<p>WAP识别APP的UA，进行定制化的开发就好了</p>
-<p>为什么说他奇怪？</p>
-</blockquote>
-<p>团队不同，业务场景不同，也面临不一样的问题，对于我们来说，这个问题不在于如何实现，而在于如何做到让WAP开发最省事。因为背景交代过了，WAP的前端团队和APP完全不是一拨人，如果能有什么办法让WAP前端团队在开发工作中尽量的无感知，尽量的少操作，不需要WAP团队在开发的时候人工的判断UA，选择性渲染，于是蛋疼的问题来了</p>
-<ul>
-<li>直接让WAP开发人员定制开发<ul>
-<li>后端渲染的时候判断UA</li>
-<li>前端模板隐藏UI</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>现有老的开发模式就是这样，每次都是人工适配，纯体力活，有时候项目紧急WAP团队就会忘了，上线的时候一发现，咦？在App里好丑啊，虽然改动很小，但一块后端判定UA，一块前端模板选择渲染，代码分散在几处，改起来很麻烦</p>
-<p>单纯是Bar的话不是问题，写进WAP基类就行，问题是类似的场景看业务功能，有时候不止是Bar，会有定制化的东西，在APP里表现，不能和WAP一样</p>
-</blockquote>
-<ul>
-<li>WAP的编译框架支持<ul>
-<li>这确实是可行的，并且是很好的解决方案之一</li>
-<li>厂里的前端使用的是FIS的编译打包框架，支持一定的插件扩展，可以在前端代码编译环节，就自动加入UA判断，对特定的UI，进行有规律的渲染控制</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>这个太底层了，对每天几千万UV的WAP来说，进行这么大的改动，风险高，收益低（毕竟这个界面适配APP只是搂草打兔子捎带手）有点难推动，后续确实可以尝试一下</p>
-</blockquote>
-<ul>
-<li>WAP的JS插件支持<ul>
-<li>基础模板引入JS脚本</li>
-<li>用JS脚本在client里判断UA</li>
-<li>提取特定Dom</li>
-<li>隐藏Dom</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>最大的问题在于，JS在client里执行的时机，JS执行的时候，这个Dom已经被渲染出来了，当你判断UA，要移除的时候，画面那个bar会闪一下，整体效果是，整个页面带着bar加载出来了，但是会突然闪一下bar消失</p>
-</blockquote>
-<ul>
-<li>App在WebView里注入CSS<ul>
-<li>让WAP只需要对需要隐藏的Dom做个标记比如<code>XXWAPBAR</code>（WAP只用写几个字母）</li>
-<li>在WAP浏览器里，无感知，完全不需要定制化开发</li>
-<li>在App WebView加载网页的时候，注入额外的CSS，将含有<code>XXWAPBAR</code>标记的Dom隐藏</li>
-</ul>
-</li>
-</ul>
-<blockquote>
-<p>看起来靠谱，看起来是一种WAP开发人员几乎不用管不用操心，也不会影响WAP，只在APP里有独有效果的设计，试试看</p>
-</blockquote>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/09/09/injectUIWebView/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/09/02/universallink/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2127,6 +1529,610 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/18/MyUserGrowth/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/18/MyUserGrowth/" itemprop="url">扯淡：用技术玩转业务增长 -- 增长黑客</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-18T19:09:24+08:00">
+                2017-03-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/18/MyUserGrowth/" class="leancloud_visitors" data-flag-title="扯淡：用技术玩转业务增长 -- 增长黑客">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>程序员有时候需要跳出代码，看看业务，思考业务</p>
+<p>带着业务的视野，返回来思考技术的运用</p>
+<p>最新最好的技术用在锋利的增长刀刃上，业务将无往不利</p>
+</blockquote>
+<p>Growth这个事情，说他是技术，可是掰开了揉碎了，细节说透了，很多程序员会说，这某一点不就是某个很普通的技术实现么？另外一点不就是另外一个苹果新API么？做起来很简单啦，只需要产品好好去规划功能与玩法就行了。</p>
+<p>一个业务在增长，技术只是被动的听，做这个做那个，等着产品设计玩法，自己只负责实现，业务做好做坏都是产品的锅。抱着这个心态的话那么产品完全可以甩锅，“我们畅想的功能你们做不了，完美的用户体验，一切智能，恨不得产品设计出一款钢铁侠Jarvis，你们技术做不了就是你们的锅”，这就会陷入一个对立状态下的困局。</p>
+<p>这里其实是沟通的问题，本着做好业务为出发点，业务走向正轨，持续增长是整个团队所期望，并且整个团队都会受益的，<code>我负责做什么</code>，<code>什么不是我负责的是你的责任</code>，<code>这些东西我们都能做就是PM不会玩</code>，等等这些借口在业务停滞这一结果导向面前是毫无意义的，在良性的沟通下，大家为了同一个目标去努力，收货丰厚的成果才是合理的工作状态。</p>
+<p><strong>通篇都会以这个基调去讨论问题</strong>，因为我们讨论的是一个综合性非常强，涉及面非常大的东西，抱着谁的责任，谁负责哪块的心态根本不是Growth所需要的。因为在极尽一切办法寻求业务增长的时候，最清楚技术能做到啥程度是研发，研发将技术的价值充分说明，建议，与分享，一起与整个团队努力，运用在业务上才是<code>增长Growth</code>的最有效的办法。</p>
+<h1 id="Growth"><a href="#Growth" class="headerlink" title="Growth"></a>Growth</h1><p>去年2015年的时候，随着一本书《增长黑客》的流行，随着覃超在国内各大科技大会上分享Facebook的一整套一切产品研发以用户增长团队驱动的策略指导为优先的<code>Facebook GrowthHack</code>方法论。Growth的概念开始在国内互联网圈里爆发开来，甚至很多公司HR开始效仿国外公司，专门招聘<code>增长官 Growth Officer</code>。</p>
+<p>抛开他突然爆火的热度，我们专注的了解一下这一全新的领域<code>Growth</code>，通过这些书籍，大公司的分享会PPT，我们会发现这里面不仅仅是业务方向的事情，绝不仅仅是只有<code>经理</code>or<code>产品经理</code>才需要考虑的业务增长方向的事。这里面甚至蕴含着很深的技术手段，需要很深的数据挖掘手段，需要很多高深莫测的黑科技，需要动态化全栈化的技术打通，可以说这里面的技术挑战绝与深度对不低，并且非常要求技术视野的广度。</p>
+<h2 id="增长黑客"><a href="#增长黑客" class="headerlink" title="增长黑客"></a>增长黑客</h2><blockquote>
+<p>GrowthHack就是一群以<code>数据驱动营销</code>，<code>以市场驱动产品</code>，通过技术化手段贯彻增长目标的人。必须既了解技术，又深谙用户心理，擅长发挥创意，绕过限制，通过低成本的手段，解决增长问题的人，在外行人的眼里，他们像极了发明家与广告狂人的混合体 </p>
+<p>—-《增长黑客》</p>
+</blockquote>
+<p><strong>增长黑客不是产品经理</strong></p>
+<p>产品经理更需要思考推出哪些功能来迎合用户，并规划产品的发展走向和节奏，<strong>增长黑客会更加关注那些能带来数据增长的功能，去发现新的机会，去摸索新的功能点，并用数据验证成功。</strong>产品运营更希望用已经被验证成功的方式和经验，不断的扩大效果，不断的复制成功。</p>
+<p>增长黑客不同于运营，增长黑客始终处于一个摸索阶段，有可能绞尽脑汁分析了无数数据，得出了很多想法，但每个尝试了数据反馈的结果都没有得到数据的认可，很有可能长期处于徒劳和无用功的状态，这一点对于可预期的产品运营思路与方法论来说是不可接受的</p>
+<p><strong>技术更胜任增长黑客</strong></p>
+<p>工程师可能是最接近和容易成为增长黑客的一群人，因为从能力角度看，增长黑客不仅需要想法，还需要将想法落实到行动的能力，包括</p>
+<ul>
+<li>自研工具</li>
+<li>采集样本</li>
+<li>分析数据</li>
+<li>大规模推广</li>
+<li>突破推广限制</li>
+</ul>
+<p>懂技术未必能成为增长黑客，但是不懂技术，你根本不知道你的想法到底是异想天开还是触手可及</p>
+<p>在竞争激烈的浪潮中，在你犹豫你的想法是有效可行的时候，很多增长的时机就稍纵即逝了，增长黑客要求就是快，敏锐，在没有任何方向的情况下，用快速的技术落地能力，趟出一条可以走的捷径</p>
+<p>这也是开头提到的</p>
+<ul>
+<li>程序员有时候需要跳出代码，看看业务，思考业务</li>
+<li>带着业务的视野，返回来思考技术的运用</li>
+</ul>
+<h2 id="Growth与方法论"><a href="#Growth与方法论" class="headerlink" title="Growth与方法论"></a>Growth与方法论</h2><p>《增长黑客》这本书里提到很多方法论，比如基本素质和思维方式</p>
+<ul>
+<li>数据为王</li>
+<li>专注目标</li>
+<li>关注细节</li>
+<li>富于创意</li>
+<li>信息通透</li>
+</ul>
+<p>比如从<code>AARRR漏斗转化模型</code>，衍生出来方法论思考步骤</p>
+<ul>
+<li>产品定位</li>
+<li>获取用户</li>
+<li>激发活跃</li>
+<li>提高留存</li>
+<li>增加收入</li>
+<li>病毒传播</li>
+</ul>
+<p>这些东西书中都有很详细的介绍和案例，我写这篇文章也不是为了摘抄书籍，在这里以一副<code>人人都是产品经理</code>（开个玩笑）的样子大谈特谈产品思维，技术博客还是聊技术，Growth里有哪些技术？Growth里可以用到哪些技术？你现在做的技术是不是就是一种Growth？</p>
+<h1 id="Growth里的技术"><a href="#Growth里的技术" class="headerlink" title="Growth里的技术"></a>Growth里的技术</h1><p>我们日常工作中很多开发工作都是与Growth密不可分，但当真的有一天老大给个命令下个死目标，在N个月内让产品提升到XXW用户，XXW收入，XXW点击的时候，没有任何的方案与方法，手头的可以用于钱和推广资源也非常有限，你作为一个工程师，你应该怎么做呢？用你手头仅有的技术能力，你应该做些什么来完成任务呢？</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/03/18/MyUserGrowth/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/12/VKSniffer/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/12/VKSniffer/" itemprop="url">VKSniffer 网络请求嗅探器</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-12T23:12:11+08:00">
+                2017-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具代码/" itemprop="url" rel="index">
+                    <span itemprop="name">工具代码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/12/VKSniffer/" class="leancloud_visitors" data-flag-title="VKSniffer 网络请求嗅探器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h1><p>无侵入式将所有App发起的网络请求，独立记录管理起来，支持界面形式进行查看</p>
+<ul>
+<li>支持<code>URLConnection</code> <code>URLSession</code> </li>
+<li>支持进行域名过滤嗅探，只截获记录符合过滤规则的网络请求</li>
+<li>支持界面形式实时查看网络请求记录</li>
+<li>支持网络请求记录的顺序，倒序查看</li>
+<li>查看复制网络请求信息到剪切板</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="VKSniffer"><a href="#VKSniffer" class="headerlink" title="VKSniffer"></a>VKSniffer</h2><p>VKSniffer目录是嗅探器的主体逻辑代码，只导入VKSniffer目录，即可让嗅探器正常工作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//基本用法</span></span><br><span class="line">[VKSniffer setupSnifferHandler:^(VKSnifferResult *result) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,result);</span><br><span class="line">    &#125;];</span><br><span class="line">[VKSniffer startSniffer];</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>+ startSniffer</code></li>
+</ul>
+<p>Require方法，一行代码即可开启监听和嗅探。</p>
+<ul>
+<li><code>+ setupSnifferHandler:</code></li>
+</ul>
+<p>Option方法，嗅探到的每一条网络请求结果，会通过Handler回调，传给使用者，如果不设置，网络请求会保存在单例的netResultArray里</p>
+<ul>
+<li><code>+ setupHostFilter:</code></li>
+</ul>
+<p>Option方法，可以让嗅探器有选择的拦截指定域名的网络请求并记录，如果不设置，默认全体拦截</p>
+<ul>
+<li><code>+ setupConfiguration:</code></li>
+</ul>
+<p>Option方法，嗅探器默认支持<code>NSURLConnection</code>与系统的<code>[NSURLSession sharedSession]</code>，如果需要支持<code>defaultSessionConfiguration</code>生成的<code>NSURLSession</code>需要调用此函数来进行额外配置（例如：AfNetworking3.0）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化AfNetworking3.0 配置VKSniffer</span></span><br><span class="line"><span class="built_in">NSURLSessionConfiguration</span> *configuration = [<span class="built_in">NSURLSessionConfiguration</span> defaultSessionConfiguration];</span><br><span class="line"></span><br><span class="line"><span class="comment">//在创建manager前，调用setupConfiguration</span></span><br><span class="line">[VKSniffer setupConfiguration:configuration];</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建manager</span></span><br><span class="line">AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];</span><br><span class="line"><span class="keyword">self</span>.manager = manager;</span><br></pre></td></tr></table></figure>
+<h2 id="VKSnifferUI"><a href="#VKSnifferUI" class="headerlink" title="VKSnifferUI"></a>VKSnifferUI</h2><p>VKSnifferUI目录是界面列表功能，同时导入<code>VKSnifferUI</code>与<code>VKSniffer</code>目录即可让所有的网络请求日志，通过列表界面进行查看</p>
+<ul>
+<li><code>+ showSnifferView</code></li>
+<li><code>+ hideSnifferView</code></li>
+</ul>
+<p>一行代码，打开网络请求日志界面</p>
+<p><strong>Menu功能包含</strong></p>
+<ul>
+<li>暂停/启动 UrlProtocol拦截</li>
+<li>移除列表中所有内容</li>
+<li>列表逆序/顺序排列</li>
+<li>重新设定域名过滤器</li>
+<li>查看复制网络请求信息到剪切板</li>
+</ul>
+<p><strong>推荐配合VKShakeCommands使用</strong></p>
+<p>VKShakeCommands是工具 <a href="https://github.com/Awhisper/VKKeyCommands" target="_blank" rel="noopener">VKKeyCommands</a> 下的摇一摇组件，可以捕捉真机的摇一摇事件</p>
+<ul>
+<li>触发VKShakeCommands</li>
+<li>调用showSnifferView</li>
+</ul>
+<p>在真机黑盒调试代码的时候，为了方便的不链接Xcode，也不必charles挂代理，就能看到所有网络日志，可以轻轻摇一摇手机，打开嗅探器界面，实现快速查看网络日志</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>VKSniffer其实是 <a href="https://github.com/Awhisper/VKDevTool" target="_blank" rel="noopener">VKDevTool</a> 的子功能发展而来。VKDevTool内部包含着网络请求日志查看功能。</p>
+<p><a href="http://awhisper.github.io/2016/09/01/VKDevTool/" target="_blank" rel="noopener">VKDevTool App黑盒调试工具</a></p>
+<p>当初开发VKDevTool的时候，贪心大而全，并且求快，网络请求日志功能，大体逻辑都已经实现，但是界面很糙，功能特别不细致（支持列表查看复制，支持暂停/开启，支持域名过滤）</p>
+<p>后来看到了 <a href="https://github.com/xmartlabs/Xniffer" target="_blank" rel="noopener">Xniffer</a> 一款用Swift语言写的针对NSURLSession的嗅探器，他的大体功能VKDevTool的网络日志模块都已实现，他的好处是网络请求日志更加精细，细致记录了很多网络请求细节</p>
+<ul>
+<li>请求耗时</li>
+<li>请求状态码</li>
+<li>请求数据</li>
+<li>请求Error信息</li>
+</ul>
+<p>因此萌生了重写<code>VKSniffer</code>的想法，取人之长，补己之短，并且把这个模块从VKDevTool中独立出来，可以独立运作。</p>
+<p>PS: VKDevTool逐个模块打算一一重新整理，当初写的太糙了</p>
+<p>PPS: 感谢 <a href="https://github.com/xmartlabs/Xniffer" target="_blank" rel="noopener">Xniffer</a> 的精致细节</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" itemprop="url">扯淡：大白话聊聊编译那点事儿</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-26T23:05:23+08:00">
+                2017-02-26
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/02/26/扯淡：大白话聊聊编译那点事儿/" class="leancloud_visitors" data-flag-title="扯淡：大白话聊聊编译那点事儿">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>notes：本篇其实是我自己的一篇读书笔记，在看了一些书和博客之后，想用大白话解释一下，然后加强自己的知识记忆，只是想分享一下</p>
+<p>很多细节知识点，在大白话后可能讲的很糙，甚至掩盖了很多技术细节，如有不足，希望指正</p>
+<p>我会把看到的相关博客，书籍，在文尾一一列出，其实还是看书好，更加系统</p>
+</blockquote>
+<p>作为程序员的我们，每天写各种语言的各种代码，点一下IDE环境里的run，或者用一行命令一跑，一个程序就运行起来了。我们写好的那一行行代码，其实就是最普通的文本字符串，这些个文本字符串是怎么变成一个个漂亮的界面，一个个大数据量吞吐的服务器，一个个聪明的人工智能AI的？这里面其实经历了三个过程,<code>编译</code>,<code>链接</code>,<code>装载</code>(脚本语言会特殊一些，本文后面也会提及)</p>
+<ul>
+<li><p>编译：编译系统会读取我们写的文本字符串，去解读这里面代码所蕴含的意义，解读出来后会翻译成机器能看懂的汇编语言，我们管这个结果叫目标文件，这个过程叫编译</p>
+</li>
+<li><p>链接：每个类，每个文件都会被编译成不同的目标文件，链接器把这每个目标文件穿起来，让他们之间能够相互调用，最后生成可执行文件，这个过程叫链接</p>
+</li>
+<li><p>装载：把已经生成的可执行文件放到操作系统里，在系统专属的进程与内存控制下，找到机器可以识别的汇编代码入口，开始按着汇编去执行机器码<br>，并且能与操作系统级别的各种系统Api对接起来，这个过程叫装载</p>
+</li>
+</ul>
+<p>这一篇主要聊聊编译，但我会持续把大白话聊链接，装载坚持写完</p>
+<h1 id="编译步骤"><a href="#编译步骤" class="headerlink" title="编译步骤"></a>编译步骤</h1><p>怎么能让编译系统理解你写出来的一行行字符串，让机器去<code>读懂</code>你写的代码？这里面其实经历了很多步骤，我之前<a href="http://awhisper.github.io/2016/11/18/%E4%BB%8Eantlr%E5%88%B0%E8%AF%AD%E6%B3%95%E8%A7%A3%E6%9E%90/" target="_blank" rel="noopener">从antlr扯淡到一点点编译原理</a>里提到过一点点，这里我们再扯一扯~</p>
+<ul>
+<li>预编译</li>
+<li>词法分析</li>
+<li>语法分析</li>
+<li>语义分析</li>
+<li>生成抽象语法树</li>
+<li>生成中间码</li>
+<li>目标代码生成</li>
+<li>目标代码优化</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/02/26/扯淡：大白话聊聊编译那点事儿/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2179,7 +2185,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">66</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2201,7 +2207,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>

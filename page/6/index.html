@@ -304,525 +304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/12/路由跳转的思考/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/06/12/路由跳转的思考/" itemprop="url">路由跳转的思考</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-12T10:27:37+08:00">
-                2016-06-12
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/06/12/路由跳转的思考/" class="leancloud_visitors" data-flag-title="路由跳转的思考">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="业务需要"><a href="#业务需要" class="headerlink" title="业务需要"></a>业务需要</h1><p>一切脱离业务需求的“结构”设计都是耍流氓（我觉得我们这小打小闹完全谈不上架构这个词）</p>
-<p>那我们先梳理一下我们现在的业务场景</p>
-<p>目前我们有一个首要问题是跳转</p>
-<ul>
-<li>书架banner是个运营位置，需要灵活可配的<code>各种跳转</code></li>
-<li>开机弹框也是个运营位置，依然需要<code>各种跳转</code></li>
-<li>push，更别说了，<code>各种跳转</code></li>
-<li>H5书城，运营活动H5落地页，通过Bridge还需要<code>各种跳转</code></li>
-</ul>
-<p>我们现在是怎么做的呢？拿书架banner举例</p>
-<p>服务器会下发一个type号，（随便假设）1代表打开webview，2代表打开图书，3代表打开个人中心…等等，相关参数会随着type的不同，下发不同字段，因此代码会长这样</p>
-<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (type) &#123;</span><br><span class="line">  <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="comment">//jumping code</span></span><br><span class="line">    <span class="built_in">NSString</span> *url = <span class="comment">/*解析对应url字段*/</span></span><br><span class="line">    <span class="built_in">NSString</span> *title = <span class="comment">/*解析对应title字段*/</span></span><br><span class="line">    <span class="built_in">NSString</span> *ydwebview = [[ydwebview alloc]init];</span><br><span class="line">    ydwebview.url = url;</span><br><span class="line">    ydwebview.navititle = title;</span><br><span class="line">    [<span class="keyword">self</span>.navigationController pushViewController:ydwebview animated:<span class="literal">YES</span>];</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">  &#123;</span><br><span class="line">  	 <span class="comment">//balabalaba</span></span><br><span class="line">  &#125;</span><br><span class="line">  	 <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
-<p>可以看下我们的switch有多恐怖</p>
-<ul>
-<li>书架banner跳转有6个switch，其中第一个switch有4种子switch</li>
-<li>开机弹窗有2个switch，支持能力弱</li>
-<li>push，这可了不得有20个switch</li>
-<li>H5bridge跳转，有10+个switch</li>
-</ul>
-<p>那我们每次新增加一个功能模块的时候改怎么办呢？</p>
-<p>假设新作一个模块叫”英式没品笑话百科”(我很爱看的一个微博号╮(╯_╰)╭)</p>
-<p>我们就需要在书架，弹框，push，H5Bridge，四处核心跳转点全都新增代码，先要<code>import “EnglishJoke.h”</code>，然后还要新增一个switch，新增一坨跳转viewcontroller的代码</p>
-<p>有没有感觉？what the fuck！</p>
-<p>我们的代码就好像是这样，一团乱麻。</p>
-<p><img src="http://blogpic-qiniu.awhisper.net/8F22DEEE-ADBD-43F3-81D7-1B9FB0485A9A.png" alt="一团乱麻"></p>
-<p>假如A模块是书架，它本身含有书架banner的跳转代码，所以他需要耦合各种跳转目标。比如跳转到B模块书城，形成了 A==&gt;B</p>
-<p>假如B模块是书城，它本身含有书城H5Brdige的跳转代码，所以他也需要耦合各种跳转目标，比如跳转到A模块书架，形成了 B==&gt;A</p>
-<p>假如所有模块都有这种蛋疼的跳转其他模块的需求，他们之间相互跳来跳去（没错，有时候需求就是这么的不讲道理），那么我们的代码结构就会如图一样，随着业务结构的逐渐庞大，就会变成一张复杂的蜘蛛网，难以维护。</p>
-<h1 id="结构梳理"><a href="#结构梳理" class="headerlink" title="结构梳理"></a>结构梳理</h1><p>仔细思考一下，我们的业务需求的最直接痛点所在就是<code>各种跳转</code>，但往深层考虑一下，这里面其实是耦合的问题，这里说的不是业务<code>逻辑耦合</code>，而是<code>引用耦合</code>。</p>
-<ul>
-<li>逻辑耦合，作为程序员，作为面向对象开发的基本思路，一个业务逻辑模块，做到模块化，不把自己自身的业务逻辑与外部不相干的模块进行混杂，所有都以接口的形式提供给外部调用，这是一个最基本的设计理念，这是没有问题，也是必须要做到的</li>
-<li>引用耦合，被抽象成一个模块，外部要使用的时候势必要import这个模块的头文件，再根据头文件的api，进行调用，这无可厚非，但是如果发生这种处理需要统一跳转多个不同模块的逻辑的时候，引用耦合就会显得混乱不好管理</li>
-</ul>
-<p>当面对这种当引用耦合一团乱麻的情况下，随着业务逐渐壮大，我们将会面对着一张复杂的如同蛛网一般的相互引用关系，这时候我们又该如何去处理？</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/06/12/路由跳转的思考/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/22/VKDebugConsole-App黑盒控制台/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/22/VKDebugConsole-App黑盒控制台/" itemprop="url">VKDebugConsole App黑盒控制台</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-22T15:12:17+08:00">
-                2016-05-22
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具代码/" itemprop="url" rel="index">
-                    <span itemprop="name">工具代码</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/05/22/VKDebugConsole-App黑盒控制台/" class="leancloud_visitors" data-flag-title="VKDebugConsole App黑盒控制台">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><p>App内控制台，可以在脱离Xcode debug的情况下，调试内存，打印数据，修改UI等</p>
-<p>方便在黑盒测试+内部体验的环境下，发现Bug后，直接在Bug现场调试内存，分析问题</p>
-<p>先大体看一下GIF动画如何使用</p>
-<p><img src="http://ww2.sinaimg.cn/mw690/678c3e91jw1f4cejgkcipg20900gfasa.gif" alt="git"></p>
-<p>Git地址 <a href="https://github.com/Awhisper/VKDebugConsole" target="_blank" rel="noopener">VKDebugConsole</a></p>
-<p>恩 基于JSPatch做的 ╮(╯_╰)╭</p>
-<p>吐槽：界面好难看。。NSLog很多的时候有点乱。。</p>
-<p>基本上初步的功能都补全了，能在自己项目里用上了，还算方便</p>
-<p>后续优化指令，优化功能，优化界面，还需要持续进行（眼下这个看着太难看，指令也太难用了）</p>
-<h1 id="基本使用"><a href="#基本使用" class="headerlink" title="基本使用"></a>基本使用</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/05/22/VKDebugConsole-App黑盒控制台/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/17/关于blog的闲扯淡/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/05/17/关于blog的闲扯淡/" itemprop="url">关于blog的闲扯淡</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-05-17T18:42:09+08:00">
-                2016-05-17
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">生活随笔</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/05/17/关于blog的闲扯淡/" class="leancloud_visitors" data-flag-title="关于blog的闲扯淡">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><strong>闲扯淡的开始</strong></p>
-<p>这应该算是一个让人开心的事情~</p>
-<p>上周的时候收到了一封七牛云的邮件，居然说我欠费了，我都惊了。<br><img src="http://blogchat-qiniu.awhisper.net/IMG_4893.JPG" alt="qianfei"></p>
-<p>我的Blog是搭建在GitPage上的，没有使用七牛的服务器，仅仅是把七牛当做图床，来存放Blog中的各种图片的，突然提示我欠费7块多我愣了一下，说好的10G免费下载流量呢╮(╯_╰)╭ 10G都超了难不成？</p>
-<p>仔细想想新西兰那篇游记 <a href="http://awhisper.github.io/2016/04/04/MyNewZealandTour/" target="_blank" rel="noopener">寻访中土世界</a> 整篇文章里面大量照片，估计是这篇文章比较吃流量于是产生的吧，不过侧面是否反映了Blog看的人也多起来了呢？</p>
-<p><strong>有更多人看到Blog是一件让人开心的事情</strong></p>
-<p>于是很想回顾一下自从开始写博客到现在的情况，写博客以来我也感觉到我自己产生了一些潜移默化的影响，有一些感想和心情</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/05/17/关于blog的闲扯淡/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/05/11/iOSBrowserDomainBridge/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2009,6 +1490,486 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/03/12/滚动圆角卡顿刨根问底/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/03/12/滚动圆角卡顿刨根问底/" itemprop="url">圆角卡顿刨根问底</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-12T09:05:01+08:00">
+                2016-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/03/12/滚动圆角卡顿刨根问底/" class="leancloud_visitors" data-flag-title="圆角卡顿刨根问底">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>整篇文章其实说来说去，最后其实只是把卡顿的这个事情用最通俗最简单最没技术含量的方案实行了。但那么多方案，为什么选择一个方案，每个方案都有优势，同样也有弊端，不同的case，不同的场景，不可能一个方案万金油适用，这个过程需要我们刨根问底，去了解简单的解决方案背后的为什么？</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>在<code>tableView</code> or <code>collectionView</code>的Cell使用中如果大量出现了<code>view.layer.cornerRadius</code> + <code>ClipToBounds</code>or<code>masksToBounds</code>的设置，会造成滚动不流畅，滚动起来十分的卡顿。</p>
+<p>这一点相信很多iOS developer都不陌生，相关的搜索<code>圆角卡顿</code>，<code>圆角性能优化</code>，都能看到很多文章，思路大致如下</p>
+<ul>
+<li>这样切圆角会造成GPU的<code>离屏渲染</code></li>
+<li><code>离屏渲染</code>会消耗太多GPU资源，但是CPU却没有太多的占用</li>
+<li>GPU消耗太大拖慢了单帧绘制</li>
+<li>解决办法，采用CPU预先绘制bitmap，交给GPU直接渲染</li>
+</ul>
+<p>最广泛的办法就是预先用CPU，构建圆角路径贝塞尔曲线<code>UIBezierPath</code>，用原来的图片填充进圆角路径，获得天然的自带圆角透明的bitmap数据<code>UIImage</code>，从而直接交给GPU进行普通渲染</p>
+<p>有不少的blog，以及大量的demo，都验证了这一点，但看完后不禁有几个疑问，于是产生了今天的刨根问底</p>
+<ul>
+<li>什么才是卡顿的根本原因？</li>
+<li>离屏渲染是什么？</li>
+<li>GPU消耗交给CPU，CPU难道就没消耗了么？</li>
+</ul>
+<p>每一种解决方案，都是在一定得特定情景下而产生的最优解，针对CPU预绘bitmap的方案，在相当多的使用场景下，是正确的没有任何问题的。</p>
+<p>但是这里要讲一个真实的case，如果这个方案都无法解决问题，依然还是卡，那么该怎么办？</p>
+<p><strong>到底卡顿根本原因是啥？</strong></p>
+<p><strong>无法彻底缓解卡顿，该怎么办？</strong><br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/03/12/滚动圆角卡顿刨根问底/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </p></div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/03/11/reviewcode-cn平台案例整理/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/03/11/reviewcode-cn平台案例整理/" itemprop="url">reviewcode.cn平台案例整理(2016.03.11更新)</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-11T14:09:28+08:00">
+                2016-03-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/03/11/reviewcode-cn平台案例整理/" class="leancloud_visitors" data-flag-title="reviewcode.cn平台案例整理(2016.03.11更新)">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <blockquote>
+<p>彦祖的这个平台已经关了 =。=  权当看笔记吧</p>
+</blockquote>
+<p>我是大神们的搬运工</p>
+<h2 id="彦祖大神的codeReview平台"><a href="#彦祖大神的codeReview平台" class="headerlink" title="彦祖大神的codeReview平台"></a>彦祖大神的codeReview平台</h2><p>@叶孤城___ 大神搞了一个提供邀请业内大神付费为你的项目进行CodeReview的平台，产出一份高质量的review报告。<a href="www.reviewcode.cn">www.reviewcode.cn</a></p>
+<h2 id="平台案例整理"><a href="#平台案例整理" class="headerlink" title="平台案例整理"></a>平台案例整理</h2><p>可能不见得每个人都要把自己所有的项目，扔到平台上让大神们review，但是我们可以进行归纳总结，在那些大神们的<code>高质量review报告</code>中，归纳和总结我们自己需要的，汲取养分。</p>
+<p>更何况这些总结，每一个都包含着真实的代码案例，优化方案，以及原因详解，比我们每天看设计模式那些抽象的理念，名词，要接地气的多</p>
+<p>我不是大神，我只是大神的搬运工</p>
+<p>(农夫山泉的广告词…咳…装X了…跑题了…)</p>
+<p>目前CodeReview平台上已经有了超级详尽的多篇review报告，每一个都是实打实的干活，所以我就搬运一下，把他们case by case 的review报告，梳理归类一下，换个形式进行总结和学习</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/03/11/reviewcode-cn平台案例整理/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/03/06/hello-world/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/03/06/hello-world/" itemprop="url">Hello World Hexo！</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-03-06T21:44:47+08:00">
+                2016-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/03/06/hello-world/" class="leancloud_visitors" data-flag-title="Hello World Hexo！">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>这篇自动生成文章就保留下来，留个纪念</p>
+<p>纪念一下这个博客的诞生</p>
+<p>这篇以前的文章从简书迁移过来</p>
+<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/03/06/hello-world/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
@@ -2061,7 +2022,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">66</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2083,7 +2044,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">48</span>
+                  <span class="site-state-item-count">46</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
