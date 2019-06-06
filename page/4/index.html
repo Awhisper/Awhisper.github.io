@@ -304,6 +304,368 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/newcommentssystem/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/04/newcommentssystem/" itemprop="url">评论系统迁移</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T21:50:00+08:00">
+                2017-05-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/生活随笔/" itemprop="url" rel="index">
+                    <span itemprop="name">生活随笔</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/04/newcommentssystem/" class="leancloud_visitors" data-flag-title="评论系统迁移">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="多说停止服务"><a href="#多说停止服务" class="headerlink" title="多说停止服务"></a>多说停止服务</h1><p>本来多说用的好好地，突然就停止服务了，据说到6月1日就彻底下线了，拖延症的我5.1假期才想起来收拾收拾</p>
+<h1 id="顺手升级了下博客"><a href="#顺手升级了下博客" class="headerlink" title="顺手升级了下博客"></a>顺手升级了下博客</h1><p>以前纯属照着小白教程搭建起来的Hexo+Next，后来就本能的不想动这块已经搭建好的环境了。这次心想既然要折腾就干脆好好捣鼓捣鼓。于是惊讶的发现Next主题都发展到5.1.1了！以前好多都得自己动手改源码才能实现的功能都被merge到主干里了，感觉越用越舒心了，评论，搜索，分享，统计等核心feature，每一个都源码实现了多个服务商的接入，只需轻松的在配置文件里，配配ID与开关就可以了</p>
+<h1 id="开始迁移评论系统-纯GitPage使用者的无奈"><a href="#开始迁移评论系统-纯GitPage使用者的无奈" class="headerlink" title="开始迁移评论系统 - 纯GitPage使用者的无奈"></a>开始迁移评论系统 - 纯GitPage使用者的无奈</h1><p>从以前多说导出来了旧的评论数据，一个超大号的json文件，选择迁移哪个评论系统纠结死我了</p>
+<ul>
+<li>Disqus</li>
+</ul>
+<p>最理想的是迁移到这里，唯一的问题是，这货被墙了，所以Pass吧</p>
+<ul>
+<li>畅言</li>
+</ul>
+<p>畅言是搜狐的云服务，问题在于畅言必须网站ICP备案，我这连自己的服务器也没有，没有自己域名的，GitPage使用者就拜拜了</p>
+<ul>
+<li>网易云跟帖</li>
+</ul>
+<p>网易云跟帖在多说关闭的新闻出来后，似乎各处都在好评都在推荐，但这网易的评论服务本身严格校验域名，申请注册的时候，等级域名必须与网站域名完全匹配，又把我这个纯GitPage使用者挡在了门外，我没申请独立域名，因此域名是github.io，这个一级域名在网易云跟帖的系统机制下是无效的，所以又无缘了</p>
+<ul>
+<li>来必力</li>
+</ul>
+<p>棒子的服务，我压根没想用，前面都无功而返后尝试注册了一下，发的验证邮件是TM棒子文，滚蛋</p>
+<ul>
+<li>友言</li>
+</ul>
+<p>最后选择了友言，友言和我博客使用的分享功能<code>JiaThis</code>是一家公司的，管理界面很简陋，但是评论页面也挺简洁，行了就这样吧。</p>
+<h1 id="迁移评论数据"><a href="#迁移评论数据" class="headerlink" title="迁移评论数据"></a>迁移评论数据</h1><p>评论数据这我还没前已完成，友言的数据导入是要求输入一套友言定义的Json，哪天搞个脚本把多说的json转成友言的格式吧，不麻烦倒是，现在还没弄好</p>
+<h1 id="纠结"><a href="#纠结" class="headerlink" title="纠结"></a>纠结</h1><ul>
+<li><p>迁移个评论我容易么</p>
+</li>
+<li><p>喜欢github.io 只用GitPage我容易么</p>
+</li>
+<li><p>静态部署Github，没搞自己的云服务器我容易么</p>
+</li>
+</ul>
+<p>上面就是扯个淡，最近在很专注的看前端相关的东西，Hexo和Next的源码还真的挺有意思的，有空值得深入看看。</p>
+<p>慢慢的估计也得自己搞个服务器，弄个域名了，毕竟还要学着弄点深入的东西</p>
+<h1 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h1><p>SB友言的评论系统，官方提供的多说迁移，导入失败，我自己按着官方例子写的迁移脚本导入失败，我直接把官方的demo例子，导入依然失败，我日他大爷的。</p>
+<p>刚迁移没两天，友言的js api sb了，我就日了。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jsapi.uyan.cc/ </span><br><span class="line"></span><br><span class="line">Failed to load resource: the server responded with a status of 502 (Bad Gateway)</span><br></pre></td></tr></table></figure></p>
+<p>听@种子的建议，我再试试棒子的<code>来必力</code>好了</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/01/DSLandLayoutEngine/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/05/01/DSLandLayoutEngine/" itemprop="url">动态界面：DSL&布局引擎</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-01T13:46:55+08:00">
+                2017-05-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/01/DSLandLayoutEngine/" class="leancloud_visitors" data-flag-title="动态界面：DSL&布局引擎">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h1 id="Jasonette-与-Tangram"><a href="#Jasonette-与-Tangram" class="headerlink" title="Jasonette 与 Tangram"></a>Jasonette 与 Tangram</h1><p>很早的时候火了一阵子<a href="https://github.com/Jasonette/JASONETTE-iOS" target="_blank" rel="noopener">Jasonette</a>，打出来的宣传语是用json写出纯native的app(牛皮其实有点大，其实只是写动态界面，完全不是写动态App)。</p>
+<p>前一阵子，天猫又开源了跨多个平台的<a href="http://tangram.pingguohe.net/" target="_blank" rel="noopener">Tangram</a>，一套通用的UI解决方案，仔细阅读文档我们会发现，他们也是在用json来实现这套七巧板布局。一套灵活的跨平台的UI解决方案。</p>
+<p>Jasonette的牛皮其实有点大，很多人看到动态用Json写出纯native的app，就很激动，仿佛客户端也能有H5那样的能力，但其实他只是focus在解决app中的界面的问题。Tangram的定位就很精准了，是一套为业务出发的通用跨平台UI解决方案，把布局渲染性能与多段一致性考虑在框架内的UI框架。这二者有个共同点都是用json来描述界面与内容，从而用native进行呈现，json这种数据是一种天然便于下发与动态更新的数据，因此这些其实都能让客户端做到类似H5网页一样的赶脚。虽然没有使用WebView，但他们的设计思路和网页技术的发展历史如出一辙，因此<a href="http://www.weibo.com/xicilion" target="_blank" rel="noopener">@响马</a>大叔说过”这其实是最纯正的网页技术，虽然他是native的”。</p>
+<p>顺着这个话题继续问几个问题</p>
+<ul>
+<li>DSL</li>
+</ul>
+<p>为什么Jasonette与Tangram都是用json？</p>
+<ul>
+<li>布局排版</li>
+</ul>
+<p>为什么Jasonette写出来的json有些属性看着很像css？<code>padding</code> &amp; <code>align</code>（拿Jasonette举例）</p>
+<ul>
+<li>渲染</li>
+</ul>
+<p>Jasonette调用UIKit进行渲染，H5用WebView渲染，所以Jasonette就叫native？</p>
+<h1 id="从DSL说起"><a href="#从DSL说起" class="headerlink" title="从DSL说起"></a>从DSL说起</h1>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/05/01/DSLandLayoutEngine/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/04/15/MySempornaDive/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1823,395 +2185,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/GitPage-Next的CSS-JS错误/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/21/GitPage-Next的CSS-JS错误/" itemprop="url">GitPage部署Hexo NexT主题的CSS/JS错误</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T13:53:54+08:00">
-                2016-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/21/GitPage-Next的CSS-JS错误/" class="leancloud_visitors" data-flag-title="GitPage部署Hexo NexT主题的CSS/JS错误">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="GitPage-升级，旧版NexT不支持"><a href="#GitPage-升级，旧版NexT不支持" class="headerlink" title="GitPage 升级，旧版NexT不支持"></a>GitPage 升级，旧版NexT不支持</h1><p>我的博客使用的是GitPage，域名直接就是<code>github.io</code>,用的Hexo博客，并且选了一个觉得很好看的NexT主题，这个主题现在还挺火，用的人挺多的，清新简约</p>
-<p>直到上周五，我更新了一波博客，当本地调试完毕后，<code>sudo hexo d</code>部署到GitPage的时候，发现所有的博客界面都无法访问了，用chrome一查发现，github的vendor目录下的所有无论是js文件还是css文件，通通的404报错了，所以导致整个页面的数据完全出不来了</p>
-<p>查了一下 发现是这个原因</p>
-<p><img src="http://blogpic-qiniu.awhisper.net/gitpageissue.png" alt="gitissue"></p>
-<p>简单的说GitPage进行了一次升级，Next使用了<code>jekyll</code>这个东西，而这个东西目前GitPage是不支持的，因此导致了博客无法正常加载。</p>
-<h1 id="解决办法-nojekyll"><a href="#解决办法-nojekyll" class="headerlink" title="解决办法 .nojekyll"></a>解决办法 .nojekyll</h1><p><strong>有一个很糙快猛的方法</strong></p>
-<ul>
-<li>找到你博客的GitPage的Github仓库</li>
-<li>在xxx.github.io这个仓库的根目录下，选择<code>create new file</code></li>
-<li>new file 的名字起名<code>.nojekyll</code></li>
-<li>new file 里面的内容就一行<code>!vendors/*</code></li>
-</ul>
-<p>通过上面的方法，可以让GitPage对vendor目录禁止jekyll，这样就一切顺利了。</p>
-<p>但是存在一个问题，每次deploy，这个仓库都会完全重新clean后生成，因此每次deploy都得这么改一次就太麻烦了</p>
-<p><strong>解决Hexo的Deploy</strong></p>
-<p>修改Hexo的Deploy过程，让Deploy的时候自动处理这些</p>
-<ul>
-<li>.deploy_git 目录, 添加 .nojekyll 空文件</li>
-<li>source目录, 添加.nojekyll 空文件</li>
-<li>修改 Hexo 上层_config.yml配置文件, 添加</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include:</span><br><span class="line">  - .nojekyll</span><br></pre></td></tr></table></figure>
-<p>之后就解决了，我就是这么干的~</p>
-<h1 id="另一个解决方案"><a href="#另一个解决方案" class="headerlink" title="另一个解决方案"></a>另一个解决方案</h1><ul>
-<li>首先修改source/vendors为source/lib</li>
-<li>然后修改_config.yml， 将 _internal: vendors修改为_internal:lib </li>
-<li>然后修改next底下所有引用source/vendors路径为source/lib。</li>
-</ul>
-<p>这些地方可以通过文件查找找出来。主要集中在这几个文件中。</p>
-<ul>
-<li><ol>
-<li>Hexo\themes\next.bowerrc </li>
-</ol>
-</li>
-<li><ol start="2">
-<li>Hexo\themes\next.gitignore </li>
-</ol>
-</li>
-<li><ol start="3">
-<li>Hexo\themes\next.javascript_ignore </li>
-</ol>
-</li>
-<li><ol start="4">
-<li>Hexo\themes\next\bower.json </li>
-</ol>
-</li>
-</ul>
-<p>修改完毕后，刷新重新g一遍就ok啦。</p>
-<h1 id="解决方案出处"><a href="#解决方案出处" class="headerlink" title="解决方案出处"></a>解决方案出处</h1><p><a href="https://www.zhihu.com/question/52268353" target="_blank" rel="noopener">hexo文章发布到github后部分文件404了</a></p>
-<p><a href="http://blog.csdn.net/zhouzixin053/article/details/53038679" target="_blank" rel="noopener">Hexo+Github博客css js404导致博客页面空白</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/18/从antlr到语法解析/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/18/从antlr到语法解析/" itemprop="url">从antlr扯淡到一点点编译原理</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-18T12:51:38+08:00">
-                2016-11-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/18/从antlr到语法解析/" class="leancloud_visitors" data-flag-title="从antlr扯淡到一点点编译原理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西</p>
-<ul>
-<li><p>比如<a href="http://bang590.github.io/JSPatchConvertor/" target="_blank" rel="noopener">JSPatchConvertor</a>，他可以做到把OC代码输入后直接转化成JSPatch代码，</p>
-</li>
-<li><p>比如<a href="http://objc2swift.yahoo-labs.jp/" target="_blank" rel="noopener">objc2swift</a>，他可以做到把OC代码输入后直接转化为Swift代码</p>
-</li>
-</ul>
-<p>这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇<a href="http://blog.cnbang.net/tech/2915/" target="_blank" rel="noopener">JSPatchConvertor实现原理</a>，我们可以好好看看。</p>
-<p>从这篇文章里，我们看到了一个工具，一个看起来很牛逼很厉害的工具，<strong>antlr</strong>，JSPatchConvertor通过它来实现的语法转换，我们先看看这玩意怎么玩？</p>
-<h1 id="antlr的概述"><a href="#antlr的概述" class="headerlink" title="antlr的概述"></a>antlr的概述</h1><p>antlr是一个包含了<code>词法分析</code>,<code>语法分析</code>两大模块的工具，并且提供了大量主流语言的现成的语法描述<code>grammar</code>文件</p>
-<p>使用antlr你可以将某种语言的代码文件，以纯文本字符串的方式输入，被antlr整理分析成一个语法树，一个可以清晰地从树状结构里，看到代码真正的逻辑的结构化数据。</p>
-<p>通俗易懂的说，antlr的作用就是将计算机不明白，无法读取，无法执行的字符串代码，一个字一个字<code>读</code>，一行一行的<code>分析</code>，最后把<code>字符串</code>读明白了，分析明白了，转化成了计算机程序能<code>弄懂</code>(也就是能遍历，能执行，能运行的)的结构化数据<code>语法树</code></p>
-<p>听起来是不是很神秘？没错，这里面其实是编译原理里面的概念，我们所写的C++,OC,JAVA各种知名语言，我们其实写的都是一行一行字符串，这一行行的字符是怎么编译成可以运行的app的，这都是要经过这样的一个步骤，但这也只是编译原理中的一环，经过了<code>词法,语法解析</code>，后面还有很多重要的环节</p>
-<ul>
-<li><p>有了<code>词法,语法解析</code>，我们甚至还可以独创我们自己的语言</p>
-</li>
-<li><p>有了<code>词法,语法解析</code>，再引入编译原理中的其他概念，我们甚至还可以自己写我们独创语言的编译器</p>
-</li>
-</ul>
-<p>看起来是不是很神秘很牛逼~我们今天深入讨论一下</p>
-<h1 id="antlr的基本使用"><a href="#antlr的基本使用" class="headerlink" title="antlr的基本使用"></a>antlr的基本使用</h1><p>antlr包含以下几个部分</p>
-<ul>
-<li>antlr 主工程 </li>
-<li>antlr 语法描述 grammer</li>
-<li>antlr 运行时 runtime</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/18/从antlr到语法解析/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/3/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/5/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2259,7 +2237,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">72</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

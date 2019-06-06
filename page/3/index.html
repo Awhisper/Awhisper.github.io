@@ -304,6 +304,464 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/24/wap-app-growth/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/24/wap-app-growth/" itemprop="url">H5主流浏览器下App导流方案选取</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-24T00:10:33+08:00">
+                2018-03-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/24/wap-app-growth/" class="leancloud_visitors" data-flag-title="H5主流浏览器下App导流方案选取">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>以前有那么几篇文章都和大家聊过做用户增长，做DeepLink，聊得很范很虚</p>
+<p><a href="http://awhisper.github.io/2017/09/02/universallink/" target="_blank" rel="noopener">Universal Link 前端部署采坑记</a><br><a href="http://awhisper.github.io/2017/03/18/MyUserGrowth/" target="_blank" rel="noopener">扯淡：用技术玩转业务增长 – 增长黑客</a><br><a href="http://awhisper.github.io/2016/05/11/iOSBrowserDomainBridge/" target="_blank" rel="noopener">iOS app与浏览器深度链接 DeeperLink</a></p>
+<p>最近好几个业务产品线都在头疼如何把用户从H5导流给App这个问题上，因此梳理一下手头的一些方案</p>
+<p>简单的一句话评价就是：浏览器适配 - 前端永远的痛！</p>
+</blockquote>
+<p>只想梳理下面3个问题在主流浏览器下的解决方案</p>
+<ul>
+<li>未安装 - 点击下载App</li>
+<li>未安装 - 点击下载App - 下载后自动精准定位</li>
+<li>已安装 - 点击打开App - 精准定位</li>
+</ul>
+<p>由于不同渠道之间差异非常大，前端是有能力判断区分出不同的渠道的，因此各个渠道之间一般都是完全定制差异化的导流方案，在优缺点之间进行取舍</p>
+<p>下面说的各种方案名词，都在 <a href="http://awhisper.github.io/2016/05/11/iOSBrowserDomainBridge/" target="_blank" rel="noopener">iOS app与浏览器深度链接 DeeperLink</a> 有技术方案思路介绍</p>
+<h2 id="系统浏览器"><a href="#系统浏览器" class="headerlink" title="系统浏览器"></a>系统浏览器</h2><p>简介：用户使用系统浏览器访问WAP进行导流，目前不受任何限制</p>
+<ul>
+<li>未安装 - 点击下载App：<ul>
+<li>直接下载 or 跳转Appstore</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - Android：<ul>
+<li>动态Apk技术，无导流负作用，对服务器压力略大</li>
+<li>手机指纹技术，存在成功率问题，大概66%，同wifi失败率增高</li>
+<li>剪切板技术，安卓因为系统浏览器内核碎片化问题，理论可行，但设备支持率很低，服务器压力小</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - iOS：<ul>
+<li>剪切板技术，必须iOS10+</li>
+<li>手机指纹技术，存在成功率问题，大概66%，同wifi失败率增高</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位 - Android：<ul>
+<li>schema吊起技术，无导流负作用</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位 - iOS：<ul>
+<li>schema吊起技术，采用这个技术，已安装App正常吊起，假如未安装App，会看到一个系统错误框，然后再打开Appstore，影响用户体验</li>
+<li>universalink技术，已安装App正常吊起，未安装App无错误弹框，但部署成本大</li>
+<li>剪切板技术，必须iOS10+</li>
+</ul>
+</li>
+</ul>
+<p><strong>建议：</strong></p>
+<ul>
+<li>安卓用动态Apk技术做下载导流精准定位，用schema技术做吊起</li>
+<li>iOS用剪切板技术做下载导流精准定位，用剪切板技术做吊起</li>
+</ul>
+<h2 id="微信"><a href="#微信" class="headerlink" title="微信"></a>微信</h2><p>简介：微信内禁止直接下载App，微信内禁止以任意方式打开App，需要分不同情况进行应对</p>
+<h3 id="微信H5"><a href="#微信H5" class="headerlink" title="微信H5"></a>微信H5</h3><ul>
+<li>未安装 - 点击下载App：<ul>
+<li>应用宝市场跳转，上架应用宝并且开通应用宝微链接，这样iOS与安卓都可以在H5页面中点击后跳转到Appstore/应用宝市场进行下载</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - Android：<ul>
+<li>动态Apk技术，存在负作用，动态Apk技术与微信应用宝直接跳转市场下载冲突，如果需要使用动态Apk技术，在安卓下，就只能弹蒙层外部浏览器打开</li>
+<li>手机指纹技术，与应用宝市场跳转不冲突，存在成功率问题，大概66%，同wifi失败率增高</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - iOS：<ul>
+<li>动态剪切板技术，与微信应用宝直接跳转市场无冲突，必须iOS10+</li>
+<li>手机指纹技术，存在成功率问题，大概66%，同wifi失败率增高</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位 - Android：<ul>
+<li>技术暂时无法突破，弹蒙层，提示用系统浏览器打开</li>
+<li>微信白名单，有部分腾讯旗下产品通过微信白名单做到</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位 - iOS：<ul>
+<li><del>universallink技术，已于18年1月被微信封堵</del></li>
+<li>剪切板技术，先拷贝剪切板，再跳转Appstore，在Appstore点击打开按钮，打开App进行剪切板定位，必须iOS10+</li>
+</ul>
+</li>
+</ul>
+<p><strong>建议：</strong></p>
+<ul>
+<li>安卓在无精准定位需求的时候用应用宝渠道下载，有精准定位需求的时候用动态Apk+蒙层提示系统浏览器下载，暂时无法解决微信内吊起，弹蒙层，提示用系统浏览器打开</li>
+<li>iOS用剪切板技术做下载导流精准定位，用剪切板技术做吊起</li>
+</ul>
+<h3 id="微信小程序"><a href="#微信小程序" class="headerlink" title="微信小程序"></a>微信小程序</h3><p>简介：微信小程序和微信内H5不一样，和浏览器的导流方式也不一样，单独说明</p>
+<ul>
+<li>传播：小程序通过分享传播，从App分享小程序到聊天对话+群对话（暂不支持朋友圈），传播小程序</li>
+<li>回流：在聊天对话+群对话中点开小程序，小程序可以开发跳转回App的功能</li>
+<li>回流受限：用户从群对话中点开小程序才能回流，用户用过一次小程序后记住了，直接自行在小程序快捷入口打开并使用，无法回流</li>
+</ul>
+<h2 id="手百"><a href="#手百" class="headerlink" title="手百"></a>手百</h2><p>简介：手百不禁止下载App，手百内禁止以任意方式打开App</p>
+<ul>
+<li>未安装 - 点击下载App：<ul>
+<li>直接下载 or 跳转Appstore</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - Android：<ul>
+<li>动态Apk技术，无导流负作用，对服务器压力略大</li>
+<li>手机指纹技术，存在成功率问题，大概66%，同wifi失败率增高</li>
+</ul>
+</li>
+<li>未安装 - 点击下载App - 下载后精准定位 - iOS：<ul>
+<li>动态剪切板技术，与微信应用宝直接跳转市场无冲突，必须iOS10+</li>
+<li>手机指纹技术，存在成功率问题，大概66%，同wifi失败率增高</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位- Android：<ul>
+<li>技术暂时无法突破，弹蒙层，提示用系统浏览器打开</li>
+</ul>
+</li>
+<li>已安装 - 点击打开App - 精准定位 - iOS：<ul>
+<li><del>universallink技术，跟随微信步伐已被封堵</del></li>
+<li>剪切板技术，先拷贝剪切板，再跳转Appstore，在Appstore点击打开按钮，打开App进行剪切板定位，必须iOS10+</li>
+</ul>
+</li>
+</ul>
+<p><strong>建议：</strong></p>
+<ul>
+<li>安卓用动态Apk技术做下载导流精准定位，暂时无法解决手百内吊起，弹蒙层，提示用系统浏览器打开</li>
+<li>iOS用剪切板技术做下载导流精准定位，用剪切板技术做吊起</li>
+</ul>
+<h2 id="补充说明："><a href="#补充说明：" class="headerlink" title="补充说明："></a>补充说明：</h2><p>iOS9 的 SafariViewController 的 Cookie互通方案在 <a href="http://awhisper.github.io/2016/05/11/iOSBrowserDomainBridge/" target="_blank" rel="noopener">iOS app与浏览器深度链接 DeeperLink</a> 这篇文章中解释了，经过种种考虑彻底应该废弃不用了，所以本文中均为考虑此方案，不做详细解释了</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/06/hybrid-webcontainer/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/06/hybrid-webcontainer/" itemprop="url">从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-06T12:06:51+08:00">
+                2018-03-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2018/03/06/hybrid-webcontainer/" class="leancloud_visitors" data-flag-title="从零收拾一个hybrid框架（二）-- WebView容器基础功能设计思路">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p><a href="http://awhisper.github.io/2018/01/02/hybrid-jscomunication/" target="_blank" rel="noopener">从零收拾一个hybrid容器（一）– 从选择JS通信方案开始</a></p>
+<blockquote>
+<p>上一篇文章介绍了如果自己亲自开发一个hybrid容器，应该怎么去选择JS通信方案，并且重点强调了现在市面上流传最广的<a href="https://github.com/marcuswestin/WebViewJavascriptBridge" target="_blank" rel="noopener">WebViewJavascriptBridge</a> 他存在的致命问题，以及不应该因为所谓的看似写法统一而在api选型上做功能妥协的思想</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>这篇文章拖到年后才开始写是有点罪过罪过，不过在写之前我想说几点，这系列文章我想表达的并不是在推广什么我自己的新Bridge轮子，也不是针对某个开源 Bridge 框架进行深度的源码分析。我们从看开源框架轮子如何设计，如何使用，源码如何工作的思维方式中跳出来，换一种模式去从目的出发，从需求出发，思考当你什么都没有的时候，你要从零思考构建一个 hybrid 框架的时候，你都要考虑哪些方面？这些方面采用怎样的设计思想能做到未来在使用中灵活自如。</p>
+<p>单纯去做一个纯hybrid通信框架，网上有的各类 bridge 轮子，但是通信只是 hybrid 这个话题下的一个底层基础，上层的玩法还有很多，跳出通信框架看看现在各种前端+客户端的混合开发模式下，他们是否有啥共通点，然后汲取里面的设计思想，然后灵活的在自己业务中发挥出来，这样你面临的就从来不是一个选择题，我要不要用RN？我要不要用新玩具 Flutter？（这玩意槽点很多也离我这篇文章的主题有点远，我就提一嘴不打算多说）你面临的只是一个问答题：新出来个重型大轮子，我能不能看看这个思想借鉴到现有业务里的？</p>
+<h1 id="Hybrid"><a href="#Hybrid" class="headerlink" title="Hybrid"></a>Hybrid</h1><blockquote>
+<p><strong>狭义Hybrid</strong></p>
+<p>也是现在大家普遍认知的，Hybrid就是一种给 WebView 增加一些js通信可以调用原生API的方式</p>
+<p><strong>广义Hybrid</strong></p>
+<p>我能否认为，只要是前端的开发思路与客户端原生的开发思路相结合，就认为他是一种 Hybrid？</p>
+<p>我能否认为，通过原生的配合，把原本js or 前端开发做不到的事情做到了，用原生的方式增强了原本的前端技术能力，是否就是一种 Hybrid？</p>
+<p>我能否认为，无论是 WebView+Bridge 也好，RN类似的原生渲染框架也好，小程序也好，某种意义上讲，他们都算 Hybrid？</p>
+</blockquote>
+<p>因为Hybrid本是一个面向业务服务的东西，如果业务的野心足够大，WebView 容器的想象空间应该是在能力上与RN/小程序看齐的，没错，WebView 在 Hybrid 的支持下，不单纯是设计几个 Bridge 调用几个原生 API 的事，我其实在不少聊天群里深度聊过这个话题，泛前端动态化这个方向上，各种技术轮子都是一脉相承通着的，所以你看RN or 小程序是一个大厂新做的重型轮子？在我看来他们都是一回事，完全可以拆解RN中的每个环节，把RN号称比 WebView 好的原生渲染/原生组件拆解融入 WebView，我也可以学习小程序保持 Html/CSS/JS 的开发方式（当然我知道小程序是WXML/WXSS），而非RN那样统一用JSX开发。我甚至还能把RN与小程序都没有的动态bridge融入到Hybrid容器中去，What’s more? 还有更多可以开放的脑洞。</p>
+<p>这种拆解不是说可以做到把所有框架优点塞在一个大而全的框架里就完事的，各种优化方案的选择背后一定带来的是一些取舍。谁来决定取舍，业务决定，如果自己能深度把握这里面的设计思想，就不用在乎什么新的轮子新的框架，取其设计优点（优点一定带来取舍，如果选择这个有点意味着也要选择他的取舍），融入自己的业务之中。</p>
+<h1 id="WebView容器-基本功能"><a href="#WebView容器-基本功能" class="headerlink" title="WebView容器 - 基本功能"></a>WebView容器 - 基本功能</h1><p>前边把话题聊得有点大，有点虚，那么收回来，我后面的内容还是围绕着 WebView 来设计我们想要的 Hybrid 框架，本系列第二篇文章我会传统点，先只从传统的对 WebView 容器上的功能需求出发说一些基本的功能的设计方案与思路，但是第三篇就会从一些“黑脑洞”的功能层面，在 WebView 的基础上扩展出一些非常规的能力。本文就基于 WKWebView 说了，UIWebView 如果说真理解设计思想的话，其实没区别，同理虽然我所有的解释说明都是 iOS 的，但对于安卓来说设计思想完全适用。</p>
+<blockquote>
+<ul>
+<li>选择合适的 JS 通信方案（第一篇）</li>
+<li>实现基本的 WebView 容器能力（第二篇 本篇）</li>
+<li>尝试拓展 WebView 容器的额外能力（第三篇 待续）</li>
+</ul>
+</blockquote>
+<p>一个标准的WebView容器要具备哪些基础的功能需求，来满足常规的 hybrid-webview 开发呢？</p>
+<ul>
+<li>良好的 JS 与原生通信交互能力</li>
+<li>灵活的业务模块扩展能力</li>
+<li>UserAgent 管理</li>
+<li>Cookies 管理</li>
+<li>本地加载 JS 管理</li>
+</ul>
+<h2 id="通信交互设计"><a href="#通信交互设计" class="headerlink" title="通信交互设计"></a>通信交互设计</h2>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/03/06/hybrid-webcontainer/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/01/08/wechatkilluniversallink/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1762,373 +2220,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/04/newcommentssystem/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/04/newcommentssystem/" itemprop="url">评论系统迁移</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-04T21:50:00+08:00">
-                2017-05-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/生活随笔/" itemprop="url" rel="index">
-                    <span itemprop="name">生活随笔</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/05/04/newcommentssystem/" class="leancloud_visitors" data-flag-title="评论系统迁移">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="多说停止服务"><a href="#多说停止服务" class="headerlink" title="多说停止服务"></a>多说停止服务</h1><p>本来多说用的好好地，突然就停止服务了，据说到6月1日就彻底下线了，拖延症的我5.1假期才想起来收拾收拾</p>
-<h1 id="顺手升级了下博客"><a href="#顺手升级了下博客" class="headerlink" title="顺手升级了下博客"></a>顺手升级了下博客</h1><p>以前纯属照着小白教程搭建起来的Hexo+Next，后来就本能的不想动这块已经搭建好的环境了。这次心想既然要折腾就干脆好好捣鼓捣鼓。于是惊讶的发现Next主题都发展到5.1.1了！以前好多都得自己动手改源码才能实现的功能都被merge到主干里了，感觉越用越舒心了，评论，搜索，分享，统计等核心feature，每一个都源码实现了多个服务商的接入，只需轻松的在配置文件里，配配ID与开关就可以了</p>
-<h1 id="开始迁移评论系统-纯GitPage使用者的无奈"><a href="#开始迁移评论系统-纯GitPage使用者的无奈" class="headerlink" title="开始迁移评论系统 - 纯GitPage使用者的无奈"></a>开始迁移评论系统 - 纯GitPage使用者的无奈</h1><p>从以前多说导出来了旧的评论数据，一个超大号的json文件，选择迁移哪个评论系统纠结死我了</p>
-<ul>
-<li>Disqus</li>
-</ul>
-<p>最理想的是迁移到这里，唯一的问题是，这货被墙了，所以Pass吧</p>
-<ul>
-<li>畅言</li>
-</ul>
-<p>畅言是搜狐的云服务，问题在于畅言必须网站ICP备案，我这连自己的服务器也没有，没有自己域名的，GitPage使用者就拜拜了</p>
-<ul>
-<li>网易云跟帖</li>
-</ul>
-<p>网易云跟帖在多说关闭的新闻出来后，似乎各处都在好评都在推荐，但这网易的评论服务本身严格校验域名，申请注册的时候，等级域名必须与网站域名完全匹配，又把我这个纯GitPage使用者挡在了门外，我没申请独立域名，因此域名是github.io，这个一级域名在网易云跟帖的系统机制下是无效的，所以又无缘了</p>
-<ul>
-<li>来必力</li>
-</ul>
-<p>棒子的服务，我压根没想用，前面都无功而返后尝试注册了一下，发的验证邮件是TM棒子文，滚蛋</p>
-<ul>
-<li>友言</li>
-</ul>
-<p>最后选择了友言，友言和我博客使用的分享功能<code>JiaThis</code>是一家公司的，管理界面很简陋，但是评论页面也挺简洁，行了就这样吧。</p>
-<h1 id="迁移评论数据"><a href="#迁移评论数据" class="headerlink" title="迁移评论数据"></a>迁移评论数据</h1><p>评论数据这我还没前已完成，友言的数据导入是要求输入一套友言定义的Json，哪天搞个脚本把多说的json转成友言的格式吧，不麻烦倒是，现在还没弄好</p>
-<h1 id="纠结"><a href="#纠结" class="headerlink" title="纠结"></a>纠结</h1><ul>
-<li><p>迁移个评论我容易么</p>
-</li>
-<li><p>喜欢github.io 只用GitPage我容易么</p>
-</li>
-<li><p>静态部署Github，没搞自己的云服务器我容易么</p>
-</li>
-</ul>
-<p>上面就是扯个淡，最近在很专注的看前端相关的东西，Hexo和Next的源码还真的挺有意思的，有空值得深入看看。</p>
-<p>慢慢的估计也得自己搞个服务器，弄个域名了，毕竟还要学着弄点深入的东西</p>
-<h1 id="更新"><a href="#更新" class="headerlink" title="更新"></a>更新</h1><p>SB友言的评论系统，官方提供的多说迁移，导入失败，我自己按着官方例子写的迁移脚本导入失败，我直接把官方的demo例子，导入依然失败，我日他大爷的。</p>
-<p>刚迁移没两天，友言的js api sb了，我就日了。。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">jsapi.uyan.cc/ </span><br><span class="line"></span><br><span class="line">Failed to load resource: the server responded with a status of 502 (Bad Gateway)</span><br></pre></td></tr></table></figure></p>
-<p>听@种子的建议，我再试试棒子的<code>来必力</code>好了</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/05/01/DSLandLayoutEngine/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/05/01/DSLandLayoutEngine/" itemprop="url">动态界面：DSL&布局引擎</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-01T13:46:55+08:00">
-                2017-05-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2017/05/01/DSLandLayoutEngine/" class="leancloud_visitors" data-flag-title="动态界面：DSL&布局引擎">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="Jasonette-与-Tangram"><a href="#Jasonette-与-Tangram" class="headerlink" title="Jasonette 与 Tangram"></a>Jasonette 与 Tangram</h1><p>很早的时候火了一阵子<a href="https://github.com/Jasonette/JASONETTE-iOS" target="_blank" rel="noopener">Jasonette</a>，打出来的宣传语是用json写出纯native的app(牛皮其实有点大，其实只是写动态界面，完全不是写动态App)。</p>
-<p>前一阵子，天猫又开源了跨多个平台的<a href="http://tangram.pingguohe.net/" target="_blank" rel="noopener">Tangram</a>，一套通用的UI解决方案，仔细阅读文档我们会发现，他们也是在用json来实现这套七巧板布局。一套灵活的跨平台的UI解决方案。</p>
-<p>Jasonette的牛皮其实有点大，很多人看到动态用Json写出纯native的app，就很激动，仿佛客户端也能有H5那样的能力，但其实他只是focus在解决app中的界面的问题。Tangram的定位就很精准了，是一套为业务出发的通用跨平台UI解决方案，把布局渲染性能与多段一致性考虑在框架内的UI框架。这二者有个共同点都是用json来描述界面与内容，从而用native进行呈现，json这种数据是一种天然便于下发与动态更新的数据，因此这些其实都能让客户端做到类似H5网页一样的赶脚。虽然没有使用WebView，但他们的设计思路和网页技术的发展历史如出一辙，因此<a href="http://www.weibo.com/xicilion" target="_blank" rel="noopener">@响马</a>大叔说过”这其实是最纯正的网页技术，虽然他是native的”。</p>
-<p>顺着这个话题继续问几个问题</p>
-<ul>
-<li>DSL</li>
-</ul>
-<p>为什么Jasonette与Tangram都是用json？</p>
-<ul>
-<li>布局排版</li>
-</ul>
-<p>为什么Jasonette写出来的json有些属性看着很像css？<code>padding</code> &amp; <code>align</code>（拿Jasonette举例）</p>
-<ul>
-<li>渲染</li>
-</ul>
-<p>Jasonette调用UIKit进行渲染，H5用WebView渲染，所以Jasonette就叫native？</p>
-<h1 id="从DSL说起"><a href="#从DSL说起" class="headerlink" title="从DSL说起"></a>从DSL说起</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/05/01/DSLandLayoutEngine/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/2/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/4/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2176,7 +2272,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">72</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
