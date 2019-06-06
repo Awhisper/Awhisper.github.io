@@ -93,7 +93,7 @@
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597912623923.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597916988576.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597923911726.jpg">
-<meta property="og:updated_time" content="2019-06-06T03:46:06.938Z">
+<meta property="og:updated_time" content="2019-06-06T03:57:16.290Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WWDC2019：What&#39;s New in Universal Links">
 <meta name="twitter:description" content="WWDC2019 Session 717 : What’s New in Universal Links 上面是 session 视频原 link ，整个视频不长，也就 20min 视频脉络  OverView 总览 Configuring Your Web Server 配置网络服务 Configuring Your App 配置应用 BestPractice 最佳实践  OverView 总览">
@@ -431,12 +431,7 @@
 <li>Configuring Your App 配置应用</li>
 <li>BestPractice 最佳实践</li>
 </ul>
-<h1 id="OverView-总览"><a href="#OverView-总览" class="headerlink" title="OverView 总览"></a>OverView 总览</h1><blockquote>
-<p>UniversalLink 就是用一个网页 URL 既可以打开网页地址，又可以打开对应 App 的地址</p>
-<p>PS: 我以前写过的一篇 UniversalLink 的详解:</p>
-<p><a href="http://www.awhisper.net/2017/09/02/universallink/" target="_blank" rel="noopener">Universal Link 部署采坑记</a></p>
-</blockquote>
-<p>Universal Link 的基本运作机制</p>
+<h1 id="OverView-总览"><a href="#OverView-总览" class="headerlink" title="OverView 总览"></a>OverView 总览</h1><p>Universal Link 的基本运作机制</p>
 <ul>
 <li>通过在 XCode 的 App 配置中配置了相关信息以及安全域名指定</li>
 <li>通过在 Https only 的安全域名上部署一个配置 json ，包含证丰富的 website 与 app 的链接信息</li>
@@ -444,6 +439,7 @@
 <li>实现 website 的 url 与 app 的直接联动</li>
 </ul>
 <p>相对于自定义的 schemes 来说 Universal Link 能带给你更安全更流畅的体验</p>
+<a id="more"></a>
 <blockquote>
 <p>补充：schemes 上最令人诟病的就是 app 劫持，很多 app 会冒充注册知名大厂的 app scheme 从而拦截调常规的大厂 scheme 唤起，这一点在 Universal Link 就能很好的避免</p>
 </blockquote>
@@ -528,6 +524,10 @@
 <li>给苹果反馈</li>
 </ul>
 <p>如果你有更多对 universal link 的建议，欢迎反馈</p>
+<blockquote>
+<p>PS: 我以前写过的一篇 UniversalLink 的部署实践:</p>
+<p><a href="http://www.awhisper.net/2017/09/02/universallink/" target="_blank" rel="noopener">Universal Link 部署采坑记</a></p>
+</blockquote>
 
       
     </div>
