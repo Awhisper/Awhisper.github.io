@@ -304,595 +304,6 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/21/GitPage-Next的CSS-JS错误/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/21/GitPage-Next的CSS-JS错误/" itemprop="url">GitPage部署Hexo NexT主题的CSS/JS错误</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-21T13:53:54+08:00">
-                2016-11-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/21/GitPage-Next的CSS-JS错误/" class="leancloud_visitors" data-flag-title="GitPage部署Hexo NexT主题的CSS/JS错误">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="GitPage-升级，旧版NexT不支持"><a href="#GitPage-升级，旧版NexT不支持" class="headerlink" title="GitPage 升级，旧版NexT不支持"></a>GitPage 升级，旧版NexT不支持</h1><p>我的博客使用的是GitPage，域名直接就是<code>github.io</code>,用的Hexo博客，并且选了一个觉得很好看的NexT主题，这个主题现在还挺火，用的人挺多的，清新简约</p>
-<p>直到上周五，我更新了一波博客，当本地调试完毕后，<code>sudo hexo d</code>部署到GitPage的时候，发现所有的博客界面都无法访问了，用chrome一查发现，github的vendor目录下的所有无论是js文件还是css文件，通通的404报错了，所以导致整个页面的数据完全出不来了</p>
-<p>查了一下 发现是这个原因</p>
-<p><img src="http://blogpic-qiniu.awhisper.net/gitpageissue.png" alt="gitissue"></p>
-<p>简单的说GitPage进行了一次升级，Next使用了<code>jekyll</code>这个东西，而这个东西目前GitPage是不支持的，因此导致了博客无法正常加载。</p>
-<h1 id="解决办法-nojekyll"><a href="#解决办法-nojekyll" class="headerlink" title="解决办法 .nojekyll"></a>解决办法 .nojekyll</h1><p><strong>有一个很糙快猛的方法</strong></p>
-<ul>
-<li>找到你博客的GitPage的Github仓库</li>
-<li>在xxx.github.io这个仓库的根目录下，选择<code>create new file</code></li>
-<li>new file 的名字起名<code>.nojekyll</code></li>
-<li>new file 里面的内容就一行<code>!vendors/*</code></li>
-</ul>
-<p>通过上面的方法，可以让GitPage对vendor目录禁止jekyll，这样就一切顺利了。</p>
-<p>但是存在一个问题，每次deploy，这个仓库都会完全重新clean后生成，因此每次deploy都得这么改一次就太麻烦了</p>
-<p><strong>解决Hexo的Deploy</strong></p>
-<p>修改Hexo的Deploy过程，让Deploy的时候自动处理这些</p>
-<ul>
-<li>.deploy_git 目录, 添加 .nojekyll 空文件</li>
-<li>source目录, 添加.nojekyll 空文件</li>
-<li>修改 Hexo 上层_config.yml配置文件, 添加</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include:</span><br><span class="line">  - .nojekyll</span><br></pre></td></tr></table></figure>
-<p>之后就解决了，我就是这么干的~</p>
-<h1 id="另一个解决方案"><a href="#另一个解决方案" class="headerlink" title="另一个解决方案"></a>另一个解决方案</h1><ul>
-<li>首先修改source/vendors为source/lib</li>
-<li>然后修改_config.yml， 将 _internal: vendors修改为_internal:lib </li>
-<li>然后修改next底下所有引用source/vendors路径为source/lib。</li>
-</ul>
-<p>这些地方可以通过文件查找找出来。主要集中在这几个文件中。</p>
-<ul>
-<li><ol>
-<li>Hexo\themes\next.bowerrc </li>
-</ol>
-</li>
-<li><ol start="2">
-<li>Hexo\themes\next.gitignore </li>
-</ol>
-</li>
-<li><ol start="3">
-<li>Hexo\themes\next.javascript_ignore </li>
-</ol>
-</li>
-<li><ol start="4">
-<li>Hexo\themes\next\bower.json </li>
-</ol>
-</li>
-</ul>
-<p>修改完毕后，刷新重新g一遍就ok啦。</p>
-<h1 id="解决方案出处"><a href="#解决方案出处" class="headerlink" title="解决方案出处"></a>解决方案出处</h1><p><a href="https://www.zhihu.com/question/52268353" target="_blank" rel="noopener">hexo文章发布到github后部分文件404了</a></p>
-<p><a href="http://blog.csdn.net/zhouzixin053/article/details/53038679" target="_blank" rel="noopener">Hexo+Github博客css js404导致博客页面空白</a></p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/18/从antlr到语法解析/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/18/从antlr到语法解析/" itemprop="url">从antlr扯淡到一点点编译原理</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-18T12:51:38+08:00">
-                2016-11-18
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/18/从antlr到语法解析/" class="leancloud_visitors" data-flag-title="从antlr扯淡到一点点编译原理">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>网上我们看到很多看起来很神奇的，能做到各种语言之间转换的东西</p>
-<ul>
-<li><p>比如<a href="http://bang590.github.io/JSPatchConvertor/" target="_blank" rel="noopener">JSPatchConvertor</a>，他可以做到把OC代码输入后直接转化成JSPatch代码，</p>
-</li>
-<li><p>比如<a href="http://objc2swift.yahoo-labs.jp/" target="_blank" rel="noopener">objc2swift</a>，他可以做到把OC代码输入后直接转化为Swift代码</p>
-</li>
-</ul>
-<p>这些看起来很酷炫的东西是怎么做的？Bang哥写的这篇<a href="http://blog.cnbang.net/tech/2915/" target="_blank" rel="noopener">JSPatchConvertor实现原理</a>，我们可以好好看看。</p>
-<p>从这篇文章里，我们看到了一个工具，一个看起来很牛逼很厉害的工具，<strong>antlr</strong>，JSPatchConvertor通过它来实现的语法转换，我们先看看这玩意怎么玩？</p>
-<h1 id="antlr的概述"><a href="#antlr的概述" class="headerlink" title="antlr的概述"></a>antlr的概述</h1><p>antlr是一个包含了<code>词法分析</code>,<code>语法分析</code>两大模块的工具，并且提供了大量主流语言的现成的语法描述<code>grammar</code>文件</p>
-<p>使用antlr你可以将某种语言的代码文件，以纯文本字符串的方式输入，被antlr整理分析成一个语法树，一个可以清晰地从树状结构里，看到代码真正的逻辑的结构化数据。</p>
-<p>通俗易懂的说，antlr的作用就是将计算机不明白，无法读取，无法执行的字符串代码，一个字一个字<code>读</code>，一行一行的<code>分析</code>，最后把<code>字符串</code>读明白了，分析明白了，转化成了计算机程序能<code>弄懂</code>(也就是能遍历，能执行，能运行的)的结构化数据<code>语法树</code></p>
-<p>听起来是不是很神秘？没错，这里面其实是编译原理里面的概念，我们所写的C++,OC,JAVA各种知名语言，我们其实写的都是一行一行字符串，这一行行的字符是怎么编译成可以运行的app的，这都是要经过这样的一个步骤，但这也只是编译原理中的一环，经过了<code>词法,语法解析</code>，后面还有很多重要的环节</p>
-<ul>
-<li><p>有了<code>词法,语法解析</code>，我们甚至还可以独创我们自己的语言</p>
-</li>
-<li><p>有了<code>词法,语法解析</code>，再引入编译原理中的其他概念，我们甚至还可以自己写我们独创语言的编译器</p>
-</li>
-</ul>
-<p>看起来是不是很神秘很牛逼~我们今天深入讨论一下</p>
-<h1 id="antlr的基本使用"><a href="#antlr的基本使用" class="headerlink" title="antlr的基本使用"></a>antlr的基本使用</h1><p>antlr包含以下几个部分</p>
-<ul>
-<li>antlr 主工程 </li>
-<li>antlr 语法描述 grammer</li>
-<li>antlr 运行时 runtime</li>
-</ul>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/18/从antlr到语法解析/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/11/01/cssprotocol/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/11/01/cssprotocol/" itemprop="url">iOS上的CSS样式协议 VKCssProtocol</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-01T16:23:35+08:00">
-                2016-11-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具代码/" itemprop="url" rel="index">
-                    <span itemprop="name">工具代码</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/11/01/cssprotocol/" class="leancloud_visitors" data-flag-title="iOS上的CSS样式协议 VKCssProtocol">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="CSS产生的想法"><a href="#CSS产生的想法" class="headerlink" title="CSS产生的想法"></a>CSS产生的想法</h1><p>早先，写过一阵子RN，前一阵子写微信小程序，深深地觉得CSS这个东西写起来很爽，样式与界面完全隔离，写好一套一套的样式<code>CSS Class</code>然后，在写界面HTML的时候直接对界面元素，无论是什么HTML标签，什么控件，只要指定<code>CSS Class</code>的名字就能自动生效。</p>
-<ul>
-<li>样式和界面完全隔离解耦</li>
-<li>样式之间可以自由任意排列组合创建新CSS Class</li>
-<li>对任意界面元素指定样式Class名就能自动生效</li>
-</ul>
-<p><strong>客户端场景</strong></p>
-<ul>
-<li>UI出App设计图也会有一套标准UI库</li>
-<li>不同的底色，字号，字色，圆角，字体，阴影等等样式属性相互组合</li>
-<li>UI有时候更换整体设计风格的时候，所有项目中用到的标准组件，应该随着UI设计一起变为最新的设计效果</li>
-<li>标准UI库扩展延伸一下，就是客户端主题风格，换肤等系统</li>
-</ul>
-<p><strong>工厂模式</strong></p>
-<p>看到上面的设计需求，相信很多人第一时间想到的都是客户端里构建一套工厂模式</p>
-<ul>
-<li>由工厂模式统一生成UI设计的标准控件</li>
-<li>所有需要使用标注控件的地方都用工厂去生成</li>
-<li>当UI需要整体修改样式属性，修改工厂模式的构造方法就能实现整体应用新效果</li>
-</ul>
-<p>我不是很喜欢这种模式</p>
-<ul>
-<li>写法不统一，必须让使用者使用工厂的构造方法来创建标准UI，非标准UI写法就随意了</li>
-<li>耦合性比较强，必须引入工厂模块</li>
-</ul>
-<p><strong>Css样式,Protocol协议</strong></p>
-<ul>
-<li>希望引入Css的样式思想，让样式与界面分离</li>
-<li>将UI给的统一标准设计图，专心的写成<code>.css</code>文件</li>
-<li>可以动态下发，可以动态替换，动态更新效果。</li>
-<li>希望像iOS Protocol协议那样工作</li>
-<li>不管控件是Label Button Image View，CSSClass都可以直接指定一个协议名字，样式功能就自动生效</li>
-<li>不管控件是用工厂创建的，还是Xib拖线的，还是手写代码写的，都能无缝接入这个cssprotocol</li>
-<li><code>xxview.protocol = &quot;cssclassname1 cssclassname2&quot;</code> 这种感觉</li>
-<li>协议可以同时指定多个样式，以空格区分，样式之间自由组合</li>
-</ul>
-<p><strong>我不想动态修改界面元素布局，动态创建全新的界面</strong></p>
-<p>大家都知道，CSS有一个很大的用途就是用于界面布局，并且css的布局写法和iOS原生的布局写法有很大的区别，所以在这里我想强调一点，我这里写的cssprotocol，不想包含任何跟布局有关，只是单纯的动态配置外观样式，丝毫不影响布局。</p>
-<p>原因是，项目里总会存在着各种各样的布局方式，有frame布局，有masonry autolayout，也有XIB拖线autolayout，我希望我写的东西能让使用的人很快的在自己项目里接入，而不是一下删掉旧的布局方案，全都替换成我的。</p>
-<p>我希望使用者直接在现有的代码里，无论是哪种方式实现的界面，取到UIView，直接指定cssprotocol，就自动样式生效了，不要让使用者需要大规模改动现有代码。</p>
-<p>同理，我也没想让这一套能够动态的创建UI，真要动态创建原生UI，直接用samurai reactnative weex好了。</p>
-<p>还原我的初衷，我还是希望原生开发者能在不改变自己的项目的情况下，很快的接入这个工具，对于主题样式能够控制的更灵活和方便。</p>
-<blockquote>
-<p>题外话：</p>
-<p>我就很不喜欢ASDK的设计，一整套异步渲染，flexbox页面布局，网络，缓存，滚动控制等等一堆完整解决方案杂糅在一起，让使用者的代价异常的高，哪怕提供了UIKit转ASNode的简单入口也无法改变这一笨重无比的事实</p>
-<p>其实ASDK每一个feature，单看源码，单独拆出来模块，学习思想，吸收进入自己的项目都是很好地。</p>
-</blockquote>
-<h1 id="VKCssProtocol"><a href="#VKCssProtocol" class="headerlink" title="VKCssProtocol"></a>VKCssProtocol</h1><p><a href="https://github.com/Awhisper/VKCssProtocol" target="_blank" rel="noopener">VKCssProtocol  Github地址</a></p>
-<p>整个项目的代码，以及使用demo，都在上面</p>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/11/01/cssprotocol/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/30/wxappdemo/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -2040,11 +1451,530 @@
 
 
     
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/07/02/ReactNative源码分析2/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/07/02/ReactNative源码分析2/" itemprop="url">ReactNative iOS源码解析（二）</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-07-02T14:39:37+08:00">
+                2016-07-02
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/07/02/ReactNative源码分析2/" class="leancloud_visitors" data-flag-title="ReactNative iOS源码解析（二）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>相关系列文章</p>
+<ul>
+<li><a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/02/ReactNative%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902/" target="_blank" rel="noopener">ReactNative iOS源码解析（二）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/17/Talk-about-ReactNative-Image-Component/" target="_blank" rel="noopener">Talk about ReactNative Image Component</a></li>
+</ul>
+<p>上一篇了解了 ReactNative是如何初始化一整套JS/OC通信机制，是如何相互通信的。通篇在讲JS/OC的通信的源代码流程，解释了为什么JS可以调用OC，为什么OC可以调用JS，这相互之间的通信，是如何通过代码进行控制与管理的</p>
+<p>但是上一篇讲的内容有一点太抽象了，全都是底层通信，我们依然不知道：</p>
+<p><strong>上层的业务module是如何一步步用js搭建出一款app的？</strong></p>
+<p>于是就进入了今天的环节，ReactNative中的Native，具体讲讲各种各样的Module是如何工作的，官方写好的Module以及我们可以自行扩展的Module</p>
+<p>这里面分为2种module</p>
+<ul>
+<li>源生API模块 - RCTModuleData </li>
+</ul>
+<p>（说明，官方文档把这个起名就叫源生模块，英文Module，我这里先中二的起名叫APIModule，为了和另一个区别起名一下，瞎起的名字，大家凑合一下）</p>
+<ul>
+<li>源生UI组件模块 - RCTComponentData</li>
+</ul>
+<p>（说明，官方文档把这个起名就叫源生UI组件，英文Component，我这里先中二的起名叫UIModule，为了和另一个区别起名，瞎起的名字，大家凑合一下）</p>
+<p>API模块阐述了JS是如何调用native各个模块的逻辑</p>
+<p>UI组件阐述了JS是如何创建出native的UI界面</p>
+<p>本文在源码分析部分，对照前文的代码流程可以加深理解</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/07/02/ReactNative源码分析2/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/24/ReactNative流程源码分析/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/24/ReactNative流程源码分析/" itemprop="url">ReactNative iOS源码解析（一）</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-24T22:05:24+08:00">
+                2016-06-24
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/06/24/ReactNative流程源码分析/" class="leancloud_visitors" data-flag-title="ReactNative iOS源码解析（一）">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>相关系列文章</p>
+<ul>
+<li><a href="http://awhisper.github.io/2016/06/24/ReactNative%E6%B5%81%E7%A8%8B%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%90/" target="_blank" rel="noopener">ReactNative iOS源码解析（一）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/02/ReactNative%E6%BA%90%E7%A0%81%E5%88%86%E6%9E%902/" target="_blank" rel="noopener">ReactNative iOS源码解析（二）</a></li>
+<li><a href="http://awhisper.github.io/2016/07/17/Talk-about-ReactNative-Image-Component/" target="_blank" rel="noopener">Talk about ReactNative Image Component</a></li>
+</ul>
+<p>本篇前两部分内容简单介绍一下ReactNative，后面的章节会把整个RN框架的iOS部分，进行代码层面的一一梳理</p>
+<p>全文是不是有点太长了，我要不要分拆成几篇文章</p>
+<p>函数栈代码流程图，由于采用层次缩进的形式，层次关系比较深的话，不是很利于手机阅读，</p>
+<h1 id="ReactNative-概要"><a href="#ReactNative-概要" class="headerlink" title="ReactNative 概要"></a>ReactNative 概要</h1><p>ReactNative，动态，跨平台，热更新，这几个词现在越来越火了，一句<code>使用JavaScript写源生App</code>吸引力了无数人的眼球，并且诞生了这么久也逐渐趋于稳定，<code>携程</code>,<code>天猫</code>,<code>QZone</code>也都在大产品线的业务上，部分模块采用这个方案上线，并且效果得到了验证<a href="http://ppt.geekbang.org/gmtc" target="_blank" rel="noopener">（见2016 GMTC 资料PPT）</a></p>
+<p>我们把这个单词拆解成2部分</p>
+<ul>
+<li>React</li>
+</ul>
+<p>熟悉前端的朋友们可能都知道<code>React.JS</code>这个前端框架，没错整个RN框架的JS代码部分，就是React.JS，所有这个框架的特点，完完全全都可以在RN里面使用（这里还融入了Flux，很好的把传统的MVC重组为dispatch，store和components，<a href="http://reactjs.cn/react/docs/flux-overview.html" target="_blank" rel="noopener">Flux架构</a>）</p>
+<p>所以说，写RN哪不懂了，去翻React.JS的文档或许都能给你解答</p>
+<p>以上由@彩虹 帮忙修正</p>
+<ul>
+<li>Native</li>
+</ul>
+<p>顾名思义，纯源生的native体验，纯源生的UI组件，纯原生的触摸响应，纯源生的模块功能</p>
+<p><strong>那么这两个不相干的东西是如何关联在一起的呢？</strong></p>
+<p>React.JS是一个前端框架，在浏览器内H5开发上被广泛使用，他在渲染render()这个环节，在经过各种flexbox布局算法之后，要在确定的位置去绘制这个界面元素的时候，需要通过浏览器去实现。他在响应触摸touchEvent()这个环节，依然是需要浏览器去捕获用户的触摸行为，然后回调React.JS</p>
+<p>上面提到的都是纯网页，纯H5，但如果我们把render()这个事情拦截下来，不走浏览器，而是走native会怎样呢？</p>
+<p>当React.JS已经计算完每个页面元素的位置大小，本来要传给浏览器，让浏览器进行渲染，这时候我们不传给浏览器了，而是通过一个JS/OC的桥梁，去通过<code>[[UIView alloc]initWithFrame:frame]</code>的OC代码，把这个界面元素渲染了，那我们就相当于用React.JS绘制出了一个native的View</p>
+<p>拿我们刚刚绘制出得native的View，当他发生native源生的<code>- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event</code>触摸事件的时候，通过一个OC/JS的桥梁，去调用React.JS里面写好的点击事件JS代码</p>
+<p>这样React.JS还是那个React.JS，他的使用方法没发生变化，但是却获得了纯源生native的体验，native的组件渲染，native的触摸响应</p>
+<p>于是，这个东西就叫做React-Native</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/06/24/ReactNative流程源码分析/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/06/16/前端10年读后感/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/06/16/前端10年读后感/" itemprop="url">“站在10年研发路上，眺望前端未来”：读后感</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-06-16T22:56:23+08:00">
+                2016-06-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/06/16/前端10年读后感/" class="leancloud_visitors" data-flag-title="“站在10年研发路上，眺望前端未来”：读后感">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>以下内容感觉都是嘴炮，没啥干货，也没啥源码，就是自己的一点乱七八糟的想法，甚至可能是个人单方面的yy。。。我还是不归类在搬砖里，归类在扯淡里吧</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/06/16/前端10年读后感/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><span class="space">&hellip;</span><a class="page-number" href="/page/8/">8</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
+    <a class="extend prev" rel="prev" href="/page/4/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span><a class="page-number" href="/page/6/">6</a><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/6/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -2092,7 +2022,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">72</span>
+                  <span class="site-state-item-count">69</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
