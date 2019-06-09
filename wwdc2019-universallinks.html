@@ -91,9 +91,7 @@
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597903153619.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597906286057.jpg">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597912623923.jpg">
-<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597916988576.jpg">
-<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-06-15597923911726.jpg">
-<meta property="og:updated_time" content="2019-06-07T02:58:57.811Z">
+<meta property="og:updated_time" content="2019-06-07T08:10:20.129Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WWDC2019：What&#39;s New in Universal Links">
 <meta name="twitter:description" content="WWDC2019 Session 717 : What’s New in Universal Links Universal Link 之前只支持 iOS tvOS 平台，现在全面登录到 macOS 平台上了，无论你是用 UIKit 还是 AppKit 开发的 Mac App 都可以使用 Universal Link 上面是 session 视频原 link ，整个视频不长，也就 20min 这一">
@@ -322,7 +320,7 @@
 <p>上面是 session 视频原 link ，整个视频不长，也就 20min</p>
 <p>这一次 WWDC2019 Universal Links 主要的变化有 2 点</p>
 <ul>
-<li>apple-app-site-association file 的写法变更</li>
+<li>apple-app-site-association file 支持精细化地址匹配写法</li>
 <li>Universal Links 支持 macOS</li>
 </ul>
 <h1 id="OverView-总览"><a href="#OverView-总览" class="headerlink" title="OverView 总览"></a>OverView 总览</h1><p>Universal Link 的基本运作机制</p>
@@ -338,7 +336,7 @@
 <blockquote>
 <p>补充：schemes 上最令人诟病的就是 app 劫持，很多 app 会冒充注册知名大厂的 app scheme 从而拦截调常规的大厂 scheme 唤起，这一点在 Universal Link 就能很好的避免</p>
 </blockquote>
-<h1 id="What’s-New-apple-app-site-association-file-的写法变更"><a href="#What’s-New-apple-app-site-association-file-的写法变更" class="headerlink" title="What’s New ? apple-app-site-association file 的写法变更"></a>What’s New ? apple-app-site-association file 的写法变更</h1><p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597892970280.jpg" alt="-w626"></p>
+<h1 id="apple-app-site-association-file-支持精细化地址匹配"><a href="#apple-app-site-association-file-支持精细化地址匹配" class="headerlink" title="apple-app-site-association file 支持精细化地址匹配"></a>apple-app-site-association file 支持精细化地址匹配</h1><p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597892970280.jpg" alt="-w626"></p>
 <p>上图是用知乎的 apple-app-site-association file 的老写法示例</p>
 <p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597903153619.jpg" alt="-w796"></p>
 <p>这是新的写法，支持了更多更强的配置能力</p>
@@ -380,7 +378,7 @@
 <li>使用 Smart Banner</li>
 </ul>
 <p>网页中的 Smart Banner 与 Universal Links 一起配合使用，可以有效的引导未安装 app 的用户前往下载，已安装 app 的用户就可以顺畅的进行跳转</p>
-<h1 id="What’s-new-Universal-Links-支持-macOS"><a href="#What’s-new-Universal-Links-支持-macOS" class="headerlink" title="What’s new ? Universal Links 支持 macOS"></a>What’s new ? Universal Links 支持 macOS</h1><p><strong>在 XCode 中配置 Universal Links</strong></p>
+<h1 id="Universal-Links-支持-macOS"><a href="#Universal-Links-支持-macOS" class="headerlink" title="Universal Links 支持 macOS"></a>Universal Links 支持 macOS</h1><p><strong>在 XCode 中配置 Universal Links</strong></p>
 <p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597912623923.jpg" alt="-w802"></p>
 <ul>
 <li>支持配置子域名</li>
@@ -388,7 +386,7 @@
 <li>支持配置特殊字符的域名，但必须 Punycode 编码</li>
 </ul>
 <p><strong>开发 Univsersal Links 的代码，支持 macOS</strong></p>
-<p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597916988576.jpg" alt="-w760"></p>
+<figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Configuring Your App</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">application</span><span class="params">(<span class="number">_</span> application: Application, <span class="keyword">continue</span> userActivity: NSUserActivity,</span></span></span><br><span class="line"><span class="function"><span class="params">restorationHandler: @escaping <span class="params">([ UserActivityRestoring]?)</span></span></span> -&gt; <span class="type">Void</span>) -&gt; <span class="type">Bool</span> &#123; </span><br><span class="line">    <span class="keyword">guard</span> userActivity.activityType == <span class="type">NSUserActivityTypeBrowsingWeb</span>,</span><br><span class="line">    <span class="keyword">let</span> url = userActivity.webpageURL,</span><br><span class="line">    <span class="keyword">let</span> components = <span class="type">URLComponents</span>(url: url, resolvingAgainstBaseURL: <span class="literal">true</span>) <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">for</span> queryItem <span class="keyword">in</span> components.queryItems ?? [] &#123;</span><br><span class="line">     …</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">true</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在支持 macOS 的情况下，appDelegate 的 Universal Link 的处理也是这个 delegate，区别只是 UIApplication 变为 NSApplication。</p>
 <p>由于这个 delegate 会由很多其他的快捷方式触发，不仅仅由 Universal Link 触发，所以通过 NSUserActivityTypeBrowsingWeb 来判断来源，剩下的就是标准的 url 处理了</p>
 <ul>
@@ -403,7 +401,7 @@
 <li>开发者签名的 macApp 必须在用户运行过一次后生效</li>
 </ul>
 <p><strong>在 mac app 中打开一个 Universal Link</strong></p>
-<p><img src="http://mweb-qiniu.awhisper.net/2019-06-06-15597923911726.jpg" alt="-w746"></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// UIApplication</span><br><span class="line">UIApplication.shared.open(url, options: [ .universalLinksOnly: true ]) &#123;</span><br><span class="line"> …</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// NSWorkspace</span><br><span class="line">let configuration = NSWorkspace.OpenConfiguration()</span><br><span class="line">configuration.requiresUniversalLinks = true</span><br><span class="line">NSWorkspace.shared.open(url, configuration: configuration) &#123;</span><br><span class="line"> …</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <blockquote>
 <p>PS: 补充文档</p>
 <p>以前写过的一篇 UniversalLink 的部署实践:</p>
@@ -483,7 +481,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">69</span>
+                  <span class="site-state-item-count">70</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -554,7 +552,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OverView-总览"><span class="nav-number">1.</span> <span class="nav-text">OverView 总览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#What’s-New-apple-app-site-association-file-的写法变更"><span class="nav-number">2.</span> <span class="nav-text">What’s New ? apple-app-site-association file 的写法变更</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#What’s-new-Universal-Links-支持-macOS"><span class="nav-number">3.</span> <span class="nav-text">What’s new ? Universal Links 支持 macOS</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#OverView-总览"><span class="nav-number">1.</span> <span class="nav-text">OverView 总览</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#apple-app-site-association-file-支持精细化地址匹配"><span class="nav-number">2.</span> <span class="nav-text">apple-app-site-association file 支持精细化地址匹配</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Universal-Links-支持-macOS"><span class="nav-number">3.</span> <span class="nav-text">Universal Links 支持 macOS</span></a></li></ol></div>
             
 
           </div>
