@@ -88,7 +88,7 @@
 <meta property="og:description" content="WWDC2019 Session 709 : Cryptography and Your Apps 上面是 session 视频是 WWDC 关于密码学与 App 信息防护方面的一节 ，大概 40 min，整个视频分为两部分，重点介绍了在 App 的开发中，apple 针对用户信息安全方面所做的努力，以及全新的 swift 安全加密框架。 通过这个视频我们可以进一步的思考一下，如何把我们的 App">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-06-07-15598885484925.jpg">
-<meta property="og:updated_time" content="2019-06-09T16:12:15.330Z">
+<meta property="og:updated_time" content="2019-06-09T16:14:16.190Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="WWDC2019：Cryptography and Your Apps">
 <meta name="twitter:description" content="WWDC2019 Session 709 : Cryptography and Your Apps 上面是 session 视频是 WWDC 关于密码学与 App 信息防护方面的一节 ，大概 40 min，整个视频分为两部分，重点介绍了在 App 的开发中，apple 针对用户信息安全方面所做的努力，以及全新的 swift 安全加密框架。 通过这个视频我们可以进一步的思考一下，如何把我们的 App">
@@ -321,6 +321,7 @@
 <p>你是否厌烦了在完成一整个加密解密操作后，还需要清零&amp;释放 buffer ？</p>
 <p>你是否研发了 C Api 下烦躁的内存管理？</p>
 <p><strong>那你还在等什么！快点拥抱最新的 CryptoKit 吧！</strong></p>
+<a id="more"></a>
 <figure class="highlight swift"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Generating and releasing a cryptographic key for a C Crypto API</span></span><br><span class="line"><span class="keyword">let</span> keyByteCount = <span class="number">256</span>/<span class="number">8</span></span><br><span class="line"><span class="keyword">var</span> key = <span class="type">Array</span>(repeating: <span class="number">0</span>, <span class="built_in">count</span>: keyByteCount)</span><br><span class="line"><span class="keyword">let</span> err = <span class="type">SecRandomCopyBytes</span>(kSecRandomDefault, keyByteCount, &amp;key)</span><br><span class="line"><span class="keyword">if</span> (err != errSecSuccess) &#123;</span><br><span class="line"> <span class="comment">// Safely handle the error</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// Use the Key</span></span><br><span class="line">...</span><br><span class="line"><span class="comment">// Zeroize the key</span></span><br><span class="line">memset_s(&amp;key, keyByteCount, <span class="number">0</span>, keyByteCount)</span><br><span class="line"></span><br><span class="line"><span class="comment">// ============================</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// Generating and releasing a cryptographic key with Apple CryptoKit</span></span><br><span class="line"><span class="keyword">let</span> key = <span class="type">SymmetricKey</span>(size: .bits256)</span><br></pre></td></tr></table></figure>
 <p><strong>一行代码就是爽～ CryptoKit 顶呱呱！～</strong></p>
 <p>看看这代码对比差距，CryptoKit 不仅大幅度简化了 Api 的使用，还支持</p>
