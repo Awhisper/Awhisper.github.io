@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content=",,">
+  <meta name="keywords" content="FrontEnd,小程序,">
 
 
 
@@ -81,20 +81,16 @@
 
 <meta name="description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
 <meta name="keywords" content="FrontEnd,小程序">
-<meta property="og:type" content="website">
-<meta property="og:title" content="用大型开发框架开发小程序那点事儿">
-<meta property="og:url" content="http://yoursite.com/tinyapp-store.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="小程序开发中的数据仓库与数据流思考">
+<meta property="og:url" content="http://yoursite.com/2018/11/22/tinyapp-store/index.html">
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png">
-<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542801758168-5a05a9af-bc3f-4526-83a0-bd0120b500e0.png">
-<meta property="og:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542863443033-858b94ec-4be7-432a-8c85-51f1b43f5a1a.png">
-<meta property="og:updated_time" content="2018-11-22T12:43:26.942Z">
+<meta property="og:updated_time" content="2019-09-06T03:01:16.402Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="用大型开发框架开发小程序那点事儿">
+<meta name="twitter:title" content="小程序开发中的数据仓库与数据流思考">
 <meta name="twitter:description" content="最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题  小程序最原始的开发模式有什么弊端？ 为什么我们很需要一些大型框架   怎么在小程序中科学的运用大型开发框架的设计思想？ 如何在缺乏现成框架的情况下，学习思想，初步自己灵活运用起来 如何在已有现成框架的情况下，深度解读框架设计思想     这其实是一篇循序渐进的小程序实践记">
-<meta name="twitter:image" content="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png">
 
 
 
@@ -124,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/tinyapp-store.html">
+  <link rel="canonical" href="http://yoursite.com/2018/11/22/tinyapp-store/">
 
 
 
 
 
-  <title>用大型开发框架开发小程序那点事儿 | 折腾范儿の味精</title>
+  <title>小程序开发中的数据仓库与数据流思考 | 折腾范儿の味精</title>
   
 
 
@@ -297,24 +293,129 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/22/tinyapp-store/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h2 class="post-title" itemprop="name headline">用大型开发框架开发小程序那点事儿</h2>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题</p>
+          <h2 class="post-title" itemprop="name headline">小程序开发中的数据仓库与数据流思考</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-22T20:05:06+08:00">
+                2018-11-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/11/22/tinyapp-store/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count gitment-comments-count" data-xid="/2018/11/22/tinyapp-store/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+             <span id="/2018/11/22/tinyapp-store/" class="leancloud_visitors" data-flag-title="小程序开发中的数据仓库与数据流思考">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在写支付宝小程序，支付宝小程序相比较微信小程序，更加缺少一些框架/工具/以及生态环境，借着这个时机我们一起来探讨一个问题</p>
 <ul>
 <li>小程序最原始的开发模式有什么弊端？<ul>
 <li>为什么我们很需要一些大型框架</li>
@@ -333,10 +434,14 @@
 <ul>
 <li>原始小程序开发中面临的问题</li>
 <li>构建一个 store 初步实现数据仓库</li>
-<li>LunaX 的小程序上层开发组件库</li>
-<li>Lux 单 store 数据仓库实践</li>
-<li>LunaX 的其他工具</li>
 </ul>
+<!--
+
+- LunaX 的小程序上层开发组件库
+- Lux 单 store 数据仓库实践
+- LunaX 的其他工具
+
+-->
 <h1 id="小程序开发中面临的问题"><a href="#小程序开发中面临的问题" class="headerlink" title="小程序开发中面临的问题"></a>小程序开发中面临的问题</h1><a id="more"></a>
 <p>原始的小程序开发模式下，天然具备了页面的 data 数据与 xml 渲染 mvvm 能力，同时也维护好了整个 app 与页面 page 的生命周期，在实际开发过程中已经比没有主流框架支持下的前端页面开发要便捷的多。但相比于前端广泛使用的 Vue 开发框架，以及蚂蚁内部对 Vue 进一步封装出来的 Kylin 框架来说，小程序的原始开发模式还是非常原始，存在着非常多的弊端与开发效率问题，逐一举例：</p>
 <ul>
@@ -374,7 +479,7 @@
 <p>痛点1: 仿照前端网页开发的方案，把这些数据提交给服务器中转存储？在新页面展现的时候从服务器拉取？说实话这样可以，但这些没必要的网络通信无形中也在浪费着用户的流量与服务器的压力</p>
 <p>痛点2: 利用 globalData 全局暂存临时对象，在 navigateTo 跳转到下一个页面之前，把当前页面的 this 对象挂在全局，当作临时对象暂存，在新页面 onLoad 的时候从全局变量中补货这个临时对象，自己持有，需要的时候直接调用暂存页面 page 的方法。这种临时变量的方案没啥可说的，能不用就别用了。</p>
 <h2 id="computed-计算能力"><a href="#computed-计算能力" class="headerlink" title="computed 计算能力"></a>computed 计算能力</h2><p>习惯了前端页面使用 vue 开发的同学应该都会对 vue 的 computed 与 kylin 的 getter 有所了解，他能够很方便的对数据进行加工再返回页面进行渲染。而在小程序的原始开发模式下，是缺乏这种能力的。</p>
-<p>我们终端团队之前没参与过 kylin 开发的同学可能不太了解，那么举几个最简单的例子：多人账本记录着用户之间的交易行为，大量的地方都在展示着金钱，而金钱的展示需要进行一定的格式化，比如无论是否整数还是小数都得转化为保留2位的格式化比如<code>998.00</code>然后再进行展示。但是服务端下发的数据都是 number 类型，page 中存储的也应该是 number 类型方便后续的计算。</p>
+<p>我们终端团队之前没参与过 kylin 开发的同学可能不太了解，那么举几个最简单的例子：业务需求中存在着用户之间的交易行为，大量的地方都在展示着金钱，而金钱的展示需要进行一定的格式化，比如无论是否整数还是小数都得转化为保留2位的格式化比如<code>998.00</code>然后再进行展示。但是服务端下发的数据都是 number 类型，page 中存储的也应该是 number 类型方便后续的计算。</p>
 <p>在小程序的里没有提供相关的计算能力于是只能这么写，再网络返回的数据回掉中同时 set 2个数据，这样就要求任何时候操作 money 的时候，都要同步维护 moneyForShow 的值，如果忘记了，那么页面就不会正常展示。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//在网络请求中调用</span><br><span class="line">this.setData&#123;</span><br><span class="line">	money: result.money;</span><br><span class="line">	moneyForShow: utils.money2show(result.money)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">//在axml中使用</span><br><span class="line">&lt;text&gt;&#123;&#123;moneyForShow&#125;&#125;&lt;/text&gt;</span><br></pre></td></tr></table></figure>
 <p>还是希望能有类似 Vuex 中 computed 的能力，在 page 的 data 中只维护一个值 money ，而定义一个 moneyForShow 的 getter 函数，在 axml 中直接写 moneyForShow 这个 getter，就能正常的渲染，并且还能保证响应式的数据同步，每当 money 发生变化，通过 moneyForShow 这个 getter 渲染的元素也能自动刷新。</p>
@@ -415,16 +520,15 @@
 </li>
 </ul>
 <p>痛点: 这里面有一个最关键的问题是，官方 IDE 的工作流都是基于打包人员本地代码的！并不是通过编译打包平台直接捞取仓库主干里那些经过 codereview 后的代码。一旦打包人员进行打包上传的时候，使用的不是仓库中的最新的正确代码，或者打包人员本地调试的时候有略微改动，忘记了就直接打了稳定包进行发布，这种情况将无法保证发布代码的质量！</p>
-<h1 id="构建一个-store-初步实现数据仓库"><a href="#构建一个-store-初步实现数据仓库" class="headerlink" title="构建一个 store 初步实现数据仓库"></a>构建一个 store 初步实现数据仓库</h1><p>多人账本是会员终端团队中最早进行小程序开发的产品，在初期调研准备的时候，参考了微信小程序的一些实战经验。尤其是关于页面组件间通信/关于全局状态管理这块，都有不少成熟的解决方案，比如使用很广泛的基于微信小程序的上层框架 wepy 。但是在支付宝小程序中缺乏这种整体的框架级解决方案，所以我们需要自己来实现一个功能相对简单，能暂时满足基础通信需求的“山寨方案”。同时因为时间问题这个山寨方案支持能力也非常有限，也并不能很好的满足上面的所有痛点，只是解决了最关键的两个问题</p>
+<h1 id="构建一个-store-初步实现数据仓库"><a href="#构建一个-store-初步实现数据仓库" class="headerlink" title="构建一个 store 初步实现数据仓库"></a>构建一个 store 初步实现数据仓库</h1><p>在初期调研准备的时候，参考了微信小程序的一些实战经验。尤其是关于页面组件间通信/关于全局状态管理这块，都有不少成熟的解决方案，比如使用很广泛的基于微信小程序的上层框架 wepy 。但是在支付宝小程序中缺乏这种整体的框架级解决方案，所以我们需要自己来实现一个功能相对简单，能暂时满足基础通信需求的“山寨方案”。同时因为时间问题这个山寨方案支持能力也非常有限，也并不能很好的满足上面的所有痛点，只是解决了最关键的两个问题</p>
 <h2 id="EventBus来实现跨页面跨组件通信"><a href="#EventBus来实现跨页面跨组件通信" class="headerlink" title="EventBus来实现跨页面跨组件通信"></a>EventBus来实现跨页面跨组件通信</h2><p>在原始的小程序开发过程中，对跨组件跨页面进行通信有着严格的限制。因为整个小程序的任何页面任何 js 代码都是运行在同一个 JSContext JS上下文中，也就是小程序的 Service Worker 环境中，所以本质上他们是完全可以进行通信只不过是受小程序约束所致。</p>
 <p>如果我们自己实现一个全局的 eventBus 并挂在 app 对象上，让各个需要发起通信的地方调用 app.event.emit() 发出通知，让需要接收通信的地方调用 app.event.on() 监听通知，就能实现初步的跨小程序自身框架的通信能力</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//简单思路</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Observer</span> </span>&#123;</span><br><span class="line">    <span class="keyword">constructor</span>() &#123;</span><br><span class="line">        <span class="comment">//初始化 callback map 字典</span></span><br><span class="line">    &#125;</span><br><span class="line">    on(eventName, callback) &#123;</span><br><span class="line">  		<span class="comment">//将传入 callback 添加到 eventBus 对象的 key 为 eventName 的数组中</span></span><br><span class="line">		<span class="comment">//添加对 eventName 的监听</span></span><br><span class="line">    &#125;</span><br><span class="line">    emit(eventName, param) &#123;</span><br><span class="line">        <span class="comment">//遍历 eventBus 对象的 key 为 eventName 的数组</span></span><br><span class="line">		<span class="comment">//依次调用数组中存放的 callback 传入参数 param</span></span><br><span class="line">		<span class="comment">//发出 eventName 的消息</span></span><br><span class="line">    &#125;</span><br><span class="line">    clear(eventName) &#123;</span><br><span class="line">        <span class="comment">//清理掉 eventBus 对象的 key 为 eventName 的数组中所有值</span></span><br><span class="line">		<span class="comment">//移除对 eventName 所有监听</span></span><br><span class="line">    &#125;</span><br><span class="line">    off(eventName, callback) &#123;</span><br><span class="line">  		<span class="comment">//清理掉 eventBus 对象的 key 为 eventName 的数组中的 callback这个值</span></span><br><span class="line">	    <span class="comment">//移除对 eventName 的具体某个监听</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> Observer;</span><br></pre></td></tr></table></figure>
 <p>但这种模式存在着一定的弊端，因为 eventBus 的通知模式是一种一对多的调用模式，并不适合设计出能支持返回值的 eventBus ，所以如果需要跨页面跨组件通信，获取一定的返回数据，则需要通过2条消息，一去，一回来实现。eventBus 虽然具备一定的弊端，但却是自己实现响应式 mvvm 的核心。如果想要构建出超过小程序页面 page 自身的 data &amp; axml 的 mvvm 能力，那么至少需要在构建起这么一套 eventBus。</p>
 <blockquote>
-<p>但受限于业务的时间非常紧迫，在确定能满足了一期多人账本的需求的情况下，并没有深入对 eventBus 进行进一步优化与扩展。</p>
-<p>后续因为了解到 LunaX 的即将发布，是一套整体的小程序框架解决方案，以后也不打算持续优化，准备将多人账本项目着手迁移到 LunaX 上（下文会介绍）</p>
+<p>但受限于业务的时间非常紧迫，在确定能满足了一期业务的需求的情况下，并没有深入对 eventBus 进行进一步优化与扩展。</p>
 </blockquote>
-<h2 id="全局状态的管理与控制"><a href="#全局状态的管理与控制" class="headerlink" title="全局状态的管理与控制"></a>全局状态的管理与控制</h2><p>在多人账本的需求中，确实存在需要全局管理一些通用数据，并且被全局各处页面 axml 使用通用数据的情况，比如 UserName / UserAvatar / WindowHeight / DeviceInfo 等。又因为这些数据大多来自异步的 JSApi 所以存在 app 初始化后数据并未准备好，异步请求回来后必需响应式的同步刷新所有可能出现并渲染出来的元素。</p>
+<h2 id="全局状态的管理与控制"><a href="#全局状态的管理与控制" class="headerlink" title="全局状态的管理与控制"></a>全局状态的管理与控制</h2><p>在业务的需求中，确实存在需要全局管理一些通用数据，并且被全局各处页面 axml 使用通用数据的情况，比如 UserName / UserAvatar / WindowHeight / DeviceInfo 等。又因为这些数据大多来自异步的 JSApi 所以存在 app 初始化后数据并未准备好，异步请求回来后必需响应式的同步刷新所有可能出现并渲染出来的元素。</p>
 <p>所以我们的思路就是将 app 下面的 globaData 设计为一个数据仓库，进行统一的维护和管理，想要操作这个仓库里的数据必须通过指定的方法 app.store.commit(key,payload) 来执行，不能通过别的方式。当执行 commit 的时候会通过 eventBus 发出一个 key 变更的通知，来通知各个页面进行数据变更。同时需要 Hook 每个 Page 的生命周期，在 Page OnLoad 的时候，自动的帮助页面开发者添加上 eventBus 的 key 变更的监听，每当 commit 全局发出了通知，监听就会自动生效，将新的 globaData，执行 setData 写入当前 page，从而触发 axml 的页面渲染刷新。</p>
 <ul>
 <li>app.store 提供 commit 能力，进行数据仓库的统一提交管理<ul>
@@ -452,33 +556,53 @@
 <li>响应式的实现跨页面跨组件的数据更新以及界面变更渲染</li>
 </ul>
 <blockquote>
-<p>但受限于业务的时间非常紧迫，在确定能满足了一期多人账本的需求的情况下，并没有深入对 store 进行进一步优化与扩展。</p>
-<p>后续因为了解到 LunaX 的即将发布，是一套整体的小程序框架解决方案，他内部的 Lux 完全的吸收了前端 Vuex 的能力已经非常出色，所以后续就不打算进一步完善我们自研的 store ，准备将多人账本项目着手迁移到 LunaX + Lux 上（下文会介绍）</p>
+<p>但受限于业务的时间非常紧迫，在确定能满足了一期业务的需求的情况下，并没有深入对 store 进行进一步优化与扩展。<br>其实在这个思路下进行扩展，就会形成诸如 wepy 一样的类 vue 的小程序开发框架，在深入的话其实更应该直接去学习 wepy 的源码来深入理解数据仓库框架的设计</p>
 </blockquote>
-<h1 id="LunaX-的小程序上层开发组件库"><a href="#LunaX-的小程序上层开发组件库" class="headerlink" title="LunaX 的小程序上层开发组件库"></a>LunaX 的小程序上层开发组件库</h1><p>LunaX 是一套从支付宝 h5 Hybrid 中心的提供的前端页面组件库 Luna 演进出的面向小程序的组建库。里面有着丰富的工具以及脚手架 cli 支持</p>
-<ul>
-<li><a href="http://lunax.alipay.net/2.tools/lux.html" target="_blank" rel="noopener">Lux 数据仓库管理插件</a> – 小程序最佳实践的核心</li>
-</ul>
-<p>LunaX 内置了一套数据仓库管理组件 Lux ，相比较我们自己初步实现的简单 store 数据管理 ， Lux<br>有着更全面的能力支持，包括 state ，getter，mutation ，action 等仓库能力，以及 commit ，dispatch 的仓库操作，可以完全实现像 Vuex 那样以前端成熟的开发模式来进行小程序开发。</p>
-<ul>
-<li><a href="http://lunax.alipay.net/2.tools/luna-mock-appx.html" target="_blank" rel="noopener">Mock 数据能力</a></li>
-</ul>
-<p>LunaX 也提供了强大的 Mock 组件，支持无论是 rpc 还是 http 还是 jsapi 的无侵入 mock 能力。支持白名单、黑名单过滤，支持网络延迟模拟等多种功能</p>
-<ul>
-<li><a href="http://site.alipay.net/luna-component/luna-appx/docs/index.html" target="_blank" rel="noopener">工具组件库</a></li>
-</ul>
-<p>组件库中封装了丰富的常用工具能力。包括带缓存，防重复提交，有统一交互的 rpc。封装了 Tracert，用于 SPM 埋点。封装了 clue，用于日志上报，监控报警。获取凤蝶区块数据。对 storage 增加了时间戳，解决兼容问题。等等实用功能</p>
-<ul>
-<li><a href="http://lunax.alipay.net/2.tools/appx-template.html" target="_blank" rel="noopener">cli 脚手架</a></li>
-</ul>
-<p>通过 luna-appx 的脚手架创建项目，配置好了统一的 .editorconfig, .eslintc, .gitignore，以及 ts 校验等配置。并且支持完全接入 basement</p>
-<p><img src="https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png" alt="undefined"> </p>
-<h1 id="Lux-单-store-数据仓库实践"><a href="#Lux-单-store-数据仓库实践" class="headerlink" title="Lux 单 store 数据仓库实践"></a>Lux 单 store 数据仓库实践</h1><p>在前端开发种 Vue 与数据仓库 Vuex 是一种被广泛运用的开发框架。而 Lux 的设计初衷就是设计出一套核心 Api 与 Vuex 完全保持一致，但又可以脱离 Vue 单独在任意环境（自然包括小程序环境）使用的数据仓库 store。Lux 这种思路吸收了很多 Redux 的设计思想，就像 Redux 也可以在非 React 环境下使用一样，并且也支持中间件与插件机制。</p>
-<p>由于 Lux 的核心 Api 与 Vuex 完全保持一致，在使用上几乎可以还原 Vuex 的开发模式，所以如果之前接触 Vuex 不多，可以先看一下官方文档： <a href="https://vuex.vuejs.org/zh/guide/" target="_blank" rel="noopener">Vuex 官方文档</a> 来了解基本概念，再参考 <a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">Lux 官方文档</a> 来了解如何使用。</p>
-<p>基本上数据仓库，主要就是 state 状态的概念，用来存储一切数据，而为了操作数据，衍生出了 getter ， mutation ， action 几种操作 ， getter 用来对 state 的数据进行加工计算 ， mutation 用 commit 触发来同步提交 state 变更， action 用 dispatch 触发来异步执行操作。</p>
-<p>同时为了能将数据仓库的 state 与小程序的 axml 渲染进行 mvvm 关联，实现响应式数据刷新，Lux 提供了 connect 和 connect4c 2个方法用来 hook 小程序页面/组件的生命周期实现绑定关系，并且在 connect 的时候，可以通过传入 mapConfig 来灵活的自定义关联控制。</p>
-<h2 id="Lux-的基本使用模式"><a href="#Lux-的基本使用模式" class="headerlink" title="Lux 的基本使用模式"></a>Lux 的基本使用模式</h2><p><img src="https://cdn.nlark.com/lark/0/2018/png/132411/1542801758168-5a05a9af-bc3f-4526-83a0-bd0120b500e0.png" alt="undefined"> </p>
-<p>一个小程序页面创建好就会包含四个基本文件，.acss .axml .js .json。如上图，为了使用 Lux 专门给页面创建一个数据仓库目录 store 来重点维护所有数据相关的逻辑代码，并把业务逻辑按着 Vuex 的设计思想抽象成四大块。</p>
+<!--
+
+>后续因为了解到 LunaX 的即将发布，是一套整体的小程序框架解决方案，他内部的 Lux 完全的吸收了前端 Vuex 的能力已经非常出色，所以后续就不打算进一步完善我们自研的 store ，准备将多人账本项目着手迁移到 LunaX + Lux 上（下文会介绍）
+
+# LunaX 的小程序上层开发组件库
+
+LunaX 是一套从支付宝 h5 Hybrid 中心的提供的前端页面组件库 Luna 演进出的面向小程序的组建库。里面有着丰富的工具以及脚手架 cli 支持
+
+- [Lux 数据仓库管理插件](http://lunax.alipay.net/2.tools/lux.html) -- 小程序最佳实践的核心
+
+LunaX 内置了一套数据仓库管理组件 Lux ，相比较我们自己初步实现的简单 store 数据管理 ， Lux
+有着更全面的能力支持，包括 state ，getter，mutation ，action 等仓库能力，以及 commit ，dispatch 的仓库操作，可以完全实现像 Vuex 那样以前端成熟的开发模式来进行小程序开发。
+
+- [Mock 数据能力](http://lunax.alipay.net/2.tools/luna-mock-appx.html)
+
+LunaX 也提供了强大的 Mock 组件，支持无论是 rpc 还是 http 还是 jsapi 的无侵入 mock 能力。支持白名单、黑名单过滤，支持网络延迟模拟等多种功能
+
+- [工具组件库](http://site.alipay.net/luna-component/luna-appx/docs/index.html)
+
+组件库中封装了丰富的常用工具能力。包括带缓存，防重复提交，有统一交互的 rpc。封装了 Tracert，用于 SPM 埋点。封装了 clue，用于日志上报，监控报警。获取凤蝶区块数据。对 storage 增加了时间戳，解决兼容问题。等等实用功能
+
+- [cli 脚手架](http://lunax.alipay.net/2.tools/appx-template.html)
+
+通过 luna-appx 的脚手架创建项目，配置好了统一的 .editorconfig, .eslintc, .gitignore，以及 ts 校验等配置。并且支持完全接入 basement
+
+![undefined](https://cdn.nlark.com/lark/0/2018/png/132411/1542796660572-524b47f5-e9a1-4344-8f59-0a2b83412831.png) 
+
+
+# Lux 单 store 数据仓库实践
+
+在前端开发种 Vue 与数据仓库 Vuex 是一种被广泛运用的开发框架。而 Lux 的设计初衷就是设计出一套核心 Api 与 Vuex 完全保持一致，但又可以脱离 Vue 单独在任意环境（自然包括小程序环境）使用的数据仓库 store。Lux 这种思路吸收了很多 Redux 的设计思想，就像 Redux 也可以在非 React 环境下使用一样，并且也支持中间件与插件机制。
+
+由于 Lux 的核心 Api 与 Vuex 完全保持一致，在使用上几乎可以还原 Vuex 的开发模式，所以如果之前接触 Vuex 不多，可以先看一下官方文档： [Vuex 官方文档](https://vuex.vuejs.org/zh/guide/) 来了解基本概念，再参考 [Lux 官方文档](http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B) 来了解如何使用。
+
+
+基本上数据仓库，主要就是 state 状态的概念，用来存储一切数据，而为了操作数据，衍生出了 getter ， mutation ， action 几种操作 ， getter 用来对 state 的数据进行加工计算 ， mutation 用 commit 触发来同步提交 state 变更， action 用 dispatch 触发来异步执行操作。
+
+同时为了能将数据仓库的 state 与小程序的 axml 渲染进行 mvvm 关联，实现响应式数据刷新，Lux 提供了 connect 和 connect4c 2个方法用来 hook 小程序页面/组件的生命周期实现绑定关系，并且在 connect 的时候，可以通过传入 mapConfig 来灵活的自定义关联控制。
+
+## Lux 的基本使用模式
+
+![undefined](https://cdn.nlark.com/lark/0/2018/png/132411/1542801758168-5a05a9af-bc3f-4526-83a0-bd0120b500e0.png) 
+
+一个小程序页面创建好就会包含四个基本文件，.acss .axml .js .json。如上图，为了使用 Lux 专门给页面创建一个数据仓库目录 store 来重点维护所有数据相关的逻辑代码，并把业务逻辑按着 Vuex 的设计思想抽象成四大块。
+
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// store/index.js 文件</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span><br><span class="line">    state: &#123;</span><br><span class="line">    	XX:xx</span><br><span class="line">    &#125;,</span><br><span class="line">    getters: &#123;</span><br><span class="line">    </span><br><span class="line">    &#125;,</span><br><span class="line">    mutaions: &#123;</span><br><span class="line">    	setXXData(commit,payload)&#123;</span><br><span class="line">  			<span class="comment">//同步 提交某个 state 更新</span></span><br><span class="line">		&#125;</span><br><span class="line">			   </span><br><span class="line">    &#125;,</span><br><span class="line">    actions: &#123;</span><br><span class="line">    	requestXXRpc(&#123;commit&#125;,payload)&#123;</span><br><span class="line">  			<span class="comment">//异步 执行某些操作，在返回后再次调用 commit 提交数据更新</span></span><br><span class="line">			xxRpcPromise.then(<span class="function">(<span class="params">result</span>)=&gt;</span>&#123;</span><br><span class="line">  				commit(<span class="string">'setXXData'</span>,result)</span><br><span class="line">			&#125;)</span><br><span class="line">		&#125;</span><br><span class="line">    &#125;,</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 <p>数据仓库已经创建好了，想要在 page 中进行使用就需要将 store 与 page 进行 connect 并且挂载到 page 对象上，能方便 page 对象操作仓库。</p>
 <p>通过 mapStatesToData 与 mapGettersToData 两个配置信息，进行可选可控的绑定操作，这样就丢弃了 page 自己的 data ，而是通过数据仓库来关联 axml 数据渲染。</p>
@@ -488,7 +612,7 @@
 </blockquote>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">// 修改 page.js 进行绑定</span><br><span class="line">import &#123; connect &#125; from &apos;@alipay/lux&apos;</span><br><span class="line">import store from &apos;./store&apos;;</span><br><span class="line"></span><br><span class="line">const options = &#123;</span><br><span class="line">  onLoad(options) &#123;</span><br><span class="line">      //触发mutation</span><br><span class="line">	  this.$commit(&apos;mutation name&apos;,data)</span><br><span class="line">  &#125;,</span><br><span class="line">  onShow(options) &#123;</span><br><span class="line">	  //触发action</span><br><span class="line">	  this.$dispatch(&apos;mutation name&apos;,data)</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">const mapStatesToData = &#123;</span><br><span class="line">    //state map 代码 todo</span><br><span class="line">	//但凡经过 map 过的 state 都可以直接在 axml 中使用，并且响应式同步刷新变化</span><br><span class="line">	xxData: state =&gt; state.xxData,</span><br><span class="line">&#125;;</span><br><span class="line">const mapGettersToData = &#123;</span><br><span class="line">    //getter map 代码 todo</span><br><span class="line">	//但凡经过 map 过的 getter 都可以直接在 axml 中使用，并且响应式同步刷新变化</span><br><span class="line">	xxGetter: &apos;xxGetter&apos;,</span><br><span class="line">&#125;;</span><br><span class="line">const storeConfig = &#123;</span><br><span class="line">    mapGetters: mapGettersToData,</span><br><span class="line">    mapState: mapStatesToData,</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//将 store 与他的配置 storeConfig 和 page 进行绑定</span><br><span class="line">Page(connect(store, &#123;</span><br><span class="line">  mapState: mapStateToData,</span><br><span class="line">  mapActions: mapActionsToProps</span><br><span class="line">&#125;)(options));</span><br></pre></td></tr></table></figure>
 <p>进行一个初始化</p>
-<h2 id="Lux-单-store-与多-store-的选择"><a href="#Lux-单-store-与多-store-的选择" class="headerlink" title="Lux 单 store 与多 store 的选择"></a>Lux 单 store 与多 store 的选择</h2><p>其实在 <a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B" target="_blank" rel="noopener">Lux 官方文档</a> 中已经有介绍这两种模式的使用差异了，这里再多废话一下</p>
+<h2 id="Lux-单-store-与多-store-的选择"><a href="#Lux-单-store-与多-store-的选择" class="headerlink" title="Lux 单 store 与多 store 的选择"></a>Lux 单 store 与多 store 的选择</h2><p>其实在 <a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%80%E3%80%81%E7%AE%80%E4%BB%8B">Lux 官方文档</a> 中已经有介绍这两种模式的使用差异了，这里再多废话一下</p>
 <ul>
 <li>多 store：一个 page 一个 store. 隔离性好, 页面间不会相互干扰</li>
 <li>单 store：整个小程序 App 只有一个 store. 交互性强, 页面间共用同一个 store 每一个 page 一个 module（子 store ）, module 间可相互 dispatch/commit</li>
@@ -568,7 +692,7 @@
 </ul>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">onShow() &#123;</span><br><span class="line">  <span class="comment">//提交给 home 子仓库下的 userInfo mutation</span></span><br><span class="line">  <span class="keyword">this</span>.$commit(<span class="string">'home/userInfo'</span>,userinfo);</span><br><span class="line">  <span class="comment">//提交给 billBookDetail 子仓库下的 refreshBookDetail action</span></span><br><span class="line">  <span class="keyword">this</span>.$dispatch(<span class="string">'billBookDetail/refreshBookDetail'</span>);</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
 <h2 id="Lux-的辅助插件"><a href="#Lux-的辅助插件" class="headerlink" title="Lux 的辅助插件"></a>Lux 的辅助插件</h2><p>Lux 还提供了3个辅助插件，和一个 immutable js 的配置</p>
-<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%BA%94%E3%80%81%E6%8F%92%E4%BB%B6-plugins" target="_blank" rel="noopener">Lux 的插件</a></p>
+<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%BA%94%E3%80%81%E6%8F%92%E4%BB%B6-plugins">Lux 的插件</a></p>
 <ul>
 <li>logger 插件：用来在任意 state 发生变化的时候打印调试信息，包含了 preState 和 nextState</li>
 </ul>
@@ -579,7 +703,7 @@
 <li><p>watcher 插件：可以做到更好的监听 state 变化，然后触发监听回掉，进行更细粒度的局部监听局部更新</p>
 </li>
 </ul>
-<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%83%E3%80%81%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%95%B0%E6%8D%AE" target="_blank" rel="noopener">不可变数据</a></p>
+<p><a href="http://lunax.alipay.net/2.tools/lux.html#%E4%B8%83%E3%80%81%E4%B8%8D%E5%8F%AF%E5%8F%98%E6%95%B0%E6%8D%AE">不可变数据</a></p>
 <p>为了更好的管理 store 数据仓库，只允许通过 mutation 更改 state 不允许其他任何代码方式直接操作 state ，也为了更高效的计算 state 变化的 diff，Lux 支持可以自定义不可变数据的方案。可以考虑使用 immer.js（脚手架默认集成） 也可以考虑自己实现 deepClone 来做到不可变数据</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 将插件配置到根 app.store.js 上</span></span><br><span class="line"><span class="keyword">import</span> * <span class="keyword">as</span> Lux <span class="keyword">from</span> <span class="string">'@alipay/lux'</span>;</span><br><span class="line"><span class="keyword">import</span> createLogger <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/logger'</span>;</span><br><span class="line"><span class="keyword">import</span> createBatched <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/batched'</span>;</span><br><span class="line"><span class="keyword">import</span> createWatch <span class="keyword">from</span> <span class="string">'@alipay/lux/plugins/watch'</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">//配置默认集成的 immer 不可变数据</span></span><br><span class="line"><span class="keyword">import</span> &#123; produce &#125; <span class="keyword">from</span> <span class="string">'immer'</span>;</span><br><span class="line"><span class="keyword">import</span> debounce <span class="keyword">from</span> <span class="string">'lodash.debounce'</span>;</span><br><span class="line"><span class="comment">//构建 logger 插件</span></span><br><span class="line"><span class="keyword">const</span> logger = createLogger(&#123;</span><br><span class="line">  predicate: <span class="function"><span class="params">m</span> =&gt;</span> m.type !== <span class="string">'add/updateInputValue'</span></span><br><span class="line">&#125;);</span><br><span class="line"><span class="comment">//构建 batch 插件</span></span><br><span class="line"><span class="keyword">const</span> batched = createBatched(debounce(<span class="function"><span class="params">notify</span> =&gt;</span> notify(), <span class="number">10</span>));</span><br><span class="line"><span class="comment">//构建 watcher 插件</span></span><br><span class="line"><span class="keyword">const</span> watcher = createWatch();</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="keyword">new</span> Lux.Store(&#123;</span><br><span class="line">  state: &#123;&#125;,</span><br><span class="line">  getters: &#123;&#125;,</span><br><span class="line">  mutations: &#123;&#125;,</span><br><span class="line">  actions: &#123;&#125;,</span><br><span class="line">  modules: &#123;</span><br><span class="line">    home,</span><br><span class="line">    createBillBook,</span><br><span class="line">	...</span><br><span class="line">  &#125;</span><br><span class="line">&#125;, &#123;</span><br><span class="line">  produce, <span class="comment">// 注册使用 immer</span></span><br><span class="line">  plugins: [</span><br><span class="line">    logger,<span class="comment">// 注册使用插件</span></span><br><span class="line">    batched,<span class="comment">//也可以不用</span></span><br><span class="line">    watcher,</span><br><span class="line">  ]</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <h2 id="代码文件规范"><a href="#代码文件规范" class="headerlink" title="代码文件规范"></a>代码文件规范</h2><p>多人账本项目，在全面实践 LunaX 的过程中对于代码文件的整理逐渐形成了一定的规范约束。可以参考一下借鉴一下</p>
@@ -609,7 +733,7 @@
 <li>app.store.js 根store文件：单 store 的构建以及插件配置</li>
 </ul>
 <h1 id="LunaX-的其他工具"><a href="#LunaX-的其他工具" class="headerlink" title="LunaX 的其他工具"></a>LunaX 的其他工具</h1><p>前面就已经提到过 LunaX 不仅由 Lux 数据仓库这个组件，还有这其他丰富组件</p>
-<h2 id="Mock-组件"><a href="#Mock-组件" class="headerlink" title="Mock 组件"></a>Mock 组件</h2><p><a href="http://lunax.alipay.net/2.tools/luna-mock-appx.html#%E7%89%B9%E7%82%B9" target="_blank" rel="noopener">小程序本地 mock 方案</a></p>
+<h2 id="Mock-组件"><a href="#Mock-组件" class="headerlink" title="Mock 组件"></a>Mock 组件</h2><p><a href="http://lunax.alipay.net/2.tools/luna-mock-appx.html#%E7%89%B9%E7%82%B9">小程序本地 mock 方案</a></p>
 <ul>
 <li>mock 在本地维护，切换非常方便灵活</li>
 <li>mock 支持种类丰富<ul>
@@ -633,24 +757,85 @@
 <h2 id="小程序埋点"><a href="#小程序埋点" class="headerlink" title="小程序埋点"></a>小程序埋点</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 埋单个数据</span></span><br><span class="line">luna.log.info(<span class="string">'SOME_INFO'</span>, infoData)</span><br><span class="line"><span class="comment">// 埋多个数据</span></span><br><span class="line">luna.log.info(<span class="string">'SOME_INFO'</span>, [infoData1, infoData2])</span><br><span class="line"><span class="comment">// 埋 spm 点位</span></span><br><span class="line"><span class="keyword">const</span> tracert = <span class="keyword">new</span> luna.Tracert(&#123;</span><br><span class="line">  spmAPos: <span class="string">'a230'</span>, <span class="comment">// spma位，必填</span></span><br><span class="line">  spmBPos: <span class="string">'b7449'</span>, <span class="comment">// spmb位，必填</span></span><br><span class="line">  bizType: <span class="string">'AntDevTools'</span>, <span class="comment">// 业务类型，必填</span></span><br><span class="line">  logLevel: <span class="number">2</span>, <span class="comment">// 默认是2</span></span><br><span class="line">  chInfo: luna.config.app <span class="comment">// 渠道</span></span><br><span class="line">&#125;);</span><br><span class="line">tracert.logPv();        <span class="comment">// 记录 pv</span></span><br><span class="line">tracert.click(<span class="string">'c17943.d32288'</span>);   <span class="comment">// 点击埋点</span></span><br><span class="line">tracert.expo(<span class="string">'c17943.d32327'</span>);  <span class="comment">// 曝光埋点</span></span><br></pre></td></tr></table></figure>
 <h2 id="凤蝶区块"><a href="#凤蝶区块" class="headerlink" title="凤蝶区块"></a>凤蝶区块</h2><p>凤蝶区块用于一些运营活动的配置，小程序也可以通过凤蝶的 path 读取凤蝶区块，从而做到不发版改换配置效果。 getH5data(‘path’) 方法返回的是一个 promise，在 promise 执行完毕后，凤蝶区块数据通过 json 返回</p>
 <h2 id="网络请求-Rpc"><a href="#网络请求-Rpc" class="headerlink" title="网络请求 Rpc"></a>网络请求 Rpc</h2><p>LunaX 封装了 rpc 方法，统一处理了 Rpc 的缓存，转菊花方案，默认错误失败处理方案，防重复提交，限流展示等处理。</p>
-<p><a href="http://site.alipay.net/luna-component/luna-appx/docs/luna.html#.rpc" target="_blank" rel="noopener">LunaX Rpc</a></p>
+<p><a href="http://site.alipay.net/luna-component/luna-appx/docs/luna.html#.rpc">LunaX Rpc</a></p>
 <h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>其他更多的插件还有很多，就不一一介绍了，有两个地方可以查看</p>
 <ul>
-<li><p><a href="http://site.alipay.net/luna-component/luna-appx/docs/index.html" target="_blank" rel="noopener">LunaX 小程序业务组件核心库</a></p>
+<li><p><a href="http://site.alipay.net/luna-component/luna-appx/docs/index.html">LunaX 小程序业务组件核心库</a></p>
 </li>
 <li><p>src/node_modules/@alipay/luna-appx/src 源码查看</p>
 </li>
 </ul>
-
-        
-      </div>
-      
-      
+<p>–&gt;</p>
+-->
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/FrontEnd/" rel="tag"># FrontEnd</a>
+          
+            <a href="/tags/小程序/" rel="tag"># 小程序</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/11/08/swipe-tableviewcell/" rel="next" title="Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案">
+                <i class="fa fa-chevron-left"></i> Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/01/11/something2018/" rel="prev" title="无题 2018">
+                无题 2018 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- Go to www.addthis.com/dashboard to customize your tools -->
+<div class="addthis_inline_share_toolbox">
+  <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-59043d9198cec104" async="async"></script>
+</div>
+
+      
+    </div>
   </div>
 
 
@@ -715,7 +900,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">70</span>
+                  <span class="site-state-item-count">74</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -786,7 +971,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#小程序开发中面临的问题"><span class="nav-number">1.</span> <span class="nav-text">小程序开发中面临的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态管理问题"><span class="nav-number">1.1.</span> <span class="nav-text">全局状态管理问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨页面跨组件通信"><span class="nav-number">1.2.</span> <span class="nav-text">跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computed-计算能力"><span class="nav-number">1.3.</span> <span class="nav-text">computed 计算能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据-Mock-能力"><span class="nav-number">1.4.</span> <span class="nav-text">数据 Mock 能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#研发部署工作流问题"><span class="nav-number">1.5.</span> <span class="nav-text">研发部署工作流问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建一个-store-初步实现数据仓库"><span class="nav-number">2.</span> <span class="nav-text">构建一个 store 初步实现数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus来实现跨页面跨组件通信"><span class="nav-number">2.1.</span> <span class="nav-text">EventBus来实现跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态的管理与控制"><span class="nav-number">2.2.</span> <span class="nav-text">全局状态的管理与控制</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LunaX-的小程序上层开发组件库"><span class="nav-number">3.</span> <span class="nav-text">LunaX 的小程序上层开发组件库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Lux-单-store-数据仓库实践"><span class="nav-number">4.</span> <span class="nav-text">Lux 单 store 数据仓库实践</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的基本使用模式"><span class="nav-number">4.1.</span> <span class="nav-text">Lux 的基本使用模式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-单-store-与多-store-的选择"><span class="nav-number">4.2.</span> <span class="nav-text">Lux 单 store 与多 store 的选择</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的多人账本单-store-实践"><span class="nav-number">4.3.</span> <span class="nav-text">Lux 的多人账本单 store 实践</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#构建-App-根-store"><span class="nav-number">4.3.1.</span> <span class="nav-text">构建 App 根 store</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#page-与单-store-的挂载与绑定"><span class="nav-number">4.3.2.</span> <span class="nav-text">page 与单 store 的挂载与绑定</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单-store-下的数据映射"><span class="nav-number">4.3.3.</span> <span class="nav-text">单 store 下的数据映射</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-store-中跨页面跨组件通信"><span class="nav-number">4.3.4.</span> <span class="nav-text">在 store 中跨页面跨组件通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#在-page-中跨页面跨组件通信"><span class="nav-number">4.3.5.</span> <span class="nav-text">在 page 中跨页面跨组件通信</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Lux-的辅助插件"><span class="nav-number">4.4.</span> <span class="nav-text">Lux 的辅助插件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#代码文件规范"><span class="nav-number">4.5.</span> <span class="nav-text">代码文件规范</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LunaX-的其他工具"><span class="nav-number">5.</span> <span class="nav-text">LunaX 的其他工具</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Mock-组件"><span class="nav-number">5.1.</span> <span class="nav-text">Mock 组件</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小程序埋点"><span class="nav-number">5.2.</span> <span class="nav-text">小程序埋点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#凤蝶区块"><span class="nav-number">5.3.</span> <span class="nav-text">凤蝶区块</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网络请求-Rpc"><span class="nav-number">5.4.</span> <span class="nav-text">网络请求 Rpc</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他"><span class="nav-number">5.5.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#小程序开发中面临的问题"><span class="nav-number">1.</span> <span class="nav-text">小程序开发中面临的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态管理问题"><span class="nav-number">1.1.</span> <span class="nav-text">全局状态管理问题</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#跨页面跨组件通信"><span class="nav-number">1.2.</span> <span class="nav-text">跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#computed-计算能力"><span class="nav-number">1.3.</span> <span class="nav-text">computed 计算能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据-Mock-能力"><span class="nav-number">1.4.</span> <span class="nav-text">数据 Mock 能力</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#研发部署工作流问题"><span class="nav-number">1.5.</span> <span class="nav-text">研发部署工作流问题</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#构建一个-store-初步实现数据仓库"><span class="nav-number">2.</span> <span class="nav-text">构建一个 store 初步实现数据仓库</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#EventBus来实现跨页面跨组件通信"><span class="nav-number">2.1.</span> <span class="nav-text">EventBus来实现跨页面跨组件通信</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#全局状态的管理与控制"><span class="nav-number">2.2.</span> <span class="nav-text">全局状态的管理与控制</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -973,7 +1158,7 @@
      
          <script type="text/javascript">
              var gitment = new Gitment({
-                 id: '用大型开发框架开发小程序那点事儿', 
+                 id: '小程序开发中的数据仓库与数据流思考', 
                  owner: 'Awhisper',
                  repo: 'Awhisper.github.io',
                  oauth: {
