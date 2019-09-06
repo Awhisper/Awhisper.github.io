@@ -87,26 +87,25 @@
 <meta property="og:site_name" content="折腾范儿の味精">
 <meta property="og:description" content="本篇不是多复杂的东西，只是苹果的官方 Api 支持能力不足，于是通过 Hack 的方案来补全苹果官方 Api ，但是每当新系统出来，iOS 内部实现经常发生变更，导致以前探索的 Hack 方案会失效，得重新绞尽脑汁 Hack，因此梳理留做记录  前言：TableView Cell 的侧滑功能，一直是一个在 iOS 下比较有特色并且被广泛使用的一种交互 在日常的开发中也总会面临产品或者交互提出的种">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef1b03af?w=788&h=214&f=png&s=21698">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd48db4a4b?w=802&h=238&f=png&s=37872">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd43184bb2?w=792&h=212&f=png&s=28242">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd48f2b5af?w=794&h=228&f=png&s=33636">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd4bd20fad?w=788&h=220&f=png&s=31251">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd4bbfb2da?w=786&h=408&f=png&s=65599">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdd9c13e14?w=798&h=228&f=png&s=34439">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef03e4e3?w=776&h=222&f=png&s=28421">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef2b0023?w=2800&h=1212&f=png&s=1936713">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef1b03af?w=788&h=214&f=png&s=21698">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78187ccd?w=794&h=214&f=png&s=26547">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdf8971d36?w=790&h=210&f=png&s=24139">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78280c15?w=2800&h=1152&f=png&s=995752">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/12/16707250e3714d2b?w=1492&h=566&f=png&s=392772">
-<meta property="og:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe7921f0a9?w=556&h=1092&f=png&s=135979">
-<meta property="og:updated_time" content="2018-11-12T09:08:28.171Z">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677401506779.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677401805125.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677401868850.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677401971706.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402030505.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402093719.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402166479.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402268467.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402392585.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402473753.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402580643.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402634673.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402710139.jpg">
+<meta property="og:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677402985633.jpg">
+<meta property="og:updated_time" content="2019-09-06T03:32:31.307Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hack 苹果系统 Api 实现 iOS TableViewCell 侧滑方案">
 <meta name="twitter:description" content="本篇不是多复杂的东西，只是苹果的官方 Api 支持能力不足，于是通过 Hack 的方案来补全苹果官方 Api ，但是每当新系统出来，iOS 内部实现经常发生变更，导致以前探索的 Hack 方案会失效，得重新绞尽脑汁 Hack，因此梳理留做记录  前言：TableView Cell 的侧滑功能，一直是一个在 iOS 下比较有特色并且被广泛使用的一种交互 在日常的开发中也总会面临产品或者交互提出的种">
-<meta name="twitter:image" content="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef1b03af?w=788&h=214&f=png&s=21698">
+<meta name="twitter:image" content="http://mweb-qiniu.awhisper.net/2019-09-06-15677401506779.jpg">
 
 
 
@@ -436,7 +435,7 @@
 </blockquote>
 <h1 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h1><p>TableView Cell 的侧滑功能，一直是一个在 iOS 下比较有特色并且被广泛使用的一种交互</p>
 <p>在日常的开发中也总会面临产品或者交互提出的种种侧滑定制的需求</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef1b03af?w=788&amp;h=214&amp;f=png&amp;s=21698" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677401506779.jpg" alt=""></p>
 <p>早先的时候，侧滑相关的苹果官方 Api 的定制能力很差，但随着 iOS 的版本迭代，相关 Api 也在调整扩充中，逐步在开放更多定制能力，但即使是 iOS 12 系统 Api 也并不能做到很容易满足产品交互的定制需求。</p>
 <p>因此在实现侧滑的定制效果上，始终存在这两种思路</p>
 <ul>
@@ -450,12 +449,12 @@
 <li>左侧/右滑模式</li>
 </ul>
 <p>该模式通过 <code>[tableview setEditing:YES animated:YES]</code>开启</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd48db4a4b?w=802&amp;h=238&amp;f=png&amp;s=37872" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677401805125.jpg" alt=""></p>
 <ul>
 <li>右侧/左滑模式</li>
 </ul>
 <p>该模式左滑cell开启</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd43184bb2?w=792&amp;h=212&amp;f=png&amp;s=28242" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677401868850.jpg" alt=""></p>
 <p>只设置 canEditRowAtIndexPath 为 YES 的时候会默认同时开启左侧右侧2种模式，并且像上面的截图一样，左侧是一个<code>红圈 - 号</code>，右滑是<code>删除按钮</code>，并且点击左侧的 <code>红圈 - 号</code> 会自动左滑展现出右侧删除按钮</p>
 <h3 id="进入编辑模式"><a href="#进入编辑模式" class="headerlink" title="进入编辑模式"></a>进入编辑模式</h3><figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[tableview setEditing:<span class="literal">YES</span> animated:<span class="literal">YES</span>]</span><br></pre></td></tr></table></figure>
 <p>可以通过对整个 tableview 调用这个方法进入编辑模式，但注意这个方法只能进入左侧/右滑的编辑模式。并且会默认对所有 canEdit 的 indexPath 同时进入左侧/右滑编辑模式，看到<code>红圈 - 号</code>，如果想选定 cell 进入编辑模式，那就需要进一步控制 canEditRowAtIndexPath 这个 delegate 了。</p>
@@ -468,7 +467,7 @@
 <li>UITableViewCellEditingStyleNone</li>
 </ul>
 <p>即便 canEdit 是 YES，当 CellEditingStyleNone 的时候，Cell 也不会允许你左滑手势出现右侧删除按钮，并且通过 tableview 的 setEditing 方法开启左侧红圈按钮的时候，你会发现 cell 确实向右滑动了，但红圈按钮已经消失，并且无法点击打开删除按钮</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd48f2b5af?w=794&amp;h=228&amp;f=png&amp;s=33636" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677401971706.jpg" alt=""></p>
 <ul>
 <li>UITableViewCellEditingStyleDelete （这个状态是默认返回值）</li>
 </ul>
@@ -477,20 +476,20 @@
 <li>UITableViewCellEditingStyleInsert</li>
 </ul>
 <p>这个状态不允许左滑手势出现删除按钮，同时当 setEditing 的时候不出现红圈了，而是一个绿色 + 号，绿圈点击后不会出现删除按钮</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd4bd20fad?w=788&amp;h=220&amp;f=png&amp;s=31251" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402030505.jpg" alt=""></p>
 <ul>
 <li>UITableViewCellEditingStyleInsert | UITableViewCellEditingStyleDelete</li>
 </ul>
 <p>这个状态就有意思了，Insert | Delete ，但这个状态下依然是不允许左滑手势出现删除按钮，区别是当 setEditing 的时候不出现红圈or绿圈了，而是一个复选框，复选框点击后是操作复选状态，不会出现删除按钮</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fd4bbfb2da?w=786&amp;h=408&amp;f=png&amp;s=65599" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402093719.jpg" alt=""></p>
 <h3 id="编辑模式特殊样式状态-移动"><a href="#编辑模式特殊样式状态-移动" class="headerlink" title="编辑模式特殊样式状态 - 移动"></a>编辑模式特殊样式状态 - 移动</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath;</span><br><span class="line"></span><br><span class="line">- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath</span><br></pre></td></tr></table></figure>
 <p>上面2个 delegate 可以控制 TableView 是否可以进行 cell 的手势拖动，这里不进一步展开手势拖动如何实现，但 canMove 为 YES 后，会影响编辑模式的效果</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdd9c13e14?w=798&amp;h=228&amp;f=png&amp;s=34439" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402166479.jpg" alt=""></p>
 <p>如图所示，当 setEditing 后，cell 的右侧会出现一个 cell 可拖动的 icon ，此时整个cell的左滑删除手势已经彻底被禁止，当发生手势的时候，就会进入把 cell 拿起来的 move 模式</p>
 <p>但 setEditing 的左侧按钮视 CellEditingStyle 不同，表现情况不变，当 CellEditingStyleDelete 时，点击红圈按钮，依然会自动左滑出现删除按钮（手势已被禁止，开启删除按钮可以通过这个方式）</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath</span><br></pre></td></tr></table></figure>
 <p>在有些场景下，希望 setEditing 只进入纯粹的 move 模式，不想要左侧的按钮怎么办，可以通过这个 delegate ，这个 delegate 会在 canMove 模式下询问是否要进行 cell 左侧的偏移，默认返回 YES，如果设为 NO 就会不显示 cell 左侧按钮，cell也不偏移了</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef03e4e3?w=776&amp;h=222&amp;f=png&amp;s=28421" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402268467.jpg" alt=""></p>
 <p>这个 delegate 有着很苛刻的限制条件</p>
 <ul>
 <li>CellEditingStyle 必须为 CellEditingStyleNone</li>
@@ -509,7 +508,7 @@
 <p>交互说要有 icon ！</p>
 <p>重要的事情说三遍</p>
 <h3 id="Hack-系统-UIView-层级，图标-字体等深度定制"><a href="#Hack-系统-UIView-层级，图标-字体等深度定制" class="headerlink" title="Hack 系统 UIView 层级，图标/字体等深度定制"></a>Hack 系统 UIView 层级，图标/字体等深度定制</h3><p>我们先分析一下 UITableView Cell 的 UIView 层级</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef2b0023?w=2800&amp;h=1212&amp;f=png&amp;s=1936713" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402392585.jpg" alt=""></p>
 <p>从图中可以看出来右滑按钮的界面层级是</p>
 <p>iOS 8 - iOS 10</p>
 <ul>
@@ -548,7 +547,7 @@
 <li>对 title 的 frame 进行 kvc 监听，从而在系统坐标校正后，改回你想要的位置</li>
 <li>dispatch_after 个0.1秒，再手动修改 title 的 frame （╮(╯_╰)╭）</li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdef1b03af?w=788&amp;h=214&amp;f=png&amp;s=21698" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402473753.jpg" alt=""></p>
 <p><strong>为所欲为2.0:</strong></p>
 <p>如果交互与设计想要这个页面更加花哨，更加风骚，更加的定制化怎么办？</p>
 <p>整个 btn 都给你了，你可以完全构造一个 customView ，frame 大小与 button 完全一致，直接盖在 btn 上，然后这个页面就彻底为所欲为了，想加什么 UI 加什么 UI，但你需要注意以下几个事情</p>
@@ -584,7 +583,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78187ccd?w=794&amp;h=214&amp;f=png&amp;s=26547" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402580643.jpg" alt=""></p>
 <ul>
 <li>我们在 didselect 的时候 进行 setEditing：YES<ul>
 <li>cell 出现了左侧 <code>红圈按钮</code></li>
@@ -592,7 +591,7 @@
 </ul>
 </li>
 </ul>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fdf8971d36?w=790&amp;h=210&amp;f=png&amp;s=24139" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402634673.jpg" alt=""></p>
 <p>其实大家还可以把 trailingSwipe 换成 leadingSwipe 的右滑，来看看 leadingSwipe 与 setEditing 的 <code>红圈按钮</code> 的冲突情况，我就不详细展开了</p>
 <p>总结如下：</p>
 <ul>
@@ -611,7 +610,7 @@
 </ul>
 <h3 id="Hack-系统-UIView-层级-新-为所欲为"><a href="#Hack-系统-UIView-层级-新-为所欲为" class="headerlink" title="Hack 系统 UIView 层级 新-为所欲为"></a>Hack 系统 UIView 层级 新-为所欲为</h3><p>新 Api 确实提供了增加 icon 的方法，但通过上面的截图发现，icon 与 title 的位置还是不够自由，更何况我们还有更深度的任意定制交互的需求，所以我们依然需要<code>为所欲为</code>，然而！旧的为所欲为方案不管用了。</p>
 <p>老办法，分析一波系统 View 层级</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe78280c15?w=2800&amp;h=1152&amp;f=png&amp;s=995752" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402710139.jpg" alt=""></p>
 <p>新的系统 View 层级是这样的</p>
 <ul>
 <li>UITableView<ul>
@@ -634,7 +633,6 @@
 <h3 id="动态展现-收起左滑动画-（老办法私有-Api-失效…"><a href="#动态展现-收起左滑动画-（老办法私有-Api-失效…" class="headerlink" title="动态展现/收起左滑动画 （老办法私有 Api 失效…"></a>动态展现/收起左滑动画 （老办法私有 Api 失效…</h3><p>看来 iOS 11 对 tableview 内部侧滑按钮的方案改动还真是非常大，不仅仅界面层级失效了，连私有 Api 动态展现侧滑按钮都失败了。想尽一切办法，各种搜索，有且仅有一篇文章可以勉强实现，并且还有瑕疵。</p>
 <p><a href="https://www.jianshu.com/p/2ab258d684b6" target="_blank" rel="noopener">点击Cell上按钮出现Cell的左滑删除编辑界面</a></p>
 <p>大家还记得我在文章中反复提到的左侧 <code>红圈按钮</code> 么？</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/12/16707250e3714d2b?w=1492&amp;h=566&amp;f=png&amp;s=392772" alt=""></p>
 <p>这篇文章的思路其实说的有点多，如果去掉一些细枝末节的逻辑，简化版就是如下（这思路真是野…）</p>
 <ul>
 <li>setEditing: YES 让 cell 进入编辑态，然后同步进入下一步</li>
@@ -657,7 +655,7 @@
 </ul>
 <p>其实我们需要的就是一个时机，来让代码执行 setEditing: NO 就可以收回侧滑按钮，回归正常 cell 状态，但眼下根本无法捕获这个时机，cell 的didselect，用户的点击触摸都无效。</p>
 <p>为什么会这样我们分析一下原因，所有的问题都发生在 <code>左滑动画，漏出右侧按钮</code> 这个状态，所以在这个状态下我们观察一下 cell 的视图层级</p>
-<p><img src="https://user-gold-cdn.xitu.io/2018/11/9/166f75fe7921f0a9?w=556&amp;h=1092&amp;f=png&amp;s=135979" alt="undefined"> </p>
+<p><img src="http://mweb-qiniu.awhisper.net/2019-09-06-15677402985633.jpg" alt=""></p>
 <p>纳尼！TableViewCell 的 userInteractionEnabled 居然在这种状态下是 NO ！我们写个 KVO 来观察一下是不是真的这样，如果是，我再把他置回来</p>
 <figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 注册 KVO        </span></span><br><span class="line">[<span class="keyword">self</span> addObserver:<span class="keyword">self</span> forKeyPath:<span class="string">@"userInteractionEnabled"</span> options:<span class="built_in">NSKeyValueObservingOptionNew</span>|<span class="built_in">NSKeyValueObservingOptionOld</span> context:<span class="literal">nil</span>];</span><br><span class="line">        </span><br><span class="line"></span><br><span class="line">-(<span class="keyword">void</span>)observeValueForKeyPath:(<span class="built_in">NSString</span> *)keyPath ofObject:(<span class="keyword">id</span>)object change:(<span class="built_in">NSDictionary</span> *)change context:(<span class="keyword">void</span> *)context</span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">if</span>([keyPath isEqualToString:<span class="string">@"userInteractionEnabled"</span>])</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="built_in">BOOL</span> s = [[change objectForKey:<span class="string">@"new"</span>] boolValue];</span><br><span class="line">        <span class="keyword">if</span> (!s) &#123;</span><br><span class="line">            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(<span class="number">1</span> * <span class="built_in">NSEC_PER_SEC</span>)), dispatch_get_main_queue(), ^&#123;</span><br><span class="line">                <span class="keyword">self</span>.userInteractionEnabled = <span class="literal">YES</span>;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>试了一下果然！只要进入 <code>左滑动画，漏出右侧按钮</code> 都会监听到系统设置 cell 的 userInteraction 为 NO ，然而我还是想简单了，即便我把他设置回 YES ，依然没有任何的卵用（鬼知道苹果的程序员里面写的是怎么样的代码），即便我设置了 YES ，整个 cell 依然接受不到任何的touch事件</p>
