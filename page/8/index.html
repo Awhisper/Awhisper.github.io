@@ -304,6 +304,180 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/01/13/ARC下强制retain/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2016/01/13/ARC下强制retain/" itemprop="url">ARC下强制retain</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-01-13T14:07:07+08:00">
+                2016-01-13
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/01/13/ARC下强制retain/" class="leancloud_visitors" data-flag-title="ARC下强制retain">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>主要是由于上一篇文章callselector引起的</p>
+<blockquote>
+<p>如果断点调试，整个call_selector的过程完全走完都不会有事，但是一旦放开断点，彻底走完就崩溃。<br>为啥呢？因为在使用invocation的时候 invoke的过程中，如果对象在invoke内被创建初始化了，invoke结束后，在下一个autorelease的时间点就会产生zombie的crash，send release to a dealloc object</p>
+</blockquote>
+<blockquote>
+<p>为什么会这样，简单的说下我的理解不细说吧，invoke和直接函数调用不太一样，如果发生了alloc对象，那么这个对象系统会额外多一次autorelease，所以，不会立刻崩溃，但当autoreleasepool释放的时候，就会发生过度release。</p>
+</blockquote>
+<p>invoke函数会导致ARC下额外的一次autoRelease，所以在自动释放池释放后就会多一次release，导致zombie</p>
+<h2 id="有点挫的解决办法"><a href="#有点挫的解决办法" class="headerlink" title="有点挫的解决办法"></a>有点挫的解决办法</h2><p>就是我在上一篇callselector提到的</p>
+<blockquote>
+<p>因为多了个release，那我再arc下不能强制retain，那我就add到一个字典里，让他被arc retain一下</p>
+</blockquote>
+<p>于是问题是解决了，但是也产生了一个一直存在的static字典，并且这个字典里，这个key所对应的数据已经野指针，千万不能操作，一旦操作就野指针crash，你对字典进行removeall，也会野指针crash</p>
+<h2 id="威武的思路"><a href="#威武的思路" class="headerlink" title="威武的思路"></a>威武的思路</h2><p>@无边的翅膀 在我的简书下留言</p>
+<blockquote>
+<p>针对这个，我想给出一个建议。在ARC下修改一个对象的引用计数，可以使用CoreFoundation框架的API，CFRetain和 CFRelease 函数</p>
+</blockquote>
+<p>这个思路靠谱啊，于是动手试验<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2016/01/13/ARC下强制retain/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </p></div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2015/12/31/尝试手写一个更好用的performSelector-msgSend/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1064,7 +1238,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">74</span>
+                  <span class="site-state-item-count">75</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -1086,7 +1260,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">49</span>
+                  <span class="site-state-item-count">50</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
