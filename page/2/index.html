@@ -304,6 +304,191 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/03/native-dynamic/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/03/native-dynamic/" itemprop="url">一些动态技术的碎碎念</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-03T14:08:39+08:00">
+                2019-03-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
+                    <span itemprop="name">技术感悟</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/03/03/native-dynamic/" class="leancloud_visitors" data-flag-title="一些动态技术的碎碎念">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>现在随着大前端的流行，Native小程序，RN，等看似打着原生旗号的动态化，但开发过程中都会发现非常非常的像在写前端，各种 margin padding align 等，尤其是各大框架看起来都在反复提一个词 FlexBox ，于是我们深入的聊聊在移动端，动态化与跨平台这两个词的发展。</p>
+<h1 id="编译动态化"><a href="#编译动态化" class="headerlink" title="编译动态化"></a>编译动态化</h1><p>每一行代码本质上他就是一个字符串，他不具备任何的可运行的能力，之所以能被运行是因为他经过了一系列的编译，把一行行人能读懂的有逻辑有语意的字符串，变成了机器可以读懂的一条条指令集</p>
+<ul>
+<li>输入：代码字符串</li>
+<li>编译：（简单介绍一下不展开 <a href="http://awhisper.github.io/2017/02/26/%E6%89%AF%E6%B7%A1%EF%BC%9A%E5%A4%A7%E7%99%BD%E8%AF%9D%E8%81%8A%E8%81%8A%E7%BC%96%E8%AF%91%E9%82%A3%E7%82%B9%E4%BA%8B%E5%84%BF/" target="_blank" rel="noopener">http://awhisper.github.io/2017/02/26/扯淡：大白话聊聊编译那点事儿/</a>）<ul>
+<li>编译前端<ul>
+<li>词法分析        一句话解释：识别字符串中的语言关键字</li>
+<li>语法分析                        ：识别循环，判断，跳转，调用等代码逻辑</li>
+<li>生成抽象语法树 AST        ：将代码字符串转化为机器可理解可遍历可处理的语法树</li>
+</ul>
+</li>
+<li>编译后端<ul>
+<li>生成中间码 IR                ：将语法树向可执行结果产物进行转化，先产生个中间产物</li>
+<li>生成结果                        ：将中间码根据个平台的差异，生成不同的运行结果</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>输出：平台可运行的结果<ul>
+<li>iOS：可执行二进制 Mach-O 文件（汇编代码装载进入内存后即可执行）</li>
+<li>安卓：JVM的字节码（在任何有JVM的平台中都可以执行）</li>
+</ul>
+</li>
+</ul>
+<h2 id="编译结果动态化"><a href="#编译结果动态化" class="headerlink" title="编译结果动态化"></a>编译结果动态化</h2><p>编译的最终结果想要执行，都得装载到运行环境里去，iOS是直接装载到内存上，而安卓是加载到JVM虚拟机里，而这个加载过程天然是支持“动态”加载的，并且这种动态化的开发模式是非常贴近原生的。</p>
+<ul>
+<li>安卓：插件化技术，dexloader 加载</li>
+<li>iOS：动态链接库技术，dlopen 加载</li>
+</ul>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2019/03/03/native-dynamic/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/01/30/hokkaido-trip/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1852,179 +2037,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/09/whatsnewinsafariandwebkitwwdc2018/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/" itemprop="url">WWDC2018 Safari与WebKit的新特性</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-06-09T16:14:17+08:00">
-                2018-06-09
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/技术感悟/" itemprop="url" rel="index">
-                    <span itemprop="name">技术感悟</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/" class="leancloud_visitors" data-flag-title="WWDC2018 Safari与WebKit的新特性">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p><img src="http://mweb-qiniu.awhisper.net/2019-09-19-15688609040966.jpg" alt=""></p>
-<blockquote>
-<p>Session 234: <a href="https://developer.apple.com/videos/play/wwdc2018/234/" target="_blank" rel="noopener">What’s New in Safari and WebKit</a></p>
-</blockquote>
-<p>这个Session介绍了Safari与WebKit的新特性，主要面向三类人群</p>
-<ul>
-<li>Web 网页开发者（是本篇主要面相对象）</li>
-<li>Use WKWebView 原生开发者</li>
-<li>Safari Extension 浏览器插件开发者</li>
-</ul>
-<p>这个Session主要围绕着与浏览器技术相关的新特性与新功能，并且和大会的其他炙手可热的议题比如<code>ARKit</code>，<code>WatchOS</code>，都有相关和联动，极大地增强了Web技术的功能与性能。整个 Session 介绍的各种新功能相对来说比较琐碎，主要包括三大部分：</p>
-<ul>
-<li>安全性与隐私保护</li>
-<li>表现力与性能</li>
-<li>丰富的交互体验</li>
-</ul>
-<h1 id="安全-Security"><a href="#安全-Security" class="headerlink" title="安全 Security"></a>安全 Security</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/06/09/whatsnewinsafariandwebkitwwdc2018/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2077,7 +2089,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">76</span>
+                  <span class="site-state-item-count">77</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -2099,7 +2111,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">51</span>
+                  <span class="site-state-item-count">52</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
