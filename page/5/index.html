@@ -304,6 +304,219 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/03/12/VKSniffer/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="唯敬">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="折腾范儿の味精">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/03/12/VKSniffer/" itemprop="url">VKSniffer 网络请求嗅探器</a></h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-03-12T23:12:11+08:00">
+                2017-03-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/工具代码/" itemprop="url" rel="index">
+                    <span itemprop="name">工具代码</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/03/12/VKSniffer/" class="leancloud_visitors" data-flag-title="VKSniffer 网络请求嗅探器">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数&#58;</span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="简介："><a href="#简介：" class="headerlink" title="简介："></a>简介：</h1><p>无侵入式将所有App发起的网络请求，独立记录管理起来，支持界面形式进行查看</p>
+<ul>
+<li>支持<code>URLConnection</code> <code>URLSession</code> </li>
+<li>支持进行域名过滤嗅探，只截获记录符合过滤规则的网络请求</li>
+<li>支持界面形式实时查看网络请求记录</li>
+<li>支持网络请求记录的顺序，倒序查看</li>
+<li>查看复制网络请求信息到剪切板</li>
+</ul>
+<h1 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h1><h2 id="VKSniffer"><a href="#VKSniffer" class="headerlink" title="VKSniffer"></a>VKSniffer</h2><p>VKSniffer目录是嗅探器的主体逻辑代码，只导入VKSniffer目录，即可让嗅探器正常工作</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//基本用法</span></span><br><span class="line">[VKSniffer setupSnifferHandler:^(VKSnifferResult *result) &#123;</span><br><span class="line">        <span class="built_in">NSLog</span>(<span class="string">@"%@"</span>,result);</span><br><span class="line">    &#125;];</span><br><span class="line">[VKSniffer startSniffer];</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>+ startSniffer</code></li>
+</ul>
+<p>Require方法，一行代码即可开启监听和嗅探。</p>
+<ul>
+<li><code>+ setupSnifferHandler:</code></li>
+</ul>
+<p>Option方法，嗅探到的每一条网络请求结果，会通过Handler回调，传给使用者，如果不设置，网络请求会保存在单例的netResultArray里</p>
+<ul>
+<li><code>+ setupHostFilter:</code></li>
+</ul>
+<p>Option方法，可以让嗅探器有选择的拦截指定域名的网络请求并记录，如果不设置，默认全体拦截</p>
+<ul>
+<li><code>+ setupConfiguration:</code></li>
+</ul>
+<p>Option方法，嗅探器默认支持<code>NSURLConnection</code>与系统的<code>[NSURLSession sharedSession]</code>，如果需要支持<code>defaultSessionConfiguration</code>生成的<code>NSURLSession</code>需要调用此函数来进行额外配置（例如：AfNetworking3.0）</p>
+<figure class="highlight objectivec"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//初始化AfNetworking3.0 配置VKSniffer</span></span><br><span class="line"><span class="built_in">NSURLSessionConfiguration</span> *configuration = [<span class="built_in">NSURLSessionConfiguration</span> defaultSessionConfiguration];</span><br><span class="line"></span><br><span class="line"><span class="comment">//在创建manager前，调用setupConfiguration</span></span><br><span class="line">[VKSniffer setupConfiguration:configuration];</span><br><span class="line"></span><br><span class="line"><span class="comment">//创建manager</span></span><br><span class="line">AFURLSessionManager *manager = [[AFURLSessionManager alloc] initWithSessionConfiguration:configuration];</span><br><span class="line"><span class="keyword">self</span>.manager = manager;</span><br></pre></td></tr></table></figure>
+<h2 id="VKSnifferUI"><a href="#VKSnifferUI" class="headerlink" title="VKSnifferUI"></a>VKSnifferUI</h2><p>VKSnifferUI目录是界面列表功能，同时导入<code>VKSnifferUI</code>与<code>VKSniffer</code>目录即可让所有的网络请求日志，通过列表界面进行查看</p>
+<ul>
+<li><code>+ showSnifferView</code></li>
+<li><code>+ hideSnifferView</code></li>
+</ul>
+<p>一行代码，打开网络请求日志界面</p>
+<p><strong>Menu功能包含</strong></p>
+<ul>
+<li>暂停/启动 UrlProtocol拦截</li>
+<li>移除列表中所有内容</li>
+<li>列表逆序/顺序排列</li>
+<li>重新设定域名过滤器</li>
+<li>查看复制网络请求信息到剪切板</li>
+</ul>
+<p><strong>推荐配合VKShakeCommands使用</strong></p>
+<p>VKShakeCommands是工具 <a href="https://github.com/Awhisper/VKKeyCommands" target="_blank" rel="noopener">VKKeyCommands</a> 下的摇一摇组件，可以捕捉真机的摇一摇事件</p>
+<ul>
+<li>触发VKShakeCommands</li>
+<li>调用showSnifferView</li>
+</ul>
+<p>在真机黑盒调试代码的时候，为了方便的不链接Xcode，也不必charles挂代理，就能看到所有网络日志，可以轻轻摇一摇手机，打开嗅探器界面，实现快速查看网络日志</p>
+<h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>VKSniffer其实是 <a href="https://github.com/Awhisper/VKDevTool" target="_blank" rel="noopener">VKDevTool</a> 的子功能发展而来。VKDevTool内部包含着网络请求日志查看功能。</p>
+<p><a href="http://awhisper.github.io/2016/09/01/VKDevTool/" target="_blank" rel="noopener">VKDevTool App黑盒调试工具</a></p>
+<p>当初开发VKDevTool的时候，贪心大而全，并且求快，网络请求日志功能，大体逻辑都已经实现，但是界面很糙，功能特别不细致（支持列表查看复制，支持暂停/开启，支持域名过滤）</p>
+<p>后来看到了 <a href="https://github.com/xmartlabs/Xniffer" target="_blank" rel="noopener">Xniffer</a> 一款用Swift语言写的针对NSURLSession的嗅探器，他的大体功能VKDevTool的网络日志模块都已实现，他的好处是网络请求日志更加精细，细致记录了很多网络请求细节</p>
+<ul>
+<li>请求耗时</li>
+<li>请求状态码</li>
+<li>请求数据</li>
+<li>请求Error信息</li>
+</ul>
+<p>因此萌生了重写<code>VKSniffer</code>的想法，取人之长，补己之短，并且把这个模块从VKDevTool中独立出来，可以独立运作。</p>
+<p>PS: VKDevTool逐个模块打算一一重新整理，当初写的太糙了</p>
+<p>PPS: 感谢 <a href="https://github.com/xmartlabs/Xniffer" target="_blank" rel="noopener">Xniffer</a> 的精致细节</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/02/26/扯淡：大白话聊聊编译那点事儿/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
@@ -1965,183 +2178,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2016/09/01/VKDevTool/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="唯敬">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="折腾范儿の味精">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h2 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2016/09/01/VKDevTool/" itemprop="url">VKDevTool App黑盒调试工具</a></h2>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-09-01T16:10:34+08:00">
-                2016-09-01
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
-                  <a href="/categories/工具代码/" itemprop="url" rel="index">
-                    <span itemprop="name">工具代码</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
-          
-
-          
-            
-          
-
-          
-          
-             <span id="/2016/09/01/VKDevTool/" class="leancloud_visitors" data-flag-title="VKDevTool App黑盒调试工具">
-               <span class="post-meta-divider">|</span>
-               <span class="post-meta-item-icon">
-                 <i class="fa fa-eye"></i>
-               </span>
-               
-                 <span class="post-meta-item-text">阅读次数&#58;</span>
-               
-                 <span class="leancloud-visitors-count"></span>
-             </span>
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><blockquote>
-<p>这个工具在早期的VKDebugConsole的基础上完全推翻重做了，核心思路都不变，只是重新整理了工具的使用方式，工具的界面呈现，工具的模块划分，模块化可扩展支持</p>
-<p><a href="http://awhisper.github.io/2016/05/22/VKDebugConsole-App%E9%BB%91%E7%9B%92%E6%8E%A7%E5%88%B6%E5%8F%B0/" target="_blank" rel="noopener">旧文档链接 – VKDebugConsole App黑盒控制台</a></p>
-</blockquote>
-<h1 id="VKDevTooL"><a href="#VKDevTooL" class="headerlink" title="VKDevTooL"></a>VKDevTooL</h1><p><a href="https://github.com/Awhisper/VKDevTool" target="_blank" rel="noopener">App内调试工具 Github VKDevTool</a></p>
-<p>允许在</p>
-<ul>
-<li>在脱离Xcode Debug的情况下</li>
-<li>黑盒真机情况下</li>
-</ul>
-<p>进行App的调试工作，包括：</p>
-<ul>
-<li>调试内存对象</li>
-<li>打印内存数据</li>
-<li>修改UI</li>
-<li>查看NSLog</li>
-<li>查看所有网络请求记录</li>
-<li>查看App界面层级</li>
-</ul>
-<p>方便在黑盒测试+内部体验的环境下，发现Bug后，直接在Bug现场调试内存，分析问题</p>
-<h1 id="使用介绍"><a href="#使用介绍" class="headerlink" title="使用介绍"></a>使用介绍</h1>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2016/09/01/VKDevTool/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -2194,7 +2230,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">77</span>
+                  <span class="site-state-item-count">78</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
